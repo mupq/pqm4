@@ -1,0 +1,7 @@
+*.o
+*.bin
+*.elf
+*.a
+*.d
+testvectors/
+benchmarks/
