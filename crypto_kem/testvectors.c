@@ -9,7 +9,7 @@
 #include <stdint.h>
 #include <string.h>
 
-#define NTESTS 10
+#define NTESTS 2
 
 typedef uint32_t uint32;
 
@@ -52,6 +52,9 @@ static void surf(void)
 
 void randombytes(unsigned char *x,unsigned long long xlen)
 {
+  unsigned long long bak = xlen;
+  unsigned char *xbak = x;
+
   while (xlen > 0) {
     if (!outleft) {
       if (!++in[0]) if (!++in[1]) if (!++in[2]) ++in[3];
@@ -62,9 +65,9 @@ void randombytes(unsigned char *x,unsigned long long xlen)
     ++x;
     --xlen;
   }
-  printbytes(x,xlen);
-  send_USART_str("\n");
+  printbytes(xbak, bak);
 }
+
 
 
 int main(void)
@@ -78,7 +81,6 @@ int main(void)
   clock_setup(CLOCK_FAST);
   gpio_setup();
   usart_setup(115200);
-  rng_enable();
 
   send_USART_str("==========================");
 
@@ -88,29 +90,24 @@ int main(void)
     crypto_kem_keypair(pk, sk_a);
 
     printbytes(pk,CRYPTO_PUBLICKEYBYTES);
-    send_USART_str("\n");
     printbytes(sk_a,CRYPTO_SECRETKEYBYTES);
-    send_USART_str("\n");
 
     // Encapsulation
     crypto_kem_enc(sendb, key_b, pk);
 
     printbytes(sendb,CRYPTO_CIPHERTEXTBYTES);
-    send_USART_str("\n");
     printbytes(key_b,CRYPTO_BYTES);
-    send_USART_str("\n");
 
     // Decapsulation
     crypto_kem_dec(key_a, sendb, sk_a);
 
     printbytes(key_a,CRYPTO_BYTES);
-    send_USART_str("\n");
 
     for(j=0;j<CRYPTO_BYTES;j++)
     {
       if(key_a[j] != key_b[j])
       {
-        send_USART_str("ERROR\n");
+        send_USART_str("ERROR");
         send_USART_str("#");
         return -1;
       }

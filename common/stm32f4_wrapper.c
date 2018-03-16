@@ -142,7 +142,6 @@ void send_USART_str(const char* in)
     for(i = 0; in[i] != 0; i++) {
         usart_send_blocking(USART2, *(unsigned char *)(in+i));
     }
-    usart_send_blocking(USART2, '\r');
     usart_send_blocking(USART2, '\n');
 }
 

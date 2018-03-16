@@ -17,6 +17,7 @@ libpqm4.a: $(OBJECTS)
 
 
 .PHONY: clean
+.INTERMEDIATE: $(OBJECTS)
 
 clean:
 	-rm libpqm4.a

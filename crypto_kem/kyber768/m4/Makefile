@@ -16,6 +16,7 @@ libpqm4.a: $(OBJECTS)
 	$(CC) -I$(INCPATH) $(CFLAGS) -c -o $@ $<
 
 .PHONY: clean
+.INTERMEDIATE: $(OBJECTS)
 
 clean:
 	-rm -f libpqm4.a

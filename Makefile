@@ -25,15 +25,33 @@ LDFLAGS    += --static -Wl,--start-group -lc -lgcc -lnosys -Wl,--end-group \
               -T$(LDSCRIPT) -nostartfiles -Wl,--gc-sections \
                $(ARCH_FLAGS) -L$(OPENCM3DIR)/lib
 
+CC_HOST    = gcc
+LD_HOST    = gcc
+
+CFLAGS_HOST = -O3 -Wall -Wextra -Wpedantic
+LDFLAGS_HOST =
+
+OBJS_HOST  = obj-host/fips202.o obj-host/keccakf1600.o
 
 KEMLIBS=$(wildcard crypto_kem/*/*)
 SIGNLIBS=$(wildcard crypto_sign/*/*)
+
+# specifically select the ref implementations to use these as 'canonical'
+# to prevent having duplicate targets, append _host
+KEMLIBS_REF=$(wildcard crypto_kem/*/ref)
+SIGNLIBS_REF=$(wildcard crypto_sign/*/ref)
+KEMLIBS_M4=$(filter-out crypto_kem/%/ref, $(KEMLIBS))
+SIGNLIBS_M4=$(filter-out crypto_sign/%/ref, $(SIGNLIBS))
 
 KEMTESTS=$(patsubst %,bin/%,$(patsubst %,%_test.bin,$(subst /,_,$(KEMLIBS))))
 SIGNTESTS=$(patsubst %,bin/%,$(patsubst %,%_test.bin,$(subst /,_,$(SIGNLIBS))))
 
 KEMTESTVECTORS=$(patsubst %,bin/%,$(patsubst %,%_testvectors.bin,$(subst /,_,$(KEMLIBS))))
 SIGNTESTVECTORS=$(patsubst %,bin/%,$(patsubst %,%_testvectors.bin,$(subst /,_,$(SIGNLIBS))))
+
+# on the host, we are only interested in the reference implementations
+KEMTESTVECTORS_HOST=$(patsubst %,bin-host/%,$(patsubst %,%_testvectors,$(subst /,_,$(KEMLIBS_REF))))
+SIGNTESTVECTORS_HOST=$(patsubst %,bin-host/%,$(patsubst %,%_testvectors,$(subst /,_,$(SIGNLIBS_REF))))
 
 KEMSPEEDS=$(patsubst %,bin/%,$(patsubst %,%_speed.bin,$(subst /,_,$(KEMLIBS))))
 SIGNSPEEDS=$(patsubst %,bin/%,$(patsubst %,%_speed.bin,$(subst /,_,$(SIGNLIBS))))
@@ -47,9 +65,9 @@ INCPATH=$(OWNDIR)/common
 
 all: tests testvectors speeds stack
 
-libs: $(KEMLIBS) $(SIGNLIBS)
+libs: $(KEMLIBS_M4) $(SIGNLIBS_M4) $(KEMLIBS_REF) $(SIGNLIBS_REF)
 tests: libs $(KEMTESTS) $(SIGNTESTS)
-testvectors: libs $(KEMTESTVECTORS) $(SIGNTESTVECTORS)
+testvectors: libs $(KEMTESTVECTORS) $(SIGNTESTVECTORS) $(KEMTESTVECTORS_HOST) $(SIGNTESTVECTORS_HOST)
 speeds: libs $(KEMSPEEDS) $(SIGNSPEEDS)
 stack: libs $(KEMSTACK) $(SIGNSTACK)
 
@@ -62,12 +80,33 @@ export INCPATH
 #  be constantly rebuilt. Suggestions welcome how to fix this nicely.
 # Currently the workaround is to `make clean` after modifying schemes.
 
-$(KEMLIBS): force
-	make -C $@
+$(KEMLIBS_M4): force
+	make -C $@ libpqm4.a
 
-$(SIGNLIBS): force
-	make -C $@
+$(SIGNLIBS_M4): force
+	make -C $@ libpqm4.a
 
+$(KEMLIBS_REF): force
+	make -C $@ libpqm4.a
+	make -C $@ libpqhost.a
+
+$(SIGNLIBS_REF): force
+	make -C $@ libpqm4.a
+	make -C $@ libpqhost.a
+
+bin-host/crypto_kem_%:  $(OBJS_HOST) obj-host/$(patsubst %,crypto_kem_%.o,%)
+	mkdir -p bin-host
+	$(LD_HOST) -o $@ \
+	$(patsubst bin-host/%,obj-host/%.o,$@) \
+	$(patsubst %testvectors,%libpqhost.a,$(patsubst bin-host/crypto/kem%,crypto_kem%,$(subst _,/,$@))) \
+	$(OBJS_HOST) $(LDFLAGS_HOST) -lm
+
+bin-host/crypto_sign_%:  $(OBJS_HOST) obj-host/$(patsubst %,crypto_sign_%.o,%)
+	mkdir -p bin-host
+	$(LD_HOST) -o $@ \
+	$(patsubst bin-host/%,obj-host/%.o,$@) \
+	$(patsubst %testvectors,%libpqhost.a,$(patsubst bin-host/crypto/sign%,crypto_sign%,$(subst _,/,$@))) \
+	$(OBJS_HOST) $(LDFLAGS_HOST) -lm
 
 bin/%.bin: elf/%.elf
 	mkdir -p bin
@@ -160,6 +199,18 @@ obj/crypto_sign_%_testvectors.o: crypto_sign/testvectors.c $(patsubst %,%/api.h,
 	-I$(patsubst %testvectors.o,%,$(patsubst obj/%,%,$(subst crypto/sign,crypto_sign,$(subst _,/,$@)))) \
 	-I./common/
 
+obj-host/crypto_kem_%_testvectors.o: crypto_kem/testvectors-host.c $(patsubst %,%/api.h,$(patsubst %,crypto_kem/%,$(subst _,/,$%)))
+	mkdir -p obj-host
+	$(CC_HOST) $(CFLAGS_HOST) -o $@ -c $< \
+	-I$(patsubst %testvectors.o,%,$(patsubst obj-host/%,%,$(subst crypto/kem,crypto_kem,$(subst _,/,$@)))) \
+	-I./common/
+
+obj-host/crypto_sign_%_testvectors.o: crypto_sign/testvectors-host.c $(patsubst %,%/api.h,$(patsubst %,crypto_sign/%,$(subst _,/,$%)))
+	mkdir -p obj-host
+	$(CC_HOST) $(CFLAGS_HOST) -o $@ -c $< \
+	-I$(patsubst %testvectors.o,%,$(patsubst obj-host/%,%,$(subst crypto/sign,crypto_sign,$(subst _,/,$@)))) \
+	-I./common/
+
 
 obj/crypto_kem_%_speed.o: crypto_kem/speed.c $(patsubst %,%/api.h,$(patsubst %,crypto_kem/%,$(subst _,/,$%)))
 	mkdir -p obj 
@@ -199,8 +250,12 @@ obj/fips202.o:  common/fips202.c
 	$(CC) $(CFLAGS) -o $@ -c $^
 
 obj/keccakf1600.o:  common/keccakf1600.S
-	mkdir -p obj 
+	mkdir -p obj
 	$(CC) $(CFLAGS) -o $@ -c $^
+
+obj-host/%.o: common/%.c
+	mkdir -p obj-host
+	$(CC_HOST) $(CFLAGS_HOST) -o $@ -c $^
 
 $(OPENCM3FILE):
 	@if [ ! "`ls -A $(OPENCM3_DIR)`" ] ; then \
@@ -226,7 +281,9 @@ clean:
 	find crypto_sign -name \*.a -type f -exec rm -f {} \;
 	rm -rf elf/
 	rm -rf bin/
+	rm -rf bin-host/
 	rm -rf obj/
+	rm -rf obj-host/
 	rm -rf testvectors/
 	rm -rf benchmarks/
 
