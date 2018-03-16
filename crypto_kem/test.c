@@ -17,15 +17,15 @@ static int test_keys(void)
   {
     //Alice generates a public key
     crypto_kem_keypair(pk, sk_a);
-    send_USART_str("PASS key pair generation!");
+    send_USART_str("DONE key pair generation!");
 
     //Bob derives a secret key and creates a response
     crypto_kem_enc(sendb, key_b, pk);
-    send_USART_str("PASS encapsulation!");
+    send_USART_str("DONE encapsulation!");
 
     //Alice uses Bobs response to get her secret key
     crypto_kem_dec(key_a, sendb, sk_a);
-    send_USART_str("PASS decapsulation!");
+    send_USART_str("DONE decapsulation!");
 
     if(memcmp(key_a, key_b, CRYPTO_BYTES))
     {

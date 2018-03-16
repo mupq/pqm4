@@ -78,4 +78,4 @@ def doTest(binary):
 
 
 for binary in binaries:
-    doTest(binary);    
+    doTest(binary)    
