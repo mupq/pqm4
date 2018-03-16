@@ -28,7 +28,13 @@ static int test_keys(void)
     send_USART_str("PASS decapsulation!");
 
     if(memcmp(key_a, key_b, CRYPTO_BYTES))
+    {
       send_USART_str("ERROR KEYS\n");
+    } 
+    else 
+    {
+      send_USART_str("OK KEYS\n");
+    }
   }
 
   return 0;
@@ -57,8 +63,14 @@ static int test_invalid_sk_a(void)
     //Alice uses Bobs response to get her secre key
     crypto_kem_dec(key_a, sendb, sk_a);
 
-    if(!memcmp(key_a, key_b, CRYPTO_BYTES))
+    if(!memcmp(key_a, key_b, CRYPTO_BYTES)) 
+    {
       send_USART_str("ERROR invalid sk_a\n");
+    } 
+    else 
+    {
+      send_USART_str("OK invalid sk_a\n");
+    }
   }
 
   return 0;
@@ -91,7 +103,13 @@ static int test_invalid_ciphertext(void)
     crypto_kem_dec(key_a, sendb, sk_a);
 
     if(!memcmp(key_a, key_b, CRYPTO_BYTES))
+    {
       send_USART_str("ERROR invalid ciphertext\n");
+    } 
+    else 
+    {
+      send_USART_str("OK invalid ciphertext\n");
+    }
   }
 
   return 0;
@@ -104,9 +122,12 @@ int main(void)
   usart_setup(115200);
   rng_enable();
 
+  // marker for automated testing
+  send_USART_str("==========================");
   test_keys();
   test_invalid_sk_a();
   test_invalid_ciphertext();
+  send_USART_str("#");
 
   while(1);
 
