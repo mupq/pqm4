@@ -31,23 +31,25 @@ Post-quantum crypto library for the ARM Cortex-M4
 | ------ | -------------- | ----------------------- | ------------- | ----------------|
 | dilithium (100 executions) | ref | AVG: 2,865,649 <br /> MIN: 2,864,838 <br /> MAX: 2,866,673 |  AVG: 15,978,458 <br /> MIN: 5,368,086 <br /> MAX: 54,869,061 | AVG: 3,206,216 <br /> MIN: 3,205,732 <br /> MAX: 3,206,654 |
 | sphincs-shake256-128s (1 executions) | ref | AVG: 4,571,546,075 <br /> MIN: 4,571,546,075 <br /> MAX: 4,571,546,075 |  AVG: 63,485,024,825 <br /> MIN: 63,485,024,825 <br /> MAX: 63,485,024,825 | AVG: 77,975,424 <br /> MIN: 77,975,424 <br /> MAX: 77,975,424 |
+
 ### Memory Evaluation
 #### Key Encapsulation Schemes
 | scheme | implementation | key generation [bytes] | encapsulation [bytes] | decapsulation [bytes] |
 | ------ | -------------- | ----------------------- | ---------------------- | -----------------------|
-| saber | ref | 12,832 |  15,104 | 16,200 |
-| ntruhrss701 | ref | 10,032 |  9,004 | 10,252 |
-| sikep751 | ref | 11,136 |  11,680 | 12,232 |
-| kyber768 | m4 | 10,504 |  13,664 | 14,824 |
-| kyber768 | ref | 10,504 |  13,664 | 14,824 |
-| frodo640-cshake | opt | 36,752 |  58,544 | 68,896 |
-| newhope1024cca | m4 | 11,440 |  17,736 | 19,936 |
-| newhope1024cca | ref | 11,440 |  17,736 | 19,936 |
+| saber | ref | 12,824 |  15,096 | 16,192 |
+| kindi256342 | ref | 10,632 |  10,736 | 16,912 |
+| ntruhrss701 | ref | 10,024 |  8,996 | 10,244 |
+| sikep751 | ref | 11,128 |  11,672 | 12,224 |
+| kyber768 | m4 | 10,496 |  13,656 | 14,816 |
+| kyber768 | ref | 10,496 |  13,656 | 14,816 |
+| frodo640-cshake | opt | 36,744 |  58,536 | 68,888 |
+| newhope1024cca | m4 | 11,432 |  17,728 | 19,928 |
+| newhope1024cca | ref | 11,432 |  17,728 | 19,928 |
 #### Signature Schemes
 | scheme | implementation | key generation [bytes] | sign [bytes] | verify [bytes] |
 | ------ | -------------- | ----------------------- | ------------- | ----------------|
-| dilithium | ref | 51,380 |  87,616 | 55,824 |
-| sphincs-shake256-128s | ref | 3,232 |  3,360 | 3,016 |
+| dilithium | ref | 51,372 |  87,608 | 55,816 |
+| sphincs-shake256-128s | ref | 3,224 |  3,352 | 3,008 |
 
 
 ## Adding new schemes and implementations

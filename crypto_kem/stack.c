@@ -3,72 +3,73 @@
 #include "stm32wrapper.h"
 #include <stdio.h>
 #include <string.h>
-#define NTESTS 1
 
-// STM32F407 stack is from 0x20020000 to 0x20000000, growing downwards
-//#define MIN_STACK_ADDR 0x20000000
-//#define MAX_STACK_ADDR 0x20020000
-#define MAX_SIZE 0x15000
+#define MAX_SIZE 0x16000
+
+
 static void send_stack_usage(const char *s, unsigned int c) {
   char outs[120];
   send_USART_str(s);
-  if (c >= MAX_SIZE) {
-    send_USART_str("stack usage exceeds MAX_SIZE");
-  } else {
-    sprintf(outs, "%u\n", c);
-    send_USART_str(outs);
-  }
+  sprintf(outs, "%u\n", c);
+  send_USART_str(outs);
 }
 
+
+unsigned int canary_size = MAX_SIZE;
 volatile unsigned char *p;
 unsigned int c;
-int i, j;
 uint8_t canary = 0x42;
 
 unsigned char key_a[CRYPTO_BYTES], key_b[CRYPTO_BYTES];
 unsigned char pk[CRYPTO_PUBLICKEYBYTES];
 unsigned char sendb[CRYPTO_CIPHERTEXTBYTES];
 unsigned char sk_a[CRYPTO_SECRETKEYBYTES];
+unsigned int stack_key_gen, stack_encaps, stack_decaps;
 
 #define FILL_STACK()                                                           \
   p = &a;                                                                      \
-  while (p > &a - MAX_SIZE)                                                    \
+  while (p > &a - canary_size)                                                 \
     *(p--) = canary;
-#define CHECK_STACK(s)                                                         \
-  c = MAX_SIZE;                                                                \
-  p = &a - MAX_SIZE + 1;                                                       \
+#define CHECK_STACK()                                                          \
+  c = canary_size;                                                             \
+  p = &a - canary_size + 1;                                                    \
   while (*p == canary && p < &a) {                                             \
     p++;                                                                       \
     c--;                                                                       \
-  }                                                                            \
-  send_stack_usage(s, c);
+  }                                                                            
 
 static int test_keys(void) {
   volatile unsigned char a;
-  for (i = 0; i < NTESTS; i++) {
-    // Alice generates a public key
-    FILL_STACK()
-    crypto_kem_keypair(pk, sk_a);
-    CHECK_STACK("key gen stack usage")
-    // Bob derives a secret key and creates a response
+  // Alice generates a public key
+  FILL_STACK()
+  crypto_kem_keypair(pk, sk_a);
+  CHECK_STACK()
+  if(c >= canary_size) return -1; 
+  stack_key_gen = c;
 
-    FILL_STACK()
-    crypto_kem_enc(sendb, key_b, pk);
-    CHECK_STACK("encaps stack usage")
+  // Bob derives a secret key and creates a response
+  FILL_STACK()
+  crypto_kem_enc(sendb, key_b, pk);
+  CHECK_STACK()
+  if(c >= canary_size) return -1; 
+  stack_encaps = c;
 
-    // Alice uses Bobs response to get her secret key
-    FILL_STACK()
-    crypto_kem_dec(key_a, sendb, sk_a);
-    CHECK_STACK("decaps stack usage")
+  // Alice uses Bobs response to get her secret key
+  FILL_STACK()
+  crypto_kem_dec(key_a, sendb, sk_a);
+  CHECK_STACK()
+  if(c >= canary_size) return -1; 
+  stack_decaps = c;
 
-    if (memcmp(key_a, key_b, CRYPTO_BYTES))
-      send_USART_str("ERROR KEYS\n");
-    else
-      send_USART_str("KEYS CORRECT\n");
-    canary++;
+  if (memcmp(key_a, key_b, CRYPTO_BYTES)){
+    return -1;
+  } else {    
+    send_stack_usage("key gen stack usage", stack_key_gen);
+    send_stack_usage("encaps stack usage", stack_encaps);
+    send_stack_usage("decaps stack usage", stack_decaps);
+    send_USART_str("KEYS CORRECT\n");
+    return 0;
   }
-
-  return 0;
 }
 
 int main(void) {
@@ -79,7 +80,14 @@ int main(void) {
 
   // marker for automated benchmarks
   send_USART_str("==========================");
-  test_keys();
+  canary_size = MAX_SIZE;
+  while(test_keys()){
+    canary_size -= 0x1000;
+    if(canary_size == 0) {
+      send_USART_str("failed to measure stack usage.\n");
+      break;
+    }
+  }
   // marker for automated benchmarks
   send_USART_str("#");
 
