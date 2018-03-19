@@ -57,6 +57,11 @@ stack: libs $(KEMSTACK) $(SIGNSTACK)
 .PHONY: force
 export INCPATH
 
+# TODO: currently the libraries are not rebuilt when a file changes in a scheme
+#  but specifying `libs` as as a dependency of the .elfs causes everything to
+#  be constantly rebuilt. Suggestions welcome how to fix this nicely.
+# Currently the workaround is to `make clean` after modifying schemes.
+
 $(KEMLIBS): force
 	make -C $@
 
