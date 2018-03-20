@@ -3,6 +3,7 @@ import serial
 import sys
 import os
 import subprocess
+from utils import m4ignore
 
 dev = serial.Serial("/dev/ttyUSB0", 115200, timeout=10)
 
@@ -19,6 +20,8 @@ def doTest(binary):
     scheme = '_'.join(info[2:-2])
     implementation = info[-2]
 
+    if m4ignore(primitive, scheme, implementation):
+        return
 
     # skip SPHINCS and SIKE for testing
     #if scheme == "sphincs-shake256-128s" or scheme == "sikep751":

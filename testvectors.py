@@ -4,6 +4,7 @@ import sys
 import os
 import subprocess
 import hashlib
+from utils import m4ignore
 
 dev = serial.Serial("/dev/ttyUSB0", 115200)
 
@@ -23,6 +24,9 @@ for binary in binaries:
     primitive = '_'.join(info[:2])
     scheme = '_'.join(info[2:-2])
     implementation = info[-2]
+
+    if m4ignore(primitive, scheme, implementation):
+        continue
 
     if len(sys.argv) > 1 and scheme not in sys.argv[1:]:
         continue

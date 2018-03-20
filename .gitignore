@@ -5,3 +5,4 @@
 *.d
 testvectors/
 benchmarks/
+__pycache__/
