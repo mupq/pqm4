@@ -21,12 +21,9 @@ def benchmarkBinary(benchmark, binary):
     if m4ignore(primitive, scheme, implementation):
         return
 
-    # skip SPHINCS and SIKE for testing
-    #if scheme == "sphincs-shake256-128s" or scheme == "sikep751":
-    #    print("skipping SPHINCS/SIKE")            
-    #    return
     if len(sys.argv) > 1 and scheme not in sys.argv[1:]:
         return
+
     print("Flashing {}..".format(binpath))
     subprocess.run(["st-flash", "write", binpath, "0x8000000"],
                    stdout=sys.stdout.buffer, stderr=sys.stdout.buffer)
