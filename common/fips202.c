@@ -6,53 +6,13 @@
  * by Gilles Van Assche, Daniel J. Bernstein, and Peter Schwabe */
 
 #include <stdint.h>
-#include <assert.h>
+#include <string.h>
 #include "fips202.h"
 #include "keccakf1600.h"
 
 #define NROUNDS 24
 #define ROL(a, offset) ((a << offset) ^ (a >> (64-offset)))
-
-/*************************************************
-* Name:        load64
-*
-* Description: Load 8 bytes into uint64_t in little-endian order
-*
-* Arguments:   - const unsigned char *x: pointer to input byte array
-*
-* Returns the loaded 64-bit unsigned integer
-**************************************************/
-static uint64_t load64(const unsigned char *x)
-{
-  unsigned long long r = 0, i;
-
-  for (i = 0; i < 8; ++i) {
-    r |= (unsigned long long)x[i] << 8 * i;
-  }
-  return r;
-}
-
-/*************************************************
-* Name:        store64
-*
-* Description: Store a 64-bit integer to a byte array in little-endian order
-*
-* Arguments:   - uint8_t *x: pointer to the output byte array
-*              - uint64_t u: input 64-bit unsigned integer
-**************************************************/
-static void store64(uint8_t *x, uint64_t u)
-{
-  unsigned int i;
-
-  for(i=0; i<8; ++i) {
-    x[i] = u;
-    u >>= 8;
-  }
-}
-
-#include <string.h>
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
-
 
 /*************************************************
 * Name:        keccak_absorb
@@ -80,9 +40,7 @@ static void keccak_absorb(uint64_t *s,
 
   while (mlen >= r)
   {
-    for (i = 0; i < r / 8; ++i)
-      s[i] ^= load64(m + 8 * i);
-
+    KeccakF1600_StateXORBytes(s, m, 0, r);
     KeccakF1600_StatePermute(s);
     mlen -= r;
     m += r;
@@ -94,8 +52,8 @@ static void keccak_absorb(uint64_t *s,
     t[i] = m[i];
   t[i] = p;
   t[r - 1] |= 128;
-  for (i = 0; i < r / 8; ++i)
-    s[i] ^= load64(t + 8 * i);
+
+  KeccakF1600_StateXORBytes(s, t, 0, r);
 }
 
 
@@ -115,14 +73,10 @@ static void keccak_squeezeblocks(unsigned char *h, unsigned long long int nblock
                                  uint64_t *s,
                                  unsigned int r)
 {
-  unsigned int i;
   while(nblocks > 0)
   {
     KeccakF1600_StatePermute(s);
-    for(i=0;i<(r>>3);i++)
-    {
-      store64(h+8*i, s[i]);
-    }
+    KeccakF1600_StateExtractBytes(s, h, 0, r);
     h += r;
     nblocks--;
   }
