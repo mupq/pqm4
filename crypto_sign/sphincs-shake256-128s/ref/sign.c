@@ -158,6 +158,8 @@ int crypto_sign_open(unsigned char *m, unsigned long long *mlen,
     unsigned char wots_pk[SPX_WOTS_BYTES];
     unsigned char root[SPX_N];
     unsigned char leaf[SPX_N];
+    unsigned char sig[SPX_BYTES];
+    unsigned char *sigptr = sig;
     unsigned int i;
     uint64_t tree;
     uint32_t idx_leaf;
@@ -179,17 +181,20 @@ int crypto_sign_open(unsigned char *m, unsigned long long *mlen,
      * prepend the required other inputs for the hash function. */
     memcpy(m + SPX_BYTES, sm + SPX_BYTES, *mlen);
 
+    /* Create a copy of the signature so that m = sm is not an issue */
+    memcpy(sig, sm, SPX_BYTES);
+
     /* Derive the message digest and leaf index from R || PK || M. */
     /* The additional SPX_N is a result of the hash domain separator. */
-    hash_message(mhash, &tree, &idx_leaf, sm, pk, m + SPX_BYTES, *mlen);
-    sm += SPX_N;
+    hash_message(mhash, &tree, &idx_leaf, sigptr, pk, m + SPX_BYTES, *mlen);
+    sigptr += SPX_N;
 
     /* Layer correctly defaults to 0, so no need to set_layer_addr */
     set_tree_addr(wots_addr, tree);
     set_keypair_addr(wots_addr, idx_leaf);
 
-    fors_pk_from_sig(root, sm, mhash, pub_seed, wots_addr);
-    sm += SPX_FORS_BYTES;
+    fors_pk_from_sig(root, sigptr, mhash, pub_seed, wots_addr);
+    sigptr += SPX_FORS_BYTES;
 
     /* For each subtree.. */
     for (i = 0; i < SPX_D; i++) {
@@ -204,16 +209,16 @@ int crypto_sign_open(unsigned char *m, unsigned long long *mlen,
         /* The WOTS public key is only correct if the signature was correct. */
         /* Initially, root is the FORS pk, but on subsequent iterations it is
            the root of the subtree below the currently processed subtree. */
-        wots_pk_from_sig(wots_pk, sm, root, pub_seed, wots_addr);
-        sm += SPX_WOTS_BYTES;
+        wots_pk_from_sig(wots_pk, sigptr, root, pub_seed, wots_addr);
+        sigptr += SPX_WOTS_BYTES;
 
         /* Compute the leaf node using the WOTS public key. */
         thash(leaf, wots_pk, SPX_WOTS_LEN, pub_seed, wots_pk_addr);
 
         /* Compute the root node of this subtree. */
-        compute_root(root, leaf, idx_leaf, 0, sm, SPX_TREE_HEIGHT,
+        compute_root(root, leaf, idx_leaf, 0, sigptr, SPX_TREE_HEIGHT,
                      pub_seed, tree_addr);
-        sm += SPX_TREE_HEIGHT * SPX_N;
+        sigptr += SPX_TREE_HEIGHT * SPX_N;
 
         /* Update the indices for the next layer. */
         idx_leaf = (tree & ((1 << SPX_TREE_HEIGHT)-1));
@@ -228,8 +233,8 @@ int crypto_sign_open(unsigned char *m, unsigned long long *mlen,
         return -1;
     }
 
-    /* If verification was successful, copy the message from the signature. */
-    memcpy(m, sm, *mlen);
+    /* If verification was successful, move the message to the right place. */
+    memmove(m, m + SPX_BYTES, *mlen);
 
     return 0;
 }
