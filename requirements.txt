@@ -1,0 +1,2 @@
+numpy==1.14.2
+pyserial==3.4
