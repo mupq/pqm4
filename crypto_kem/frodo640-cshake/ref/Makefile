@@ -6,9 +6,9 @@ CC_HOST = gcc
 CC_CLFAGS = -Wall -Wextra -O3
 AR_HOST = gcc-ar
 
-SOURCES =          cbd.c owcpa.c poly.c verify.c ntrukem.c
-HEADERS = params.h cbd.h owcpa.h poly.h verify.h api.h
-OBJECTS =          cbd.o owcpa.o poly.o verify.o ntrukem.o
+HEADERS = api.h config.h frodo_macrify.h 
+SOURCES = frodo640.c util.c 
+OBJECTS = frodo640.o util.o 
 
 OBJECTS_HOST = $(patsubst %.o,%_host.o,$(OBJECTS))
 
@@ -28,6 +28,6 @@ libpqhost.a: $(OBJECTS_HOST)
 .INTERMEDIATE: $(OBJECTS) $(OBJECTS_HOST)
 
 clean:
-	-rm libpqhost.a
-	-rm libpqm4.a
-	-rm *.o
+	-rm -f libpqm4.a
+	-rm -f *.o
+	-rm -f libpqhost.a

@@ -2,26 +2,25 @@
 /* taken from SUPERCOP (https://bench.cr.yp.to)     */
 
 #include "api.h"
-#include "stm32wrapper.h"
 #include "randombytes.h"
 
 #include <stdio.h>
-#include <string.h>
 #include <stdint.h>
+#include <string.h>
 
-#define MAXMLEN 2048
+#define NTESTS 2
 
 typedef uint32_t uint32;
 
 static void printbytes(const unsigned char *x, unsigned long long xlen)
 {
-  char out[3];
+  char outs[2*xlen+1];
   unsigned long long i;
-  for(i=0;i<xlen;i++) {
-    sprintf(out, "%02x", x[i]);
-    send_USART_bytes((unsigned char *)out, 2);
-  }
-  send_USART_str("");
+  for(i=0;i<xlen;i++)
+    sprintf(outs+2*i, "%02x", x[i]);
+  outs[2*xlen] = 0;
+  printf(outs);
+  printf("\n");
 }
 
 static uint32 seed[32] = { 3,1,4,1,5,9,2,6,5,3,5,8,9,7,9,3,2,3,8,4,6,2,6,4,3,3,8,3,2,7,9,5 } ;
@@ -53,6 +52,9 @@ static void surf(void)
 
 void randombytes(unsigned char *x,unsigned long long xlen)
 {
+  unsigned long long bak = xlen;
+  unsigned char *xbak = x;
+
   while (xlen > 0) {
     if (!outleft) {
       if (!++in[0]) if (!++in[1]) if (!++in[2]) ++in[3];
@@ -63,61 +65,46 @@ void randombytes(unsigned char *x,unsigned long long xlen)
     ++x;
     --xlen;
   }
+  printbytes(xbak, bak);
 }
+
 
 int main(void)
 {
-  unsigned char sk[CRYPTO_SECRETKEYBYTES];
+  unsigned char key_a[CRYPTO_BYTES], key_b[CRYPTO_BYTES];
   unsigned char pk[CRYPTO_PUBLICKEYBYTES];
+  unsigned char sendb[CRYPTO_CIPHERTEXTBYTES];
+  unsigned char sk_a[CRYPTO_SECRETKEYBYTES];
+  int i,j;
 
-  unsigned char mi[MAXMLEN];
-  unsigned char sm[MAXMLEN+CRYPTO_BYTES];
-  unsigned long long smlen;
-  unsigned long long mlen;
-
-  int r;
-  unsigned long long i,j;
-
-  clock_setup(CLOCK_FAST);
-  gpio_setup();
-  usart_setup(115200);
-  rng_enable();
-
-  send_USART_str("==========================");
-
-  for(i=0; i<MAXMLEN; i=(i==0)?i+1:i<<1)
+  for(i=0;i<NTESTS;i++)
   {
-    randombytes(mi,i);
-
-    crypto_sign_keypair(pk, sk);
+    // Key-pair generation
+    crypto_kem_keypair(pk, sk_a);
 
     printbytes(pk,CRYPTO_PUBLICKEYBYTES);
-    printbytes(sk,CRYPTO_SECRETKEYBYTES);
+    printbytes(sk_a,CRYPTO_SECRETKEYBYTES);
 
-    crypto_sign(sm, &smlen, mi, i, sk);
+    // Encapsulation
+    crypto_kem_enc(sendb, key_b, pk);
 
-    printbytes(sm, smlen);
+    printbytes(sendb,CRYPTO_CIPHERTEXTBYTES);
+    printbytes(key_b,CRYPTO_BYTES);
 
-    // By relying on m == sm we prevent having to allocate CRYPTO_BYTES twice
-    r = crypto_sign_open(sm, &mlen, sm, smlen, pk);
+    // Decapsulation
+    crypto_kem_dec(key_a, sendb, sk_a);
 
-    if(r)
+    printbytes(key_a,CRYPTO_BYTES);
+
+    for(j=0;j<CRYPTO_BYTES;j++)
     {
-      send_USART_str("ERROR: signature verification failed");
-      send_USART_str("#");
-      return -1;
-    }
-    for(j=0;j<i;j++)
-    {
-      if(sm[j]!=mi[j])
+      if(key_a[j] != key_b[j])
       {
-        send_USART_str("ERROR: message recovery failed");
-        send_USART_str("#");
+        printf("ERROR\n");
+        printf("#\n");
         return -1;
       }
     }
   }
-
-  send_USART_str("#");
   return 0;
 }
