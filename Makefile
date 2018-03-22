@@ -190,7 +190,7 @@ obj/randombytes.o: common/randombytes.c
 	mkdir -p obj 
 	$(CC) $(CFLAGS) -o $@ -c $^
 
-obj/stm32f4_wrapper.o:  common/stm32f4_wrapper.c $(OPENCM3FILE)
+obj/stm32f4_wrapper.o:  common/stm32f4_wrapper.c
 	mkdir -p obj 
 	$(CC) $(CFLAGS) -o $@ -c $^
 

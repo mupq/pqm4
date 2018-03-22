@@ -19,7 +19,7 @@ static void printbytes(const unsigned char *x, unsigned long long xlen)
   unsigned long long i;
   for(i=0;i<xlen;i++) {
     sprintf(out, "%02x", x[i]);
-    send_USART_bytes(out, 2);
+    send_USART_bytes((unsigned char *)out, 2);
   }
   send_USART_str("");
 }
@@ -76,7 +76,7 @@ int main(void)
   unsigned long long mlen;
 
   int r;
-  unsigned long long i,j,k;
+  unsigned long long i,j;
 
   clock_setup(CLOCK_FAST);
   gpio_setup();
@@ -110,9 +110,9 @@ int main(void)
       send_USART_str("#");
       return -1;
     }
-    for(k=0;k<i;k++)
+    for(j=0;j<i;j++)
     {
-      if(sm[k]!=mi[k])
+      if(sm[j]!=mi[j])
       {
         send_USART_str("ERROR: message recovery failed\n");
         send_USART_str("#");

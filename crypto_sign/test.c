@@ -6,7 +6,7 @@
 #define NTESTS 15
 #define MLEN 32
 
-int test_sign(void)
+static int test_sign(void)
 {
     unsigned char pk[CRYPTO_PUBLICKEYBYTES];
     unsigned char sk[CRYPTO_SECRETKEYBYTES];
@@ -38,7 +38,7 @@ int test_sign(void)
     return 0;
 }
 
-void test_wrong_pk()
+static int test_wrong_pk(void)
 {
     unsigned char pk[CRYPTO_PUBLICKEYBYTES];
     unsigned char pk2[CRYPTO_PUBLICKEYBYTES];
@@ -64,11 +64,11 @@ void test_wrong_pk()
         send_USART_str("crypto_sign DONE.\n");
 
         // By relying on m == sm we prevent having to allocate CRYPTO_BYTES twice
-        if (crypto_sign_open(sm, &mlen, sm, smlen, pk2)) 
+        if (crypto_sign_open(sm, &mlen, sm, smlen, pk2))
         {
             send_USART_str("OK Signature did not verify correctly under wrong public key!\n");
-        } 
-        else 
+        }
+        else
         {
             send_USART_str("ERROR Signature did verify correctly under wrong public key!\n");
         }
@@ -76,7 +76,6 @@ void test_wrong_pk()
     }
 
     return 0;
-
 }
 
 int main(void)
