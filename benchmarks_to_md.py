@@ -27,8 +27,8 @@ def formatData(scheme, implementation, data, printStats):
         print("| {} | {} | {} |  {} | {} |".format(scheme, implementation, keygen, encsign, decverify))
             
 def processPrimitives(path, printStats):
-    for scheme in os.listdir(path):
-        for implementation in os.listdir(path+"/"+scheme):
+    for scheme in sorted(os.listdir(path)):
+        for implementation in sorted(os.listdir(path+"/"+scheme)):
             measurements = []
             for measurement in os.listdir(path+"/"+scheme+"/"+implementation):
                 with open(path+"/"+scheme+"/"+implementation+"/"+measurement, "r") as f:
