@@ -33,13 +33,57 @@ Currently **pqm4** contains implementations of the following post-quantum signat
 
 The schemes were selected according to the following criteria:
 * Restrict to [NIST round 1 candidates](https://csrc.nist.gov/Projects/Post-Quantum-Cryptography/Round-1-Submissions).
-* Restrict to schemes and implementations resulting from the [PQCRYPTO projects](https://pqcrypto.eu.org).
+* Restrict to schemes and implementations resulting from the [PQCRYPTO project](https://pqcrypto.eu.org).
 * Choose parameters targeting NIST security level 3 by default, but
   * choose parameters targeting a *higher* security level if there are no level-3 parameters, and
   * choose parameters targeting a *lower* security level if level-3 parameters exceed the development board's resources (in particular RAM).
 * Restrict to schemes that have at least implementation of one parameter set that does not exceed the development board's resources.
 
+For most of the schemes there are multiple implementations. 
+The naming scheme for these implementations is as follows:
+* `ref`: the reference implementation submitted to NIST,
+* `opt`: an optimized implementation in plain C (e.g., the optimized implementation submitted to NIST),
+* `m4`: an implementation with Cortex-M4 specific optimizations (typically in assembly).
+
 ## Setup/Installation
+The testing and benchmarking framework of **pqm4** targets the 
+[STM32F4 Discovery board](http://www.st.com/en/evaluation-tools/stm32f4discovery.html)
+featuring an ARM Cortex-M4 CPU, 1MB of Flash, and 192KB of RAM.
+Connecting the development to the host computer requires a 
+mini-USB cable and a USB-TTL converter together with a 2-pin dupont / jumper cable.
+
+### Installing the ARM toolchain
+The **pqm4** build system assumes that you have the [arm-none-eabi toolchain](https://launchpad.net/gcc-arm-embedded)
+toolchain installed.
+On most Linux systems, the correct toolchain gets installed when you install the `arm-none-eabi-gcc` (or `gcc-arm-none-eabi`) package.  
+On Linux Mint, be sure to explicitly install `libnewlib-arm-none-eabi` as well (to fix an error relating to `stdint.h`).
+
+### Installing stlink
+To flash binaries onto the development board, **pqm4** is using [stlink](https://github.com/texane/stlink). 
+Depending on your operating system, stlink may be available in your package manager -- if not, please
+refer to the stlink Github page for instructions on how to [compile it from source](https://github.com/texane/stlink/blob/master/doc/compiling.md) 
+(in that case, be careful to use libusb-1.0.0-dev, not libusb-0.1).
+
+### Installing pyserial
+The host-side Python code requires the [pyserial](https://github.com/pyserial/pyserial) module. 
+Your package repository might offer `python-serial` or `python-pyserial` directly 
+(as of writing, this is the case for Ubuntu, Debian and Arch). 
+Alternatively, this can be easily installed from PyPA by calling `pip install pyserial` 
+(or `pip3`, depending on your system). 
+If you do not have `pip` installed yet, you can typically find it as `python3-pip` using your package manager. 
+
+### Connecting the board to the host
+Connect the board to your host machine using the mini-USB port. 
+This provides it with power, and allows you to flash binaries onto the board. 
+It should show up in `lsusb` as `STMicroelectronics ST-LINK/V2`.
+
+If you are using a UART-USB connector that has a PL2303 chip on board (which appears to be the most common), 
+the driver should be loaded in your kernel by default. If it is not, it is typically called `pl2303`. 
+On macOS, you will still need to [install it](http://www.prolific.com.tw/US/ShowProduct.aspx?p_id=229&pcid=41) (and reboot). 
+When you plug in the device, it should show up as `Prolific Technology, Inc. PL2303 Serial Port` when you type `lsusb`.
+
+Using dupont / jumper cables, connect the `TX`/`TXD` pin of the USB connector to the `PA3` pin on the board, and connect `RX`/`RXD` to `PA2`. 
+Depending on your setup, you may also want to connect the `GND` pins.
 
 ## Running tests and benchmarks
 
@@ -86,9 +130,84 @@ The tables below list cycle counts and stack usage of the implementations curren
 | sphincs-shake256-128s | ref | 2,904 |  3,032 | 10,768 |
 
 ## Adding new schemes and implementations
+The **pqm4** build system is designed to make it very easy to add new schemes
+and implementations, if these implementations follow the NIST API. 
+In the following we consider the example of adding the reference implementation
+of [NewHope-512-CPA-KEM](https://newhopecrypto.org) to **pqm4**:
+1. Create a subdirectory for the new scheme under `crypto_kem/`; in the following we assume that this subdirectory is called `newhope512cpa`.
+1. Create a subdirectory `ref` under `crypto_kem/newhope512cpa/`.
+1. Copy all files of the reference implementation into this new subdirectory `crypto_kem/newhope512cpa/ref/`.
+1. In the subdirectory `crypto_kem/newhope512cpa/ref/` write a Makefile with default target `libpqm4.a`.
+   For our example, this Makefile could look as follows:
+   ```
+   CC = arm-none-eabi-gcc
+   CFLAGS = -Wall -Wextra -O3 -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16
+   AR     = arm-none-eabi-gcc-ar 
+
+   OBJECTS= cpapke.o kem.o ntt.o poly.o precomp.o reduce.o verify.o
+   HEADERS= api.h cpapke.h ntt.h params.h poly.h reduce.h verify.h 
+
+   libpqm4.a: $(OBJECTS)
+     $(AR) rcs $@ $(OBJECTS)
+
+   %.o: %.c $(HEADERS)
+     $(CC) -I$(INCPATH) $(CFLAGS) -c -o $@ $<
+   ```
+   Note that this setup easily allows each implementation of each scheme to be built with
+   different compiler flags. Also note the `-I$(INCPATH)` flag. The variable `$(INCPATH)`
+   is provided externally from the **pqm4** build system and provides access to header files
+   defining the `randombytes` function and FIPS202 (Keccak) functions (see below).
+1. If the implementation added is a pure C implementation that can also run on the host,
+   then add an additional target called `libpqhost.a`to the Makefile, for example as follows:
+   ```
+   CC_HOST = gcc
+   CC_CLFAGS = -Wall -Wextra -O3
+   AR_HOST = gcc-ar
+
+   OBJECTS_HOST = $(patsubst %.o,%_host.o,$(OBJECTS))
+
+   libpqhost.a: $(OBJECTS_HOST)
+	 $(AR_HOST) rcs $@ $(OBJECTS_HOST)
+
+   %_host.o: %.c $(HEADERS)
+	   $(CC_HOST) -I$(INCPATH) $(CFLAGS_HOST) -c -o $@ $<
+   ```
+1. For some schemes you may have a *reference* implementation that exceeds the resource limits
+   of the STM32F4 Discovery board. This reference implementation is still useful for **pqm4**,
+   because it can run on the host to generate test vectors for comparison. 
+   If the implementation you're adding is such a host-side only reference implementation, place
+   a file called `.m4ignore` in the subdirectory containing the implementation.
+   In that case the Makefile is not required to contain the `libpqm4` target.
+
+The procedure for adding a signature scheme is the same, except that it starts with creating a
+new subdirectory under `crypto_sign`.
+
+### Using optimized FIPS202 (Keccak, SHA3, SHAKE)
+   Many schemes submitted to NIST use SHA-3 or SHAKE for hashing. 
+   This is why **pqm4** comes with highly optimized Keccak code that is accessible
+   from all KEM and signature implementations. 
+   Functions from the FIPS202 standard are defined in `common/fips202.h` as follows:
+   ```
+   void shake128_absorb(uint64_t *state, const unsigned char *input, unsigned int inbytes);
+   void shake128_squeezeblocks(unsigned char *output, unsigned long long nblocks, uint64_t *s);
+   void shake128(unsigned char *output, unsigned long long outbytes, const unsigned char *input,  unsigned long long inlen);
+
+   void shake256_absorb(uint64_t *state, const unsigned char *input, unsigned int inbytes);
+   void shake256_squeezeblocks(unsigned char *output, unsigned long long nblocks, uint64_t *s);
+   void shake256(unsigned char *output, unsigned long long outbytes, const unsigned char *input,  unsigned long long inlen);
+
+   void sha3_256(unsigned char *output, const unsigned char *input,  unsigned long long inbytes);
+   void sha3_512(unsigned char *output, const unsigned char *input,  unsigned long long inbytes);
+   ```
+   Implementations that want to make use of these optimized routines simply include 
+   `fips202.h`. The API for `sha3_256` and `sha3_512` follows the 
+   [SUPERCOP hash API](http://bench.cr.yp.to/call-hash.html).
+   The API for `shake256` and `shake512` is very similar, except that it supports variable-length output.
+   The SHAKE functions are also accessible via the absorb-squeezeblocks functions, which offer incremental
+   output generation (but not incremental input handling).
 
 ## License
-Different parts of **pqm4** have different licenses, but large parts are in the public domain. Specifically,
+Different parts of **pqm4** have different licenses. Specifically,
 * all files under `common/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
 * all files under `hostside/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
 * all files under `crypto_kem/kyber768/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
@@ -97,6 +216,9 @@ Different parts of **pqm4** have different licenses, but large parts are in the 
 * all files under `crypto_sign/dilithium` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
 * all files under `crypto_sign/sphincs-shake256-128s` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
 * the files `speed.c`, `stack.c`, `test.c`, `testvectors.c`, `testvectors-host.c` in `crypto_kem` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
-* the files `speed.c`, `stack.c`, `test.c`, `testvectors.c`, and `testvectors-host.c` in `crypto_sign` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/) and
+* the files `speed.c`, `stack.c`, `test.c`, `testvectors.c`, and `testvectors-host.c` in `crypto_sign` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/)
 * the files `benchmarks.py`, `benchmarks_to_md.py`, `Makefile`, `README.md`, `test.py`, `testvectors.py`, and `utils.py` 
-  are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/).
+  are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/); and
+* the files under `crypto_kem/sikep751` are under [MIT License](https://raw.githubusercontent.com/Microsoft/PQCrypto-SIKE/master/LICENSE).
+* the files under `crypto_kem/frodo640-cshake` are under [MIT License](https://raw.githubusercontent.com/Microsoft/PQCrypto-LWEKE/master/LICENSE).
+
