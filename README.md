@@ -85,6 +85,15 @@ When you plug in the device, it should show up as `Prolific Technology, Inc. PL2
 Using dupont / jumper cables, connect the `TX`/`TXD` pin of the USB connector to the `PA3` pin on the board, and connect `RX`/`RXD` to `PA2`. 
 Depending on your setup, you may also want to connect the `GND` pins.
 
+### Downloading pqm4 and libopencm3
+Finally, obtain the **pqm4** library and the submodule libopencm3:
+```
+git clone https://github.com/mupq/pqm4.git
+cd pqm4
+git submodule init
+git submodule update
+```
+
 ## Running tests and benchmarks
 
 ## API documentation
@@ -131,12 +140,13 @@ The tables below list cycle counts and stack usage of the implementations curren
 
 ## Adding new schemes and implementations
 The **pqm4** build system is designed to make it very easy to add new schemes
-and implementations, if these implementations follow the NIST API. 
+and implementations, if these implementations follow the NIST/SUPERCOP API. 
 In the following we consider the example of adding the reference implementation
 of [NewHope-512-CPA-KEM](https://newhopecrypto.org) to **pqm4**:
 1. Create a subdirectory for the new scheme under `crypto_kem/`; in the following we assume that this subdirectory is called `newhope512cpa`.
 1. Create a subdirectory `ref` under `crypto_kem/newhope512cpa/`.
-1. Copy all files of the reference implementation into this new subdirectory `crypto_kem/newhope512cpa/ref/`.
+1. Copy all files of the reference implementation into this new subdirectory `crypto_kem/newhope512cpa/ref/`,
+   except the file implementing the `randombytes` function (typically `PQCgenKAT_kem.c`).
 1. In the subdirectory `crypto_kem/newhope512cpa/ref/` write a Makefile with default target `libpqm4.a`.
    For our example, this Makefile could look as follows:
    ```
@@ -175,7 +185,7 @@ of [NewHope-512-CPA-KEM](https://newhopecrypto.org) to **pqm4**:
 1. For some schemes you may have a *reference* implementation that exceeds the resource limits
    of the STM32F4 Discovery board. This reference implementation is still useful for **pqm4**,
    because it can run on the host to generate test vectors for comparison. 
-   If the implementation you're adding is such a host-side only reference implementation, place
+   If the implementation you're adding is such a host-side-only reference implementation, place
    a file called `.m4ignore` in the subdirectory containing the implementation.
    In that case the Makefile is not required to contain the `libpqm4` target.
 
@@ -221,4 +231,5 @@ Different parts of **pqm4** have different licenses. Specifically,
   are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/); and
 * the files under `crypto_kem/sikep751` are under [MIT License](https://raw.githubusercontent.com/Microsoft/PQCrypto-SIKE/master/LICENSE).
 * the files under `crypto_kem/frodo640-cshake` are under [MIT License](https://raw.githubusercontent.com/Microsoft/PQCrypto-LWEKE/master/LICENSE).
+* the files under the submodule directory `libopencm3` are under [LGPL3](https://raw.githubusercontent.com/libopencm3/libopencm3/master/COPYING.LGPL3)
 
