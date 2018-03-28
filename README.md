@@ -2,8 +2,42 @@
 Post-quantum crypto library for the ARM Cortex-M4
 
 ## Introduction
+The **pqm4** library, benchmarking and testing framework is a result of the [PQCRYPTO](https://pqcrypto.eu.org)
+project funded by the European Commission in the H2020 program. 
+It currently contains implementations of 7 post-quantum key-encapsulation mechanisms
+and 2 post-quantum signature schemes targeting the ARM Cortex-M4 family of microcontrollers.
+The design goals of the library are to offer
+* a simple build system that generates an individual static library 
+  for each implementation of each scheme, which can simply be linked into
+  any software project;
+* automated functional testing on a widely available development board;
+* automated generation of test vectors and comparison against output
+  of a reference implementation running host-side (i.e., on the computer the
+  development board is connected to);
+* automated benchmarking for speed and stack usage; and
+* easy integration of new schemes and implementations into the framework.
 
 ## Schemes included in pqm4
+Currently **pqm4** contains implementations of the following post-quantum KEMs:
+* [FrodoKEM-640-cSHAKE](https://frodokem.org/)
+* [KINDI-256-3-4-2](http://kindi-kem.de/)
+* [Kyber-768](https://pq-crystals.org/kyber/)
+* [NewHope-1024-CCA-KEM](https://newhopecrypto.org)
+* [NTRU-HRSS-KEM-701](https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/submissions/NTRU_HRSS_KEM.zip)
+* [Saber](https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/submissions/SABER.zip)
+* [SIKE-p571](https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/submissions/SIKE.zip)
+
+Currently **pqm4** contains implementations of the following post-quantum signature schemes:
+* [Dilithium-III](https://pq-crystals.org/dilithium/)
+* [SPHINCS+-SHAKE256-128s](https://sphincs.org)
+
+The schemes were selected according to the following criteria:
+* Restrict to [NIST round 1 candidates](https://csrc.nist.gov/Projects/Post-Quantum-Cryptography/Round-1-Submissions).
+* Restrict to schemes and implementations resulting from the [PQCRYPTO projects](https://pqcrypto.eu.org).
+* Choose parameters targeting NIST security level 3 by default, but
+  * choose parameters targeting a *higher* security level if there are no level-3 parameters, and
+  * choose parameters targeting a *lower* security level if level-3 parameters exceed the development board's resources (in particular RAM).
+* Restrict to schemes that have at least implementation of one parameter set that does not exceed the development board's resources.
 
 ## Setup/Installation
 
@@ -12,6 +46,7 @@ Post-quantum crypto library for the ARM Cortex-M4
 ## API documentation
 
 ## Benchmarks
+The tables below list cycle counts and stack usage of the implementations currently included in **pqm4**.
 
 ### Speed Evaluation
 #### Key Encapsulation Schemes
@@ -53,3 +88,15 @@ Post-quantum crypto library for the ARM Cortex-M4
 ## Adding new schemes and implementations
 
 ## License
+Different parts of **pqm4** have different licenses, but large parts are in the public domain. Specifically,
+* all files under `common/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
+* all files under `hostside/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
+* all files under `crypto_kem/kyber768/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
+* all files under `crypto_kem/newhope1024cca/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
+* all files under `crypto_kem/ntruhrss701/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
+* all files under `crypto_sign/dilithium` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
+* all files under `crypto_sign/sphincs-shake256-128s` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
+* the files `speed.c`, `stack.c`, `test.c`, `testvectors.c`, `testvectors-host.c` in `crypto_kem` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
+* the files `speed.c`, `stack.c`, `test.c`, `testvectors.c`, and `testvectors-host.c` in `crypto_sign` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/) and
+* the files `benchmarks.py`, `benchmarks_to_md.py`, `Makefile`, `README.md`, `test.py`, `testvectors.py`, and `utils.py` 
+  are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/).
