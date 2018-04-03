@@ -78,48 +78,6 @@ static void keccak_squeezeblocks(unsigned char *h, unsigned long long int nblock
   }
 }
 
-
-/*************************************************
-* Name:        keccak_absorb_inc
-*
-* Description: Absorb step of Keccak;
-*              incremental, state needs to be initialized.
-*
-* Arguments:   - uint64_t *s:             pointer to  output Keccak state
-*              - unsigned int r:          rate in bytes (e.g., 168 for SHAKE128)
-*              - const unsigned char *m:  pointer to input to be absorbed into s
-*              - unsigned long long mlen: length of input in bytes
-*              - unsigned char p:         domain-separation byte for different Keccak-derived functions
-**************************************************/
-static void keccak_absorb_inc(uint64_t *s,
-                          unsigned int r,
-                          const unsigned char *m, unsigned long long int mlen,
-                          unsigned char p)
-{ 
-  unsigned long long i;
-  unsigned char t[200];
-
-  
-  while (mlen >= r)
-  { 
-    KeccakF1600_StateXORBytes(s, m, 0, r);
-    KeccakF1600_StatePermute(s);
-    mlen -= r;
-    m += r;
-  }
-  
-  for (i = 0; i < r; ++i)
-    t[i] = 0; 
-  for (i = 0; i < mlen; ++i)
-    t[i] = m[i];
-  t[i] = p;
-  t[r - 1] |= 128;
-  
-  KeccakF1600_StateXORBytes(s, t, 0, r);
-}
-
-
-
 /********** cSHAKE128 ***********/
 
 void cshake128_simple_absorb(uint64_t s[25], uint16_t cstm, const unsigned char *in, unsigned long long inlen)
@@ -144,7 +102,7 @@ void cshake128_simple_absorb(uint64_t s[25], uint16_t cstm, const unsigned char 
   KeccakF1600_StatePermute(s);
 
   /* Absorb input */
-  keccak_absorb_inc(s, SHAKE128_RATE, in, inlen, 0x04);
+  keccak_absorb(s, SHAKE128_RATE, in, inlen, 0x04);
 }
 
 
@@ -156,7 +114,7 @@ void cshake128_simple_squeezeblocks(unsigned char *output, unsigned long long nb
 
 void cshake128_simple(unsigned char *output, unsigned long long outlen, uint16_t cstm, const unsigned char *in, unsigned long long inlen)
 {
-  uint64_t s[25]={0};
+  uint64_t s[25];
   unsigned char t[SHAKE128_RATE];
   unsigned int i;
 
@@ -213,7 +171,7 @@ void shake128_squeezeblocks(unsigned char *output, unsigned long long nblocks, u
 
 void shake128(unsigned char *output, unsigned long long outlen, const unsigned char *input,  unsigned long long inlen)
 {
-  uint64_t s[25];
+  uint64_t s[25] = {0};
   unsigned char t[SHAKE128_RATE];
   unsigned long long nblocks = outlen/SHAKE128_RATE;
   size_t i;
@@ -360,7 +318,7 @@ void cshake256_simple_absorb(uint64_t s[25], uint16_t cstm, const unsigned char 
   KeccakF1600_StatePermute(s);
 
   /* Absorb input */
-  keccak_absorb_inc(s, SHAKE256_RATE, in, inlen, 0x04);
+  keccak_absorb(s, SHAKE256_RATE, in, inlen, 0x04);
 }
 
 
