@@ -101,7 +101,6 @@ int main(void)
       if(key_a[j] != key_b[j])
       {
         printf("ERROR\n");
-        printf("#\n");
         return -1;
       }
     }
