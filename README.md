@@ -95,6 +95,25 @@ git submodule update
 ```
 
 ## API documentation
+The **pqm4** library uses the [NIST API](https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/example-files/api-notes.pdf). It is mandated for all included schemes.
+
+KEMs need to define `CRYPTO_SECRETKEYBYTES`, `CRYPTO_PUBLICKEYBYTES`, `CRYPTO_BYTES`, and `CRYPTO_CIPHERTEXTBYTES` and implement 
+```c
+int crypto_kem_keypair(unsigned char *pk, unsigned char *sk);
+int crypto_kem_enc(unsigned char *ct, unsigned char *ss, const unsigned char *pk);
+int crypto_kem_dec(unsigned char *ss, const unsigned char *ct, const unsigned char *sk);
+```
+
+Signature schemes need to define `CRYPTO_SECRETKEYBYTES`, `CRYPTO_PUBLICKEYBYTES`, and `CRYPTO_BYTES` and implement
+```c
+int crypto_sign_keypair(unsigned char *pk, unsigned char *sk);
+int crypto_sign(unsigned char *sm, unsigned long long *smlen, 
+		const unsigned char *msg, unsigned long long len, 
+                const unsigned char *sk);
+int crypto_sign_open(unsigned char *m, unsigned long long *mlen,
+                     const unsigned char *sm, unsigned long long smlen,
+                     const unsigned char *pk);
+```
 
 ## Running tests and benchmarks
 Executing `make` compiles five binaries for each implemenation which can be used to test and benchmark the schemes. For example, for the reference implementation of  [NewHope-1024-CCA-KEM](https://newhopecrypto.org) the following binaries are assembled: 
@@ -102,13 +121,13 @@ Executing `make` compiles five binaries for each implemenation which can be used
  - `bin/crypto_kem_newhope1024cca_ref_speed.bin` measures the runtime of `crypto_kem_keypair`, `crypto_kem_enc`, and `crypto_kem_dec` for KEMs and `crypto_sign_keypair`, `crypto_sign`, and `crypto_sign_open` for signatures. See [crypto_kem/speed.c](crypto_kem/speed.c) and [crypto_sign/speed.c](crypto_sign/speed.c).   
  - `bin/crypto_kem_newhope1024cca_ref_stack.bin` measures the stack consumption of each of the procedures involved. The memory allocated outside of the procedures (e.g., public keys, private keys, ciphertexts, signatures) is not included. See [crypto_kem/stack.c](crypto_kem/stack.c) and [crypto_sign/stack.c](crypto_sign/stack.c).    
  - `bin/crypto_kem_newhope1024cca_ref_testvectors.bin` uses a deterministic random number generator to generate testvectors for the implementation. These can be used to cross-check different implemenatations of the same scheme. See [crypto_kem/testvectors.c](crypto_kem/testvectors.c) and [crypto_sign/testvectors.c](crypto_sign/testvectors.c).   
-- `bin-host/crypto_kem_newhope1024cca_ref_testvectors` uses the same deterministic random number generator to crate the testvectors on your host. See [crypto_kem/testvectors-host.c](crypto_kem/testvectors-host.c) and [crypto_sign/testvectors-host.c](crypto_sign/testvectors-host.c). 
+- `bin-host/crypto_kem_newhope1024cca_ref_testvectors` uses the same deterministic random number generator to create the testvectors on your host. See [crypto_kem/testvectors-host.c](crypto_kem/testvectors-host.c) and [crypto_sign/testvectors-host.c](crypto_sign/testvectors-host.c). 
 
 The binaries can be flashed to your board using `st-flash`, e.g., `st-flash write bin/crypto_kem_newhope1024cca_ref_test.bin 0x8000000`. To receive the output, run `python3 hostside/host_unidirectional.py`. 
 
 The **pqm4** framework automates testing and benchmarking for all schemes using Python3 scripts: 
 - `python3 test.py`: flashes all test binaries to the boards and checks that no errors occur. 
-- `python3 testvectors.py`: flashes all testvector binaries to the boards and writes the testvectors to `testvectors/`. Additionally, it executes the reference implementations on your host machine. Afterwards it checks the testvectors of different implementations of the same scheme for consistency. 
+- `python3 testvectors.py`: flashes all testvector binaries to the boards and writes the testvectors to `testvectors/`. Additionally, it executes the reference implementations on your host machine. Afterwards, it checks the testvectors of different implementations of the same scheme for consistency. 
 - `python3 benchmarks.py`: flashes the stack and speed binaries and writes the results to `benchmarks/stack/` and `benchmarks/speed/`. You may want to execute this several times for certain schemes for which the execution time varies significantly. 
 
 In case you don't want to include all schemes, pass a list of schemes you want to include to any of the scripts, e.g., `python3 test.py newhope1024cca sphincs-shake256-128s`. 
