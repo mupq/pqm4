@@ -186,7 +186,7 @@ of [NewHope-512-CPA-KEM](https://newhopecrypto.org) to **pqm4**:
    except the file implementing the `randombytes` function (typically `PQCgenKAT_kem.c`).
 1. In the subdirectory `crypto_kem/newhope512cpa/ref/` write a Makefile with default target `libpqm4.a`.
    For our example, this Makefile could look as follows:
-   ```
+   ```Makefile
    CC = arm-none-eabi-gcc
    CFLAGS = -Wall -Wextra -O3 -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16
    AR     = arm-none-eabi-gcc-ar 
@@ -206,7 +206,7 @@ of [NewHope-512-CPA-KEM](https://newhopecrypto.org) to **pqm4**:
    defining the `randombytes` function and FIPS202 (Keccak) functions (see below).
 1. If the implementation added is a pure C implementation that can also run on the host,
    then add an additional target called `libpqhost.a`to the Makefile, for example as follows:
-   ```
+   ```Makefile
    CC_HOST = gcc
    CC_CLFAGS = -Wall -Wextra -O3
    AR_HOST = gcc-ar
@@ -234,7 +234,7 @@ new subdirectory under `crypto_sign`.
    This is why **pqm4** comes with highly optimized Keccak code that is accessible
    from all KEM and signature implementations. 
    Functions from the FIPS202 standard are defined in `common/fips202.h` as follows:
-   ```
+   ```c
    void shake128_absorb(uint64_t *state, const unsigned char *input, unsigned int inbytes);
    void shake128_squeezeblocks(unsigned char *output, unsigned long long nblocks, uint64_t *s);
    void shake128(unsigned char *output, unsigned long long outbytes, const unsigned char *input,  unsigned long long inlen);
