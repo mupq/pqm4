@@ -3,7 +3,7 @@ CFLAGS = -Wall -Wextra -O3 -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-s
 AR     = arm-none-eabi-gcc-ar
 
 CC_HOST = gcc
-CC_CLFAGS = -Wall -Wextra -O3
+CFLAGS_HOST = -Wall -Wextra -O3
 AR_HOST = gcc-ar
 
 OBJECTS = sign.o polyvec.o packing.o poly.o reduce.o ntt.o rounding.o

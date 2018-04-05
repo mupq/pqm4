@@ -208,7 +208,7 @@ of [NewHope-512-CPA-KEM](https://newhopecrypto.org) to **pqm4**:
    then add an additional target called `libpqhost.a`to the Makefile, for example as follows:
    ```Makefile
    CC_HOST = gcc
-   CC_CLFAGS = -Wall -Wextra -O3
+   CFLAGS_HOST = -Wall -Wextra -O3
    AR_HOST = gcc-ar
 
    OBJECTS_HOST = $(patsubst %.o,%_host.o,$(OBJECTS))
