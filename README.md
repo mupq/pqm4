@@ -156,7 +156,7 @@ The tables below list cycle counts and stack usage of the implementations curren
 | ------ | -------------- | ----------------------- | ------------- | ----------------|
 | dilithium (100 executions) | ref | AVG: 2,888,788 <br /> MIN: 2,887,878 <br /> MAX: 2,889,666 |  AVG: 17,318,678 <br /> MIN: 5,395,144 <br /> MAX: 58,367,745 | AVG: 3,225,821 <br /> MIN: 3,225,481 <br /> MAX: 3,226,288 |
 | sphincs-shake256-128s (1 executions) | ref | AVG: 4,433,268,654 <br /> MIN: 4,433,268,654 <br /> MAX: 4,433,268,654 |  AVG: 61,562,227,280 <br /> MIN: 61,562,227,280 <br /> MAX: 61,562,227,280 | AVG: 70,943,476 <br /> MIN: 70,943,476 <br /> MAX: 70,943,476 |
-### Memory Evaluation
+### Stack Usage
 #### Key Encapsulation Schemes
 | scheme | implementation | key generation [bytes] | encapsulation [bytes] | decapsulation [bytes] |
 | ------ | -------------- | ----------------------- | ---------------------- | -----------------------|
@@ -180,45 +180,45 @@ The **pqm4** build system is designed to make it very easy to add new schemes
 and implementations, if these implementations follow the NIST/SUPERCOP API. 
 In the following we consider the example of adding the reference implementation
 of [NewHope-512-CPA-KEM](https://newhopecrypto.org) to **pqm4**:
+
 1. Create a subdirectory for the new scheme under `crypto_kem/`; in the following we assume that this subdirectory is called `newhope512cpa`.
 1. Create a subdirectory `ref` under `crypto_kem/newhope512cpa/`.
 1. Copy all files of the reference implementation into this new subdirectory `crypto_kem/newhope512cpa/ref/`,
    except the file implementing the `randombytes` function (typically `PQCgenKAT_kem.c`).
 1. In the subdirectory `crypto_kem/newhope512cpa/ref/` write a Makefile with default target `libpqm4.a`.
    For our example, this Makefile could look as follows:
-   ```Makefile
-   CC = arm-none-eabi-gcc
-   CFLAGS = -Wall -Wextra -O3 -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16
-   AR     = arm-none-eabi-gcc-ar 
+```Makefile
+CC = arm-none-eabi-gcc
+CFLAGS = -Wall -Wextra -O3 -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16
+AR     = arm-none-eabi-gcc-ar 
 
-   OBJECTS= cpapke.o kem.o ntt.o poly.o precomp.o reduce.o verify.o
-   HEADERS= api.h cpapke.h ntt.h params.h poly.h reduce.h verify.h 
+OBJECTS= cpapke.o kem.o ntt.o poly.o precomp.o reduce.o verify.o
+HEADERS= api.h cpapke.h ntt.h params.h poly.h reduce.h verify.h 
 
-   libpqm4.a: $(OBJECTS)
-     $(AR) rcs $@ $(OBJECTS)
+libpqm4.a: $(OBJECTS)
+  $(AR) rcs $@ $(OBJECTS)
 
-   %.o: %.c $(HEADERS)
-     $(CC) -I$(INCPATH) $(CFLAGS) -c -o $@ $<
-   ```
+%.o: %.c $(HEADERS)
+  $(CC) -I$(INCPATH) $(CFLAGS) -c -o $@ $<
+```
    Note that this setup easily allows each implementation of each scheme to be built with
    different compiler flags. Also note the `-I$(INCPATH)` flag. The variable `$(INCPATH)`
    is provided externally from the **pqm4** build system and provides access to header files
    defining the `randombytes` function and FIPS202 (Keccak) functions (see below).
 1. If the implementation added is a pure C implementation that can also run on the host,
    then add an additional target called `libpqhost.a`to the Makefile, for example as follows:
-   ```Makefile
-   CC_HOST = gcc
-   CFLAGS_HOST = -Wall -Wextra -O3
-   AR_HOST = gcc-ar
+```Makefile
+CC_HOST = gcc
+CFLAGS_HOST = -Wall -Wextra -O3
+AR_HOST = gcc-ar
+OBJECTS_HOST = $(patsubst %.o,%_host.o,$(OBJECTS))
 
-   OBJECTS_HOST = $(patsubst %.o,%_host.o,$(OBJECTS))
+libpqhost.a: $(OBJECTS_HOST)
+  $(AR_HOST) rcs $@ $(OBJECTS_HOST)
 
-   libpqhost.a: $(OBJECTS_HOST)
-	 $(AR_HOST) rcs $@ $(OBJECTS_HOST)
-
-   %_host.o: %.c $(HEADERS)
-	   $(CC_HOST) -I$(INCPATH) $(CFLAGS_HOST) -c -o $@ $<
-   ```
+%_host.o: %.c $(HEADERS)
+  $(CC_HOST) -I$(INCPATH) $(CFLAGS_HOST) -c -o $@ $<
+```
 1. For some schemes you may have a *reference* implementation that exceeds the resource limits
    of the STM32F4 Discovery board. This reference implementation is still useful for **pqm4**,
    because it can run on the host to generate test vectors for comparison. 
