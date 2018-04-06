@@ -230,27 +230,35 @@ The procedure for adding a signature scheme is the same, except that it starts w
 new subdirectory under `crypto_sign`.
 
 ### Using optimized FIPS202 (Keccak, SHA3, SHAKE)
-   Many schemes submitted to NIST use SHA-3 or SHAKE for hashing. 
+   Many schemes submitted to NIST use SHA-3, SHAKE or cSHAKE for hashing. 
    This is why **pqm4** comes with highly optimized Keccak code that is accessible
    from all KEM and signature implementations. 
-   Functions from the FIPS202 standard are defined in `common/fips202.h` as follows:
+   Functions from the FIPS202 standard (and related publication SP 800-185) are defined in `common/fips202.h` as follows:
    ```c
-   void shake128_absorb(uint64_t *state, const unsigned char *input, unsigned int inbytes);
-   void shake128_squeezeblocks(unsigned char *output, unsigned long long nblocks, uint64_t *s);
-   void shake128(unsigned char *output, unsigned long long outbytes, const unsigned char *input,  unsigned long long inlen);
+  void shake128_absorb(uint64_t *state, const unsigned char *input, unsigned int inlen);
+  void shake128_squeezeblocks(unsigned char *output, unsigned long long nblocks, uint64_t *state);
+  void shake128(unsigned char *output, unsigned long long outlen, const unsigned char *input,  unsigned long long inlen);
 
-   void shake256_absorb(uint64_t *state, const unsigned char *input, unsigned int inbytes);
-   void shake256_squeezeblocks(unsigned char *output, unsigned long long nblocks, uint64_t *s);
-   void shake256(unsigned char *output, unsigned long long outbytes, const unsigned char *input,  unsigned long long inlen);
+  void cshake128_simple_absorb(uint64_t *state, uint16_t cstm, const unsigned char *in, unsigned long long inlen);
+  void cshake128_simple_squeezeblocks(unsigned char *output, unsigned long long nblocks, uint64_t *state);
+  void cshake128_simple(unsigned char *output, unsigned long long outlen, uint16_t cstm, const unsigned char *in, unsigned long long inlen);
 
-   void sha3_256(unsigned char *output, const unsigned char *input,  unsigned long long inbytes);
-   void sha3_512(unsigned char *output, const unsigned char *input,  unsigned long long inbytes);
+  void shake256_absorb(uint64_t *state, const unsigned char *input, unsigned int inlen);
+  void shake256_squeezeblocks(unsigned char *output, unsigned long long nblocks, uint64_t *state);
+  void shake256(unsigned char *output, unsigned long long outlen, const unsigned char *input,  unsigned long long inlen);
+
+  void cshake256_simple_absorb(uint64_t *state, uint16_t cstm, const unsigned char *in, unsigned long long inlen);
+  void cshake256_simple_squeezeblocks(unsigned char *output, unsigned long long nblocks, uint64_t *state);
+  void cshake256_simple(unsigned char *output, unsigned long long outlen, uint16_t cstm, const unsigned char *in, unsigned long long inlen);
+
+  void sha3_256(unsigned char *output, const unsigned char *input,  unsigned long long inlen);
+  void sha3_512(unsigned char *output, const unsigned char *input,  unsigned long long inlen);
    ```
    Implementations that want to make use of these optimized routines simply include 
    `fips202.h`. The API for `sha3_256` and `sha3_512` follows the 
    [SUPERCOP hash API](http://bench.cr.yp.to/call-hash.html).
    The API for `shake256` and `shake512` is very similar, except that it supports variable-length output.
-   The SHAKE functions are also accessible via the absorb-squeezeblocks functions, which offer incremental
+   The SHAKE and cSHAKE functions are also accessible via the absorb-squeezeblocks functions, which offer incremental
    output generation (but not incremental input handling).
 
 ## License

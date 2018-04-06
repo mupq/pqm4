@@ -34,10 +34,6 @@ static void keccak_absorb(uint64_t *s,
   unsigned long long i;
   unsigned char t[200];
 
-  // Zero state
-  for (i = 0; i < 25; ++i)
-    s[i] = 0;
-
   while (mlen >= r)
   {
     KeccakF1600_StateXORBytes(s, m, 0, r);
@@ -86,7 +82,7 @@ static void keccak_squeezeblocks(unsigned char *h, unsigned long long int nblock
 
 void cshake128_simple_absorb(uint64_t s[25], uint16_t cstm, const unsigned char *in, unsigned long long inlen)
 {
-  unsigned char *sep = (unsigned char*)s;
+  unsigned char sep[8];
   unsigned int i;
 
   for (i = 0; i < 25; i++)
@@ -102,6 +98,7 @@ void cshake128_simple_absorb(uint64_t s[25], uint16_t cstm, const unsigned char 
   sep[6] = cstm & 0xff;
   sep[7] = cstm >> 8;
 
+  KeccakF1600_StateXORBytes(s, sep, 0, 8);
   KeccakF1600_StatePermute(s);
 
   /* Absorb input */
@@ -149,6 +146,10 @@ void cshake128_simple(unsigned char *output, unsigned long long outlen, uint16_t
 **************************************************/
 void shake128_absorb(uint64_t *s, const unsigned char *input, unsigned int inputByteLen)
 {
+  int i;
+  for (i = 0; i < 25; i++)
+    s[i] = 0;
+
   keccak_absorb(s, SHAKE128_RATE, input, inputByteLen, 0x1F);
 }
 
@@ -195,6 +196,10 @@ void shake128(unsigned char *output, unsigned long long outlen, const unsigned c
 
 void shake256_absorb(uint64_t *s, const unsigned char *input, unsigned int inputByteLen)
 {
+  int i;
+  for (i = 0; i < 25; i++)
+    s[i] = 0;
+
 	keccak_absorb(s, SHAKE256_RATE, input, inputByteLen, 0x1F);
 }
 
@@ -217,7 +222,7 @@ void shake256_squeezeblocks(unsigned char *output, unsigned long long nblocks, u
 void shake256(unsigned char *output, unsigned long long outlen,
               const unsigned char *input,  unsigned long long inlen)
 {
-  uint64_t s[25];
+  uint64_t s[25] = {0};
   unsigned char t[SHAKE256_RATE];
   unsigned long long nblocks = outlen/SHAKE256_RATE;
   size_t i;
@@ -250,7 +255,7 @@ void shake256(unsigned char *output, unsigned long long outlen,
 **************************************************/
 void sha3_256(unsigned char *output, const unsigned char *input,  unsigned long long inlen)
 {
-  uint64_t s[25];
+  uint64_t s[25] = {0};
   unsigned char t[SHA3_256_RATE];
   size_t i;
 
@@ -275,7 +280,7 @@ void sha3_256(unsigned char *output, const unsigned char *input,  unsigned long 
 **************************************************/
 void sha3_512(unsigned char *output, const unsigned char *input,  unsigned long long inlen)
 {
-  uint64_t s[25];
+  uint64_t s[25] = {0};
   unsigned char t[SHA3_512_RATE];
   size_t i;
 
@@ -293,7 +298,7 @@ void sha3_512(unsigned char *output, const unsigned char *input,  unsigned long 
 
 void cshake256_simple_absorb(uint64_t s[25], uint16_t cstm, const unsigned char *in, unsigned long long inlen)
 {
-  unsigned char *sep = (unsigned char*)s;
+  unsigned char sep[8];
   unsigned int i;
 
   for (i = 0; i < 25; i++)
@@ -309,6 +314,7 @@ void cshake256_simple_absorb(uint64_t s[25], uint16_t cstm, const unsigned char 
   sep[6] = cstm & 0xff;
   sep[7] = cstm >> 8;
 
+  KeccakF1600_StateXORBytes(s, sep, 0, 8);
   KeccakF1600_StatePermute(s);
 
   /* Absorb input */
