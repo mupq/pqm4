@@ -26,6 +26,7 @@ Currently **pqm4** contains implementations of the following post-quantum KEMs:
 * [NTRU-HRSS-KEM-701](https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/submissions/NTRU_HRSS_KEM.zip)
 * [Saber](https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/submissions/SABER.zip)
 * [SIKE-p571](https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/submissions/SIKE.zip)
+* [Streamlined NTRU Prime 4591761](https://ntruprime.cr.yp.to/)
 
 Currently **pqm4** contains implementations of the following post-quantum signature schemes:
 * [Dilithium-III](https://pq-crystals.org/dilithium/)
@@ -151,6 +152,7 @@ The tables below list cycle counts and stack usage of the implementations curren
 | ntruhrss701 (10 executions) | ref | AVG: 197,262,297 <br /> MIN: 197,261,894 <br /> MAX: 197,262,845 |  AVG: 5,166,153 <br /> MIN: 5,166,153 <br /> MAX: 5,166,155 | AVG: 15,069,480 <br /> MIN: 15,069,478 <br /> MAX: 15,069,485 |
 | saber (10 executions) | ref | AVG: 7,122,695 <br /> MIN: 7,122,695 <br /> MAX: 7,122,695 |  AVG: 9,470,634 <br /> MIN: 9,470,634 <br /> MAX: 9,470,634 | AVG: 12,303,775 <br /> MIN: 12,303,775 <br /> MAX: 12,303,775 |
 | sikep751 (1 executions) | ref | AVG: 3,508,587,555 <br /> MIN: 3,508,587,555 <br /> MAX: 3,508,587,555 |  AVG: 5,685,591,898 <br /> MIN: 5,685,591,898 <br /> MAX: 5,685,591,898 | AVG: 6,109,763,845 <br /> MIN: 6,109,763,845 <br /> MAX: 6,109,763,845 |
+| sntrup4591761 (10 executions) | ref | AVG: 147,543,618 <br /> MIN: 147,543,618 <br /> MAX: 147,543,618 |  AVG: 10,631,675 <br /> MIN: 10,631,675 <br /> MAX: 10,631,675 | AVG: 30,641,200 <br /> MIN: 30,641,200 <br /> MAX: 30,641,200 |
 #### Signature Schemes
 | scheme | implementation | key generation [cycles] | sign [cycles] | verify [cycles] |
 | ------ | -------------- | ----------------------- | ------------- | ----------------|
@@ -169,6 +171,7 @@ The tables below list cycle counts and stack usage of the implementations curren
 | ntruhrss701 | ref | 10,024 |  8,996 | 10,244 |
 | saber | ref | 12,616 |  14,888 | 15,984 |
 | sikep751 | ref | 11,128 |  11,672 | 12,224 |
+| sntrup4591761 | ref | 14,648 |  10,824 | 16,176 |
 #### Signature Schemes
 | scheme | implementation | key generation [bytes] | sign [bytes] | verify [bytes] |
 | ------ | -------------- | ----------------------- | ------------- | ----------------|
@@ -277,4 +280,4 @@ Different parts of **pqm4** have different licenses. Specifically,
 * the files under `crypto_kem/sikep751` are under [MIT License](https://raw.githubusercontent.com/Microsoft/PQCrypto-SIKE/master/LICENSE).
 * the files under `crypto_kem/frodo640-cshake` are under [MIT License](https://raw.githubusercontent.com/Microsoft/PQCrypto-LWEKE/master/LICENSE).
 * the files under the submodule directory `libopencm3` are under [LGPL3](https://raw.githubusercontent.com/libopencm3/libopencm3/master/COPYING.LGPL3)
-
+* all files under `crypto_kem/sntrup4591761/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
