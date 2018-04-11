@@ -138,6 +138,7 @@ The benchmark results (in `benchmarks/`) created by
 
 ## Benchmarks
 The tables below list cycle counts and stack usage of the implementations currently included in **pqm4**.
+All cycle counts were obtained at 24MHz to avoid wait cycles due to the speed of the memory controller.
 
 ### Speed Evaluation
 #### Key Encapsulation Schemes
