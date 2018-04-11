@@ -4,7 +4,7 @@ Post-quantum crypto library for the ARM Cortex-M4
 ## Introduction
 The **pqm4** library, benchmarking and testing framework is a result of the [PQCRYPTO](https://pqcrypto.eu.org)
 project funded by the European Commission in the H2020 program. 
-It currently contains implementations of 7 post-quantum key-encapsulation mechanisms
+It currently contains implementations of 8 post-quantum key-encapsulation mechanisms
 and 2 post-quantum signature schemes targeting the ARM Cortex-M4 family of microcontrollers.
 The design goals of the library are to offer
 * a simple build system that generates an individual static library 
@@ -271,13 +271,13 @@ Different parts of **pqm4** have different licenses. Specifically,
 * all files under `crypto_kem/kyber768/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
 * all files under `crypto_kem/newhope1024cca/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
 * all files under `crypto_kem/ntruhrss701/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
-* all files under `crypto_sign/dilithium` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
-* all files under `crypto_sign/sphincs-shake256-128s` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
-* the files `speed.c`, `stack.c`, `test.c`, `testvectors.c`, `testvectors-host.c` in `crypto_kem` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
-* the files `speed.c`, `stack.c`, `test.c`, `testvectors.c`, and `testvectors-host.c` in `crypto_sign` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/)
+* all files under `crypto_sign/dilithium/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
+* all files under `crypto_sign/sphincs-shake256-128s/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
+* the files `speed.c`, `stack.c`, `test.c`, `testvectors.c`, `testvectors-host.c` in `crypto_kem/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
+* the files `speed.c`, `stack.c`, `test.c`, `testvectors.c`, and `testvectors-host.c` in `crypto_sign/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/)
 * the files `benchmarks.py`, `benchmarks_to_md.py`, `Makefile`, `README.md`, `test.py`, `testvectors.py`, and `utils.py` 
   are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/); and
-* the files under `crypto_kem/sikep751` are under [MIT License](https://raw.githubusercontent.com/Microsoft/PQCrypto-SIKE/master/LICENSE).
-* the files under `crypto_kem/frodo640-cshake` are under [MIT License](https://raw.githubusercontent.com/Microsoft/PQCrypto-LWEKE/master/LICENSE).
-* the files under the submodule directory `libopencm3` are under [LGPL3](https://raw.githubusercontent.com/libopencm3/libopencm3/master/COPYING.LGPL3)
+* the files under `crypto_kem/sikep751/` are under [MIT License](https://raw.githubusercontent.com/Microsoft/PQCrypto-SIKE/master/LICENSE).
+* the files under `crypto_kem/frodo640-cshake/` are under [MIT License](https://raw.githubusercontent.com/Microsoft/PQCrypto-LWEKE/master/LICENSE).
+* the files under the submodule directory `libopencm3/` are under [LGPL3](https://raw.githubusercontent.com/libopencm3/libopencm3/master/COPYING.LGPL3)
 * all files under `crypto_kem/sntrup4591761/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
