@@ -2,10 +2,10 @@
 Post-quantum crypto library for the ARM Cortex-M4
 
 ## Introduction
-The **pqm4** library, benchmarking and testing framework is a result of the [PQCRYPTO](https://pqcrypto.eu.org)
-project funded by the European Commission in the H2020 program. 
+The **pqm4** library, benchmarking and testing framework started as a result of the 
+[PQCRYPTO](https://pqcrypto.eu.org) project funded by the European Commission in the H2020 program. 
 It currently contains implementations of 8 post-quantum key-encapsulation mechanisms
-and 2 post-quantum signature schemes targeting the ARM Cortex-M4 family of microcontrollers.
+and 3 post-quantum signature schemes targeting the ARM Cortex-M4 family of microcontrollers.
 The design goals of the library are to offer
 * a simple build system that generates an individual static library 
   for each implementation of each scheme, which can simply be linked into
@@ -35,7 +35,7 @@ Currently **pqm4** contains implementations of the following post-quantum signat
 
 The schemes were selected according to the following criteria:
 * Restrict to [NIST round 1 candidates](https://csrc.nist.gov/Projects/Post-Quantum-Cryptography/Round-1-Submissions).
-* Restrict to schemes and implementations resulting from the [PQCRYPTO project](https://pqcrypto.eu.org).
+* First focus on schemes and implementations resulting from the [PQCRYPTO project](https://pqcrypto.eu.org).
 * Choose parameters targeting NIST security level 3 by default, but
   * choose parameters targeting a *higher* security level if there are no level-3 parameters, and
   * choose parameters targeting a *lower* security level if level-3 parameters exceed the development board's resources (in particular RAM).
