@@ -6,9 +6,9 @@ CC_HOST = gcc
 CFLAGS_HOST = -Wall -Wextra -O3
 AR_HOST = gcc-ar
 
-OBJECTS = sign.o polyvec.o packing.o poly.o reduce.o ntt.o rounding.o
-HEADERS = api.h params.h sign.h polyvec.h packing.h poly.h reduce.h ntt.h \
-  rounding.h
+OBJECTS = dec.o enc.o int32_sort.o keypair.o r3_mult.o r3_recip.o random32.o randomsmall.o randomweightw.o rq.o rq_mult.o rq_recip3.o rq_round3.o rq_rounded.o small.o swap.o crypto_hashblocks_sha512.o crypto_hash_sha512.o crypto_verify_32.o
+
+HEADERS = api.h crypto_kem.h crypto_kem_sntrup4591761.h int32_sort.h mod3.h modq.h params.h r3.h randomweightw.c rq.h small.h swap.h crypto_verify_32.h crypto_hashblocks_sha512.h crypto_hash_sha512.h
 
 OBJECTS_HOST = $(patsubst %.o,%_host.o,$(OBJECTS))
 

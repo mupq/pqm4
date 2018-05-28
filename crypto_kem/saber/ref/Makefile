@@ -3,7 +3,7 @@ CFLAGS = -Wall -Wextra -O3 -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-s
 AR     = arm-none-eabi-gcc-ar
 
 CC_HOST = gcc
-CC_CLFAGS = -Wall -Wextra -O3
+CFLAGS_HOST = -Wall -Wextra -O3
 AR_HOST = gcc-ar
 
 HEADERS = api.h cbd.h kem.h pack_unpack.h poly.h poly_mul.h recon.h SABER_indcpa.h SABER_params.h verify.h

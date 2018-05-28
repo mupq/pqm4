@@ -1,6 +1,13 @@
 #ifndef PARAMS_H
 #define PARAMS_H
 
+// this is a temporary workaround because llrint (libm) is broken in newlib
+// We've fixed this in https://www.sourceware.org/ml/newlib/2018/msg00358.html, 
+// but it may take a while until it is actually in the ARM toolchain 
+
+//TODO remove once llrint was fixed in the ARM toolchain
+#define llrint llrint_fixed
+
 #define PARAM_N 1024
 #define PARAM_N_LOG 10
 #define PARAM_SIGMA 8.5

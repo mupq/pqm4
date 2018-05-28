@@ -3,7 +3,7 @@ CFLAGS = -Wall -Wextra -Wpedantic -O3 -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -
 AR     = arm-none-eabi-gcc-ar
 
 CC_HOST = gcc
-CC_CLFAGS = -Wall -Wextra -O3
+CFLAGS_HOST = -Wall -Wextra -O3
 AR_HOST = gcc-ar
 
 SOURCES =          hash_shake256.c hash_address.c wots.c utils.c fors.c sign.c
