@@ -31,6 +31,8 @@ Currently **pqm4** contains implementations of the following post-quantum KEMs:
 Currently **pqm4** contains implementations of the following post-quantum signature schemes:
 * [Dilithium-III](https://pq-crystals.org/dilithium/)
 * [qTesla-I](https://qTesla.org/)
+* [qTesla-III-size](https://qTesla.org/)
+* [qTesla-III-speed](https://qTesla.org/)
 * [SPHINCS+-SHAKE256-128s](https://sphincs.org)
 
 The schemes were selected according to the following criteria:
@@ -163,6 +165,10 @@ executions is reported in parantheses.
 | ------ | -------------- | ----------------------- | ------------- | ----------------|
 | dilithium (100 executions) | ref | AVG: 2,888,788 <br /> MIN: 2,887,878 <br /> MAX: 2,889,666 |  AVG: 17,318,678 <br /> MIN: 5,395,144 <br /> MAX: 58,367,745 | AVG: 3,225,821 <br /> MIN: 3,225,481 <br /> MAX: 3,226,288 |
 | qTesla-I (100 executions) | ref | AVG: 16,894,344 <br /> MIN: 8,108,507 <br /> MAX: 48,319,170 |  AVG: 8,232,552 <br /> MIN: 1,720,142 <br /> MAX: 49,637,253 | AVG: 1,280,935 <br /> MIN: 1,277,433 <br /> MAX: 1,305,748 |
+| qTesla-III-size (100 executions) | ref | AVG: 56,075,146 <br /> MIN: 22,907,085 <br /> MAX: 153,715,649 |  AVG: 24,229,336 <br /> MIN: 3,709,273 <br /> MAX: 122,873,829 | AVG: 2,531,368 <br /> MIN: 2,514,719 <br /> MAX:
+2,566,414 |
+| qTesla-III-speed (100 executions) | ref | AVG: 36,689,132 <br /> MIN: 20,936,453 <br /> MAX: 109,099,374 |  AVG: 13,203,440 <br /> MIN: 3,681,969 <br /> MAX: 43,997,844 | AVG: 2,581,961 <br /> MIN: 2,575,513 <br /> MAX:
+2,607,342 |
 | sphincs-shake256-128s (1 executions) | ref | AVG: 4,433,268,654 <br /> MIN: 4,433,268,654 <br /> MAX: 4,433,268,654 |  AVG: 61,562,227,280 <br /> MIN: 61,562,227,280 <br /> MAX: 61,562,227,280 | AVG: 70,943,476 <br /> MIN: 70,943,476 <br /> MAX: 70,943,476 |
 ### Stack Usage
 #### Key Encapsulation Schemes
@@ -183,6 +189,8 @@ executions is reported in parantheses.
 | ------ | -------------- | ----------------------- | ------------- | ----------------|
 | dilithium | ref | 51,372 |  87,544 | 55,752 |
 | qTesla-I | ref | 22,456 |  29,328 | 23,080 |
+| qTesla-III-size | ref | 44,008 |  58,104 | 45,712 |
+| qTesla-III-speed | ref | 44,008 |  58,104 | 45,704 |
 | sphincs-shake256-128s | ref | 2,904 |  3,032 | 10,768 |
 
 ## Adding new schemes and implementations
