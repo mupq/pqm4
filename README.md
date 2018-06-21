@@ -30,7 +30,7 @@ Currently **pqm4** contains implementations of the following post-quantum KEMs:
 
 Currently **pqm4** contains implementations of the following post-quantum signature schemes:
 * [Dilithium-III](https://pq-crystals.org/dilithium/)
-* [qTesla128](https://tesla.informatik.tu-darmstadt.de/)
+* [qTesla-I](https://qTesla.org/)
 * [SPHINCS+-SHAKE256-128s](https://sphincs.org)
 
 The schemes were selected according to the following criteria:
@@ -162,7 +162,7 @@ executions is reported in parantheses.
 | scheme | implementation | key generation [cycles] | sign [cycles] | verify [cycles] |
 | ------ | -------------- | ----------------------- | ------------- | ----------------|
 | dilithium (100 executions) | ref | AVG: 2,888,788 <br /> MIN: 2,887,878 <br /> MAX: 2,889,666 |  AVG: 17,318,678 <br /> MIN: 5,395,144 <br /> MAX: 58,367,745 | AVG: 3,225,821 <br /> MIN: 3,225,481 <br /> MAX: 3,226,288 |
-| qTesla128 (100 executions) | ref | AVG: 30,442,902 <br /> MIN: 21,592,895 <br /> MAX: 86,158,028 |  AVG: 49,414,760 <br /> MIN: 15,064,365 <br /> MAX: 232,469,620 | AVG: 10,546,608 <br /> MIN: 10,516,371 <br /> MAX: 10,580,620 |
+| qTesla-I (100 executions) | ref | AVG: 16,894,344 <br /> MIN: 8,108,507 <br /> MAX: 48,319,170 |  AVG: 8,232,552 <br /> MIN: 1,720,142 <br /> MAX: 49,637,253 | AVG: 1,280,935 <br /> MIN: 1,277,433 <br /> MAX: 1,305,748 |
 | sphincs-shake256-128s (1 executions) | ref | AVG: 4,433,268,654 <br /> MIN: 4,433,268,654 <br /> MAX: 4,433,268,654 |  AVG: 61,562,227,280 <br /> MIN: 61,562,227,280 <br /> MAX: 61,562,227,280 | AVG: 70,943,476 <br /> MIN: 70,943,476 <br /> MAX: 70,943,476 |
 ### Stack Usage
 #### Key Encapsulation Schemes
@@ -182,7 +182,7 @@ executions is reported in parantheses.
 | scheme | implementation | key generation [bytes] | sign [bytes] | verify [bytes] |
 | ------ | -------------- | ----------------------- | ------------- | ----------------|
 | dilithium | ref | 51,372 |  87,544 | 55,752 |
-| qTesla128 | ref | 51,136 |  66,264 | 49,792 |
+| qTesla-I | ref | 22,456 |  29,328 | 23,080 |
 | sphincs-shake256-128s | ref | 2,904 |  3,032 | 10,768 |
 
 ## Adding new schemes and implementations
@@ -283,7 +283,7 @@ Different parts of **pqm4** have different licenses. Specifically,
 * all files under `crypto_kem/newhope1024cca/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
 * all files under `crypto_kem/ntruhrss701/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
 * all files under `crypto_sign/dilithium/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
-* all files under `crypto_sign/qTesla128/` except `fixed_llrint.c` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
+* all files under `crypto_sign/qTesla-I/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
 * all files under `crypto_sign/sphincs-shake256-128s/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
 * the files `speed.c`, `stack.c`, `test.c`, `testvectors.c`, `testvectors-host.c` in `crypto_kem/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
 * the files `speed.c`, `stack.c`, `test.c`, `testvectors.c`, and `testvectors-host.c` in `crypto_sign/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/)

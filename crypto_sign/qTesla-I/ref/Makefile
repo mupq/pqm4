@@ -6,8 +6,8 @@ CC_HOST = gcc
 CC_CLFAGS = -Wall -Wextra -O3
 AR_HOST = gcc-ar
 
-OBJECTS= sign.o consts.o sample.o oracle.o poly.o fixed_llrint.o 
-HEADER = api.h params.h sample.h oracle.h 
+OBJECTS= sign.o consts.o sample.o poly.o  
+HEADER = api.h params.h sample.h  
 OBJECTS_HOST = $(patsubst %.o,%_host.o,$(OBJECTS))
 
 
