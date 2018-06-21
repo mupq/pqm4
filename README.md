@@ -292,6 +292,8 @@ Different parts of **pqm4** have different licenses. Specifically,
 * all files under `crypto_kem/ntruhrss701/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
 * all files under `crypto_sign/dilithium/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
 * all files under `crypto_sign/qTesla-I/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
+* all files under `crypto_sign/qTesla-III-size/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
+* all files under `crypto_sign/qTesla-III-speed/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
 * all files under `crypto_sign/sphincs-shake256-128s/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
 * the files `speed.c`, `stack.c`, `test.c`, `testvectors.c`, `testvectors-host.c` in `crypto_kem/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
 * the files `speed.c`, `stack.c`, `test.c`, `testvectors.c`, and `testvectors-host.c` in `crypto_sign/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/)
