@@ -104,31 +104,31 @@ static void encode_sig(unsigned char *sm, unsigned char *c, poly z)
 { // Encode signature sm
   unsigned int i, j=0;
   uint64_t *t = (uint64_t*)z;
-  uint32_t *pt = (uint32_t*)sm;
-  
-  for (i=0; i<(PARAM_N*PARAM_D/32); i+=PARAM_D) {
-    pt[i   ] = (t[j] & ((1<<21)-1)) | (t[j+1] << 21);
-    pt[i+ 1] = ((t[j+ 1] >> 11) & ((1<<10)-1)) | ((t[j+ 2] & ((1<<21)-1)) << 10) | (t[j+ 3] << 31);
-    pt[i+ 2] = ((t[j+ 3] >>  1) & ((1<<20)-1)) | (t[j+4] << 20);
-    pt[i+ 3] = ((t[j+ 4] >> 12) & ((1<<9)-1 )) | ((t[j+ 5] & ((1<<21)-1)) <<  9) | (t[j+ 6] << 30);
-    pt[i+ 4] = ((t[j+ 6] >>  2) & ((1<<19)-1)) | (t[j+7] << 19);
-    pt[i+ 5] = ((t[j+ 7] >> 13) & ((1<<8)-1 )) | ((t[j+ 8] & ((1<<21)-1)) <<  8) | (t[j+ 9] << 29);
-    pt[i+ 6] = ((t[j+ 9] >>  3) & ((1<<18)-1)) | (t[j+10] << 18);
-    pt[i+ 7] = ((t[j+10] >> 14) & ((1<<7)-1 )) | ((t[j+11] & ((1<<21)-1)) <<  7) | (t[j+12] << 28);
-    pt[i+ 8] = ((t[j+12] >>  4) & ((1<<17)-1)) | (t[j+13] << 17);
-    pt[i+ 9] = ((t[j+13] >> 15) & ((1<<6)-1 )) | ((t[j+14] & ((1<<21)-1)) <<  6) | (t[j+15] << 27);
-    pt[i+10] = ((t[j+15] >>  5) & ((1<<16)-1)) | (t[j+16] << 16);
-    pt[i+11] = ((t[j+16] >> 16) & ((1<<5)-1 )) | ((t[j+17] & ((1<<21)-1)) <<  5) | (t[j+18] << 26);
-    pt[i+12] = ((t[j+18] >>  6) & ((1<<15)-1)) | (t[j+19] << 15);
-    pt[i+13] = ((t[j+19] >> 17) & ((1<<4)-1 )) | ((t[j+20] & ((1<<21)-1)) <<  4) | (t[j+21] << 25);
-    pt[i+14] = ((t[j+21] >>  7) & ((1<<14)-1)) | (t[j+22] << 14);
-    pt[i+15] = ((t[j+22] >> 18) & ((1<<3)-1 )) | ((t[j+23] & ((1<<21)-1)) <<  3) | (t[j+24] << 24);
-    pt[i+16] = ((t[j+24] >>  8) & ((1<<13)-1)) | (t[j+25] << 13);
-    pt[i+17] = ((t[j+25] >> 19) & ((1<<2)-1 )) | ((t[j+26] & ((1<<21)-1)) <<  2) | (t[j+27] << 23);
-    pt[i+18] = ((t[j+27] >>  9) & ((1<<12)-1)) | (t[j+28] << 12);
-    pt[i+19] = ((t[j+28] >> 20) & ((1<<1)-1 )) | ((t[j+29] & ((1<<21)-1)) <<  1) | (t[j+30] << 22);
-    pt[i+20] = ((t[j+30] >> 10) & ((1<<11)-1)) | (t[j+31] << 11);
-    j += 32;
+  uint8_t  *pt = (uint8_t*)sm;
+
+  for (i=0; i<(PARAM_N*PARAM_D/8); i+=PARAM_D) {
+    pt[i   ] = (t[j] & ((1<<8)-1));
+    pt[i+ 1] = (t[j] >> 8) & ((1<<8)-1);
+    pt[i+ 2] = ((t[j+1]<<5) | ((t[j]>>16) & ((1<<5)-1)));
+    pt[i+ 3] = (t[j+1] >> 3) & ((1<<8)-1);
+    pt[i+ 4] = (t[j+1] >> 11) & ((1<<8)-1);
+    pt[i+ 5] = ((t[j+2]<<2) | ((t[j+1]>>19) & ((1<<2)-1)));
+    pt[i+ 6] = (t[j+2]>>6) & ((1<<8)-1);
+    pt[i+ 7] = ((t[j+3]<<7) | ((t[j+2]>>14) & ((1<<7)-1)));
+    pt[i+ 8] = (t[j+3]>>1) & ((1<<8)-1);
+    pt[i+ 9] = (t[j+3]>>9) & ((1<<8)-1);
+    pt[i+10] = ((t[j+4]<<4) | ((t[j+3]>>17) & ((1<<4)-1)));
+    pt[i+11] = (t[j+4]>>4) & ((1<<8)-1);
+    pt[i+12] = (t[j+4]>>12) & ((1<<8)-1);
+    pt[i+13] = ((t[j+5]<<1) | ((t[j+4]>>20) & ((1<<1)-1)));
+    pt[i+14] = (t[j+5]>>7) & ((1<<8)-1);
+    pt[i+15] = ((t[j+6]<<6) | ((t[j+5]>>15) & ((1<<6)-1)));
+    pt[i+16] = (t[j+6]>>2) & ((1<<8)-1);
+    pt[i+17] = (t[j+6]>>10) & ((1<<8)-1);
+    pt[i+18] = ((t[j+7]<<3) | ((t[j+6]>>18) & ((1<<3)-1)));
+    pt[i+19] = (t[j+7]>>5) & ((1<<8)-1);
+    pt[i+20] = (t[j+7]>>13) & ((1<<8)-1);
+    j += 8;
   }
   memcpy(&sm[PARAM_N*PARAM_D/8], c, CRYPTO_C_BYTES);
 }
@@ -137,30 +137,17 @@ static void encode_sig(unsigned char *sm, unsigned char *c, poly z)
 static void decode_sig(unsigned char *c, poly z, const unsigned char *sm)
 { // Decode signature sm
   unsigned int i, j=0;
-  uint32_t *pt = (uint32_t*)sm;
+  uint8_t *pt = (uint8_t*)sm;
 
-  for (i=0; i<PARAM_N; i+=32) {
-    z[i   ] = ((int32_t)pt[j+ 0] << 11) >> 11; z[i+ 1] = (int32_t)(pt[j+ 0] >> 21) | ((int32_t)(pt[j+ 1] << 22) >> 11); 
-    z[i+ 2] = ((int32_t)pt[j+ 1] <<  1) >> 11; z[i+ 3] = (int32_t)(pt[j+ 1] >> 31) | ((int32_t)(pt[j+ 2] << 12) >> 11);
-    z[i+ 4] = (int32_t)(pt[j+ 2] >> 20) | ((int32_t)(pt[j+ 3] << 23) >> 11);
-    z[i+ 5] = (int32_t)(pt[j+ 3] <<  2) >> 11; z[i+ 6] = (int32_t)(pt[j+ 3] >> 30) | ((int32_t)(pt[j+ 4] << 13) >> 11);
-    z[i+ 7] = (int32_t)(pt[j+ 4] >> 19) | ((int32_t)(pt[j+ 5] << 24) >> 11);
-    z[i+ 8] = (int32_t)(pt[j+ 5] <<  3) >> 11; z[i+ 9] = (int32_t)(pt[j+ 5] >> 29) | ((int32_t)(pt[j+ 6] << 14) >> 11);
-    z[i+10] = (int32_t)(pt[j+ 6] >> 18) | ((int32_t)(pt[j+ 7] << 25) >> 11);
-    z[i+11] = (int32_t)(pt[j+ 7] <<  4) >> 11; z[i+12] = (int32_t)(pt[j+ 7] >> 28) | ((int32_t)(pt[j+ 8] << 15) >> 11);
-    z[i+13] = (int32_t)(pt[j+ 8] >> 17) | ((int32_t)(pt[j+ 9] << 26) >> 11);
-    z[i+14] = (int32_t)(pt[j+ 9] <<  5) >> 11; z[i+15] = (int32_t)(pt[j+ 9] >> 27) | ((int32_t)(pt[j+10] << 16) >> 11);
-    z[i+16] = (int32_t)(pt[j+10] >> 16) | ((int32_t)(pt[j+11] << 27) >> 11);
-    z[i+17] = (int32_t)(pt[j+11] <<  6) >> 11; z[i+18] = (int32_t)(pt[j+11] >> 26) | ((int32_t)(pt[j+12] << 17) >> 11);
-    z[i+19] = (int32_t)(pt[j+12] >> 15) | ((int32_t)(pt[j+13] << 28) >> 11);
-    z[i+20] = (int32_t)(pt[j+13] <<  7) >> 11; z[i+21] = (int32_t)(pt[j+13] >> 25) | ((int32_t)(pt[j+14] << 18) >> 11);
-    z[i+22] = (int32_t)(pt[j+14] >> 14) | ((int32_t)(pt[j+15] << 29) >> 11);
-    z[i+23] = (int32_t)(pt[j+15] <<  8) >> 11; z[i+24] = (int32_t)(pt[j+15] >> 24) | ((int32_t)(pt[j+16] << 19) >> 11);
-    z[i+25] = (int32_t)(pt[j+16] >> 13) | ((int32_t)(pt[j+17] << 30) >> 11);
-    z[i+26] = (int32_t)(pt[j+17] <<  9) >> 11; z[i+27] = (int32_t)(pt[j+17] >> 23) | ((int32_t)(pt[j+18] << 20) >> 11);
-    z[i+28] = (int32_t)(pt[j+18] >> 12) | ((int32_t)(pt[j+19] << 31) >> 11);
-    z[i+29] = (int32_t)(pt[j+19] << 10) >> 11; z[i+30] = (int32_t)(pt[j+19] >> 22) | ((int32_t)(pt[j+20] << 21) >> 11);
-    z[i+31] = (int32_t)pt[j+20] >> 11;
+  for (i=0; i<PARAM_N; i+=8) {
+    z[i   ] = ((int32_t)(((uint32_t)pt[j]) | ((uint32_t)pt[j+1]<<8) | ((uint32_t)pt[j+2]<<16))<<11)>>11;
+    z[i+ 1] = ((int32_t)(((uint32_t)pt[j+2]>>5) | (((uint32_t)pt[j+3])<<3) | (((uint32_t) pt[j+4])<<11) | ((uint32_t)pt[j+5]<<19))<<11)>>11;
+    z[i+ 2] = ((int32_t)(((uint32_t)pt[j+5]>>2) | (((uint32_t)pt[j+6])<<6) | ((uint32_t) pt[j+7]<<14))<<11)>>11;
+    z[i+ 3] = ((int32_t)(((uint32_t)pt[j+7]>>7) | (((uint32_t)pt[j+8])<<1) | (((uint32_t)pt[j+9])<<9) | ((uint32_t)pt[j+10]<<17))<<11)>>11;
+    z[i+ 4] = ((int32_t)(((uint32_t)pt[j+10]>>4) | (((uint32_t)pt[j+11])<<4) | (((uint32_t)pt[j+12])<<12) | ((uint32_t)pt[j+13]<<20))<<11)>>11;
+    z[i+ 5] = ((int32_t)(((uint32_t)pt[j+13]>>1) | (((uint32_t)pt[j+14])<<7) | ((uint32_t)pt[j+15]<<15))<<11)>>11;
+    z[i+ 6] = ((int32_t)(((uint32_t)pt[j+15]>>6) | (((uint32_t)pt[j+16])<<2) | (((uint32_t)pt[j+17])<<10) | ((uint32_t)pt[j+18]<<18))<<11)>>11;
+    z[i+ 7] = ((int32_t)(((uint32_t)pt[j+18]>>3) | (((uint32_t)pt[j+19])<<5) | ((uint32_t)pt[j+20]<<13))<<11)>>11;
     j += 21;
   }   
   memcpy(c, &sm[PARAM_N*PARAM_D/8], CRYPTO_C_BYTES);
@@ -252,7 +239,7 @@ static int test_z(poly z)
 }
 
 
-static int check_ES(poly p, int bound)
+static int check_ES(poly p, unsigned int bound)
 { // Checks the generated secret polynomial s
   // Returns 0 if ok, otherwise returns 1
   unsigned int i, j, sum = 0, limit = PARAM_N;
@@ -398,18 +385,22 @@ int crypto_sign_keypair(unsigned char *pk, unsigned char *sk)
 ***************************************************************/
 int crypto_sign(unsigned char *sm, unsigned long long *smlen, const unsigned char *m, unsigned long long mlen, const unsigned char* sk)
 {
+  poly y, v, Sc, Ec, z, a;
   unsigned char c[CRYPTO_C_BYTES], randomness[CRYPTO_SEEDBYTES], randomness_input[CRYPTO_RANDOMBYTES+CRYPTO_SEEDBYTES+mlen];
+
   uint32_t pos_list[PARAM_W];
   int16_t sign_list[PARAM_W];
-  poly y, v, Sc, Ec, z, a;
+
   int nonce = 0;  // Initialize domain separator for sampling y  
 
   // Get H(seed_y, r, m) to sample y
-  randombytes(randomness_input+CRYPTO_RANDOMBYTES, CRYPTO_RANDOMBYTES);
+  randombytes(randomness_input+CRYPTO_SEEDBYTES, CRYPTO_RANDOMBYTES);
+
   memcpy(randomness_input, &sk[CRYPTO_SECRETKEYBYTES-CRYPTO_SEEDBYTES], CRYPTO_SEEDBYTES);
   memcpy(randomness_input+CRYPTO_RANDOMBYTES+CRYPTO_SEEDBYTES, m, mlen);
+
   shake128(randomness, CRYPTO_SEEDBYTES, randomness_input, CRYPTO_RANDOMBYTES+CRYPTO_SEEDBYTES+mlen);
-  
+
   poly_uniform(a, &sk[CRYPTO_SECRETKEYBYTES-2*CRYPTO_SEEDBYTES]);
 
   while (1) {
@@ -423,7 +414,7 @@ int crypto_sign(unsigned char *sm, unsigned long long *smlen, const unsigned cha
     if (test_rejection(z) != 0) {               // Rejection sampling
       continue;
     }
- 
+   
     sparse_mul16(Ec, sk+(sizeof(int16_t)*PARAM_N), pos_list, sign_list);
     poly_sub(v, v, Ec);                         
     

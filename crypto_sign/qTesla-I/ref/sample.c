@@ -180,7 +180,7 @@ void sample_gauss_poly(int64_t *x, const unsigned char *seed, int nonce)
   unsigned char seed_ex[PARAM_N*8]; 
   int64_t i, j=0, x_ind;
   int64_t *buf = (int64_t*)seed_ex;
-  int64_t sign, k, l, bitsremained, rbits, y, z;
+  int64_t sign, k, bitsremained, rbits, y, z;
   uint64_t r, s, c_lo, c_hi;
   int16_t dmsp = (int16_t)(nonce<<8);
 

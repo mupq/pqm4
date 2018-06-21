@@ -74,7 +74,7 @@ long long int llrint_fixed(double x)
           GET_HIGH_WORD(i0, t);
           /* Detect the all-zeros representation of plus and
              minus zero, which fails the calculation below. */
-          if ((i0 & ~((__int32_t)1 << 31)) == 0)
+          if ((i0 & ~((int32_t)1 << 31)) == 0)
               return 0;
           /* After round:  j0 in [0,20] */
           j0 = ((i0 & 0x7ff00000) >> 20) - 1023;
