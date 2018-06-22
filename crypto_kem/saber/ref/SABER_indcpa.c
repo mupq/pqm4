@@ -115,61 +115,28 @@ void indcpa_kem_keypair(unsigned char *pk, unsigned char *sk)
 
 void indcpa_kem_enc(unsigned char *message_received, unsigned char *noiseseed, const unsigned char *pk, unsigned char *ciphertext)
 {
+	uint32_t i,j;
+	const uint16_t mod_p=SABER_P-1;
 
-
-	uint32_t i,j,k;
 	polyvec a[SABER_K];		// skpv;
-	unsigned char seed[SABER_SEEDBYTES];
-	uint16_t pkcl[SABER_K][SABER_N]; 	//public key of received by the client
-
-
+	GenMatrix(a, pk + SABER_POLYVECCOMPRESSEDBYTES);
 
 	uint16_t skpv1[SABER_K][SABER_N];
-
-	uint16_t message[SABER_KEYBYTES*8];
-
-	uint16_t res[SABER_K][SABER_N];
-	//uint16_t acc[SABER_N];
-	//uint16_t mod=SABER_Q-1;
-	uint16_t mod_p=SABER_P-1;
-
-	uint16_t vprime[SABER_N];
-
-	//uint16_t ciphertext_temp[SABER_N];
-
-
-	unsigned char rec_c[SABER_RECONBYTES_KEM];
-
-	for(i=0;i<SABER_SEEDBYTES;i++){ // extract the seedbytes from Public Key.
-		seed[i]=pk[ SABER_POLYVECCOMPRESSEDBYTES + i];
-	}
-
-
-	GenMatrix(a, seed);
-
 	GenSecret(skpv1,noiseseed);//generate secret from constant-time binomial distribution
 
 	//-----------------matrix-vector multiplication and rounding
 
-	for(i=0;i<SABER_K;i++){
-		for(j=0;j<SABER_N;j++){
-			res[i][j]=0;
-		}
-	}
+	uint16_t res[SABER_K][SABER_N] = {{0}};
 
 	MatrixVectorMul(a,skpv1,res,SABER_Q-1,1);
 
-	  //-----now rounding
+	//-----now rounding
 
 	for(i=0;i<SABER_K;i++){ //shift right 3 bits
 		for(j=0;j<SABER_N;j++){
-			res[i][j]=res[i][j]+ 4;
-			res[i][j]=(res[i][j]>> 3);
+			res[i][j]= (res[i][j]+4) >> 3;
 		}
 	}
-
-
-
 
 	POLVECp2BS(ciphertext,res);
 
@@ -179,12 +146,10 @@ void indcpa_kem_enc(unsigned char *message_received, unsigned char *noiseseed, c
 
 	//-------unpack the public_key
 
-	BS2POLVECp(pk, pkcl); //pkcl is the b in the protocol
+	// To reduce stack usage, res[SABER_K][SABER_N] is reused instead of the original pkcl, which is 'b' in the protocol
+	// res contains the public key received by the client
+	BS2POLVECp(pk, res); 
 
-
-
-	for(i=0;i<SABER_N;i++)
-		vprime[i]=0;
 
 	for(i=0;i<SABER_K;i++){
 		for(j=0;j<SABER_N;j++){
@@ -192,40 +157,22 @@ void indcpa_kem_enc(unsigned char *message_received, unsigned char *noiseseed, c
 		}
 	}
 
+	uint16_t vprime[SABER_N] = {0};
+
 	// vector-vector scalar multiplication with mod p
-	VectorMul(pkcl,skpv1,mod_p,vprime);
+	VectorMul(res,skpv1,mod_p,vprime);
 
-
-	// unpack message_received;
+	// unpack message_received and message encoding
 	for(j=0; j<SABER_KEYBYTES; j++)
 	{
 		for(i=0; i<8; i++)
 		{
-			message[8*j+i] = ((message_received[j]>>i) & 0x01);
+			vprime[8*j+i] = vprime[8*j+i] + (((uint16_t) ((message_received[j]>>i) & 0x01)) <<9);
 		}
 	}
 
 
-
-	// message encoding
-	for(i=0; i<SABER_N; i++)
-	{
-		message[i] = (message[i]<<9);
-	}
-
-
-
-	for(k=0;k<SABER_N;k++)
-	{
-		vprime[k]=vprime[k]+ message[k];
-	}
-
-	ReconDataGen(vprime,rec_c);
-
-	for(j=0;j<SABER_RECONBYTES_KEM;j++){
-		ciphertext[SABER_POLYVECCOMPRESSEDBYTES + j] = rec_c[j];
-	}
-
+	ReconDataGen(vprime, ciphertext + SABER_POLYVECCOMPRESSEDBYTES);
 }
 
 
