@@ -7,7 +7,7 @@ CC_CLFAGS = -Wall -Wextra -O3
 AR_HOST = gcc-ar
 
 OBJECTS= sign.o consts.o sample.o poly.o  
-HEADER = api.h params.h sample.h  
+HEADERS= api.h params.h sample.h poly.h
 OBJECTS_HOST = $(patsubst %.o,%_host.o,$(OBJECTS))
 
 
