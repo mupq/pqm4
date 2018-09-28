@@ -37,12 +37,9 @@ void recover_s1(uint8_t *s1, poly_d v) {
 void kindi_keygen(kindi_pk *pk, poly_d *sk_r) {
 
 	int i, x;
-	poly_d **A, *e, tmp;
-
-	A = (poly_d**) memalign(32, KINDI_KEM_L * sizeof(poly_d*));
-	e = (poly_d*) memalign(32, KINDI_KEM_L * sizeof(poly_d));
-	for (i = 0; i < KINDI_KEM_L; i++)
-		A[i] = (poly_d*) memalign(32, KINDI_KEM_L * sizeof(poly_d));
+	poly_d tmp;
+	poly_d e[KINDI_KEM_L];
+	poly_d A[KINDI_KEM_L][KINDI_KEM_L];
 
 	// \mu <- {0,1}^n
 	randombytes(pk->seed, KINDI_KEM_SEEDSIZE);
@@ -51,15 +48,12 @@ void kindi_keygen(kindi_pk *pk, poly_d *sk_r) {
 	poly_gen_matrix(A, pk->seed);
 
 	// sample r,e with coefficients in [-r_sec,r_sec)
-	uint8_t *gamma = malloc(KINDI_KEM_SEEDSIZE);
+	uint8_t gamma[KINDI_KEM_SEEDSIZE];
 	randombytes(gamma,KINDI_KEM_SEEDSIZE);
 	poly_setrandom_rsec(sk_r,e,gamma);
-	free(gamma);
 
 	//cache FFT of sk to avoid redundant FFT calculations in poly_mul
-	poly_f *r_real, *r_imag;
-	r_real = (poly_f*) memalign(32, KINDI_KEM_L * sizeof(poly_f));
-	r_imag = (poly_f*) memalign(32, KINDI_KEM_L * sizeof(poly_f));
+	poly_f r_real[KINDI_KEM_L], r_imag[KINDI_KEM_L];
 	for (i = 0; i < KINDI_KEM_L; i++)
 		psi_loop_and_fft(sk_r[i], r_real[i], r_imag[i]);
 
@@ -74,34 +68,17 @@ void kindi_keygen(kindi_pk *pk, poly_d *sk_r) {
 		poly_add_nored(pk->b[i], pk->b[i], e[i]);
 		poly_coeffreduce_pos(pk->b[i]);
 	}
-
-	for (i = 0; i < KINDI_KEM_L; i++)
-		free(A[i]);
-	free(A);
-	free(r_real);
-	free(r_imag);
-	free(e);
-
 }
 
 void kindi_kem_encrypt(kindi_pk *pk, uint8_t *d, uint8_t *s1, poly_d *cipher) {
 
 	int i, x;
+	poly_d s[KINDI_KEM_L];
+	poly_d u_encoded[KINDI_KEM_L+1];
+	poly_d  A[KINDI_KEM_L][KINDI_KEM_L], tmp;
+	poly_f s_real[KINDI_KEM_L], s_imag[KINDI_KEM_L];
 
-	poly_d *s, **A, *u_encoded, tmp;
-	s = (poly_d *) memalign(32, KINDI_KEM_L * sizeof(poly_d));
-	u_encoded = (poly_d*) memalign(32, (KINDI_KEM_L + 1) * sizeof(poly_d));
-	A = (poly_d**) memalign(32, KINDI_KEM_L * sizeof(poly_d*));
-	for (i = 0; i < KINDI_KEM_L; i++)
-		A[i] = (poly_d*) memalign(32, KINDI_KEM_L * sizeof(poly_d));
-
-	poly_f *s_real, *s_imag;
-	s_real = (poly_f*) memalign(32, KINDI_KEM_L * sizeof(poly_f));
-	s_imag = (poly_f*) memalign(32, KINDI_KEM_L * sizeof(poly_f));
-
-	uint8_t *u, *message_padded;
-	u = malloc(KINDI_KEM_MESSAGEBYTES);
-	message_padded = calloc(KINDI_KEM_MESSAGEBYTES, 1);
+	uint8_t u[KINDI_KEM_MESSAGEBYTES], message_padded[KINDI_KEM_MESSAGEBYTES];
 
 	//padding with 0
 	memcpy(message_padded, d, KINDI_KEM_HASHSIZE);
@@ -160,16 +137,6 @@ void kindi_kem_encrypt(kindi_pk *pk, uint8_t *d, uint8_t *s1, poly_d *cipher) {
 	poly_add_nored(cipher[KINDI_KEM_L], cipher[KINDI_KEM_L],
 			u_encoded[KINDI_KEM_L]);
 	poly_coeffreduce_pos(cipher[KINDI_KEM_L]);
-
-	free(s);
-	for (i = 0; i < KINDI_KEM_L; i++)
-		free(A[i]);
-	free(A);
-	free(u);
-	free(u_encoded);
-	free(s_real);
-	free(s_imag);
-	free(message_padded);
 }
 
 void kindi_kem_decrypt(poly_d *sk_r, kindi_pk *pk, poly_d *cipher,
@@ -177,20 +144,12 @@ void kindi_kem_decrypt(poly_d *sk_r, kindi_pk *pk, poly_d *cipher,
 
 	int i, x;
 
-	poly_d *u_rec, *s_rec, **A, v, tmp;
-	u_rec = (poly_d *) memalign(32, (KINDI_KEM_L + 1) * sizeof(poly_d));
-	s_rec = (poly_d *) memalign(32, KINDI_KEM_L * sizeof(poly_d));
-	A = (poly_d**) memalign(32, KINDI_KEM_L * sizeof(poly_d *));
-	for (i = 0; i < KINDI_KEM_L; i++)
-		A[i] = (poly_d*) memalign(32, KINDI_KEM_L * sizeof(poly_d));
+	poly_d u_rec[KINDI_KEM_L+1], s_rec[KINDI_KEM_L], v, tmp;
+	poly_d A[KINDI_KEM_L][KINDI_KEM_L]; 
 
-	poly_f *s_rec_real, *s_rec_imag;
-	s_rec_real = (poly_f*) memalign(32, KINDI_KEM_L * sizeof(poly_f));
-	s_rec_imag = (poly_f*) memalign(32, KINDI_KEM_L * sizeof(poly_f));
+	poly_f s_rec_real[KINDI_KEM_L], s_rec_imag[KINDI_KEM_L];
 
-	uint8_t *u_bar, *u_rec_bytes;
-	u_bar = malloc(KINDI_KEM_MESSAGEBYTES);
-	u_rec_bytes = malloc(KINDI_KEM_MESSAGEBYTES);
+	uint8_t u_bar[KINDI_KEM_MESSAGEBYTES], u_rec_bytes[KINDI_KEM_MESSAGEBYTES];
 
 	// A <- SampleU(\mu)
 	poly_gen_matrix(A, pk->seed);
@@ -255,28 +214,14 @@ void kindi_kem_decrypt(poly_d *sk_r, kindi_pk *pk, poly_d *cipher,
 
 	// msg = d = Decode(u) XOR u_bar
 	xor_bytes(d_rec, u_rec_bytes, u_bar, KINDI_KEM_MESSAGEBYTES);
-
-	free(s_rec);
-	free(u_bar);
-	free(u_rec);
-	free(u_rec_bytes);
-	for (i = 0; i < KINDI_KEM_L; i++)
-		free(A[i]);
-	free(A);
-	free(s_rec_real);
-	free(s_rec_imag);
-
 }
 
 void kindi_kem_encaps(kindi_pk *pk_p, uint8_t *ct, uint8_t *ss) {
 
 	int i;
-	uint8_t *s1 = malloc(KINDI_KEM_S1SIZE);
-
-	uint8_t *d = malloc(KINDI_KEM_HASHSIZE);
-
-	poly_d *cipher = (poly_d *) memalign(32,
-	KINDI_KEM_NUMBER_CIPHERPOLY * sizeof(poly_d));
+	uint8_t s1[KINDI_KEM_S1SIZE];
+	uint8_t d[KINDI_KEM_HASHSIZE];
+	poly_d cipher[KINDI_KEM_NUMBER_CIPHERPOLY]; 
 
 	// s1 <- {0,1}^{KINDI_KEM_S1SIZE*8}
 	randombytes(s1, KINDI_KEM_S1SIZE);
@@ -297,27 +242,19 @@ void kindi_kem_encaps(kindi_pk *pk_p, uint8_t *ct, uint8_t *ss) {
 	}
 
 	int hash_inputlen = KINDI_KEM_CIPHERBYTES+ KINDI_KEM_S1SIZE;
-	uint8_t *hash_in = malloc(hash_inputlen);
+	uint8_t hash_in[hash_inputlen];
 	memcpy(hash_in, ct, KINDI_KEM_CIPHERBYTES);
 	memcpy(hash_in + KINDI_KEM_CIPHERBYTES, s1,
 			KINDI_KEM_S1SIZE);
 	//  K <- H'(s1,(\vec{c},c))
 	kindi_crypto_stream_hprime(ss, KINDI_KEM_HASHSIZE, hash_in, hash_inputlen);
-	free(hash_in);
-	free(cipher);
-	free(d);
-	free(s1);
-
 }
 
 void kindi_kem_decaps(poly_d *sk_p, kindi_pk *pk_p, poly_d *cipher,
 		const uint8_t *ct, uint8_t *ss) {
 
-	uint8_t *d_rec, *s1_rec, *d;
-	d_rec = malloc(KINDI_KEM_MESSAGEBYTES);
-	d = malloc(KINDI_KEM_HASHSIZE);
+	uint8_t d_rec[KINDI_KEM_MESSAGEBYTES], s1_rec[KINDI_KEM_S1SIZE], d[KINDI_KEM_HASHSIZE];
 
-	s1_rec = malloc(KINDI_KEM_S1SIZE);
 
 	// (d',s1') <- KINDI_CPA.Decrypt(sk,(\vec{c},c))
 	kindi_kem_decrypt(sk_p, pk_p, cipher, d_rec, s1_rec);
@@ -326,10 +263,11 @@ void kindi_kem_decaps(poly_d *sk_p, kindi_pk *pk_p, poly_d *cipher,
 	kindi_crypto_stream_h(d, KINDI_KEM_HASHSIZE, s1_rec, KINDI_KEM_S1SIZE);
 
 	int hash_inlen = KINDI_KEM_CIPHERBYTES + KINDI_KEM_S1SIZE;
-	uint8_t *hash_in = malloc(hash_inlen);
+	uint8_t hash_in[hash_inlen];
 
 	memcpy(hash_in, ct, KINDI_KEM_CIPHERBYTES);
-	uint8_t *zero = calloc(KINDI_KEM_MESSAGEBYTES, 1);
+	uint8_t zero[KINDI_KEM_MESSAGEBYTES];
+	memset(zero, 0, sizeof(zero));
 
 	// d' == d ? and rest of message == 0?
 	if (memcmp(d, d_rec, KINDI_KEM_HASHSIZE) == 0
@@ -342,19 +280,14 @@ void kindi_kem_decaps(poly_d *sk_p, kindi_pk *pk_p, poly_d *cipher,
 	}
 
 	else {
-		uint8_t *uniform_rand = malloc(KINDI_KEM_S1SIZE);
+		uint8_t uniform_rand[KINDI_KEM_S1SIZE];
 		randombytes(uniform_rand, KINDI_KEM_S1SIZE);
 
 		// return H'(random,(\vec{c},c))
 		memcpy(hash_in + KINDI_KEM_CIPHERBYTES,
 				uniform_rand, KINDI_KEM_S1SIZE);
-		free(uniform_rand);
 	}
 
 	kindi_crypto_stream_hprime(ss, KINDI_KEM_HASHSIZE, hash_in, hash_inlen);
-	free(hash_in);
-	free(zero);
-	free(d_rec);
-	free(s1_rec);
 }
 

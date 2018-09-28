@@ -4,7 +4,7 @@
 void kindi_crypto_stream_h(uint8_t *out, unsigned long long outlen,
 		const uint8_t *in, unsigned long long inlen) {
 
-	uint8_t *in1 = malloc(inlen + 1);
+	uint8_t in1[inlen + 1];
 	memcpy(in1, in, inlen);
 	in1[inlen] = 4;
 #if KINDI_KEM_SHAKEMODE == 128
@@ -12,9 +12,6 @@ void kindi_crypto_stream_h(uint8_t *out, unsigned long long outlen,
 #elif KINDI_KEM_SHAKEMODE == 256
 	shake256(out, outlen, in1, inlen+1);
 #endif
-
-	free(in1);
-
 }
 
 //H'
@@ -36,7 +33,7 @@ void gen_randomness(poly_d *s, uint8_t *u, uint8_t *s1) {
 #if KINDI_KEM_S1BITS == 1
 	int i, a, x;
 
-	uint8_t *buffer = malloc(BUFFERLEN);
+	uint8_t buffer[BUFFERLEN];
 #if KINDI_KEM_SHAKEMODE == 128
 	shake128(buffer, BUFFERLEN, s1, KINDI_KEM_S1SIZE);
 #elif KINDI_KEM_SHAKEMODE == 256
@@ -74,11 +71,10 @@ void gen_randomness(poly_d *s, uint8_t *u, uint8_t *s1) {
 
 	memcpy(u, buffer + pos, KINDI_KEM_MESSAGEBYTES);
 
-	free(buffer);
 #elif KINDI_KEM_S1BITS == 2
 	int i, a, x;
 
-	uint8_t *buffer = malloc(BUFFERLEN);
+	uint8_t buffer[BUFFERLEN];
 #if KINDI_KEM_SHAKEMODE == 128
 	shake128(buffer, BUFFERLEN, s1, KINDI_KEM_S1SIZE);
 #elif KINDI_KEM_SHAKEMODE == 256
@@ -114,9 +110,6 @@ void gen_randomness(poly_d *s, uint8_t *u, uint8_t *s1) {
 	}
 
 	memcpy(u, buffer + pos, KINDI_KEM_MESSAGEBYTES);
-
-	free(buffer);
-
 #endif
 }
 

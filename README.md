@@ -173,7 +173,7 @@ executions is reported in parantheses.
 | scheme | implementation | key generation [bytes] | encapsulation [bytes] | decapsulation [bytes] |
 | ------ | -------------- | ----------------------- | ---------------------- | -----------------------|
 | frodo640-cshake | opt | 36,536 |  58,328 | 68,680 |
-| kindi256342 | ref | 10,632 |  10,736 | 16,912 |
+| kindi256342 | ref | 59,864 | 71,000 | 83,336 |
 | kyber768 | m4 | 10,304 |  13,464 | 14,624 |
 | kyber768 | ref | 10,304 |  13,464 | 14,624 |
 | newhope1024cca | m4 | 11,160 |  17,456 | 19,656 |

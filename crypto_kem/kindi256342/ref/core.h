@@ -11,10 +11,8 @@
 #include "gen_randomness.h"
 
 typedef struct {
-
-	poly_d *b;
-	uint8_t *seed;
-
+	poly_d b[KINDI_KEM_L];
+	uint8_t seed[KINDI_KEM_SEEDSIZE];
 } kindi_pk;
 
 void xor_bytes(uint8_t *r, const uint8_t *f, const uint8_t *g, int len);
