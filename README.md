@@ -60,7 +60,7 @@ mini-USB cable and a USB-TTL converter together with a 2-pin dupont / jumper cab
 The **pqm4** build system assumes that you have the [arm-none-eabi toolchain](https://launchpad.net/gcc-arm-embedded)
 toolchain installed.
 On most Linux systems, the correct toolchain gets installed when you install the `arm-none-eabi-gcc` (or `gcc-arm-none-eabi`) package.  
-On Linux Mint, be sure to explicitly install `libnewlib-arm-none-eabi` as well (to fix an error relating to `stdint.h`).
+On some Linux distributions, you will also have to explicitly install `libnewlib-arm-none-eabi` .
 
 ### Installing stlink
 To flash binaries onto the development board, **pqm4** is using [stlink](https://github.com/texane/stlink). 
@@ -96,6 +96,7 @@ git clone https://github.com/mupq/pqm4.git
 cd pqm4
 git submodule init
 git submodule update
+cd libopencm3 && make
 ```
 
 ## API documentation
