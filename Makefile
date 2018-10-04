@@ -12,7 +12,7 @@ GDB         = $(PREFIX)-gdb
 
 ARCH_FLAGS  = -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16
 DEFINES     = -DSTM32F4
-OBJS        = obj/stm32f4_wrapper.o obj/fips202.o obj/keccakf1600.o
+OBJS        = obj/stm32f4_wrapper.o obj/fips202.o obj/keccakf1600.o obj/crypto_hash_sha512.o
 RANDOMBYTES = obj/randombytes.o
 
 CFLAGS     += -O3 \
@@ -31,7 +31,7 @@ LD_HOST    = gcc
 CFLAGS_HOST = -O3 -Wall -Wextra -Wpedantic
 LDFLAGS_HOST =
 
-OBJS_HOST  = obj-host/fips202.o obj-host/keccakf1600.o
+OBJS_HOST  = obj-host/fips202.o obj-host/keccakf1600.o obj-host/crypto_hash_sha512.o
 
 KEMLIBS=$(wildcard crypto_kem/*/*)
 SIGNLIBS=$(wildcard crypto_sign/*/*)
@@ -175,26 +175,26 @@ elf/crypto_sign_%_stack.elf: $(OBJS) $(LDSCRIPT) $(RANDOMBYTES) obj/$(patsubst %
 
 
 obj/crypto_kem_%_test.o: crypto_kem/test.c $(patsubst %,%/api.h,$(patsubst %,crypto_kem/%,$(subst _,/,$%)))
-	mkdir -p obj 
+	mkdir -p obj
 	$(CC) $(CFLAGS) -o $@ -c $< \
 	-I$(patsubst %test.o,%,$(patsubst obj/%,%,$(subst crypto/kem,crypto_kem,$(subst _,/,$@)))) \
 	-I./common/
 
 obj/crypto_sign_%_test.o: crypto_sign/test.c $(patsubst %,%/api.h,$(patsubst %,crypto_sign/%,$(subst _,/,$%)))
-	mkdir -p obj 
+	mkdir -p obj
 	$(CC) $(CFLAGS) -o $@ -c $< \
 	-I$(patsubst %test.o,%,$(patsubst obj/%,%,$(subst crypto/sign,crypto_sign,$(subst _,/,$@)))) \
 	-I./common/
 
 
 obj/crypto_kem_%_testvectors.o: crypto_kem/testvectors.c $(patsubst %,%/api.h,$(patsubst %,crypto_kem/%,$(subst _,/,$%)))
-	mkdir -p obj 
+	mkdir -p obj
 	$(CC) $(CFLAGS) -o $@ -c $< \
 	-I$(patsubst %testvectors.o,%,$(patsubst obj/%,%,$(subst crypto/kem,crypto_kem,$(subst _,/,$@)))) \
 	-I./common/
 
 obj/crypto_sign_%_testvectors.o: crypto_sign/testvectors.c $(patsubst %,%/api.h,$(patsubst %,crypto_sign/%,$(subst _,/,$%)))
-	mkdir -p obj 
+	mkdir -p obj
 	$(CC) $(CFLAGS) -o $@ -c $< \
 	-I$(patsubst %testvectors.o,%,$(patsubst obj/%,%,$(subst crypto/sign,crypto_sign,$(subst _,/,$@)))) \
 	-I./common/
@@ -213,43 +213,48 @@ obj-host/crypto_sign_%_testvectors.o: crypto_sign/testvectors-host.c $(patsubst 
 
 
 obj/crypto_kem_%_speed.o: crypto_kem/speed.c $(patsubst %,%/api.h,$(patsubst %,crypto_kem/%,$(subst _,/,$%)))
-	mkdir -p obj 
+	mkdir -p obj
 	$(CC) $(CFLAGS) -o $@ -c $< \
 	-I$(patsubst %speed.o,%,$(patsubst obj/%,%,$(subst crypto/kem,crypto_kem,$(subst _,/,$@)))) \
 	-I./common/
 
 obj/crypto_sign_%_speed.o: crypto_sign/speed.c $(patsubst %,%/api.h,$(patsubst %,crypto_sign/%,$(subst _,/,$%)))
-	mkdir -p obj 
+	mkdir -p obj
 	$(CC) $(CFLAGS) -o $@ -c $< \
 	-I$(patsubst %speed.o,%,$(patsubst obj/%,%,$(subst crypto/sign,crypto_sign,$(subst _,/,$@)))) \
 	-I./common/
 
 obj/crypto_kem_%_stack.o: crypto_kem/stack.c $(patsubst %,%/api.h,$(patsubst %,crypto_kem/%,$(subst _,/,$%)))
-	mkdir -p obj 
+	mkdir -p obj
 	$(CC) $(CFLAGS) -o $@ -c $< \
 	-I$(patsubst %stack.o,%,$(patsubst obj/%,%,$(subst crypto/kem,crypto_kem,$(subst _,/,$@)))) \
 	-I./common/
 
 obj/crypto_sign_%_stack.o: crypto_sign/stack.c $(patsubst %,%/api.h,$(patsubst %,crypto_sign/%,$(subst _,/,$%)))
-	mkdir -p obj 
+	mkdir -p obj
 	$(CC) $(CFLAGS) -o $@ -c $< \
 	-I$(patsubst %stack.o,%,$(patsubst obj/%,%,$(subst crypto/sign,crypto_sign,$(subst _,/,$@)))) \
 	-I./common/
 
 
 obj/randombytes.o: common/randombytes.c
-	mkdir -p obj 
+	mkdir -p obj
 	$(CC) $(CFLAGS) -o $@ -c $^
 
 obj/stm32f4_wrapper.o:  common/stm32f4_wrapper.c
-	mkdir -p obj 
+	mkdir -p obj
 	$(CC) $(CFLAGS) -o $@ -c $^
 
 obj/fips202.o:  common/fips202.c
-	mkdir -p obj 
+	mkdir -p obj
 	$(CC) $(CFLAGS) -o $@ -c $^
 
 obj/keccakf1600.o:  common/keccakf1600.S
+	mkdir -p obj
+	$(CC) $(CFLAGS) -o $@ -c $^
+
+
+obj/crypto_hash_sha512.o:  common/crypto_hash_sha512.c
 	mkdir -p obj
 	$(CC) $(CFLAGS) -o $@ -c $^
 

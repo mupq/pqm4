@@ -282,6 +282,22 @@ new subdirectory under `crypto_sign/`.
    The SHAKE and cSHAKE functions are also accessible via the absorb-squeezeblocks functions, which offer incremental
    output generation (but not incremental input handling).
 
+## Using optimised SHA512
+
+  Some schemes submitted to NIST make use of SHA512 for hashing.
+  We've experimented with assembly-optimised SHA512, but found that the speed-up
+  achievable with this compared to the C implementation from
+  [SUPERCOP](http://bench.cr.yp.to/) is negligible
+  when compiled using `arm-none-eabi-gcc-8.2.0`.
+  For older compiler versions (e.g. `5.4.1`) hand-optimised assembly implementations
+  were significantly faster.
+  We've therefore decided to only include a C version of SHA512.
+  The available functions are:
+   ```c
+  int crypto_hash_sha512(unsigned char *out,const unsigned char *in,unsigned long long inlen);
+   ```
+  Implementations can make use of this by including `crypto_hash_sha512.h`.
+
 ## License
 Different parts of **pqm4** have different licenses. Specifically,
 * the files under `common/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
