@@ -61,5 +61,6 @@ int main(void)
   printcycles("verify cycles: ", (t0+overflowcnt*2400000llu)-t1);
 
   send_USART_str("#");
+  while(1);
   return 0;
 }

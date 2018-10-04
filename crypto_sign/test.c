@@ -90,6 +90,6 @@ int main(void)
     test_sign();
     test_wrong_pk();
     send_USART_str("#");
-
+    while(1);
     return 0;
 }

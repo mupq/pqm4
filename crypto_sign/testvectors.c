@@ -119,5 +119,6 @@ int main(void)
   }
 
   send_USART_str("#");
+  while(1);
   return 0;
 }
