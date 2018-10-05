@@ -6,7 +6,7 @@ CC_HOST = gcc
 CFLAGS_HOST = -Wall -Wextra -O3
 AR_HOST = gcc-ar
 
-OBJECTS= NTRUEncrypt.o kem.o packing.o param.o poly.o crypto_stream.o
+OBJECTS= NTRUEncrypt.o kem.o packing.o param.o poly.o
 HEADERS=
 
 
