@@ -160,7 +160,7 @@ executions is reported in parantheses.
 | ntruhrss701 (10 executions) | ref | AVG: 197,262,297 <br /> MIN: 197,261,894 <br /> MAX: 197,262,845 |  AVG: 5,166,153 <br /> MIN: 5,166,153 <br /> MAX: 5,166,155 | AVG: 15,069,480 <br /> MIN: 15,069,478 <br /> MAX: 15,069,485 |
 | saber (10 executions) | ref | AVG: 7,122,695 <br /> MIN: 7,122,695 <br /> MAX: 7,122,695 |  AVG: 9,470,634 <br /> MIN: 9,470,634 <br /> MAX: 9,470,634 | AVG: 12,303,775 <br /> MIN: 12,303,775 <br /> MAX: 12,303,775 |
 | sikep751 (1 executions) | ref | AVG: 3,508,587,555 <br /> MIN: 3,508,587,555 <br /> MAX: 3,508,587,555 |  AVG: 5,685,591,898 <br /> MIN: 5,685,591,898 <br /> MAX: 5,685,591,898 | AVG: 6,109,763,845 <br /> MIN: 6,109,763,845 <br /> MAX: 6,109,763,845 |
-| sntrup4591761 (10 executions) | ref | AVG: 147,543,618 <br /> MIN: 147,543,618 <br /> MAX: 147,543,618 |  AVG: 10,631,675 <br /> MIN: 10,631,675 <br /> MAX: 10,631,675 | AVG: 30,641,200 <br /> MIN: 30,641,200 <br /> MAX: 30,641,200 |
+| sntrup4591761 (10 executions) | ref | AVG: 145,371,484 <br /> MIN: 145,371,484 <br /> MAX: 145,371,484 |  AVG: 10,331,556 <br /> MIN: 10,331,556 <br /> MAX: 10,331,556 | AVG: 30,335,175 <br /> MIN: 30,335,175 <br /> MAX: 30,335,175 |
 #### Signature Schemes
 | scheme | implementation | key generation [cycles] | sign [cycles] | verify [cycles] |
 | ------ | -------------- | ----------------------- | ------------- | ----------------|
@@ -182,7 +182,7 @@ executions is reported in parantheses.
 | ntruhrss701 | ref | 10,024 |  8,996 | 10,244 |
 | saber | ref | 12,616 |  14,888 | 15,984 |
 | sikep751 | ref | 11,128 |  11,672 | 12,224 |
-| sntrup4591761 | ref | 14,648 |  10,824 | 16,176 |
+| sntrup4591761 | ref | 14,608 |  7,264 | 12,544 |
 #### Signature Schemes
 | scheme | implementation | key generation [bytes] | sign [bytes] | verify [bytes] |
 | ------ | -------------- | ----------------------- | ------------- | ----------------|
