@@ -3,7 +3,6 @@
 
 #include <string.h>
 #include <stdlib.h>
-#include <malloc.h>
 
 #include "params.h"
 #include "fips202.h"
