@@ -6,8 +6,8 @@ CC_HOST = gcc
 CFLAGS_HOST = -Wall -Wextra -O3
 AR_HOST = gcc-ar
 
-OBJECTS = RLizard.o sha512.o
-
+OBJECTS = RLizard.o
+ 
 OBJECTS_HOST = $(patsubst %.o,%_host.o,$(OBJECTS))
 libpqm4.a: $(OBJECTS) libkeccak/pqm4libkeccak
 	rm -f libkeccak/*.o
