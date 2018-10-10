@@ -6,9 +6,9 @@ CC_HOST = gcc
 CFLAGS_HOST = -Wall -Wextra -O3
 AR_HOST = gcc-ar
 
-OBJECTS = dec.o enc.o int32_sort.o keypair.o r3_mult.o r3_recip.o random32.o randomsmall.o randomweightw.o rq.o rq_mult.o rq_recip3.o rq_round3.o rq_rounded.o small.o swap.o crypto_hashblocks_sha512.o crypto_hash_sha512.o crypto_verify_32.o
+OBJECTS = dec.o enc.o int32_sort.o keypair.o r3_mult.o r3_recip.o random32.o randomsmall.o randomweightw.o rq.o rq_mult.o rq_recip3.o rq_round3.o rq_rounded.o small.o swap.o crypto_verify_32.o
 
-HEADERS = api.h crypto_kem.h crypto_kem_sntrup4591761.h int32_sort.h mod3.h modq.h params.h r3.h randomweightw.c rq.h small.h swap.h crypto_verify_32.h crypto_hashblocks_sha512.h crypto_hash_sha512.h
+HEADERS = api.h crypto_kem.h crypto_kem_sntrup4591761.h int32_sort.h mod3.h modq.h params.h r3.h randomweightw.c rq.h small.h swap.h crypto_verify_32.h
 
 OBJECTS_HOST = $(patsubst %.o,%_host.o,$(OBJECTS))
 
@@ -32,4 +32,4 @@ libpqhost.a: $(OBJECTS_HOST)
 clean:
 	-rm -f libpqhost.a
 	-rm -f libpqm4.a
-	-rm -f *.o 
+	-rm -f *.o
