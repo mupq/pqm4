@@ -74,7 +74,7 @@ void poly_type_convert_df(poly_f f, poly_d d);
 void poly_copy_d(poly_d r, poly_d p);
 
 void poly_setrandom_rsec(poly_d *r,poly_d *e, uint8_t *gamma);
-void poly_gen_matrix(poly_d **A, uint8_t* seed);
+void poly_gen_matrix(poly_d A[KINDI_KEM_L][KINDI_KEM_L], uint8_t* seed);
 
 void poly_sub_constant(poly_d r, const poly_d f, const int64_t c);
 void poly_add_nored(poly_d r, const poly_d f, const poly_d g);

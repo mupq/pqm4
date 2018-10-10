@@ -34,7 +34,7 @@ void poly_copy_d(poly_d r, poly_d p) {
 void poly_setrandom_rsec(poly_d *r,poly_d *e, uint8_t *gamma) {
 
 	int bufferlen = 2*KINDI_KEM_L*KINDI_KEM_N*(KINDI_KEM_LOG2RSEC+1)/8;
-	uint8_t *buffer = malloc(bufferlen);
+	uint8_t buffer[bufferlen];
 	shake128(buffer,bufferlen,gamma,KINDI_KEM_SEEDSIZE);
 	int i;
 	uint64_t offset =0;
@@ -46,15 +46,14 @@ void poly_setrandom_rsec(poly_d *r,poly_d *e, uint8_t *gamma) {
 		offset+= KINDI_KEM_N*(KINDI_KEM_LOG2RSEC+1)/8;
 	}
 
-	free(buffer);
 }
 
 // generate LxL matrix of polynomials from a seed \mu
-void poly_gen_matrix(poly_d **A, uint8_t * seed) {
+void poly_gen_matrix(poly_d A[KINDI_KEM_L][KINDI_KEM_L], uint8_t * seed) {
 
 	uint32_t tmp;
 	int buffer_size = KINDI_KEM_L * KINDI_KEM_L * KINDI_KEM_N * KINDI_KEM_BYTESLOGQ;
-	uint8_t *buffer = malloc(buffer_size);
+	uint8_t buffer[buffer_size];
 
 	shake128(buffer, buffer_size, seed, KINDI_KEM_SEEDSIZE);
 	int a, x, i, y;
@@ -70,7 +69,6 @@ void poly_gen_matrix(poly_d **A, uint8_t * seed) {
 
 			}
 
-	free(buffer);
 }
 
 

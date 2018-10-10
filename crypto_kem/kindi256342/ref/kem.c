@@ -8,11 +8,8 @@ int crypto_kem_keypair(unsigned char *pk, unsigned char *sk) {
 	memset(sk, 0, KINDI_KEM_SECRETKEYBYTES);
 	memset(pk, 0, KINDI_KEM_PUBLICKEYBYTES);
 	kindi_pk pk_p;
-	poly_d *sk_p;
-
-	pk_p.b = (poly_d*) memalign(32, KINDI_KEM_L * sizeof(poly_d));
-	pk_p.seed = (uint8_t *) malloc(KINDI_KEM_SEEDSIZE);
-	sk_p = (poly_d*) memalign(32, KINDI_KEM_L * sizeof(poly_d));
+	poly_d sk_p[KINDI_KEM_L];
+	
 	kindi_keygen(&pk_p, sk_p);
 
 	int offset_pk = 0;
@@ -35,10 +32,6 @@ int crypto_kem_keypair(unsigned char *pk, unsigned char *sk) {
 	}
 
 	memcpy(sk + offset_sk, pk, KINDI_KEM_PUBLICKEYBYTES);
-
-	free(pk_p.b);
-	free(pk_p.seed);
-	free(sk_p);
 	return 0;
 }
 
@@ -47,9 +40,6 @@ int crypto_kem_enc(unsigned char *ct, unsigned char *ss,
 
 	int i;
 	kindi_pk pk_p;
-
-	pk_p.b = (poly_d*) memalign(32, KINDI_KEM_L * sizeof(poly_d));
-	pk_p.seed = (uint8_t *) malloc(KINDI_KEM_SEEDSIZE);
 
 	// convert pk from byte-array to polynomials and decompress
 	int offset_pk = 0;
@@ -62,10 +52,6 @@ int crypto_kem_enc(unsigned char *ct, unsigned char *ss,
 	memcpy(pk_p.seed, pk + offset_pk, KINDI_KEM_SEEDSIZE);
 
 	kindi_kem_encaps(&pk_p, ct, ss);
-
-	free(pk_p.b);
-	free(pk_p.seed);
-
 	return 0;
 
 }
@@ -75,11 +61,8 @@ int crypto_kem_dec(unsigned char *ss, const unsigned char *ct,
 	int i;
 	kindi_pk pk_p;
 
-	poly_d *cipher = (poly_d *) memalign(32,
-	KINDI_KEM_NUMBER_CIPHERPOLY * sizeof(poly_d));
-	pk_p.b = (poly_d*) memalign(32, KINDI_KEM_L * sizeof(poly_d));
-	pk_p.seed = (uint8_t *) malloc(KINDI_KEM_SEEDSIZE);
-	poly_d *sk_p = (poly_d*) memalign(32, KINDI_KEM_L * sizeof(poly_d));
+	poly_d cipher[KINDI_KEM_NUMBER_CIPHERPOLY];
+	poly_d sk_p[KINDI_KEM_L];
 
 	int offset_sk = 0;
 	int offset_c = 0;
@@ -109,11 +92,5 @@ int crypto_kem_dec(unsigned char *ss, const unsigned char *ct,
 	}
 
 	kindi_kem_decaps(sk_p, &pk_p, cipher, ct, ss);
-
-	free(pk_p.b);
-	free(pk_p.seed);
-	free(sk_p);
-	free(cipher);
-
 	return 0;
 }
