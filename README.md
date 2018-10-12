@@ -298,6 +298,18 @@ new subdirectory under `crypto_sign/`.
    ```
   Implementations can make use of this by including `crypto_hash_sha512.h`.
 
+## Bibliography
+
+When referring to this framework in academic literature, please consider using the following bibTeX excerpt:
+
+```
+@misc{PQM4,
+  title = {{PQM4}: Post-quantum crypto library for the {ARM} {Cortex-M4}},
+  author = {Matthias J. Kannwischer and Joost Rijneveld and Peter Schwabe and Ko Stoffelen},
+  note = {\url{https://github.com/mupq/pqm4}}
+}
+```
+
 ## License
 Different parts of **pqm4** have different licenses. Specifically,
 * the files under `common/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
