@@ -10,8 +10,8 @@ int crypto_kem_dec(unsigned char *ss, const unsigned char *ct, const unsigned ch
 #define PublicKey_A (LWE_N * 2)
 #define PublicKey_B (LWE_N * 2)
 
-#define CRYPTO_SECRETKEYBYTES LWE_N + (LWE_N / 8)
 #define CRYPTO_PUBLICKEYBYTES (PublicKey_A + PublicKey_B)
+#define CRYPTO_SECRETKEYBYTES (LWE_N + (LWE_N / 8) + CRYPTO_PUBLICKEYBYTES)
 #define CRYPTO_BYTES (LAMBDA / 4)
 
 #ifdef RING_CATEGORY1
