@@ -27,6 +27,8 @@ int crypto_kem_keypair(
     uint16_t mem[param->padN * 3];
     uint16_t buf[param->padN * 6];
 
+    memset(mem,0,sizeof(uint16_t)*padN);
+
     F = mem;
     g = F   + param->padN;
     h = g   + param->padN;
