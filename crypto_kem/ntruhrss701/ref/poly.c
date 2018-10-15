@@ -378,12 +378,12 @@ static void poly_R2_inv(poly *r, const poly *a)
 {
   /* Schroeppel--Orman--O'Malley--Spatscheck
    * "Almost Inverse" algorithm as described
-   * by Siverman in NTRU Tech Report #14 */
+   * by Silverman in NTRU Tech Report #14 */
   // with several modifications to make it run in constant-time
   int i, j;
   int k = 0;
-  int degf = NTRU_N-1;
-  int degg = NTRU_N-1;
+  uint16_t degf = NTRU_N-1;
+  uint16_t degg = NTRU_N-1;
   int sign, t, swap;
   int done = 0;
   poly b, f, g;
@@ -400,11 +400,7 @@ static void poly_R2_inv(poly *r, const poly *a)
 
   /* f(X) := a(X) */
   for(i=0; i<NTRU_N; i++)
-  {
     f.coeffs[i] = a->coeffs[i] & 1;
-    if(f.coeffs[i])
-      degf = i;
-  }
 
   /* g(X) := 1 + X + X^2 + ... + X^{N-1} */
   for(i=0; i<NTRU_N; i++)
@@ -413,7 +409,7 @@ static void poly_R2_inv(poly *r, const poly *a)
   for(j=0;j<2*(NTRU_N-1)-1;j++)
   {
     sign = f.coeffs[0];
-    swap = sign && !done && (degf < degg);
+    swap = sign & !done & ((degf - degg) >> 15);
 
     cswappoly(&f, &g, swap);
     cswappoly(&b, c, swap);
@@ -429,7 +425,7 @@ static void poly_R2_inv(poly *r, const poly *a)
     degf -= !done;
     k += !done;
 
-    done = (degf == 0);
+    done = 1 - (((uint16_t)-degf) >> 15);
   }
 
   k = k - NTRU_N*(k >= NTRU_N);
@@ -490,8 +486,8 @@ void poly_S3_inv(poly *r, const poly *a)
   // with several modifications to make it run in constant-time
   int i, j;
   int k = 0;
-  int degf = NTRU_N-1;
-  int degg = NTRU_N-1;
+  uint16_t degf = NTRU_N-1;
+  uint16_t degg = NTRU_N-1;
   int sign, fsign = 0, t, swap;
   int done = 0;
   poly b, c, f, g;
@@ -516,7 +512,7 @@ void poly_S3_inv(poly *r, const poly *a)
   for(j=0; j<2*(NTRU_N-1)-1; j++)
   {
     sign = mod3(2 * g.coeffs[0] * f.coeffs[0]);
-    swap = sign && !done && (degf < degg);
+    swap = (((sign & 2) >> 1) | sign) & !done & ((degf - degg) >> 15);
 
     cswappoly(&f, &g, swap);
     cswappoly(&b, &c, swap);
@@ -532,7 +528,7 @@ void poly_S3_inv(poly *r, const poly *a)
     degf -= !done;
     k += !done;
 
-    done = (degf == 0);
+    done = 1 - (((uint16_t)-degf) >> 15);
   }
 
   fsign = f.coeffs[0];
