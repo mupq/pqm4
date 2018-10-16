@@ -91,7 +91,6 @@ int check_keys(
     {
         if (grec[i]!=g[i])
         {
-            printf("checking keys error for %dth coefficients: %d %d\n", i, grec[i], g[i]);
             return -1;
         }
     }
@@ -111,7 +110,6 @@ check_m (
     {
         if(m[i]!=1 && m[i]!=65535 && m[i]!=0)
         {
-            printf("checking message error for %dth coefficients: %d \n", i, m[i]);
             return -1;
         }
     }
@@ -132,7 +130,6 @@ int encrypt_kem(
 {
     if (check_m(m, param->N) == -1 )
     {
-        printf("error message\n");
         return -1;
     }
     uint16_t    i;
@@ -231,7 +228,6 @@ pad_msg(
 {
     if (msg_len > param->max_msg_len)
     {
-        printf("error: message too long");
         return -1;
     }
     uint16_t    *pad;
@@ -287,7 +283,6 @@ recover_msg(
 
     if (msg_len > param->max_msg_len)
     {
-        printf("error: message too long");
         return -1;
     }
 
@@ -322,7 +317,6 @@ generate_r(
     {
         if (msg[i]!=0 && msg[i]!=1 && (msg[i]%param->q)!=param->q-1)
         {
-            printf("invalid messages\n");
             return -1;
         }
     }
@@ -532,28 +526,6 @@ int decrypt_cca(
     {
         if (((param->p*t_rec[i] - t[i]) & (param->q-1)) !=0)
         {
-            printf("error: \n");
-            printf("r: \n");
-            for (i=0;i<param->padN;i++)
-                printf("%d, ", r[i]);
-            printf("\n");
-            printf("h: \n");
-            for (i=0;i<param->padN;i++)
-                printf("%d, ", h[i]);
-            printf("\n");
-            printf("t_rec: \n");
-            for (i=0;i<param->padN;i++)
-                printf("%d, ", t_rec[i]);
-            printf("\n");
-            printf("t: \n");
-            for (i=0;i<param->padN;i++)
-                printf("%d, ", t[i]);
-            printf("\n");
-            printf("c: \n");
-            for (i=0;i<param->padN;i++)
-                printf("%d, ", c[i]);
-            printf("\n");
-
             memset(buf,0, sizeof(uint16_t)*param->padN*8);
             return -1;
         }

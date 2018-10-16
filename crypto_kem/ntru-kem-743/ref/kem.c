@@ -63,7 +63,6 @@ int crypto_kem_enc(
 
     if ( param->id!=NTRU_KEM_443 && param->id != NTRU_KEM_743)
     {
-        printf("unsupported parameter sets\n");
         return -1;
     }
 
@@ -111,7 +110,6 @@ int crypto_kem_dec(
     param   =   get_param_set_by_id(ct[0]);
     if ( param->id!=NTRU_KEM_443 && param->id != NTRU_KEM_743)
     {
-        printf("unsupported parameter sets\n");
         return -1;
     }
 
