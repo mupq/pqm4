@@ -143,53 +143,58 @@ The benchmark results (in `benchmarks/`) created by
 ## Benchmarks
 The tables below list cycle counts and stack usage of the implementations currently included in **pqm4**.
 All cycle counts were obtained at 24MHz to avoid wait cycles due to the speed of the memory controller.
-For most schemes we report minimum, maxium, and average cycle counts of 10 executions. 
+For most schemes we report minimum, maxium, and average cycle counts of 100 executions.
+For schemes with no cycle count variation we only did 10 executions. 
 For some particularly slow schemes we reduce the number of executions; the number of
 executions is reported in parantheses.
+
+The following numbers were obtained with `arm-none-eabi-gcc 8.2.0` and libopencm3
+[@8b1ac58](https://github.com/libopencm3/libopencm3/commit/8b1ac585dfd6eb13938f2090bff6a78b836a0452)
+
 
 ### Speed Evaluation
 #### Key Encapsulation Schemes
 | scheme | implementation | key generation [cycles] | encapsulation [cycles] | decapsulation [cycles] |
 | ------ | -------------- | ----------------------- | ---------------------- | -----------------------|
-| frodo640-cshake (10 executions) | opt | AVG: 94,191,951 <br /> MIN: 94,191,921 <br /> MAX: 94,192,027 |  AVG: 111,688,861 <br /> MIN: 111,688,796 <br /> MAX: 111,688,895 | AVG: 112,156,317 <br /> MIN: 112,156,264 <br /> MAX: 112,156,389 |
-| kindi256342 (10 executions) | ref | AVG: 21,793,959 <br /> MIN: 21,784,358 <br /> MAX: 21,803,111 |  AVG: 28,172,479 <br /> MIN: 28,155,635 <br /> MAX: 28,183,740 | AVG: 37,125,697 <br /> MIN: 37,105,911 <br /> MAX: 37,138,137 |
-| kyber768 (10 executions) | m4 | AVG: 1,200,351 <br /> MIN: 1,199,831 <br /> MAX: 1,200,671 |  AVG: 1,497,789 <br /> MIN: 1,497,296 <br /> MAX: 1,498,094 | AVG: 1,526,564 <br /> MIN: 1,526,070 <br /> MAX: 1,526,868 |
-| kyber768 (10 executions) | ref | AVG: 1,379,979 <br /> MIN: 1,379,339 <br /> MAX: 1,380,339 |  AVG: 1,797,604 <br /> MIN: 1,796,996 <br /> MAX: 1,797,947 | AVG: 1,950,350 <br /> MIN: 1,949,742 <br /> MAX: 1,950,693 |
-| newhope1024cca (10 executions) | ref | AVG: 1,502,435 <br /> MIN: 1,502,179 <br /> MAX: 1,502,707 |  AVG: 2,370,157 <br /> MIN: 2,369,901 <br /> MAX: 2,370,429 | AVG: 2,517,215 <br /> MIN: 2,516,959 <br /> MAX: 2,517,488 |
-| newhope1024cca (9 executions) | m4 | AVG: 1,246,626 <br /> MIN: 1,246,404 <br /> MAX: 1,246,772 |  AVG: 1,966,358 <br /> MIN: 1,966,137 <br /> MAX: 1,966,505 | AVG: 1,977,753 <br /> MIN: 1,977,532 <br /> MAX: 1,977,899 |
-| ntruhrss701 (10 executions) | ref | AVG: 197,262,297 <br /> MIN: 197,261,894 <br /> MAX: 197,262,845 |  AVG: 5,166,153 <br /> MIN: 5,166,153 <br /> MAX: 5,166,155 | AVG: 15,069,480 <br /> MIN: 15,069,478 <br /> MAX: 15,069,485 |
-| saber (10 executions) | ref | AVG: 7,122,695 <br /> MIN: 7,122,695 <br /> MAX: 7,122,695 |  AVG: 9,470,634 <br /> MIN: 9,470,634 <br /> MAX: 9,470,634 | AVG: 12,303,775 <br /> MIN: 12,303,775 <br /> MAX: 12,303,775 |
-| sikep751 (1 executions) | ref | AVG: 3,508,587,555 <br /> MIN: 3,508,587,555 <br /> MAX: 3,508,587,555 |  AVG: 5,685,591,898 <br /> MIN: 5,685,591,898 <br /> MAX: 5,685,591,898 | AVG: 6,109,763,845 <br /> MIN: 6,109,763,845 <br /> MAX: 6,109,763,845 |
+| frodo640-cshake (100 executions) | opt | AVG: 94,119,511 <br /> MIN: 94,119,511 <br /> MAX: 94,119,511 |  AVG: 106,992,266 <br /> MIN: 106,992,266 <br /> MAX: 106,992,266 | AVG: 107,505,670 <br /> MIN: 107,505,670 <br /> MAX: 107,505,670 |
+| kindi256342 (100 executions) | ref | AVG: 21,794,303 <br /> MIN: 21,777,419 <br /> MAX: 21,812,486 |  AVG: 28,175,792 <br /> MIN: 28,155,214 <br /> MAX: 28,202,159 | AVG: 37,128,741 <br /> MIN: 37,106,492 <br /> MAX: 37,153,861 |
+| kyber768 (100 executions) | m4 | AVG: 1,200,291 <br /> MIN: 1,199,710 <br /> MAX: 1,200,930 |  AVG: 1,446,284 <br /> MIN: 1,445,732 <br /> MAX: 1,446,891 | AVG: 1,477,365 <br /> MIN: 1,476,813 <br /> MAX: 1,477,972 |
+| kyber768 (100 executions) | ref | AVG: 1,381,942 <br /> MIN: 1,381,440 <br /> MAX: 1,382,660 |  AVG: 1,748,054 <br /> MIN: 1,747,577 <br /> MAX: 1,748,736 | AVG: 1,904,113 <br /> MIN: 1,903,637 <br /> MAX: 1,904,796 |
+| newhope1024cca (100 executions) | m4 | AVG: 1,243,729 <br /> MIN: 1,243,497 <br /> MAX: 1,244,041 |  AVG: 1,963,184 <br /> MIN: 1,962,952 <br /> MAX: 1,963,495 | AVG: 1,978,982 <br /> MIN: 1,978,748 <br /> MAX: 1,979,293 |
+| newhope1024cca (100 executions) | ref | AVG: 1,508,532 <br /> MIN: 1,508,149 <br /> MAX: 1,508,917 |  AVG: 2,380,428 <br /> MIN: 2,380,046 <br /> MAX: 2,380,813 | AVG: 2,536,341 <br /> MIN: 2,535,957 <br /> MAX: 2,536,725 |
+| ntruhrss701 (10 executions) | ref | AVG: 205,156,102 <br /> MIN: 205,156,102 <br /> MAX: 205,156,102 |  AVG: 5,165,764 <br /> MIN: 5,165,764 <br /> MAX: 5,165,764 | AVG: 15,067,346 <br /> MIN: 15,067,346 <br /> MAX: 15,067,346 |
+| saber (10 executions) | ref | AVG: 6,530,112 <br /> MIN: 6,530,112 <br /> MAX: 6,530,112 |  AVG: 8,683,792 <br /> MIN: 8,683,792 <br /> MAX: 8,683,792 | AVG: 10,580,822 <br /> MIN: 10,580,822 <br /> MAX: 10,580,822 |
+| sikep751 (1 executions) | ref | AVG: 3,525,565,432 <br /> MIN: 3,525,565,432 <br /> MAX: 3,525,565,432 |  AVG: 5,712,676,148 <br /> MIN: 5,712,676,148 <br /> MAX: 5,712,676,148 | AVG: 6,139,132,015 <br /> MIN: 6,139,132,015 <br /> MAX: 6,139,132,015 |
 | sntrup4591761 (10 executions) | ref | AVG: 145,371,484 <br /> MIN: 145,371,484 <br /> MAX: 145,371,484 |  AVG: 10,331,556 <br /> MIN: 10,331,556 <br /> MAX: 10,331,556 | AVG: 30,335,175 <br /> MIN: 30,335,175 <br /> MAX: 30,335,175 |
 #### Signature Schemes
 | scheme | implementation | key generation [cycles] | sign [cycles] | verify [cycles] |
 | ------ | -------------- | ----------------------- | ------------- | ----------------|
-| dilithium (100 executions) | ref | AVG: 2,888,788 <br /> MIN: 2,887,878 <br /> MAX: 2,889,666 |  AVG: 17,318,678 <br /> MIN: 5,395,144 <br /> MAX: 58,367,745 | AVG: 3,225,821 <br /> MIN: 3,225,481 <br /> MAX: 3,226,288 |
-| qTesla-I (100 executions) | ref | AVG: 16,894,344 <br /> MIN: 8,108,507 <br /> MAX: 48,319,170 |  AVG: 8,232,552 <br /> MIN: 1,720,142 <br /> MAX: 49,637,253 | AVG: 1,280,935 <br /> MIN: 1,277,433 <br /> MAX: 1,305,748 |
-| qTesla-III-size (100 executions) | ref | AVG: 56,075,146 <br /> MIN: 22,907,085 <br /> MAX: 153,715,649 |  AVG: 24,229,336 <br /> MIN: 3,709,273 <br /> MAX: 122,873,829 | AVG: 2,531,368 <br /> MIN: 2,514,719 <br /> MAX: 2,566,414 |
-| qTesla-III-speed (100 executions) | ref | AVG: 36,689,132 <br /> MIN: 20,936,453 <br /> MAX: 109,099,374 |  AVG: 13,203,440 <br /> MIN: 3,681,969 <br /> MAX: 43,997,844 | AVG: 2,581,961 <br /> MIN: 2,575,513 <br /> MAX: 2,607,342 |
-| sphincs-shake256-128s (1 executions) | ref | AVG: 4,433,268,654 <br /> MIN: 4,433,268,654 <br /> MAX: 4,433,268,654 |  AVG: 61,562,227,280 <br /> MIN: 61,562,227,280 <br /> MAX: 61,562,227,280 | AVG: 70,943,476 <br /> MIN: 70,943,476 <br /> MAX: 70,943,476 |
-### Stack Usage
+| dilithium (100 executions) | ref | AVG: 2,788,880 <br /> MIN: 2,787,512 <br /> MAX: 2,789,574 |  AVG: 14,561,389 <br /> MIN: 5,042,770 <br /> MAX: 56,392,860 | AVG: 3,064,201 <br /> MIN: 3,063,784 <br /> MAX: 3,064,698 |
+| qTesla-I (100 executions) | ref | AVG: 17,545,901 <br /> MIN: 7,826,320 <br /> MAX: 51,706,602 |  AVG: 6,317,445 <br /> MIN: 1,509,322 <br /> MAX: 25,051,076 | AVG: 1,059,370 <br /> MIN: 1,051,846 <br /> MAX: 1,085,445 |
+| qTesla-III-size (100 executions) | ref | AVG: 58,227,852 <br /> MIN: 22,220,409 <br /> MAX: 159,316,030 |  AVG: 19,869,370 <br /> MIN: 3,457,790 <br /> MAX: 89,902,537 | AVG: 2,297,530 <br /> MIN: 2,292,479 <br /> MAX: 2,325,980 |
+| qTesla-III-speed (100 executions) | ref | AVG: 30,720,411 <br /> MIN: 19,963,698 <br /> MAX: 151,901,043 |  AVG: 11,987,079 <br /> MIN: 3,422,459 <br /> MAX: 46,186,863 | AVG: 2,225,296 <br /> MIN: 2,216,600 <br /> MAX: 2,258,153 |
+| sphincs-shake256-128s (1 executions) | ref | AVG: 4,439,815,208 <br /> MIN: 4,439,815,208 <br /> MAX: 4,439,815,208 |  AVG: 61,665,898,904 <br /> MIN: 61,665,898,904 <br /> MAX: 61,665,898,904 | AVG: 72,326,283 <br /> MIN: 72,326,283 <br /> MAX: 72,326,283 |
+### Memory Evaluation
 #### Key Encapsulation Schemes
 | scheme | implementation | key generation [bytes] | encapsulation [bytes] | decapsulation [bytes] |
 | ------ | -------------- | ----------------------- | ---------------------- | -----------------------|
-| frodo640-cshake | opt | 36,536 |  58,328 | 68,680 |
-| kindi256342 | ref | 59,864 | 71,000 | 83,336 |
-| kyber768 | m4 | 10,304 |  13,464 | 14,624 |
-| kyber768 | ref | 10,304 |  13,464 | 14,624 |
-| newhope1024cca | m4 | 11,160 |  17,456 | 19,656 |
-| newhope1024cca | ref | 11,160 |  17,456 | 19,656 |
-| ntruhrss701 | ref | 10,024 |  8,996 | 10,244 |
-| saber | ref | 12,616 |  14,888 | 15,984 |
-| sikep751 | ref | 11,128 |  11,672 | 12,224 |
+| frodo640-cshake | opt | 36,528 |  58,240 | 68,608 |
+| kindi256342 | ref | 59,864 |  71,000 | 84,096 |
+| kyber768 | m4 | 10,544 |  13,720 | 14,880 |
+| kyber768 | ref | 10,544 |  13,720 | 14,880 |
+| newhope1024cca | m4 | 11,152 |  17,448 | 19,648 |
+| newhope1024cca | ref | 11,152 |  17,448 | 19,648 |
+| ntruhrss701 | ref | 10,020 |  8,956 | 10,204 |
+| saber | ref | 12,616 |  14,896 | 15,992 |
+| sikep751 | ref | 11,528 |  11,688 | 12,240 |
 | sntrup4591761 | ref | 14,608 |  7,264 | 12,544 |
 #### Signature Schemes
 | scheme | implementation | key generation [bytes] | sign [bytes] | verify [bytes] |
 | ------ | -------------- | ----------------------- | ------------- | ----------------|
-| dilithium | ref | 51,372 |  87,544 | 55,752 |
-| qTesla-I | ref | 22,456 |  29,328 | 23,080 |
-| qTesla-III-size | ref | 44,008 |  58,104 | 45,712 |
-| qTesla-III-speed | ref | 44,008 |  58,104 | 45,704 |
+| dilithium | ref | 50,864 |  86,720 | 54,904 |
+| qTesla-I | ref | 22,480 |  29,336 | 23,096 |
+| qTesla-III-size | ref | 43,984 |  58,116 | 45,732 |
+| qTesla-III-speed | ref | 43,992 |  58,112 | 45,712 |
 | sphincs-shake256-128s | ref | 2,904 |  3,032 | 10,768 |
 
 ## Adding new schemes and implementations
