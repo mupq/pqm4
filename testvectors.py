@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
-import serial
 import sys
 import os
 import subprocess
 import hashlib
-from utils import m4ignore
+import utils
 
-dev = serial.Serial("/dev/ttyUSB0", 115200)
 
 try:
     binaries = [x for x in os.listdir('bin') if 'testvectors.bin' in x]
@@ -36,46 +34,15 @@ for binary in binaries + binaries_host:
 
     # if this is a binary that needs to be ran on the board:
     if binary[-4:] == '.bin':
-        if m4ignore(primitive, scheme, impl):
+        if utils.m4ignore(primitive, scheme, impl):
             continue
-
         binpath = os.path.join("bin", binary)
-        print("Flashing {}..".format(binpath))
-        subprocess.run(["st-flash", "write", binpath, "0x8000000"],
-                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-        print("Flashed, now computing test vectors..".format(binary))
-        state = 'waiting'
-        marker = b''
-
-        # This parses test vector output starting with a number of leading '=',
-        #  and expects a hashtag '#' after the test vector output.
-        while True:
-            x = dev.read()
-            if state == 'waiting':
-                if x == b'=':
-                    marker += x
-                    continue
-                # If we saw >5 equal signs, assume we've probably started
-                elif marker.count(b'=') > 5:
-                    state = 'beginning'
-                    vector = []
-                    print("  .. found output marker..")
-            if state == 'beginning':
-                if x == b'=':
-                    continue
-                else:
-                    state = 'reading'
-            elif state == 'reading':
-                if x == b'#':
-                    break
-                else:
-                    vector.append(x)
-
+        results = utils.m4run(binpath)
         filename = os.path.join('testvectors/', primitive, scheme, impl)
         os.makedirs(os.path.dirname(filename), exist_ok=True)
         with open(filename, 'w') as f:
-            f.write(b''.join(vector).decode('utf-8').lstrip())
+            f.write(results.lstrip())
     else:
         binpath = os.path.join("bin-host", binary)
         print("Running {}..".format(binpath))
