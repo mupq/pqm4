@@ -4,7 +4,7 @@ Post-quantum crypto library for the ARM Cortex-M4
 ## Introduction
 The **pqm4** library, benchmarking and testing framework started as a result of the 
 [PQCRYPTO](https://pqcrypto.eu.org) project funded by the European Commission in the H2020 program. 
-It currently contains implementations of 8 post-quantum key-encapsulation mechanisms
+It currently contains implementations of 9 post-quantum key-encapsulation mechanisms
 and 3 post-quantum signature schemes targeting the ARM Cortex-M4 family of microcontrollers.
 The design goals of the library are to offer
 * a simple build system that generates an individual static library 
