@@ -148,8 +148,7 @@ For schemes with no cycle count variation we only did 10 executions.
 For some particularly slow schemes we reduce the number of executions; the number of
 executions is reported in parantheses.
 
-The following numbers were obtained with `arm-none-eabi-gcc 8.2.0` and libopencm3 https://github.com/libopencm3/libopencm3/tree/8b1ac585dfd6eb13938f2090bff6a78b836a0452. 
-
+The following numbers were obtained with `arm-none-eabi-gcc 8.2.0` and libopencm3 https://github.com/libopencm3/libopencm3/commit/8b1ac585dfd6eb13938f2090bff6a78b836a0452 
 
 
 ### Speed Evaluation
