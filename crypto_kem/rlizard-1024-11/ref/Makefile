@@ -6,19 +6,16 @@ CC_HOST = gcc
 CFLAGS_HOST = -Wall -Wextra -O3
 AR_HOST = gcc-ar
 
-OBJECTS = RLizard.o
+OBJECTS = RLizard.o libkeccak/SP800-185.o libkeccak/KeccakSpongeWidth1600.o 
  
 OBJECTS_HOST = $(patsubst %.o,%_host.o,$(OBJECTS))
-libpqm4.a: $(OBJECTS) libkeccak/pqm4libkeccak
-	rm -f libkeccak/*.o
-	cd libkeccak && $(AR) x pqm4libkeccak
-	$(AR) rcs $@ $(OBJECTS) libkeccak/*.o
+
+libpqm4.a: $(OBJECTS) libkeccak/KeccakP-1600-inplace-32bi-armv7m-le-gcc.o 
+	$(AR) rcs $@ $(OBJECTS) libkeccak/KeccakP-1600-inplace-32bi-armv7m-le-gcc.o 
 
 
-libpqhost.a: $(OBJECTS_HOST) libkeccak/pqm4libkeccakhost
-	rm -f libkeccak/*.o
-	cd libkeccak && $(AR) x pqm4libkeccakhost
-	$(AR_HOST) rcs $@ $(OBJECTS_HOST) libkeccak/*.o
+libpqhost.a: $(OBJECTS_HOST) libkeccak/KeccakP-1600-reference_host.o 
+	$(AR_HOST) rcs $@ $(OBJECTS_HOST) libkeccak/KeccakP-1600-reference_host.o
 
 
 
