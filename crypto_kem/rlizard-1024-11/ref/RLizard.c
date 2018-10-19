@@ -5,7 +5,7 @@
 #include "RLizard.h"
 #include "randombytes.h"
 #include "crypto_hash_sha512.h"
-#include "libkeccak.a.headers/SP800-185.h"
+#include "libkeccak/SP800-185.h"
 
 #define CRYPTO_SECRETKEYBYTES_WITHOUTPK (LWE_N + (LWE_N / 8))
 uint16_t seed[PublicKey_B];
