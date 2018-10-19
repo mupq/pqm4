@@ -2,7 +2,7 @@ import os
 import serial
 import subprocess
 import sys
-
+import string
 
 dev = serial.Serial("/dev/ttyUSB0", 115200,timeout=10)
 
@@ -44,7 +44,7 @@ def m4run(binpath):
                 break
             else:
                 vector.append(x)
-    return b''.join(vector).decode('utf-8')
+    return b''.join(vector).decode('utf-8', 'ignore')
 
 def m4ignore(primitive, scheme, implementation):
     ignores = [os.path.join(primitive, scheme, implementation, '.m4ignore'),
