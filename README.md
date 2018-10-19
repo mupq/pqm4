@@ -4,7 +4,7 @@ Post-quantum crypto library for the ARM Cortex-M4
 ## Introduction
 The **pqm4** library, benchmarking and testing framework started as a result of the 
 [PQCRYPTO](https://pqcrypto.eu.org) project funded by the European Commission in the H2020 program. 
-It currently contains implementations of 9 post-quantum key-encapsulation mechanisms
+It currently contains implementations of 10 post-quantum key-encapsulation mechanisms
 and 3 post-quantum signature schemes targeting the ARM Cortex-M4 family of microcontrollers.
 The design goals of the library are to offer
 * a simple build system that generates an individual static library 
@@ -25,6 +25,7 @@ Currently **pqm4** contains implementations of the following post-quantum KEMs:
 * [NewHope-1024-CCA-KEM](https://newhopecrypto.org)
 * [NTRU-HRSS-KEM-701](https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/submissions/NTRU_HRSS_KEM.zip)
 * [NTRU-KEM-743](https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/submissions/NTRUEncrypt.zip)
+* [RLizard-1024-11](https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/submissions/Lizard.zip)
 * [Saber](https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/submissions/SABER.zip)
 * [SIKE-p571](https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/submissions/SIKE.zip)
 * [Streamlined NTRU Prime 4591761](https://ntruprime.cr.yp.to/)
