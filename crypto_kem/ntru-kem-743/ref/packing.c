@@ -9,6 +9,7 @@
 #include <stdint.h>
 #include <string.h>
 #include "param.h"
+#include "packing.h"
 
 
 
@@ -134,45 +135,6 @@ ntru_octets_2_elements(
 
 /*
  * trinary polynomial to char string
- * pack 1 coefficients into 2 bits
- */
-void
-tri_to_string_old(
-    const uint16_t  in_len,     /*  in - degree of trinary poly */
-    const uint16_t  *in,        /*  in - ptr to poly */
-    unsigned char   *out)       /* out - addr for output string */
-{
-    unsigned char tmp;
-    int i,j;
-    int padNover4;
-
-    padNover4 = in_len>>2;
-    if(in_len%4==0)
-        padNover4--;
-
-    for (i=0;i<padNover4;i++)
-    {
-        tmp = 0;
-        for (j=0;j<4;j++)
-        {
-            tmp += ((in[i*4+j]&0b11)<<(2*j));
-        }
-        out[i] = tmp;
-    }
-    tmp = 0;
-    for (i=(padNover4)<<2;i<in_len;i++)
-    {
-
-        tmp += (in[i]&0b11)<<((i%4)*2);
-    }
-    out[padNover4] = tmp;
-
-    return;
-}
-
-
-/*
- * trinary polynomial to char string
  * pack 5 coefficients into 8 bits
  */
 static void
@@ -219,49 +181,6 @@ tri_to_string(
     }
     out[padNover5] = tmp1;
 
-    return;
-}
-
-
-/*
- * trinary polynomial to char string
- * unpack 1 coefficients from 2 bits
- */
-void
-string_to_tri_old(
-    const uint16_t  in_len,/*  in - degree of trinary poly */
-    const unsigned char  *in,        /*  in - ptr to string */
-    uint16_t        *out)       /* out - addr for trinary poly */
-{
-    unsigned char tmp;
-    int i,j;
-    int padNover4;
-
-    padNover4 = in_len>>2;
-    if(in_len%4==0)
-        padNover4--;
-
-    for(i=0;i<padNover4;i++)
-    {
-        tmp = in[i];
-        for (j=0;j<4;j++)
-        {
-            out[i*4+j] = tmp&0b11;
-            if (out[i*4+j]==0b11)
-                out[i*4+j] = -1;
-            tmp >>=2;
-        }
-    }
-
-    tmp = in[padNover4];
-    for (i=(padNover4)<<2;i<in_len;i++)
-    {
-
-        out[i] = tmp & 0b11;
-        if (out[i]==0b11)
-            out[i] = -1;
-        tmp >>= 2;
-    }
     return;
 }
 

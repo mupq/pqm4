@@ -82,7 +82,7 @@ int encrypt_kem_KAT(
     const PARAM_SET *param,
     unsigned char   *seed);
 
-void decrypt_kem(
+int decrypt_kem(
     uint16_t    *m,     /* output binary message */
     uint16_t    *f,     /* input secret key */
     uint16_t    *cntt,  /* input ciphertext */

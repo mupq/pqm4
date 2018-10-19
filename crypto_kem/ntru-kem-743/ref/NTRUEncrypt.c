@@ -12,6 +12,7 @@
 #include "poly.h"
 #include "randombytes.h"
 #include "crypto_hash_sha512.h"
+#include "NTRUEncrypt.h"
 
 
 /*
@@ -25,7 +26,7 @@ keygen(
           uint16_t  *buf,
     const PARAM_SET *param)
 {
-    int16_t     i;
+    uint16_t     i;
     uint16_t    *f;
     uint16_t    *f_inv;
     uint16_t    *localbuf;
@@ -74,7 +75,7 @@ int check_keys(
           uint16_t  *buf,
     const PARAM_SET *param)
 {
-    int16_t  i;
+    uint16_t  i;
     uint16_t *f, *grec, *localbuf;
 
     memset(buf, 0, sizeof(uint16_t)*param->padN*5);
@@ -100,7 +101,7 @@ int check_keys(
 }
 
 /* check if message is a valid trinary poly for kem */
-int
+static int
 check_m (
     const uint16_t *m,
     const uint16_t N)
@@ -304,7 +305,7 @@ recover_msg(
  * generate a balanced trinary r from msg and h
  * memory requirement: 2 * LENGTH_OF_HASH
  */
-int
+static int
 generate_r(
           uint16_t  *r,     /* output r */
     const uint16_t  *msg,   /* input binary message */
@@ -342,7 +343,7 @@ generate_r(
  * input a message msg, output msg \trixor hash(rh)
  * memory requirements: LENGTH_OF_HASH + 1 ring element
  */
-int
+static int
 mask_m(
           uint16_t  *msg,   /* in/output binary message */
     const uint16_t  *rh,
