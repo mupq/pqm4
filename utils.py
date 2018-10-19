@@ -44,7 +44,10 @@ def m4run(binpath):
                 break
             else:
                 vector.append(x)
-    return b''.join(vector).decode('utf-8', 'ignore')
+    output = b''.join(vector).decode('utf-8', 'ignore')
+    # sometimes there's a line full of markers; strip that out to avoid errors
+    lines = [x for x in output.split('\n') if not all(c == '=' for c in x)]
+    return '\n'.join(lines) + '\n'
 
 def m4ignore(primitive, scheme, implementation):
     ignores = [os.path.join(primitive, scheme, implementation, '.m4ignore'),
