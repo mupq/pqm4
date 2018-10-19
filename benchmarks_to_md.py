@@ -6,15 +6,9 @@ BENCHMARK_DIR = 'benchmarks/'
 
 def parseData(fileContents):
     parts = fileContents.split("\n")
-    # sometimes the output markers end up as the first line of the output file
-    if "=" in parts[0]:
-        keygen = int(parts[2])
-        encsign = int(parts[5])
-        decverify = int(parts[8])
-    else:
-        keygen = int(parts[1])
-        encsign = int(parts[4])
-        decverify = int(parts[7])
+    keygen = int(parts[1])
+    encsign = int(parts[3])
+    decverify = int(parts[5])
     return [keygen, encsign, decverify]
 
 def getStats(l):

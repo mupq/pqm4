@@ -4,7 +4,7 @@
 #include "verify.h"
 #include "owcpa.h"
 
-// API FUNCTIONS 
+// API FUNCTIONS
 int crypto_kem_keypair(unsigned char *pk, unsigned char *sk)
 {
   size_t i;
@@ -61,8 +61,6 @@ int crypto_kem_dec(unsigned char *k, const unsigned char *c, const unsigned char
   }
 
   fail = verify(c, cmp, NTRU_CIPHERTEXTBYTES);
-
-  if(fail) printf("error: reencryption produces a different result\n");
 
   for (i = 0; i < NTRU_SHAREDKEYBYTES; i++) {
     k[i] = buf[NTRU_COINBYTES + i];
