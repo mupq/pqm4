@@ -4,7 +4,7 @@ Post-quantum crypto library for the ARM Cortex-M4
 ## Introduction
 The **pqm4** library, benchmarking and testing framework started as a result of the 
 [PQCRYPTO](https://pqcrypto.eu.org) project funded by the European Commission in the H2020 program. 
-It currently contains implementations of 9 post-quantum key-encapsulation mechanisms
+It currently contains implementations of 10 post-quantum key-encapsulation mechanisms
 and 3 post-quantum signature schemes targeting the ARM Cortex-M4 family of microcontrollers.
 The design goals of the library are to offer
 * a simple build system that generates an individual static library 
@@ -25,6 +25,7 @@ Currently **pqm4** contains implementations of the following post-quantum KEMs:
 * [NewHope-1024-CCA-KEM](https://newhopecrypto.org)
 * [NTRU-HRSS-KEM-701](https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/submissions/NTRU_HRSS_KEM.zip)
 * [NTRU-KEM-743](https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/submissions/NTRUEncrypt.zip)
+* [RLizard-1024-11](https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/submissions/Lizard.zip)
 * [Saber](https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/submissions/SABER.zip)
 * [SIKE-p571](https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/submissions/SIKE.zip)
 * [Streamlined NTRU Prime 4591761](https://ntruprime.cr.yp.to/)
@@ -165,6 +166,7 @@ The following numbers were obtained with `arm-none-eabi-gcc 8.2.0` and libopencm
 | newhope1024cca (100 executions) | ref | AVG: 1,508,532 <br /> MIN: 1,508,149 <br /> MAX: 1,508,917 |  AVG: 2,380,428 <br /> MIN: 2,380,046 <br /> MAX: 2,380,813 | AVG: 2,536,341 <br /> MIN: 2,535,957 <br /> MAX: 2,536,725 |
 | ntruhrss701 (10 executions) | ref | AVG: 205,156,102 <br /> MIN: 205,156,102 <br /> MAX: 205,156,102 |  AVG: 5,165,764 <br /> MIN: 5,165,764 <br /> MAX: 5,165,764 | AVG: 15,067,346 <br /> MIN: 15,067,346 <br /> MAX: 15,067,346 |
 | ntru-kem-743 (100 executions) | ref | AVG: 59,815,371 <br /> MIN: 59,544,772 <br /> MAX: 60,057,520 |  AVG: 7,539,756 <br /> MIN: 7,512,835 <br /> MAX: 7,578,878 | AVG: 14,229,462 <br /> MIN: 14,211,760 <br /> MAX: 14,276,253 |
+| rlizard-1024-11 (100 executions) | ref | AVG: 26,423,327 <br /> MIN: 26,422,421 <br /> MAX: 26,424,264 |  AVG: 32,156,356 <br /> MIN: 32,155,918 <br /> MAX: 32,183,476 | AVG: 53,181,411 <br /> MIN: 53,180,957 <br /> MAX: 53,208,533 |
 | saber (10 executions) | ref | AVG: 6,530,112 <br /> MIN: 6,530,112 <br /> MAX: 6,530,112 |  AVG: 8,683,792 <br /> MIN: 8,683,792 <br /> MAX: 8,683,792 | AVG: 10,580,822 <br /> MIN: 10,580,822 <br /> MAX: 10,580,822 |
 | sikep751 (1 executions) | ref | AVG: 3,525,565,432 <br /> MIN: 3,525,565,432 <br /> MAX: 3,525,565,432 |  AVG: 5,712,676,148 <br /> MIN: 5,712,676,148 <br /> MAX: 5,712,676,148 | AVG: 6,139,132,015 <br /> MIN: 6,139,132,015 <br /> MAX: 6,139,132,015 |
 | sntrup4591761 (10 executions) | ref | AVG: 145,371,484 <br /> MIN: 145,371,484 <br /> MAX: 145,371,484 |  AVG: 10,331,556 <br /> MIN: 10,331,556 <br /> MAX: 10,331,556 | AVG: 30,335,175 <br /> MIN: 30,335,175 <br /> MAX: 30,335,175 |
@@ -188,6 +190,7 @@ The following numbers were obtained with `arm-none-eabi-gcc 8.2.0` and libopencm
 | newhope1024cca | ref | 11,152 |  17,448 | 19,648 |
 | ntru-kem-743 | ref | 14,148 |  13,372 | 18,036 |
 | ntruhrss701 | ref | 10,020 |  8,956 | 10,204 |
+| rlizard-1024-11 | ref | 4,272 |  10,532 | 12,636 |
 | saber | ref | 12,616 |  14,896 | 15,992 |
 | sikep751 | ref | 11,528 |  11,688 | 12,240 |
 | sntrup4591761 | ref | 14,608 |  7,264 | 12,544 |
@@ -326,6 +329,7 @@ Different parts of **pqm4** have different licenses. Specifically,
 * the files under `crypto_kem/newhope1024cca/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
 * the files under `crypto_kem/ntruhrss701/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
 * the files under `crypto_kem/ntru-kem-743/` are in the [public domain](https://raw.githubusercontent.com/NTRUOpenSourceProject/ntru-crypto/master/LICENSE.md);
+* the files under `crypto_kem/rlizard-1024-11/` are covered by the corresponding [IP statements submitted to NIST](https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/ip-statements/Lizard-Statements.pdf);
 * the files under `crypto_kem/sikep751/` are under [MIT License](https://raw.githubusercontent.com/Microsoft/PQCrypto-SIKE/master/LICENSE);
 * the files under `crypto_kem/sntrup4591761/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
 * the files under `crypto_sign/dilithium/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
