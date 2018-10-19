@@ -336,11 +336,13 @@ When referring to this framework in academic literature, please consider using t
 Different parts of **pqm4** have different licenses. Specifically,
 * the files under `common/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
 * the files under `crypto_kem/frodo640-cshake/` are under [MIT License](https://raw.githubusercontent.com/Microsoft/PQCrypto-LWEKE/master/LICENSE);
+* the files under `crypto_kem/kindi/` are covered by the corresponding [IP statements submitted to NIST](https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/ip-statements/Kindi-Statements.pdf);
 * the files under `crypto_kem/kyber768/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
 * the files under `crypto_kem/newhope1024cca/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
 * the files under `crypto_kem/ntruhrss701/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
 * the files under `crypto_kem/ntru-kem-743/` are in the [public domain](https://raw.githubusercontent.com/NTRUOpenSourceProject/ntru-crypto/master/LICENSE.md);
 * the files under `crypto_kem/rlizard-1024-11/` are covered by the corresponding [IP statements submitted to NIST](https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/ip-statements/Lizard-Statements.pdf);
+* the files under `crypto_kem/saber/` are in the [public domain](https://eprint.iacr.org/2018/682.pdf);
 * the files under `crypto_kem/sikep751/` are under [MIT License](https://raw.githubusercontent.com/Microsoft/PQCrypto-SIKE/master/LICENSE);
 * the files under `crypto_kem/sntrup4591761/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
 * the files under `crypto_sign/dilithium/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
