@@ -1,3 +1,7 @@
+# This assembly file is automatically generated. Do not modify it directly.
+# The code generator is available at https://github.com/mupq/polymul-z2mx-m4
+# - Matthias Kannwischer, Joost Rijneveld, and Peter Schwabe, 2018, Public Domain
+
 .syntax unified
 .cpu cortex-m4
 .global schoolbook_16x16
