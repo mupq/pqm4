@@ -67,7 +67,7 @@ static int test_keys(void) {
     send_stack_usage("key gen stack usage", stack_key_gen);
     send_stack_usage("encaps stack usage", stack_encaps);
     send_stack_usage("decaps stack usage", stack_decaps);
-    send_USART_str("KEYS CORRECT\n");
+    send_USART_str("OK KEYS\n");
     return 0;
   }
 }

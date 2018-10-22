@@ -21,6 +21,14 @@ def benchmarkBinary(benchmark, binary):
         return
 
     result = utils.m4run(binpath)
+    if 'ERROR KEYS' in result:
+        print("")
+        print("!!! KEY MISMATCH DURING BENCHMARKING !!!")
+        print("  This could indicate illegal stack usage,")
+        print("  leading to errors when measurement interrupts occur.")
+        print("")
+        print("  .. exiting with errors!")
+        sys.exit(1)
 
     timestamp = datetime.datetime.fromtimestamp(time.time()).strftime('%Y%m%d%H%M%S')
     filename = os.path.join('benchmarks/', benchmark, primitive, scheme, implementation, timestamp)
