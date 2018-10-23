@@ -23,7 +23,7 @@ static void printcycles(const char *s, unsigned long long c)
 
 int main(void)
 {
-  unsigned char ss[CRYPTO_BYTES];
+  unsigned char key_a[CRYPTO_BYTES], key_b[CRYPTO_BYTES];
   unsigned char sk[CRYPTO_SECRETKEYBYTES];
   unsigned char pk[CRYPTO_PUBLICKEYBYTES];
   unsigned char ct[CRYPTO_CIPHERTEXTBYTES];
@@ -47,16 +47,23 @@ int main(void)
   // Encapsulation
   t0 = systick_get_value();
   overflowcnt = 0;
-  crypto_kem_enc(ct, ss, pk);
+  crypto_kem_enc(ct, key_a, pk);
   t1 = systick_get_value();
   printcycles("encaps cycles: ", (t0+overflowcnt*2400000llu)-t1);
 
   // Decapsulation
   t0 = systick_get_value();
   overflowcnt = 0;
-  crypto_kem_dec(ss, ct, sk);
+  crypto_kem_dec(key_b, ct, sk);
   t1 = systick_get_value();
   printcycles("decaps cycles: ", (t0+overflowcnt*2400000llu)-t1);
+
+  if (memcmp(key_a, key_b, CRYPTO_BYTES)) {
+    send_USART_str("ERROR KEYS\n");
+  }
+  else {
+    send_USART_str("OK KEYS\n");
+  }
 
   send_USART_str("#");
   while(1);
