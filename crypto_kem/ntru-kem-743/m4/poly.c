@@ -18,7 +18,7 @@
 #include "param.h"
 #include "poly.h"
 #include "randombytes.h"
-#include "crypto_hash_sha512.h"
+#include "sha2.h"
 
 #define PAD(N) ((N + 0x000f) & 0xfff0)
 
@@ -370,7 +370,7 @@ trinary_poly_gen_w_seed(
 
     seed_ptr = (uint64_t*) seed;
 
-    crypto_hash_sha512(seed, seed, seed_len);
+    sha512(seed, seed, seed_len);
 
 
 
@@ -381,7 +381,7 @@ trinary_poly_gen_w_seed(
         j++;
         if(j==8)
         {
-            crypto_hash_sha512(seed, seed, LENGTH_OF_HASH);
+            sha512(seed, seed, LENGTH_OF_HASH);
             j = 0;
         }
         for (i =0;i<6;i++)
@@ -405,7 +405,7 @@ trinary_poly_gen_w_seed(
         j++;
         if(j==8)
         {
-            crypto_hash_sha512(seed, seed, LENGTH_OF_HASH);
+            sha512(seed, seed, LENGTH_OF_HASH);
             j = 0;
         }
         for (i =0;i<6;i++)
@@ -440,14 +440,14 @@ rand_tri_poly_from_seed(
   i = 0;
   j = 0;
 
-  crypto_hash_sha512(seed, seed, seed_len);
+  sha512(seed, seed, seed_len);
 
   while (i<N)
   {
       tmp = (uint8_t)seed[j++];
       if(j==64)
       {
-          crypto_hash_sha512(seed, seed, seed_len);
+          sha512(seed, seed, seed_len);
           j=0;
       }
       for (k=0;k<4;k++)

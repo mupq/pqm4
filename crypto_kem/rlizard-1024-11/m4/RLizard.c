@@ -4,7 +4,7 @@
 
 #include "RLizard.h"
 #include "randombytes.h"
-#include "crypto_hash_sha512.h"
+#include "sha2.h"
 #include "libkeccak/SP800-185.h"
 
 extern  void polymul_asm(uint16_t *h, const uint16_t *f, const uint16_t *g);
@@ -291,7 +291,7 @@ int crypto_kem_enc(unsigned char *ct, unsigned char *ss, const unsigned char *pk
 #endif
 
 	// Compute d = H'(delta)
-	crypto_hash_sha512((unsigned char *) hash, (unsigned char*)delta, sizeof(delta));
+	sha512((unsigned char *) hash, (unsigned char*)delta, sizeof(delta));
 #ifdef RING_CATEGORY1
 	for (j = 0; j < 4; ++j) {
 		ct[LWE_N + LWE_N + j * 8] = (unsigned char)(hash[j] >> 56);
@@ -375,7 +375,7 @@ int crypto_kem_enc(unsigned char *ct, unsigned char *ss, const unsigned char *pk
 	uint64_t hash_t2[(LWE_N + LWE_N + (LAMBDA / 4) + (LWE_N / 8)) / 8];
 	memcpy((unsigned char*)hash_t2, (unsigned char*)ct, LWE_N + LWE_N + (LAMBDA / 4));
 	memcpy((unsigned char*)hash_t2 + LWE_N + LWE_N + (LAMBDA / 4), (unsigned char*)delta, (LWE_N / 8));
-	crypto_hash_sha512((unsigned char *) hash, (unsigned char*)hash_t2, sizeof(hash_t2));
+	sha512((unsigned char *) hash, (unsigned char*)hash_t2, sizeof(hash_t2));
 #endif
 #if defined(RING_CATEGORY3_N1024) || defined(RING_CATEGORY3_N2048) || defined(RING_CATEGORY5)
 	for (i = 0; i < LWE_N; ++i) {
@@ -390,7 +390,7 @@ int crypto_kem_enc(unsigned char *ct, unsigned char *ss, const unsigned char *pk
 	uint64_t hash_t2[((LWE_N * 2) + (LWE_N * 2) + (LAMBDA / 4) + (LWE_N / 8))/8];
 	memcpy((unsigned char*)hash_t2, (unsigned char*)ct, (LWE_N * 2) + (LWE_N * 2) + (LAMBDA / 4));
 	memcpy((unsigned char*)hash_t2 + (LWE_N * 2) + (LWE_N * 2) + (LAMBDA / 4), (unsigned char*)delta, (LWE_N / 8));
-	crypto_hash_sha512((unsigned char *) hash, (unsigned char*)hash_t2, sizeof(hash_t2));
+	sha512((unsigned char *) hash, (unsigned char*)hash_t2, sizeof(hash_t2));
 #endif
 	for (i = 0; i < LAMBDA / 32; ++i) {
 		ss[i * 8] = (unsigned char)(hash[i] >> 56);
@@ -594,7 +594,7 @@ int crypto_kem_dec(unsigned char *ss, const unsigned char *ct, const unsigned ch
 #endif
 
 	// Compute d' = H'(delta)
-	crypto_hash_sha512((unsigned char *)hash, (unsigned char*)delta, sizeof(delta));
+	sha512((unsigned char *)hash, (unsigned char*)delta, sizeof(delta));
 
 	// Initialize c2' as q/2 * delta
 	for (i = 0; i < LWE_N; ++i) { c2[i] = decomp_delta[i] << _16_LOG_T; }
@@ -669,7 +669,7 @@ int crypto_kem_dec(unsigned char *ss, const unsigned char *ct, const unsigned ch
 		uint64_t hash_t2[(LWE_N + LWE_N + (LAMBDA / 4) + (LWE_N / 8)) / 8];
 		memcpy((unsigned char*)hash_t2, (unsigned char*)ct, LWE_N + LWE_N + (LAMBDA / 4));
 		memcpy((unsigned char*)hash_t2 + LWE_N + LWE_N + (LAMBDA / 4), (unsigned char*)sk + LWE_N, (LWE_N / 8));
-		crypto_hash_sha512((unsigned char *) hash, (unsigned char*)hash_t2, sizeof(hash_t2));
+		sha512((unsigned char *) hash, (unsigned char*)hash_t2, sizeof(hash_t2));
 
 		for (j = 0; j < 4; ++j) {
 			ss[j * 8] = (unsigned char)(hash[j] >> 56);
@@ -690,7 +690,7 @@ int crypto_kem_dec(unsigned char *ss, const unsigned char *ct, const unsigned ch
 		uint64_t hash_t2[((LWE_N * 2) + (LWE_N * 2) + (LAMBDA / 4) + (LWE_N / 8))/8];
 		memcpy((unsigned char*)hash_t2, (unsigned char*)ct, (LWE_N * 2) + (LWE_N * 2) + (LAMBDA / 4));
 		memcpy((unsigned char*)hash_t2 + (LWE_N * 2) + (LWE_N * 2) + (LAMBDA / 4), (unsigned char*)sk + LWE_N, (LWE_N / 8));
-		crypto_hash_sha512((unsigned char *) hash, (unsigned char*)hash_t2, sizeof(hash_t2));
+		sha512((unsigned char *) hash, (unsigned char*)hash_t2, sizeof(hash_t2));
 
 		for (j = 0; j < 6; ++j) {
 			ss[j * 8] = (unsigned char)(hash[j] >> 56);
@@ -712,7 +712,7 @@ int crypto_kem_dec(unsigned char *ss, const unsigned char *ct, const unsigned ch
 		uint64_t hash_t2[((LWE_N * 2) + (LWE_N * 2) + (LAMBDA / 4) + (LWE_N / 8))/8];
 		memcpy((unsigned char*)hash_t2, (unsigned char*)ct, (LWE_N * 2) + (LWE_N * 2) + (LAMBDA / 4));
 		memcpy((unsigned char*)hash_t2 + (LWE_N * 2) + (LWE_N * 2) + (LAMBDA / 4), (unsigned char*)sk + LWE_N, (LWE_N / 8));
-		crypto_hash_sha512((unsigned char *) hash, (unsigned char*)hash_t2, sizeof(hash_t2));
+		sha512((unsigned char *) hash, (unsigned char*)hash_t2, sizeof(hash_t2));
 
 		for (i = 0; i < 8; ++i) {
 			ss[i * 8] = (unsigned char)(hash[i] >> 56);
@@ -747,7 +747,7 @@ int crypto_kem_dec(unsigned char *ss, const unsigned char *ct, const unsigned ch
 		uint64_t hash_t3[(LWE_N + LWE_N + (LAMBDA / 4) + (LWE_N / 8)) / 8];
 		memcpy((unsigned char*)hash_t3, (unsigned char*)ct, LWE_N + LWE_N + (LAMBDA / 4));
 		memcpy((unsigned char*)hash_t3 + LWE_N + LWE_N + (LAMBDA / 4), (unsigned char*)sk + LWE_N, (LWE_N / 8));
-		crypto_hash_sha512((unsigned char *) hash, (unsigned char*)hash_t3, sizeof(hash_t3));
+		sha512((unsigned char *) hash, (unsigned char*)hash_t3, sizeof(hash_t3));
 
 		for (i = 0; i < 4; ++i) {
 			ss[i * 8] = (unsigned char)(hash[i] >> 56);
@@ -764,7 +764,7 @@ int crypto_kem_dec(unsigned char *ss, const unsigned char *ct, const unsigned ch
 		uint64_t hash_t3[(LWE_N + LWE_N + (LAMBDA / 4) + (LWE_N / 8)) / 8];
 		memcpy((unsigned char*)hash_t3, (unsigned char*)ct, LWE_N + LWE_N + (LAMBDA / 4));
 		memcpy((unsigned char*)hash_t3 + LWE_N + LWE_N + (LAMBDA / 4), (unsigned char*)delta, (LWE_N / 8));
-		crypto_hash_sha512((unsigned char *)hash, (unsigned char*)hash_t3, sizeof(hash_t3));
+		sha512((unsigned char *)hash, (unsigned char*)hash_t3, sizeof(hash_t3));
 
 		for (i = 0; i < 4; ++i) {
 			ss[i * 8] = (unsigned char)(hash[i] >> 56);
@@ -794,7 +794,7 @@ int crypto_kem_dec(unsigned char *ss, const unsigned char *ct, const unsigned ch
 		uint64_t hash_t3[((LWE_N * 2) + (LWE_N * 2) + (LAMBDA / 4) + (LWE_N / 8))/8];
 		memcpy((unsigned char*)hash_t3, (unsigned char*)ct, (LWE_N * 2) + (LWE_N * 2) + (LAMBDA / 4));
 		memcpy((unsigned char*)hash_t3 + (LWE_N * 2) + (LWE_N * 2) + (LAMBDA / 4), (unsigned char*)sk + LWE_N, (LWE_N / 8));
-		crypto_hash_sha512((unsigned char *)hash,(unsigned char*)hash_t3, sizeof(hash_t3));
+		sha512((unsigned char *)hash,(unsigned char*)hash_t3, sizeof(hash_t3));
 
 		for (i = 0; i < LAMBDA / 32; ++i) {
 			ss[i * 8] = (unsigned char)(hash[i] >> 56);
@@ -811,7 +811,7 @@ int crypto_kem_dec(unsigned char *ss, const unsigned char *ct, const unsigned ch
 		uint64_t hash_t3[((LWE_N * 2) + (LWE_N * 2) + (LAMBDA / 4) + (LWE_N / 8))/8];
 		memcpy((unsigned char*)hash_t3, (unsigned char*)ct, (LWE_N * 2) + (LWE_N * 2) + (LAMBDA / 4));
 		memcpy((unsigned char*)hash_t3 + (LWE_N * 2) + (LWE_N * 2) + (LAMBDA / 4), (unsigned char*)delta, (LWE_N / 8));
-		crypto_hash_sha512((unsigned char *) hash, (unsigned char*)hash_t3, sizeof(hash_t3));
+		sha512((unsigned char *) hash, (unsigned char*)hash_t3, sizeof(hash_t3));
 
 		for (i = 0; i < LAMBDA / 32; ++i) {
 			ss[i * 8] = (unsigned char)(hash[i] >> 56);

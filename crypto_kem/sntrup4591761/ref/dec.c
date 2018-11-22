@@ -9,7 +9,7 @@
 #include "mod3.h"
 #include "rq.h"
 #include "r3.h"
-#include "crypto_hash_sha512.h"
+#include "sha2.h"
 #include "crypto_verify_32.h"
 #include "crypto_kem.h"
 
@@ -65,7 +65,7 @@ int crypto_kem_dec(
   for (i = 0;i < p;++i) result |= modq_nonzero_mask(hr[i] - c[i]);
 
   small_encode(rstr,r);
-  crypto_hash_sha512(hash,rstr,sizeof rstr);
+  sha512(hash,rstr,sizeof rstr);
   result |= crypto_verify_32(hash,cstr);
 
   for (i = 0;i < 32;++i) k[i] = (hash[32 + i] & ~result);

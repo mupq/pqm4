@@ -12,7 +12,7 @@ GDB         = $(PREFIX)-gdb
 
 ARCH_FLAGS  = -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16
 DEFINES     = -DSTM32F4
-OBJS        = obj/stm32f4_wrapper.o obj/fips202.o obj/keccakf1600.o obj/crypto_hash_sha512.o
+OBJS        = obj/stm32f4_wrapper.o obj/fips202.o obj/keccakf1600.o obj/sha2.o
 RANDOMBYTES = obj/randombytes.o
 
 CFLAGS     += -O3 \
@@ -31,7 +31,7 @@ LD_HOST    = gcc
 CFLAGS_HOST = -O3 -Wall -Wextra -Wpedantic
 LDFLAGS_HOST =
 
-OBJS_HOST  = obj-host/fips202.o obj-host/keccakf1600.o obj-host/crypto_hash_sha512.o
+OBJS_HOST  = obj-host/fips202.o obj-host/keccakf1600.o obj-host/sha2.o
 
 KEMS=$(wildcard crypto_kem/*/*)
 SIGNS=$(wildcard crypto_sign/*/*)
@@ -253,7 +253,7 @@ obj/keccakf1600.o:  common/keccakf1600.S
 	$(CC) $(CFLAGS) -o $@ -c $^
 
 
-obj/crypto_hash_sha512.o:  common/crypto_hash_sha512.c
+obj/sha2.o:  common/sha2.c
 	mkdir -p obj
 	$(CC) $(CFLAGS) -o $@ -c $^
 

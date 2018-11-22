@@ -169,7 +169,7 @@ void shake128_squeezeblocks(unsigned char *output, unsigned long long nblocks, u
   keccak_squeezeblocks(output, nblocks, s, SHAKE128_RATE);
 }
 
-void shake128(unsigned char *output, unsigned long long outlen, const unsigned char *input,  unsigned long long inlen)
+void shake128(unsigned char *output, unsigned long long outlen, const unsigned char *input, unsigned long long inlen)
 {
   uint64_t s[25] = {0};
   unsigned char t[SHAKE128_RATE];
@@ -220,7 +220,7 @@ void shake256_squeezeblocks(unsigned char *output, unsigned long long nblocks, u
                - unsigned long long inlen:   length of input in bytes
 **************************************************/
 void shake256(unsigned char *output, unsigned long long outlen,
-              const unsigned char *input,  unsigned long long inlen)
+              const unsigned char *input, unsigned long long inlen)
 {
   uint64_t s[25] = {0};
   unsigned char t[SHAKE256_RATE];
@@ -253,7 +253,7 @@ void shake256(unsigned char *output, unsigned long long outlen,
 *              - const unsigned char *input: pointer to input
 *              - unsigned long long inlen:   length of input in bytes
 **************************************************/
-void sha3_256(unsigned char *output, const unsigned char *input,  unsigned long long inlen)
+void sha3_256(unsigned char *output, const unsigned char *input, unsigned long long inlen)
 {
   uint64_t s[25] = {0};
   unsigned char t[SHA3_256_RATE];
@@ -278,7 +278,7 @@ void sha3_256(unsigned char *output, const unsigned char *input,  unsigned long 
 *              - const unsigned char *input: pointer to input
 *              - unsigned long long inlen:   length of input in bytes
 **************************************************/
-void sha3_512(unsigned char *output, const unsigned char *input,  unsigned long long inlen)
+void sha3_512(unsigned char *output, const unsigned char *input, unsigned long long inlen)
 {
   uint64_t s[25] = {0};
   unsigned char t[SHA3_512_RATE];
