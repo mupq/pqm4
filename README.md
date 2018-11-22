@@ -145,10 +145,10 @@ The benchmark results (in `benchmarks/`) created by
 ## Benchmarks
 The tables below list cycle counts and stack usage of the implementations currently included in **pqm4**.
 All cycle counts were obtained at 24MHz to avoid wait cycles due to the speed of the memory controller.
-For most schemes we report minimum, maxium, and average cycle counts of 100 executions.
+For most schemes we report minimum, maximum, and average cycle counts of 100 executions.
 For schemes with no cycle count variation we only did 10 executions. 
 For some particularly slow schemes we reduce the number of executions; the number of
-executions is reported in parantheses.
+executions is reported in parentheses.
 
 The following numbers were obtained with `arm-none-eabi-gcc 8.2.0` and libopencm3
 [@8b1ac58](https://github.com/libopencm3/libopencm3/commit/8b1ac585dfd6eb13938f2090bff6a78b836a0452)
@@ -304,14 +304,14 @@ new subdirectory under `crypto_sign/`.
    The SHAKE and cSHAKE functions are also accessible via the absorb-squeezeblocks functions, which offer incremental
    output generation (but not incremental input handling).
 
-## Using optimised SHA384 and SHA512
+## Using optimized SHA384 and SHA512
 
   Some schemes submitted to NIST make use of SHA384 or SHA512 for hashing.
-  We've experimented with assembly-optimised SHA512, but found that the speed-up
+  We've experimented with assembly-optimized SHA512, but found that the speed-up
   achievable with this compared to the C implementation from
   [SUPERCOP](http://bench.cr.yp.to/) is negligible
   when compiled using `arm-none-eabi-gcc-8.2.0`.
-  For older compiler versions (e.g. `5.4.1`) hand-optimised assembly implementations
+  For older compiler versions (e.g. `5.4.1`) hand-optimized assembly implementations
   were significantly faster.
   We've therefore decided to only include a C version of SHA384 and SHA512.
   The available functions are:
