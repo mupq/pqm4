@@ -11,7 +11,7 @@
 #include "param.h"
 #include "poly.h"
 #include "randombytes.h"
-#include "crypto_hash_sha512.h"
+#include "sha2.h"
 #include "NTRUEncrypt.h"
 
 
@@ -325,8 +325,8 @@ generate_r(
     memset(seed, 0, sizeof(unsigned char)* LENGTH_OF_HASH*2);
 
     /* hash message/public key into a string 'seed'*/
-    crypto_hash_sha512(seed, (unsigned char*)msg, param->N*2);
-    crypto_hash_sha512(seed+LENGTH_OF_HASH, (unsigned char*)h, param->N*2);
+    sha512(seed, (unsigned char*)msg, param->N*2);
+    sha512(seed+LENGTH_OF_HASH, (unsigned char*)h, param->N*2);
 
 
     /* use the seed to generate r */
@@ -358,7 +358,7 @@ mask_m(
     seed  = (unsigned char*) buf;
     mask  = (uint16_t *) (seed + LENGTH_OF_HASH);
 
-    crypto_hash_sha512(seed, (unsigned char*) rh, param->N*sizeof(uint16_t)/sizeof(unsigned char));
+    sha512(seed, (unsigned char*) rh, param->N*sizeof(uint16_t)/sizeof(unsigned char));
 
     rand_tri_poly_from_seed(mask, param->N, seed, LENGTH_OF_HASH);
 
@@ -400,7 +400,7 @@ unmask_m(
     mask  = (uint16_t *) (seed + LENGTH_OF_HASH);
 
 
-    crypto_hash_sha512(seed, (unsigned char*) rh, param->N*sizeof(uint16_t)/sizeof(unsigned char));
+    sha512(seed, (unsigned char*) rh, param->N*sizeof(uint16_t)/sizeof(unsigned char));
 
     rand_tri_poly_from_seed(mask, param->N, seed, LENGTH_OF_HASH);
 

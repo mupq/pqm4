@@ -8,7 +8,7 @@
 #include "params.h"
 #include "small.h"
 #include "rq.h"
-#include "crypto_hash_sha512.h"
+#include "sha2.h"
 #include "crypto_kem.h"
 
 int crypto_kem_enc(
@@ -37,7 +37,7 @@ int crypto_kem_enc(
 #endif
 
   small_encode(rstr,r);
-  crypto_hash_sha512(hash,rstr,sizeof rstr);
+  sha512(hash,rstr,sizeof rstr);
 
   rq_decode(h,pk);
   rq_mult(c,h,r);

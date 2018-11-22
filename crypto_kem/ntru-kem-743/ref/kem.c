@@ -10,7 +10,7 @@
 #include "api.h"
 #include "NTRUEncrypt.h"
 #include "packing.h"
-#include "crypto_hash_sha512.h"
+#include "sha2.h"
 #include "randombytes.h"
 
 /* kem and encryption use a same key gen */
@@ -87,8 +87,8 @@ int crypto_kem_enc(
     pack_public_key (ct, param, cpoly);
 
     /* ss = Hash (shared_secret | h) */
-    crypto_hash_sha512(shared_secret + CRYPTO_BYTES, (unsigned char*)h, sizeof(uint16_t)*param->padN);
-    crypto_hash_sha512(shared_secret, shared_secret, LENGTH_OF_HASH + CRYPTO_BYTES);
+    sha512(shared_secret + CRYPTO_BYTES, (unsigned char*)h, sizeof(uint16_t)*param->padN);
+    sha512(shared_secret, shared_secret, LENGTH_OF_HASH + CRYPTO_BYTES);
     memcpy (ss, shared_secret, CRYPTO_BYTES);
 
 
@@ -141,8 +141,8 @@ int crypto_kem_dec(
     }
 
     /* deriving the session key */
-    crypto_hash_sha512(shared_secret+CRYPTO_BYTES, (unsigned char*) h, sizeof(uint16_t)*param->padN);
-    crypto_hash_sha512(shared_secret, shared_secret, LENGTH_OF_HASH + CRYPTO_BYTES);
+    sha512(shared_secret+CRYPTO_BYTES, (unsigned char*) h, sizeof(uint16_t)*param->padN);
+    sha512(shared_secret, shared_secret, LENGTH_OF_HASH + CRYPTO_BYTES);
     memcpy (ss, shared_secret, CRYPTO_BYTES);
     return 0;
 }

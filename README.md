@@ -304,21 +304,22 @@ new subdirectory under `crypto_sign/`.
    The SHAKE and cSHAKE functions are also accessible via the absorb-squeezeblocks functions, which offer incremental
    output generation (but not incremental input handling).
 
-## Using optimised SHA512
+## Using optimised SHA384 and SHA512
 
-  Some schemes submitted to NIST make use of SHA512 for hashing.
+  Some schemes submitted to NIST make use of SHA384 or SHA512 for hashing.
   We've experimented with assembly-optimised SHA512, but found that the speed-up
   achievable with this compared to the C implementation from
   [SUPERCOP](http://bench.cr.yp.to/) is negligible
   when compiled using `arm-none-eabi-gcc-8.2.0`.
   For older compiler versions (e.g. `5.4.1`) hand-optimised assembly implementations
   were significantly faster.
-  We've therefore decided to only include a C version of SHA512.
+  We've therefore decided to only include a C version of SHA384 and SHA512.
   The available functions are:
    ```c
-  int crypto_hash_sha512(unsigned char *out,const unsigned char *in,unsigned long long inlen);
+  int sha384(unsigned char *output, const unsigned char *input, unsigned long long inlen);
+  int sha512(unsigned char *output, const unsigned char *input, unsigned long long inlen);
    ```
-  Implementations can make use of this by including `crypto_hash_sha512.h`.
+  Implementations can make use of this by including `sha2.h`.
 
 ## Bibliography
 
