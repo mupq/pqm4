@@ -4,13 +4,8 @@
 #include "ntt.h"
 .syntax unified
 
-// This code uses UMULL - which is constant time on the M4, but not on the M3
-// Make sure that this code is never used on an M3
-smlad r0,r0,r0,r0
-
-
 // ##############################
-// ##########	NTT	   ##########
+// ##########   NTT    ##########
 // ##############################
 
 //CT butterfly with Montgomery reduction
@@ -262,10 +257,10 @@ ntt_asm:
     .unreq zeta1
     .unreq zeta2
 
+
 // ##############################
 // ##########  NTT^-1  ##########
 // ##############################
-
 
 //GS butterfly with Montgomery reduction
 .macro gs_butterfly_montg pol0, pol1, zeta, q, qinv, x, y
