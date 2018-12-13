@@ -2,8 +2,8 @@ CC     = arm-none-eabi-gcc
 CFLAGS = -Wall -Wextra -O3 -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16
 AR     = arm-none-eabi-gcc-ar
 
-HEADERS = api.h config.h frodo_macrify.h 
-SOURCES = frodo640.c util.c 
+HEADERS = api.h config.h frodo_macrify.h
+SOURCES = frodo640.c util.c
 OBJECTS = frodo640.o util.o 
 
 libpqm4.a: $(OBJECTS)

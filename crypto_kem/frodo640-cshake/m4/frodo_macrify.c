@@ -484,7 +484,7 @@ int frodo_mul_add_as_plus_e(uint16_t *out, const uint16_t *s, const uint8_t *see
         cshake128_simple((unsigned char*)(a_row + 1*PARAMS_N), (unsigned long long)(2*PARAMS_N), (uint16_t)(256+i+1), seed_A, (unsigned long long)BYTES_SEED_A);
         cshake128_simple((unsigned char*)(a_row + 2*PARAMS_N), (unsigned long long)(2*PARAMS_N), (uint16_t)(256+i+2), seed_A, (unsigned long long)BYTES_SEED_A);
         cshake128_simple((unsigned char*)(a_row + 3*PARAMS_N), (unsigned long long)(2*PARAMS_N), (uint16_t)(256+i+3), seed_A, (unsigned long long)BYTES_SEED_A);
-
+		
         for (k = 0; k < PARAMS_NBAR; k++) {
           out[k + (i + 0)*PARAMS_NBAR] += xs(s + k*PARAMS_N,a_row + 0*PARAMS_N);
           out[k + (i + 1)*PARAMS_NBAR] += xs(s + k*PARAMS_N,a_row + 1*PARAMS_N);
@@ -513,7 +513,7 @@ int frodo_mul_add_sa_plus_e(uint16_t *out, const uint16_t *s, const uint8_t *see
         cshake128_simple((unsigned char*)(a_cols + 5*PARAMS_N), (unsigned long long)(2*PARAMS_N), (uint16_t)(256+kk+5), seed_A, (unsigned long long)BYTES_SEED_A);
         cshake128_simple((unsigned char*)(a_cols + 6*PARAMS_N), (unsigned long long)(2*PARAMS_N), (uint16_t)(256+kk+6), seed_A, (unsigned long long)BYTES_SEED_A);
         cshake128_simple((unsigned char*)(a_cols + 7*PARAMS_N), (unsigned long long)(2*PARAMS_N), (uint16_t)(256+kk+7), seed_A, (unsigned long long)BYTES_SEED_A);
-
+		
         for (i = 0; i < PARAMS_N; i++) {
 
           asm volatile (

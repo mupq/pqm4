@@ -17,9 +17,9 @@ void frodo_unpack(uint16_t *out, const size_t outlen, const unsigned char *in, c
 void frodo_sample_n(uint16_t *s, const size_t n, const uint8_t *seed, const size_t s_seed, const uint16_t ctr);
 void clear_words(void* mem, unsigned int nwords);
 
-int frodo_mul_add_as_plus_e(uint16_t *b, const uint16_t *s, const uint16_t *e, const uint8_t *seed_A);
-int frodo_mul_add_sa_plus_e(uint16_t *b, const uint16_t *s, const uint16_t *e, const uint8_t *seed_A);
-void frodo_mul_add_sb_plus_e(uint16_t *out, const uint16_t *b, const uint16_t *s, const uint16_t *e);
+int frodo_mul_add_as_plus_e(uint16_t *b, const uint16_t *s, const uint8_t *seed_A);
+int frodo_mul_add_sa_plus_e(uint16_t *b, const uint16_t *s, const uint8_t *seed_A);
+void frodo_mul_add_sb_plus_e(uint16_t *out, const uint16_t *b, const uint16_t *s);
 void frodo_mul_bs(uint16_t *out, const uint16_t *b, const uint16_t *s);
 
 void frodo_add(uint16_t *out, const uint16_t *a, const uint16_t *b);

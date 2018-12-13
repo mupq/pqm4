@@ -50,13 +50,6 @@
 
 // Defining method for generating matrix A
 #define _CSHAKE128_FOR_A_
-#if (_AES128_FOR_A_)
-    #define USE_AES128_FOR_A
-#elif defined(_CSHAKE128_FOR_A_)
-    #define USE_CSHAKE128_FOR_A
-#else
-    #error -- missing method for generating matrix A
-#endif
 
 
 // Selecting use of OpenSSL's AES functions
