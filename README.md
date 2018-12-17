@@ -19,6 +19,7 @@ The design goals of the library are to offer
 
 ## Schemes included in pqm4
 Currently **pqm4** contains implementations of the following post-quantum KEMs:
+* [FrodoKEM-640-AES](https://frodokem.org/)
 * [FrodoKEM-640-cSHAKE](https://frodokem.org/)
 * [KINDI-256-3-4-2](http://kindi-kem.de/)
 * [Kyber-768](https://pq-crystals.org/kyber/)
@@ -158,6 +159,8 @@ The following numbers were obtained with `arm-none-eabi-gcc 8.2.0` and libopencm
 #### Key Encapsulation Schemes
 | scheme | implementation | key generation [cycles] | encapsulation [cycles] | decapsulation [cycles] |
 | ------ | -------------- | ----------------------- | ---------------------- | -----------------------|
+| frodo640-aes (100 executions) | m4 | AVG: 42,338,468 <br /> MIN: 42,283,346 <br /> MAX: 42,452,566 |  AVG: 46,341,632 <br /> MIN: 46,286,540 <br /> MAX: 46,455,733 | AVG: 47,339,524 <br /> MIN: 47,284,462 <br /> MAX: 47,453,615 |
+| frodo640-cshake (100 executions) | m4 | AVG: 81,293,476 <br /> MIN: 81,293,476 <br /> MAX: 81,293,476 |  AVG: 86,178,252 <br /> MIN: 86,178,252 <br /> MAX: 86,178,252 | AVG: 87,170,982 <br /> MIN: 87,170,982 <br /> MAX: 87,170,982 |
 | frodo640-cshake (100 executions) | opt | AVG: 94,119,511 <br /> MIN: 94,119,511 <br /> MAX: 94,119,511 |  AVG: 106,992,266 <br /> MIN: 106,992,266 <br /> MAX: 106,992,266 | AVG: 107,505,670 <br /> MIN: 107,505,670 <br /> MAX: 107,505,670 |
 | kindi256342 (100 executions) | m4 | AVG: 1,009,667 <br /> MIN: 1,009,667 <br /> MAX: 1,009,667 |  AVG: 1,365,402 <br /> MIN: 1,365,402 <br /> MAX: 1,365,402 | AVG: 1,563,475 <br /> MIN: 1,563,333 <br /> MAX: 1,563,612 |
 | kindi256342 (100 executions) | ref | AVG: 21,794,303 <br /> MIN: 21,777,419 <br /> MAX: 21,812,486 |  AVG: 28,175,792 <br /> MIN: 28,155,214 <br /> MAX: 28,202,159 | AVG: 37,128,741 <br /> MIN: 37,106,492 <br /> MAX: 37,153,861 |
@@ -188,6 +191,8 @@ The following numbers were obtained with `arm-none-eabi-gcc 8.2.0` and libopencm
 #### Key Encapsulation Schemes
 | scheme | implementation | key generation [bytes] | encapsulation [bytes] | decapsulation [bytes] |
 | ------ | -------------- | ----------------------- | ---------------------- | -----------------------|
+| frodo640-aes | m4 | 31,116 |  51,444 | 61,820 |
+| frodo640-cshake | m4 | 26,272 |  41,472 | 51,848 |
 | frodo640-cshake | opt | 36,528 |  58,240 | 68,608 |
 | kindi256342 | m4 | 44,264 |  55,392 | 64,376 |
 | kindi256342 | ref | 59,864 |  71,000 | 84,096 |
@@ -336,6 +341,7 @@ When referring to this framework in academic literature, please consider using t
 ## License
 Different parts of **pqm4** have different licenses. Specifically,
 * the files under `common/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
+* the files under `crypto_kem/frodo640-aes/` are under [MIT License](https://raw.githubusercontent.com/Microsoft/PQCrypto-LWEKE/master/LICENSE);
 * the files under `crypto_kem/frodo640-cshake/` are under [MIT License](https://raw.githubusercontent.com/Microsoft/PQCrypto-LWEKE/master/LICENSE);
 * the files under `crypto_kem/kindi/` are covered by the corresponding [IP statements submitted to NIST](https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/ip-statements/Kindi-Statements.pdf);
 * the files under `crypto_kem/kyber768/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
