@@ -179,7 +179,7 @@ The following numbers were obtained with `arm-none-eabi-gcc 8.2.0` and libopencm
 #### Signature Schemes
 | scheme | implementation | key generation [cycles] | sign [cycles] | verify [cycles] |
 | ------ | -------------- | ----------------------- | ------------- | ----------------|
-| dilithium (100 executions) | m4 | AVG: 2,323,921 <br /> MIN: 2,323,255 <br /> MAX: 2,324,698 |  AVG: 9,163,466 <br /> MIN: 3,147,480 <br /> MAX: 34,575,028 | AVG: 2,325,258 <br /> MIN: 2,324,814 <br /> MAX: 2,325,670 |
+| dilithium (100 executions) | m4 | AVG: 2,322,955 <br /> MIN: 2,322,167 <br /> MAX: 2,324,016 |  AVG: 9,978,000 <br /> MIN: 3,141,379 <br /> MAX: 46,351,220 | AVG: 2,322,765 <br /> MIN: 2,322,321 <br /> MAX: 2,323,214 |
 | dilithium (100 executions) | ref | AVG: 2,788,880 <br /> MIN: 2,787,512 <br /> MAX: 2,789,574 |  AVG: 14,561,389 <br /> MIN: 5,042,770 <br /> MAX: 56,392,860 | AVG: 3,064,201 <br /> MIN: 3,063,784 <br /> MAX: 3,064,698 |
 | qTesla-I (100 executions) | ref | AVG: 17,545,901 <br /> MIN: 7,826,320 <br /> MAX: 51,706,602 |  AVG: 6,317,445 <br /> MIN: 1,509,322 <br /> MAX: 25,051,076 | AVG: 1,059,370 <br /> MIN: 1,051,846 <br /> MAX: 1,085,445 |
 | qTesla-III-size (100 executions) | ref | AVG: 58,227,852 <br /> MIN: 22,220,409 <br /> MAX: 159,316,030 |  AVG: 19,869,370 <br /> MIN: 3,457,790 <br /> MAX: 89,902,537 | AVG: 2,297,530 <br /> MIN: 2,292,479 <br /> MAX: 2,325,980 |

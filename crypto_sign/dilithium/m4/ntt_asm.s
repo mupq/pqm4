@@ -28,11 +28,12 @@
       umlal \tl, \th, \pol1, \q
       add \pol1, \pol0, \q, LSL #1
       sub \pol1, \pol1, \th
-      add \pol0, \pol0, \th
+      add.w \pol0, \pol0, \th
 .endm
 	
 //void ntt_asm(uint32_t *p);
 .global ntt_asm
+.align 2
 ntt_asm:
 	//bind aliases
 	ptr_p 		.req R0
@@ -64,7 +65,7 @@ ntt_asm:
 	ldr zeta1, [ptr_zeta], #4	//z2
 	ldr zeta2, [ptr_zeta], #4	//z3
 	stage_1_2:
-		ldr pol0, [ptr_p]
+		ldr.w pol0, [ptr_p]
 		ldr pol1, [ptr_p, #256]	//64*4
 		ldr pol2, [ptr_p, #512]	//128*4
 		ldr pol3, [ptr_p, #768]	//192*4
@@ -72,7 +73,7 @@ ntt_asm:
 		ct_butterfly_montg pol1, pol3, zeta0, q, qinv, temp_h, temp_l	//stage1
 		ct_butterfly_montg pol0, pol1, zeta1, q, qinv, temp_h, temp_l	//stage2
 		ct_butterfly_montg pol2, pol3, zeta2, q, qinv, temp_h, temp_l	//stage2
-		str pol0, [ptr_p]
+		str.w pol0, [ptr_p]
 		str pol1, [ptr_p, #256]
 		str pol2, [ptr_p, #512]
 		str pol3, [ptr_p, #768]
@@ -226,7 +227,7 @@ ntt_asm:
 		str pol3, [ptr_p], #-44	//(4*3-1)*4
 
 		add ptr_p, #48			//(16-4)*4
-		subs cntr, #1
+		subs.w cntr, #1
 		bne stage_5_6
 	sub ptr_p, #1024			//256*4
 
@@ -279,7 +280,7 @@ ntt_asm:
 .macro gs_butterfly_montg pol0, pol1, zeta, q, qinv, x, y
       add \x, \pol0, \q, LSL#8
       sub \x, \x, \pol1
-      add \pol0, \pol0, \pol1
+      add.w \pol0, \pol0, \pol1
       umull \y, \pol1, \x, \zeta
       mul \x, \y, \qinv
       umlal \y, \pol1, \x, \q
@@ -294,6 +295,7 @@ ntt_asm:
 
 //void inv_ntt_asm(uint32_t *p);
 .global inv_ntt_asm
+.align 2
 inv_ntt_asm:
 	//bind aliases
 	ptr_p 		.req R0
@@ -400,7 +402,7 @@ inv_ntt_asm:
 		str pol3, [ptr_p], #-44	//(4*3-1)*4
 
 		add ptr_p, #48			//(16-4)*4
-		subs cntr, #1
+		subs.w cntr, #1
 		bne inv_stage_3_4
 	sub ptr_p, #1024			//256*4
 
@@ -508,7 +510,7 @@ inv_ntt_asm:
 		montg_red ptr_zeta, pol1, q, qinv, temp_h, temp_l				//final reduction
 		montg_red ptr_zeta, pol2, q, qinv, temp_h, temp_l				//final reduction
 		montg_red ptr_zeta, pol3, q, qinv, temp_h, temp_l				//final reduction
-		str pol0, [ptr_p]
+		str.w pol0, [ptr_p]
 		str pol1, [ptr_p, #256]
 		str pol2, [ptr_p, #512]
 		str pol3, [ptr_p, #768]
