@@ -22,7 +22,7 @@ def m4run(binpath):
         x = dev.read()
         if x == b'' and state == 'waiting':
             print("timed out while waiting for the markers")
-            run(binpath)
+            m4run(binpath)
             return
 
         if state == 'waiting':
