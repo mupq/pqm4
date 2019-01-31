@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
 import numpy as np
+import re
 
 BENCHMARK_DIR = 'benchmarks/'
 
@@ -26,11 +27,25 @@ def formatData(scheme, implementation, data, printStats):
         decverify  = "{:,}".format( max([item[2] for item in data]))
         print("| {} | {} | {} |  {} | {} |".format(scheme, implementation, keygen, encsign, decverify))
 
+
+def sort_mixed(l):
+    r = []
+    for word in l:
+        word = re.split(r'(\d+)', word)
+        for i, fragment in enumerate(word):
+            try:
+                word[i] = int(fragment)  # cast ints for proper sorting
+            except Exception:
+                pass
+        r.append(word)
+    return [''.join(map(str, x)) for x in sorted(r)]
+
+
 def processPrimitives(path, printStats):
     if os.path.exists(path) == False:
         return;
-    for scheme in sorted(os.listdir(path)):
-        for implementation in sorted(os.listdir(path+"/"+scheme)):
+    for scheme in sort_mixed(os.listdir(path)):
+        for implementation in sort_mixed(os.listdir(path+"/"+scheme)):
             measurements = []
             for measurement in os.listdir(path+"/"+scheme+"/"+implementation):
                 with open(path+"/"+scheme+"/"+implementation+"/"+measurement, "r") as f:
