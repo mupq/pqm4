@@ -22,7 +22,9 @@ Currently **pqm4** contains implementations of the following post-quantum KEMs:
 * [FrodoKEM-640-AES](https://frodokem.org/)
 * [FrodoKEM-640-cSHAKE](https://frodokem.org/)
 * [KINDI-256-3-4-2](http://kindi-kem.de/)
+* [Kyber-512](https://pq-crystals.org/kyber/)
 * [Kyber-768](https://pq-crystals.org/kyber/)
+* [Kyber-1024](https://pq-crystals.org/kyber/)
 * [NewHope-1024-CCA-KEM](https://newhopecrypto.org)
 * [NTRU-HRSS-KEM-701](https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/submissions/NTRU_HRSS_KEM.zip)
 * [NTRU-KEM-743](https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/submissions/NTRUEncrypt.zip)
@@ -164,6 +166,10 @@ The following numbers were obtained with `arm-none-eabi-gcc 8.2.0` and libopencm
 | frodo640-cshake (100 executions) | opt | AVG: 94,119,511 <br /> MIN: 94,119,511 <br /> MAX: 94,119,511 |  AVG: 106,992,266 <br /> MIN: 106,992,266 <br /> MAX: 106,992,266 | AVG: 107,505,670 <br /> MIN: 107,505,670 <br /> MAX: 107,505,670 |
 | kindi256342 (100 executions) | m4 | AVG: 1,009,667 <br /> MIN: 1,009,667 <br /> MAX: 1,009,667 |  AVG: 1,365,402 <br /> MIN: 1,365,402 <br /> MAX: 1,365,402 | AVG: 1,563,475 <br /> MIN: 1,563,333 <br /> MAX: 1,563,612 |
 | kindi256342 (100 executions) | ref | AVG: 21,794,303 <br /> MIN: 21,777,419 <br /> MAX: 21,812,486 |  AVG: 28,175,792 <br /> MIN: 28,155,214 <br /> MAX: 28,202,159 | AVG: 37,128,741 <br /> MIN: 37,106,492 <br /> MAX: 37,153,861 |
+| kyber1024 (100 executions) | m4 | AVG: 1,771,729 <br /> MIN: 1,770,909 <br /> MAX: 1,772,961 |  AVG: 2,142,912 <br /> MIN: 2,142,092 <br /> MAX: 2,144,145 | AVG: 2,188,917 <br /> MIN: 2,188,098 <br /> MAX: 2,190,149 |
+| kyber1024 (100 executions) | ref | AVG: 2,002,968 <br /> MIN: 2,002,248 <br /> MAX: 2,003,825 |  AVG: 2,527,874 <br /> MIN: 2,527,155 <br /> MAX: 2,528,731 | AVG: 2,728,471 <br /> MIN: 2,727,751 <br /> MAX: 2,729,328 |
+| kyber512 (100 executions) | m4 | AVG: 726,921 <br /> MIN: 726,513 <br /> MAX: 727,657 |  AVG: 987,864 <br /> MIN: 987,456 <br /> MAX: 988,600 | AVG: 1,018,946 <br /> MIN: 1,018,538 <br /> MAX: 1,019,680 |
+| kyber512 (100 executions) | ref | AVG: 847,955 <br /> MIN: 847,469 <br /> MAX: 848,591 |  AVG: 1,205,773 <br /> MIN: 1,205,287 <br /> MAX: 1,206,409 | AVG: 1,330,155 <br /> MIN: 1,329,669 <br /> MAX: 1,330,790 |
 | kyber768 (100 executions) | m4 | AVG: 1,200,291 <br /> MIN: 1,199,710 <br /> MAX: 1,200,930 |  AVG: 1,446,284 <br /> MIN: 1,445,732 <br /> MAX: 1,446,891 | AVG: 1,477,365 <br /> MIN: 1,476,813 <br /> MAX: 1,477,972 |
 | kyber768 (100 executions) | ref | AVG: 1,381,942 <br /> MIN: 1,381,440 <br /> MAX: 1,382,660 |  AVG: 1,748,054 <br /> MIN: 1,747,577 <br /> MAX: 1,748,736 | AVG: 1,904,113 <br /> MIN: 1,903,637 <br /> MAX: 1,904,796 |
 | newhope1024cca (100 executions) | m4 | AVG: 1,243,729 <br /> MIN: 1,243,497 <br /> MAX: 1,244,041 |  AVG: 1,963,184 <br /> MIN: 1,962,952 <br /> MAX: 1,963,495 | AVG: 1,978,982 <br /> MIN: 1,978,748 <br /> MAX: 1,979,293 |
@@ -197,6 +203,10 @@ The following numbers were obtained with `arm-none-eabi-gcc 8.2.0` and libopencm
 | frodo640-cshake | opt | 36,528 |  58,240 | 68,608 |
 | kindi256342 | m4 | 44,264 |  55,392 | 64,376 |
 | kindi256342 | ref | 59,864 |  71,000 | 84,096 |
+| kyber1024 | m4 | 15,664 |  19,352 | 20,864 |
+| kyber1024 | ref | 15,664 |  19,352 | 20,864 |
+| kyber512 | m4 | 6,456 |  9,120 | 9,928 |
+| kyber512 | ref | 6,456 |  9,120 | 9,928 |
 | kyber768 | m4 | 10,544 |  13,720 | 14,880 |
 | kyber768 | ref | 10,544 |  13,720 | 14,880 |
 | newhope1024cca | m4 | 11,152 |  17,448 | 19,648 |
@@ -346,7 +356,9 @@ Different parts of **pqm4** have different licenses. Specifically,
 * the files under `crypto_kem/frodo640-aes/` are under [MIT License](https://raw.githubusercontent.com/Microsoft/PQCrypto-LWEKE/master/LICENSE);
 * the files under `crypto_kem/frodo640-cshake/` are under [MIT License](https://raw.githubusercontent.com/Microsoft/PQCrypto-LWEKE/master/LICENSE);
 * the files under `crypto_kem/kindi/` are covered by the corresponding [IP statements submitted to NIST](https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/ip-statements/Kindi-Statements.pdf);
+* the files under `crypto_kem/kyber512/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
 * the files under `crypto_kem/kyber768/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
+* the files under `crypto_kem/kyber1024/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
 * the files under `crypto_kem/newhope1024cca/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
 * the files under `crypto_kem/ntruhrss701/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
 * the files under `crypto_kem/ntru-kem-743/` are in the [public domain](https://raw.githubusercontent.com/NTRUOpenSourceProject/ntru-crypto/master/LICENSE.md);
