@@ -1,5 +1,5 @@
 CC = arm-none-eabi-gcc
-CFLAGS = -Wall -Wextra -O3 -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16
+CFLAGS = -Wall -Wextra -O3 -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -flto
 AR     = arm-none-eabi-gcc-ar 
 
 OBJECTS= cpapke.o kem.o newhope_asm.o poly.o precomp.o reduce.o verify.o

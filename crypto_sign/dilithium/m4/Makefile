@@ -1,5 +1,5 @@
 CC     = arm-none-eabi-gcc
-CFLAGS = -Wall -Wextra -O3 -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16
+CFLAGS = -Wall -Wextra -O3 -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -flto
 AR     = arm-none-eabi-gcc-ar
 
 HEADERS = api.h params.h sign.h polyvec.h packing.h poly.h reduce.h ntt.h rounding.h
