@@ -231,6 +231,48 @@ The following numbers were obtained with `arm-none-eabi-gcc 8.2.0` and libopencm
 | qTesla-III-speed | ref | 43,992 |  58,112 | 45,712 |
 | sphincs-shake256-128s | ref | 2,904 |  3,032 | 10,768 |
 
+### Code Size Evaluation
+The code size is evaluated using `arm-none-eabi-size`.
+We subtract the size of the surrounding that is required for setting up the
+board and communicating with the host.
+Note that we do not exclude the code size of common dependencies, e.g. Keccak.
+
+#### Key Encapsulation Schemes
+| scheme | implementation | code size [bytes] |
+| ------ | -------------- | ----------------- |
+| frodo640-aes | m4 | 30164 |
+| frodo640-cshake | m4 | 26612 |
+| frodo640-cshake | opt | 24820 |
+| kindi256342 | m4 | 62504 |
+| kindi256342 | ref | 42964 |
+| kyber512 | m4 | 23256 |
+| kyber512 | ref | 16088 |
+| kyber768 | m4 | 23256 |
+| kyber768 | ref | 16088 |
+| kyber1024 | m4 | 23512 |
+| kyber1024 | ref | 16088 |
+| newhope1024cca | m4 | 24024 |
+| newhope1024cca | ref | 22488 |
+| ntru-kem-743 | m4 | 187508 |
+| ntru-kem-743 | ref | 52644 |
+| ntruhrss701 | m4 | 143320 |
+| ntruhrss701 | ref | 17880 |
+| rlizard-1024-11 | m4 | 254432 |
+| rlizard-1024-11 | ref | 70928 |
+| saber | m4 | 55256 |
+| saber | ref | 16344 |
+| sikep751 | ref | 31804 |
+| sntrup4591761 | ref | 45596 |
+#### Signature Schemes
+| scheme | implementation | code size [bytes] |
+| ------ | -------------- | ----------------- |
+| dilithium | m4 | 25292 |
+| dilithium | ref | 20684 |
+| qTesla-III-size | ref | 38028 |
+| qTesla-III-speed | ref | 36684 |
+| qTesla-I | ref | 29324 |
+| sphincs-shake256-128s | ref | 15104 |
+
 ## Adding new schemes and implementations
 The **pqm4** build system is designed to make it very easy to add new schemes
 and implementations, if these implementations follow the NIST/SUPERCOP API. 

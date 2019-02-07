@@ -44,5 +44,5 @@ def printCodeSizes(primitive):
 print("### Code Size Evaluation")
 print("#### Key Encapsulation Schemes")
 printCodeSizes("crypto_kem")
-print("## Code Size Evaluation")
+print("#### Signature Schemes")
 printCodeSizes("crypto_sign")
