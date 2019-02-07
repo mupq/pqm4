@@ -233,8 +233,8 @@ The following numbers were obtained with `arm-none-eabi-gcc 8.2.0` and libopencm
 
 ### Code Size Evaluation
 The code size is evaluated using `arm-none-eabi-size`.
-We subtract the size of the surrounding that is required for setting up the
-board and communicating with the host.
+We subtract the size of the surrounding code that is required for setting up 
+the board and communicating with the host.
 Note that we do not exclude the code size of common dependencies, e.g. Keccak.
 
 #### Key Encapsulation Schemes
