@@ -70,13 +70,14 @@ OWNDIR=$(shell pwd)
 INCPATH=$(OWNDIR)/common
 
 
-all: tests testvectors speeds stack
+all: tests testvectors speeds stack dummy
 
 libs: $(LIBS_M4) $(LIBS_HOST)
 tests: libs $(KEMTESTS) $(SIGNTESTS)
 testvectors: libs $(KEMTESTVECTORS) $(SIGNTESTVECTORS) $(KEMTESTVECTORS_HOST) $(SIGNTESTVECTORS_HOST)
 speeds: libs $(KEMSPEEDS) $(SIGNSPEEDS)
 stack: libs $(KEMSTACK) $(SIGNSTACK)
+dummy: libs elf/crypto_kem_dummy.elf elf/crypto_sign_dummy.elf
 
 
 .PHONY: force
@@ -111,8 +112,8 @@ bin/%.bin: elf/%.elf
 	mkdir -p bin
 	$(OBJCOPY) -Obinary $^ $@
 
-
-
+# keep .elf files for code-size inspection
+.PRECIOUS:  elf/crypto_kem_%_test.elf
 elf/crypto_kem_%_test.elf: $(OBJS) $(RANDOMBYTES) $(LDSCRIPT) obj/$(patsubst %,crypto_kem_%_test.o,%) $(OPENCM3FILE)
 	mkdir -p elf
 	$(LD) -o $@ \
@@ -121,6 +122,8 @@ elf/crypto_kem_%_test.elf: $(OBJS) $(RANDOMBYTES) $(LDSCRIPT) obj/$(patsubst %,c
 	$(OBJS) $(RANDOMBYTES) $(LDFLAGS) -l$(OPENCM3NAME) -lm
 
 
+# keep .elf files for code-size inspection
+.PRECIOUS:  elf/crypto_sign_%_test.elf
 elf/crypto_sign_%_test.elf: $(OBJS) $(RANDOMBYTES) $(LDSCRIPT) obj/$(patsubst %,crypto_sign_%_test.o,%) $(OPENCM3FILE)
 	mkdir -p elf
 	$(LD) -o $@ \
@@ -235,6 +238,45 @@ obj/crypto_sign_%_stack.o: crypto_sign/stack.c $(patsubst %,%/api.h,$(patsubst %
 	-I$(patsubst %stack.o,%,$(patsubst obj/%,%,$(subst crypto/sign,crypto_sign,$(subst _,/,$@)))) \
 	-I./common/
 
+
+elf/crypto_kem_dummy.elf: obj/crypto_kem_dummy.o obj/crypto_kem_dummy_test.o $(OBJS) $(RANDOMBYTES) $(LDSCRIPT) $(OPENCM3FILE)
+	mkdir -p elf
+	$(LD) -o $@ \
+	obj/crypto_kem_dummy.o obj/crypto_kem_dummy_test.o \
+	$(OBJS) $(RANDOMBYTES) $(LDFLAGS) -l$(OPENCM3NAME) -lm
+
+
+obj/crypto_kem_dummy_test.o: crypto_kem/test.c
+	mkdir -p obj
+	$(CC) $(CFLAGS) -o $@ -c $< \
+	-I./common/ \
+	-I./dummy/crypto_kem/
+
+obj/crypto_kem_dummy.o: dummy/crypto_kem/dummy.c
+	mkdir -p obj
+	$(CC) $(CFLAGS) -o $@ -c $< \
+	-I./common/ \
+	-I./dummy/crypto_kem/
+
+
+elf/crypto_sign_dummy.elf: obj/crypto_sign_dummy.o obj/crypto_sign_dummy_test.o $(OBJS) $(RANDOMBYTES) $(LDSCRIPT) $(OPENCM3FILE)
+	mkdir -p elf
+	$(LD) -o $@ \
+	obj/crypto_sign_dummy.o obj/crypto_sign_dummy_test.o \
+	$(OBJS) $(RANDOMBYTES) $(LDFLAGS) -l$(OPENCM3NAME) -lm
+
+
+obj/crypto_sign_dummy_test.o: crypto_sign/test.c
+	mkdir -p obj
+	$(CC) $(CFLAGS) -o $@ -c $< \
+	-I./common/ \
+	-I./dummy/crypto_sign/
+
+obj/crypto_sign_dummy.o: dummy/crypto_sign/dummy.c
+	mkdir -p obj
+	$(CC) $(CFLAGS) -o $@ -c $< \
+	-I./common/ \
+	-I./dummy/crypto_sign/
 
 obj/randombytes.o: common/randombytes.c
 	mkdir -p obj
