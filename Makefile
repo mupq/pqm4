@@ -1,7 +1,7 @@
 OPENCM3DIR  = ./libopencm3
 OPENCM3NAME = opencm3_stm32f4
 OPENCM3FILE = $(OPENCM3DIR)/lib/lib$(OPENCM3NAME).a
-LDSCRIPT    = $(OPENCM3DIR)/lib/stm32/f4/stm32f405x6.ld
+LDSCRIPT    = stm32f405x6.ld
 
 PREFIX     ?= arm-none-eabi
 CC          = $(PREFIX)-gcc
