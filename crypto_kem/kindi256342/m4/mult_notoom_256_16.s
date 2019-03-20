@@ -298,6 +298,7 @@ ldr.w lr, [sp], #4
 bx lr
 .global polymul_asm
 .type polymul_asm, %function
+.align 2
 polymul_asm:
 stmdb sp!, {r4, r5, r6, r7, r8, r9, sl, fp, ip, lr}
 bl schoolbook_16x16
