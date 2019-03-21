@@ -79,7 +79,7 @@ static int test_sign(void) {
 }
 
 int main(void) {
-  hal_setup(CLOCK_FAST)
+  hal_setup(CLOCK_FAST);
 
  // marker for automated benchmarks
   hal_send_str("==========================");

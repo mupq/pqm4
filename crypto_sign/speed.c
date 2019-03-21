@@ -31,7 +31,7 @@ int main(void)
   t0 = hal_get_time();
   crypto_sign_keypair(pk, sk);
   t1 = hal_get_time();
-  printcycles("keypair cycles:", t1-t0;
+  printcycles("keypair cycles:", t1-t0);
 
   // Signing
   t0 = hal_get_time();
