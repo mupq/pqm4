@@ -4,8 +4,8 @@ Post-quantum crypto library for the ARM Cortex-M4
 ## Introduction
 The **pqm4** library, benchmarking and testing framework started as a result of the 
 [PQCRYPTO](https://pqcrypto.eu.org) project funded by the European Commission in the H2020 program. 
-It currently contains implementations of 10 post-quantum key-encapsulation mechanisms
-and 3 post-quantum signature schemes targeting the ARM Cortex-M4 family of microcontrollers.
+It currently contains implementations post-quantum key-encapsulation mechanisms
+and post-quantum signature schemes targeting the ARM Cortex-M4 family of microcontrollers.
 The design goals of the library are to offer
 * a simple build system that generates an individual static library 
   for each implementation of each scheme, which can simply be linked into
@@ -17,18 +17,25 @@ The design goals of the library are to offer
 * automated benchmarking for speed and stack usage; and
 * easy integration of new schemes and implementations into the framework.
 
+## PQM4 in second round of NISTPQC 
+
+As a result of the [Oxford PQC Workshop](https://www.maths.ox.ac.uk/events/conferences/oxford-post-quantum-cryptography-workshop), PQM4 was extended to further support benchmarking for the second round of the NIST PQC competition. 
+Alongside simplifying the build and benchmarking system, the following changes were implemented:
+* move platform independent code to [mupq](https://github.com/mupq/mupq) to allow re-use of this code for other benchmarking projects like [pqriscv](https://github.com/mupq/pqriscv) 
+* integration of [PQClean](https://github.com/PQClean/PQClean) as a source for round 2 clean reference implementations
+* reporting of cycles spent in SHA-2, SHA-3, and AES 
+* reporting of code-size for all schemes 
+
+
 ## Schemes included in pqm4
 Currently **pqm4** contains implementations of the following post-quantum KEMs:
 * [FrodoKEM-640-AES](https://frodokem.org/)
 * [FrodoKEM-640-cSHAKE](https://frodokem.org/)
-* [KINDI-256-3-4-2](http://kindi-kem.de/)
 * [Kyber-512](https://pq-crystals.org/kyber/)
 * [Kyber-768](https://pq-crystals.org/kyber/)
 * [Kyber-1024](https://pq-crystals.org/kyber/)
 * [NewHope-1024-CCA-KEM](https://newhopecrypto.org)
 * [NTRU-HRSS-KEM-701](https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/submissions/NTRU_HRSS_KEM.zip)
-* [NTRU-KEM-743](https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/submissions/NTRUEncrypt.zip)
-* [RLizard-1024-11](https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/submissions/Lizard.zip)
 * [Saber](https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/submissions/SABER.zip)
 * [SIKE-p571](https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/submissions/SIKE.zip)
 * [Streamlined NTRU Prime 4591761](https://ntruprime.cr.yp.to/)
