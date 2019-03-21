@@ -40,6 +40,7 @@ LDFLAGS_HOST =
 # endif
 
 # override as desired
+PROJECT=pqm4
 TYPE=kem
 SCHEME=kyber768
 IMPLEMENTATION=ref
@@ -56,14 +57,14 @@ RANDOMBYTES_M4=common/randombytes.c
 DEST_HOST=bin-host
 DEST=bin
 
-all: $(DEST)/crypto_$(TYPE)_$(SCHEME)_$(IMPLEMENTATION)_testvectors.bin \
-	 $(DEST)/crypto_$(TYPE)_$(SCHEME)_$(IMPLEMENTATION)_test.bin \
-	 $(DEST)/crypto_$(TYPE)_$(SCHEME)_$(IMPLEMENTATION)_speed.bin \
-	 $(DEST)/crypto_$(TYPE)_$(SCHEME)_$(IMPLEMENTATION)_stack.bin \
-	 $(DEST)/crypto_$(TYPE)_$(SCHEME)_$(IMPLEMENTATION)_hashing.bin \
-	 $(DEST_HOST)/crypto_$(TYPE)_$(SCHEME)_$(IMPLEMENTATION)_testvectors
+all: $(DEST)/$(PROJECT)_crypto_$(TYPE)_$(SCHEME)_$(IMPLEMENTATION)_testvectors.bin \
+	 $(DEST)/$(PROJECT)_crypto_$(TYPE)_$(SCHEME)_$(IMPLEMENTATION)_test.bin \
+	 $(DEST)/$(PROJECT)_crypto_$(TYPE)_$(SCHEME)_$(IMPLEMENTATION)_speed.bin \
+	 $(DEST)/$(PROJECT)_crypto_$(TYPE)_$(SCHEME)_$(IMPLEMENTATION)_stack.bin \
+	 $(DEST)/$(PROJECT)_crypto_$(TYPE)_$(SCHEME)_$(IMPLEMENTATION)_hashing.bin \
+	 $(DEST_HOST)/$(PROJECT)_crypto_$(TYPE)_$(SCHEME)_$(IMPLEMENTATION)_testvectors
 
-$(DEST_HOST)/crypto_$(TYPE)_$(SCHEME)_$(IMPLEMENTATION)_testvectors: $(COMMONSOURCES_HOST) crypto_$(TYPE)/$(SCHEME)/$(IMPLEMENTATION)/*.c
+$(DEST_HOST)/$(PROJECT)_crypto_$(TYPE)_$(SCHEME)_$(IMPLEMENTATION)_testvectors: $(COMMONSOURCES_HOST) crypto_$(TYPE)/$(SCHEME)/$(IMPLEMENTATION)/*.c
 	mkdir -p $(DEST_HOST)
 	$(CC_HOST) -o $@ $(CFLAGS_HOST) crypto_$(TYPE)/testvectors-host.c $(COMMONSOURCES_HOST) crypto_$(TYPE)/$(SCHEME)/$(IMPLEMENTATION)/*.c \
 	-Icrypto_$(TYPE)/$(SCHEME)/$(IMPLEMENTATION) $(COMMONINCLUDES) $(LDFLAGS_HOST) -lm
@@ -75,19 +76,19 @@ $(DEST)/%.bin: elf/%.elf
 # pattern rules, intended to match % to the type of test (i.e. test, speed, stack)
 # note that this excludes testvectors, as that is a special case that provides its own randombytes
 # TODO use notrandombytes more generically rather than included in testvectors.c
-elf/crypto_$(TYPE)_$(SCHEME)_$(IMPLEMENTATION)_%.elf: $(COMMONSOURCES_M4) $(RANDOMBYTES_M4) crypto_$(TYPE)/$(SCHEME)/$(IMPLEMENTATION)/*.c $(OPENCM3FILE) common/hal-stm32f4.c
+elf/$(PROJECT)_crypto_$(TYPE)_$(SCHEME)_$(IMPLEMENTATION)_%.elf: $(COMMONSOURCES_M4) $(RANDOMBYTES_M4) crypto_$(TYPE)/$(SCHEME)/$(IMPLEMENTATION)/*.c $(OPENCM3FILE) common/hal-stm32f4.c
 	mkdir -p elf
 	$(CC) -o $@ $(CFLAGS) \
 	crypto_$(TYPE)/$*.c $(COMMONSOURCES_M4) $(RANDOMBYTES_M4) crypto_$(TYPE)/$(SCHEME)/$(IMPLEMENTATION)/*.c common/hal-stm32f4.c \
 	-Icrypto_$(TYPE)/$(SCHEME)/$(IMPLEMENTATION) $(COMMONINCLUDES_M4) $(LDFLAGS)
 
-elf/crypto_$(TYPE)_$(SCHEME)_$(IMPLEMENTATION)_testvectors.elf: $(COMMONSOURCES_M4) crypto_$(TYPE)/$(SCHEME)/$(IMPLEMENTATION)/*.c $(OPENCM3FILE) common/hal-stm32f4.c
+elf/$(PROJECT)_crypto_$(TYPE)_$(SCHEME)_$(IMPLEMENTATION)_testvectors.elf: $(COMMONSOURCES_M4) crypto_$(TYPE)/$(SCHEME)/$(IMPLEMENTATION)/*.c $(OPENCM3FILE) common/hal-stm32f4.c
 	mkdir -p elf
 	$(CC) -o $@ $(CFLAGS) \
 	crypto_$(TYPE)/testvectors.c $(COMMONSOURCES_M4) crypto_$(TYPE)/$(SCHEME)/$(IMPLEMENTATION)/*.c common/hal-stm32f4.c \
 	-Icrypto_$(TYPE)/$(SCHEME)/$(IMPLEMENTATION) $(COMMONINCLUDES_M4) $(LDFLAGS)
 
-elf/crypto_$(TYPE)_$(SCHEME)_$(IMPLEMENTATION)_hashing.elf: $(COMMONSOURCES_M4) crypto_$(TYPE)/$(SCHEME)/$(IMPLEMENTATION)/*.c $(OPENCM3FILE) common/hal-stm32f4.c
+elf/$(PROJECT)_crypto_$(TYPE)_$(SCHEME)_$(IMPLEMENTATION)_hashing.elf: $(COMMONSOURCES_M4) crypto_$(TYPE)/$(SCHEME)/$(IMPLEMENTATION)/*.c $(OPENCM3FILE) common/hal-stm32f4.c
 	mkdir -p elf
 	$(CC) -o $@ $(CFLAGS) -DPROFILE_HASHING \
 	crypto_$(TYPE)/hashing.c $(COMMONSOURCES_M4) $(RANDOMBYTES_M4) crypto_$(TYPE)/$(SCHEME)/$(IMPLEMENTATION)/*.c common/hal-stm32f4.c \
