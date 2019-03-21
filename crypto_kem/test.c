@@ -1,6 +1,5 @@
 #include "api.h"
 #include "randombytes.h"
-#include "stm32wrapper.h"
 #include "hal.h"
 
 #include <string.h>
@@ -151,7 +150,7 @@ static int test_invalid_ciphertext(void)
 
 int main(void)
 {
-  hal_setup(CLOCK_FAST)
+  hal_setup(CLOCK_FAST);
 
   // marker for automated testing
   hal_send_str("==========================");

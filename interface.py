@@ -51,19 +51,19 @@ class Platform(object):
             x = dev.read()
             # Consume remaining =
             if x != b'=':
+                self.output = [x]
                 self.state = 'reading'
                 break
 
     def _read_output(self):
-        output = []
         while self.state == 'reading':
             x = dev.read()
             if x == b'#':
                 self.state = 'done'
                 break
             elif x != b'':
-                output.append(x)
-        output = b''.join(output).decode('utf-8', 'ignore')
+                self.output.append(x)
+        output = b''.join(self.output).decode('utf-8', 'ignore')
         # sometimes there's a line full of markers; strip out to avoid errors
         lines = (x for x in output.split('\n') if not all(c == '=' for c in x))
         return "{}\n".format('\n'.join(lines))

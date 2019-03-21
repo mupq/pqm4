@@ -1,5 +1,4 @@
 #include "api.h"
-#include "stm32wrapper.h"
 #include "hal.h"
 
 #include <stdio.h>
@@ -30,7 +29,7 @@ int main(void)
   t0 = hal_get_time();
   crypto_kem_keypair(pk, sk);
   t1 = hal_get_time();
-  printcycles("keypair cycles:", t1-t0;
+  printcycles("keypair cycles:", t1-t0);
 
   // Encapsulation
   t0 = hal_get_time();

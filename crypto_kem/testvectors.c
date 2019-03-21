@@ -2,7 +2,6 @@
 /* taken from SUPERCOP (https://bench.cr.yp.to)     */
 
 #include "api.h"
-#include "stm32wrapper.h"
 #include "randombytes.h"
 #include "hal.h"
 

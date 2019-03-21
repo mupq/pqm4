@@ -1,6 +1,5 @@
 #include "api.h"
 #include "randombytes.h"
-#include "stm32wrapper.h"
 #include "hal.h"
 
 #include <stdio.h>
@@ -50,22 +49,22 @@ static int test_sign(void) {
   FILL_STACK()
   crypto_sign_keypair(pk, sk);
   CHECK_STACK()
-  if(c >= canary_size) return -1; 
+  if(c >= canary_size) return -1;
   stack_key_gen = c;
-  
+
   // Bob derives a secret key and creates a response
   randombytes(m, MLEN);
   FILL_STACK()
   crypto_sign(sm, &smlen, m, MLEN, sk);
   CHECK_STACK()
-  if(c >= canary_size) return -1; 
+  if(c >= canary_size) return -1;
   stack_sign = c;
-    
+
   // Alice uses Bobs response to get her secret key
   FILL_STACK()
   rc = crypto_sign_open(m_out, &mlen, sm, smlen, pk);
   CHECK_STACK()
-  if(c >= canary_size) return -1; 
+  if(c >= canary_size) return -1;
   stack_verify = c;
 
   if (rc) {
@@ -90,7 +89,7 @@ int main(void) {
     if(canary_size == 0) {
       hal_send_str("failed to measure stack usage.\n");
       break;
-    } 
+    }
   }
 
   // marker for automated benchmarks

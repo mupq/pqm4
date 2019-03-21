@@ -1,5 +1,4 @@
 #include "api.h"
-#include "stm32wrapper.h"
 #include "hal.h"
 
 #include <stdio.h>

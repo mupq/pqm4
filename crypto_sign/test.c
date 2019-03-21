@@ -1,6 +1,5 @@
 #include "api.h"
 #include "randombytes.h"
-#include "stm32wrapper.h"
 #include "hal.h"
 
 #include <string.h>
