@@ -17,9 +17,9 @@ The design goals of the library are to offer
 * automated benchmarking for speed and stack usage; and
 * easy integration of new schemes and implementations into the framework.
 
-## PQM4 in second round of NISTPQC 
+## pqm4 in second round of NISTPQC 
 
-As a result of the [Oxford PQC Workshop](https://www.maths.ox.ac.uk/events/conferences/oxford-post-quantum-cryptography-workshop), PQM4 was extended to further support benchmarking for the second round of the NIST PQC competition. 
+As a result of the [Oxford PQC Workshop](https://www.maths.ox.ac.uk/events/conferences/oxford-post-quantum-cryptography-workshop), **pqm4** was extended to further support benchmarking for the second round of the NIST PQC competition. 
 Alongside simplifying the build and benchmarking system, the following changes were implemented:
 * move platform independent code to [mupq](https://github.com/mupq/mupq) to allow re-use of this code for other benchmarking projects like [pqriscv](https://github.com/mupq/pqriscv) 
 * integration of [PQClean](https://github.com/PQClean/PQClean) as a source for round 2 clean reference implementations
