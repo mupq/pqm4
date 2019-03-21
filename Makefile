@@ -71,28 +71,19 @@ $(DEST)/%.bin: elf/%.elf
 	mkdir -p $(DEST)
 	$(OBJCOPY) -Obinary $^ $@
 
+# pattern rules, intended to match % to the type of test (i.e. test, speed, stack)
+# note that this excludes testvectors, as that is a special case that provides its own randombytes
+# TODO use notrandombytes more generically rather than included in testvectors.c
+elf/crypto_$(TYPE)_$(SCHEME)_$(IMPLEMENTATION)_%.elf: $(COMMONSOURCES_M4) $(RANDOMBYTES_M4) crypto_$(TYPE)/$(SCHEME)/$(IMPLEMENTATION)/*.c $(OPENCM3FILE) common/stm32f4_wrapper.c
+	mkdir -p elf
+	$(CC) -o $@ $(CFLAGS) \
+	crypto_$(TYPE)/$*.c $(COMMONSOURCES_M4) $(RANDOMBYTES_M4) crypto_$(TYPE)/$(SCHEME)/$(IMPLEMENTATION)/*.c common/stm32f4_wrapper.c \
+	-Icrypto_$(TYPE)/$(SCHEME)/$(IMPLEMENTATION) $(COMMONINCLUDES_M4) $(LDFLAGS)
+
 elf/crypto_$(TYPE)_$(SCHEME)_$(IMPLEMENTATION)_testvectors.elf: $(COMMONSOURCES_M4) crypto_$(TYPE)/$(SCHEME)/$(IMPLEMENTATION)/*.c $(OPENCM3FILE) common/stm32f4_wrapper.c
 	mkdir -p elf
 	$(CC) -o $@ $(CFLAGS) \
 	crypto_$(TYPE)/testvectors.c $(COMMONSOURCES_M4) crypto_$(TYPE)/$(SCHEME)/$(IMPLEMENTATION)/*.c common/stm32f4_wrapper.c \
-	-Icrypto_$(TYPE)/$(SCHEME)/$(IMPLEMENTATION) $(COMMONINCLUDES_M4) $(LDFLAGS)
-
-elf/crypto_$(TYPE)_$(SCHEME)_$(IMPLEMENTATION)_speed.elf: $(COMMONSOURCES_M4) $(RANDOMBYTES_M4) crypto_$(TYPE)/$(SCHEME)/$(IMPLEMENTATION)/*.c $(OPENCM3FILE) common/stm32f4_wrapper.c
-	mkdir -p elf
-	$(CC) -o $@ $(CFLAGS) \
-	crypto_$(TYPE)/speed.c $(COMMONSOURCES_M4) $(RANDOMBYTES_M4) crypto_$(TYPE)/$(SCHEME)/$(IMPLEMENTATION)/*.c common/stm32f4_wrapper.c \
-	-Icrypto_$(TYPE)/$(SCHEME)/$(IMPLEMENTATION) $(COMMONINCLUDES_M4) $(LDFLAGS)
-
-elf/crypto_$(TYPE)_$(SCHEME)_$(IMPLEMENTATION)_stack.elf: $(COMMONSOURCES_M4) $(RANDOMBYTES_M4) crypto_$(TYPE)/$(SCHEME)/$(IMPLEMENTATION)/*.c $(OPENCM3FILE) common/stm32f4_wrapper.c
-	mkdir -p elf
-	$(CC) -o $@ $(CFLAGS) \
-	crypto_$(TYPE)/stack.c $(COMMONSOURCES_M4) $(RANDOMBYTES_M4) crypto_$(TYPE)/$(SCHEME)/$(IMPLEMENTATION)/*.c common/stm32f4_wrapper.c \
-	-Icrypto_$(TYPE)/$(SCHEME)/$(IMPLEMENTATION) $(COMMONINCLUDES_M4) $(LDFLAGS)
-
-elf/crypto_$(TYPE)_$(SCHEME)_$(IMPLEMENTATION)_test.elf: $(COMMONSOURCES_M4) $(RANDOMBYTES_M4) crypto_$(TYPE)/$(SCHEME)/$(IMPLEMENTATION)/*.c $(OPENCM3FILE) common/stm32f4_wrapper.c
-	mkdir -p elf
-	$(CC) -o $@ $(CFLAGS) \
-	crypto_$(TYPE)/test.c $(COMMONSOURCES_M4) $(RANDOMBYTES_M4) crypto_$(TYPE)/$(SCHEME)/$(IMPLEMENTATION)/*.c common/stm32f4_wrapper.c \
 	-Icrypto_$(TYPE)/$(SCHEME)/$(IMPLEMENTATION) $(COMMONINCLUDES_M4) $(LDFLAGS)
 
 $(OPENCM3FILE):
