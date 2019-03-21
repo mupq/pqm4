@@ -4,6 +4,7 @@
 #include "api.h"
 #include "stm32wrapper.h"
 #include "randombytes.h"
+#include "hal.h"
 
 #include <stdio.h>
 #include <stdint.h>
@@ -20,7 +21,7 @@ static void printbytes(const unsigned char *x, unsigned long long xlen)
   for(i=0;i<xlen;i++)
     sprintf(outs+2*i, "%02x", x[i]);
   outs[2*xlen] = 0;
-  send_USART_str(outs);
+  hal_send_str(outs);
 }
 
 static uint32 seed[32] = { 3,1,4,1,5,9,2,6,5,3,5,8,9,7,9,3,2,3,8,4,6,2,6,4,3,3,8,3,2,7,9,5 } ;
@@ -68,8 +69,6 @@ void randombytes(unsigned char *x,unsigned long long xlen)
   printbytes(xbak, bak);
 }
 
-
-
 int main(void)
 {
   unsigned char key_a[CRYPTO_BYTES], key_b[CRYPTO_BYTES];
@@ -78,11 +77,9 @@ int main(void)
   unsigned char sk_a[CRYPTO_SECRETKEYBYTES];
   int i,j;
 
-  clock_setup(CLOCK_FAST);
-  gpio_setup();
-  usart_setup(115200);
+  hal_setup(CLOCK_FAST);
 
-  send_USART_str("==========================");
+  hal_send_str("==========================");
 
   for(i=0;i<NTESTS;i++)
   {
@@ -107,14 +104,14 @@ int main(void)
     {
       if(key_a[j] != key_b[j])
       {
-        send_USART_str("ERROR");
-        send_USART_str("#");
+        hal_send_str("ERROR");
+        hal_send_str("#");
         return -1;
       }
     }
   }
 
-  send_USART_str("#");
+  hal_send_str("#");
   while(1);
   return 0;
 }

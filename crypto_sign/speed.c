@@ -1,5 +1,6 @@
 #include "api.h"
 #include "stm32wrapper.h"
+#include "hal.h"
 
 #include <stdio.h>
 #include <stdint.h>
@@ -7,21 +8,13 @@
 
 #define MLEN 59
 
-static unsigned long long overflowcnt = 0;
-
-void sys_tick_handler(void)
-{
-  ++overflowcnt;
-}
-
 static void printcycles(const char *s, unsigned long long c)
 {
   char outs[32];
-  send_USART_str(s);
+  hal_send_str(s);
   snprintf(outs,sizeof(outs),"%llu\n",c);
-  send_USART_str(outs);
+  hal_send_str(outs);
 }
-
 
 int main(void)
 {
@@ -29,38 +22,31 @@ int main(void)
   unsigned char pk[CRYPTO_PUBLICKEYBYTES];
   unsigned char sm[MLEN+CRYPTO_BYTES];
   unsigned long long smlen;
-  unsigned int t0, t1;
+  unsigned long long t0, t1;
 
-  clock_setup(CLOCK_BENCHMARK);
-  gpio_setup();
-  usart_setup(115200);
-  systick_setup();
-  rng_enable();
+  hal_setup(CLOCK_BENCHMARK);
 
-  send_USART_str("==========================");
+  hal_send_str("==========================");
 
   // Key-pair generation
-  t0 = systick_get_value();
-  overflowcnt = 0;
+  t0 = hal_get_time();
   crypto_sign_keypair(pk, sk);
-  t1 = systick_get_value();
-  printcycles("keypair cycles:", (t0+overflowcnt*2400000llu)-t1);
+  t1 = hal_get_time();
+  printcycles("keypair cycles:", t1-t0;
 
   // Signing
-  t0 = systick_get_value();
-  overflowcnt = 0;
+  t0 = hal_get_time();
   crypto_sign(sm, &smlen, sm, MLEN, sk);
-  t1 = systick_get_value();
-  printcycles("sign cycles: ", (t0+overflowcnt*2400000llu)-t1);
+  t1 = hal_get_time();
+  printcycles("sign cycles: ", t1-t0);
 
   // Verification
-  t0 = systick_get_value();
-  overflowcnt = 0;
+  t0 = hal_get_time();
   crypto_sign_open(sm, &smlen, sm, smlen, pk);
-  t1 = systick_get_value();
-  printcycles("verify cycles: ", (t0+overflowcnt*2400000llu)-t1);
+  t1 = hal_get_time();
+  printcycles("verify cycles: ", t1-t0);
 
-  send_USART_str("#");
+  hal_send_str("#");
   while(1);
   return 0;
 }

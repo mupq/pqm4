@@ -1,25 +1,18 @@
 #include "api.h"
 #include "stm32wrapper.h"
+#include "hal.h"
 
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
 
-static unsigned long long overflowcnt = 0;
-
-void sys_tick_handler(void)
-{
-  ++overflowcnt;
-}
-
 static void printcycles(const char *s, unsigned long long c)
 {
   char outs[32];
-  send_USART_str(s);
+  hal_send_str(s);
   snprintf(outs,sizeof(outs),"%llu\n",c);
-  send_USART_str(outs);
+  hal_send_str(outs);
 }
-
 
 int main(void)
 {
@@ -27,45 +20,38 @@ int main(void)
   unsigned char sk[CRYPTO_SECRETKEYBYTES];
   unsigned char pk[CRYPTO_PUBLICKEYBYTES];
   unsigned char ct[CRYPTO_CIPHERTEXTBYTES];
-  unsigned int t0, t1;
+  unsigned long long t0, t1;
 
-  clock_setup(CLOCK_BENCHMARK);
-  gpio_setup();
-  usart_setup(115200);
-  systick_setup();
-  rng_enable();
+  hal_setup(CLOCK_BENCHMARK);
 
-  send_USART_str("==========================");
+  hal_send_str("==========================");
 
   // Key-pair generation
-  t0 = systick_get_value();
-  overflowcnt = 0;
+  t0 = hal_get_time();
   crypto_kem_keypair(pk, sk);
-  t1 = systick_get_value();
-  printcycles("keypair cycles:", (t0+overflowcnt*2400000llu)-t1);
+  t1 = hal_get_time();
+  printcycles("keypair cycles:", t1-t0;
 
   // Encapsulation
-  t0 = systick_get_value();
-  overflowcnt = 0;
+  t0 = hal_get_time();
   crypto_kem_enc(ct, key_a, pk);
-  t1 = systick_get_value();
-  printcycles("encaps cycles: ", (t0+overflowcnt*2400000llu)-t1);
+  t1 = hal_get_time();
+  printcycles("sign cycles: ", t1-t0);
 
   // Decapsulation
-  t0 = systick_get_value();
-  overflowcnt = 0;
+  t0 = hal_get_time();
   crypto_kem_dec(key_b, ct, sk);
-  t1 = systick_get_value();
-  printcycles("decaps cycles: ", (t0+overflowcnt*2400000llu)-t1);
+  t1 = hal_get_time();
+  printcycles("verify cycles: ", t1-t0);
 
   if (memcmp(key_a, key_b, CRYPTO_BYTES)) {
-    send_USART_str("ERROR KEYS\n");
+    hal_send_str("ERROR KEYS\n");
   }
   else {
-    send_USART_str("OK KEYS\n");
+    hal_send_str("OK KEYS\n");
   }
 
-  send_USART_str("#");
+  hal_send_str("#");
   while(1);
   return 0;
 }

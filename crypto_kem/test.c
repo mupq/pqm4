@@ -1,6 +1,8 @@
 #include "api.h"
 #include "randombytes.h"
 #include "stm32wrapper.h"
+#include "hal.h"
+
 #include <string.h>
 
 #define NTESTS 10
@@ -41,19 +43,19 @@ static int test_keys(void)
   {
     //Alice generates a public key
     crypto_kem_keypair(pk+8, sk_a+8);
-    send_USART_str("DONE key pair generation!");
+    hal_send_str("DONE key pair generation!");
 
     //Bob derives a secret key and creates a response
     crypto_kem_enc(sendb+8, key_b+8, pk+8);
-    send_USART_str("DONE encapsulation!");
+    hal_send_str("DONE encapsulation!");
 
     //Alice uses Bobs response to get her secret key
     crypto_kem_dec(key_a+8, sendb+8, sk_a+8);
-    send_USART_str("DONE decapsulation!");
+    hal_send_str("DONE decapsulation!");
 
     if(memcmp(key_a+8, key_b+8, CRYPTO_BYTES))
     {
-      send_USART_str("ERROR KEYS\n");
+      hal_send_str("ERROR KEYS\n");
     }
     else if(check_canary(key_a) || check_canary(key_a+sizeof(key_a)-8) ||
             check_canary(key_b) || check_canary(key_b+sizeof(key_b)-8) ||
@@ -61,11 +63,11 @@ static int test_keys(void)
             check_canary(sendb) || check_canary(sendb+sizeof(sendb)-8) ||
             check_canary(sk_a) || check_canary(sk_a+sizeof(sk_a)-8))
     {
-      send_USART_str("ERROR canary overwritten\n");
+      hal_send_str("ERROR canary overwritten\n");
     }
     else
     {
-      send_USART_str("OK KEYS\n");
+      hal_send_str("OK KEYS\n");
     }
   }
 
@@ -97,11 +99,11 @@ static int test_invalid_sk_a(void)
 
     if(!memcmp(key_a, key_b, CRYPTO_BYTES))
     {
-      send_USART_str("ERROR invalid sk_a\n");
+      hal_send_str("ERROR invalid sk_a\n");
     }
     else
     {
-      send_USART_str("OK invalid sk_a\n");
+      hal_send_str("OK invalid sk_a\n");
     }
   }
 
@@ -136,11 +138,11 @@ static int test_invalid_ciphertext(void)
 
     if(!memcmp(key_a, key_b, CRYPTO_BYTES))
     {
-      send_USART_str("ERROR invalid ciphertext\n");
+      hal_send_str("ERROR invalid ciphertext\n");
     }
     else
     {
-      send_USART_str("OK invalid ciphertext\n");
+      hal_send_str("OK invalid ciphertext\n");
     }
   }
 
@@ -149,17 +151,14 @@ static int test_invalid_ciphertext(void)
 
 int main(void)
 {
-  clock_setup(CLOCK_FAST);
-  gpio_setup();
-  usart_setup(115200);
-  rng_enable();
+  hal_setup(CLOCK_FAST)
 
   // marker for automated testing
-  send_USART_str("==========================");
+  hal_send_str("==========================");
   test_keys();
   test_invalid_sk_a();
   test_invalid_ciphertext();
-  send_USART_str("#");
+  hal_send_str("#");
 
   while(1);
 

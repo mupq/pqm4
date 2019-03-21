@@ -1,6 +1,8 @@
 #include "api.h"
 #include "randombytes.h"
 #include "stm32wrapper.h"
+#include "hal.h"
+
 #include <string.h>
 
 #define NTESTS 15
@@ -39,29 +41,29 @@ static int test_sign(void)
 
     for (i = 0; i < NTESTS; i++) {
         crypto_sign_keypair(pk+8, sk+8);
-        send_USART_str("crypto_sign_keypair DONE.\n");
+        hal_send_str("crypto_sign_keypair DONE.\n");
 
         randombytes(m+8, MLEN);
         crypto_sign(sm+8, &smlen, m+8, MLEN, sk+8);
-        send_USART_str("crypto_sign DONE.\n");
+        hal_send_str("crypto_sign DONE.\n");
 
         // By relying on m == sm we prevent having to allocate CRYPTO_BYTES twice
         if (crypto_sign_open(sm+8, &mlen, sm+8, smlen, pk+8))
         {
-            send_USART_str("ERROR Signature did not verify correctly!\n");
+            hal_send_str("ERROR Signature did not verify correctly!\n");
         }
         else if(check_canary(pk) || check_canary(pk+sizeof(pk)-8) ||
             check_canary(sk) || check_canary(sk+sizeof(sk)-8) ||
             check_canary(sm) || check_canary(sm+sizeof(sm)-8) ||
             check_canary(m) || check_canary(m+sizeof(m)-8))
         {
-            send_USART_str("ERROR canary overwritten\n");
+            hal_send_str("ERROR canary overwritten\n");
         }
         else
         {
-            send_USART_str("OK Signature did verify correctly!\n");
+            hal_send_str("OK Signature did verify correctly!\n");
         }
-        send_USART_str("crypto_sign_open DONE.\n");
+        hal_send_str("crypto_sign_open DONE.\n");
     }
 
     return 0;
@@ -82,26 +84,26 @@ static int test_wrong_pk(void)
 
     for (i = 0; i < NTESTS; i++) {
         crypto_sign_keypair(pk2, sk);
-        send_USART_str("crypto_sign_keypair DONE.\n");
+        hal_send_str("crypto_sign_keypair DONE.\n");
 
         crypto_sign_keypair(pk, sk);
-        send_USART_str("crypto_sign_keypair DONE.\n");
+        hal_send_str("crypto_sign_keypair DONE.\n");
 
 
         randombytes(m, MLEN);
         crypto_sign(sm, &smlen, m, MLEN, sk);
-        send_USART_str("crypto_sign DONE.\n");
+        hal_send_str("crypto_sign DONE.\n");
 
         // By relying on m == sm we prevent having to allocate CRYPTO_BYTES twice
         if (crypto_sign_open(sm, &mlen, sm, smlen, pk2))
         {
-            send_USART_str("OK Signature did not verify correctly under wrong public key!\n");
+            hal_send_str("OK Signature did not verify correctly under wrong public key!\n");
         }
         else
         {
-            send_USART_str("ERROR Signature did verify correctly under wrong public key!\n");
+            hal_send_str("ERROR Signature did verify correctly under wrong public key!\n");
         }
-        send_USART_str("crypto_sign_open DONE.\n");
+        hal_send_str("crypto_sign_open DONE.\n");
     }
 
     return 0;
@@ -109,16 +111,13 @@ static int test_wrong_pk(void)
 
 int main(void)
 {
-    clock_setup(CLOCK_FAST);
-    gpio_setup();
-    usart_setup(115200);
-    rng_enable();
+    hal_setup(CLOCK_FAST);
 
     // marker for automated testing
-    send_USART_str("==========================");
+    hal_send_str("==========================");
     test_sign();
     test_wrong_pk();
-    send_USART_str("#");
+    hal_send_str("#");
     while(1);
     return 0;
 }
