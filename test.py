@@ -12,6 +12,7 @@ except FileNotFoundError:
     print("There is no bin/ folder. Please first make binaries.")
     sys.exit(1)
 
+
 def doTest(binary):
     binpath = os.path.join("bin", binary)
     info = binary.split('_')
@@ -23,10 +24,9 @@ def doTest(binary):
         return
 
     if len(sys.argv) > 1 and scheme not in sys.argv[1:]:
-       return
+        return
 
     result = utils.m4run(binpath)
-
 
     print("Testing if tests were successful..")
     contents = result.strip()
@@ -35,6 +35,7 @@ def doTest(binary):
         print("FAILED!")
     else:
         print("passed.")
+
 
 for binary in binaries:
     doTest(binary)
