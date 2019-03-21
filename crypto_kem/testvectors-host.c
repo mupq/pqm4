@@ -50,7 +50,7 @@ static void surf(void)
   }
 }
 
-void randombytes(unsigned char *x,unsigned long long xlen)
+int randombytes(uint8_t *x, size_t xlen)
 {
   unsigned long long bak = xlen;
   unsigned char *xbak = x;
@@ -66,6 +66,8 @@ void randombytes(unsigned char *x,unsigned long long xlen)
     --xlen;
   }
   printbytes(xbak, bak);
+
+  return 0;
 }
 
 

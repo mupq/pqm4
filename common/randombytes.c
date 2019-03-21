@@ -4,7 +4,7 @@
 
 //TODO Maybe we do not want to use the hardware RNG for all randomness, but instead only read a seed and then expand that using fips202.
 
-void randombytes(unsigned char *x,unsigned long long xlen)
+int randombytes(uint8_t *buf, size_t xlen)
 {
     union
     {
@@ -28,4 +28,6 @@ void randombytes(unsigned char *x,unsigned long long xlen)
             *x++ = random.aschar[xlen - 1];
         }
     }
+
+    return 0;
 }

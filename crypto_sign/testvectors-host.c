@@ -50,7 +50,7 @@ static void surf(void)
   }
 }
 
-void randombytes(unsigned char *x,unsigned long long xlen)
+int randombytes(uint8_t *x, size_t xlen)
 {
   while (xlen > 0) {
     if (!outleft) {
@@ -62,6 +62,8 @@ void randombytes(unsigned char *x,unsigned long long xlen)
     ++x;
     --xlen;
   }
+
+  return 0;
 }
 
 int main(void)
