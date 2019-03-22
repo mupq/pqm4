@@ -43,7 +43,7 @@ DEST_HOST=bin-host
 DEST=bin
 
 TARGET_NAME = $(shell echo $(IMPLEMENTATION_PATH) | sed 's@/@_@g')
-TYPE = $(shell echo $(IMPLEMENTATION_PATH) | sed -r 's@(.*/)?crypto_(kem)(/.*)@\2@')
+TYPE = $(shell echo $(IMPLEMENTATION_PATH) | sed -r 's@(.*/)?crypto_(kem|sign)(/.*)@\2@')
 IMPLEMENTATION_SOURCES = $(wildcard $(IMPLEMENTATION_PATH)/*.c) $(wildcard $(IMPLEMENTATION_PATH)/*.s) $(wildcard $(IMPLEMENTATION_PATH)/*.S)
 IMPLEMENTATION_HEADERS = $(IMPLEMENTATION_PATH)/*.h
 
