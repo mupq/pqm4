@@ -1,6 +1,12 @@
 # pqm4
 Post-quantum crypto library for the ARM Cortex-M4
 
+## Work in progress
+
+This is the v2 version of pqm4, which will abstract away a lot of things into the
+mupq parent project. Please make sure you have all the submodules when you work in this
+directory
+
 ## Introduction
 The **pqm4** library, benchmarking and testing framework started as a result of the 
 [PQCRYPTO](https://pqcrypto.eu.org) project funded by the European Commission in the H2020 program. 
