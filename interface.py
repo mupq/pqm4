@@ -32,4 +32,6 @@ class M4(mupq.Platform):
         super().flash(binary_path)
         subprocess.check_call(
             ["st-flash", "--reset", "write", binary_path, "0x8000000"],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL
         )
