@@ -27,23 +27,8 @@ LD_HOST    = gcc
 CFLAGS_HOST = -O3 -Wall -Wextra -Wpedantic
 LDFLAGS_HOST =
 
-
-# TODO this does not work as desired, as it blocks 'make clean'
-# ifndef TYPE
-# $(error Please supply a TYPE (i.e. kem or sign))
-# endif
-# ifndef SCHEME
-# $(error Please supply a SCHEME (e.g. 'kyber768'))
-# endif
-# ifndef IMPLEMENTATION
-# $(error Please supply a IMPLEMENTATION (e.g. 'ref'))
-# endif
-
 # override as desired
-PROJECT=pqm4
 TYPE=kem
-SCHEME=kyber768
-IMPLEMENTATION=ref
 
 COMMONSOURCES=mupq/common/fips202.c mupq/common/sha2.c mupq/common/aes.c mupq/common/rijndael.c
 COMMONSOURCES_HOST=$(COMMONSOURCES) mupq/common/keccakf1600.c
@@ -57,42 +42,55 @@ RANDOMBYTES_M4=common/randombytes.c
 DEST_HOST=bin-host
 DEST=bin
 
-all: $(DEST)/$(PROJECT)_crypto_$(TYPE)_$(SCHEME)_$(IMPLEMENTATION)_testvectors.bin \
-	 $(DEST)/$(PROJECT)_crypto_$(TYPE)_$(SCHEME)_$(IMPLEMENTATION)_test.bin \
-	 $(DEST)/$(PROJECT)_crypto_$(TYPE)_$(SCHEME)_$(IMPLEMENTATION)_speed.bin \
-	 $(DEST)/$(PROJECT)_crypto_$(TYPE)_$(SCHEME)_$(IMPLEMENTATION)_stack.bin \
-	 $(DEST)/$(PROJECT)_crypto_$(TYPE)_$(SCHEME)_$(IMPLEMENTATION)_hashing.bin \
-	 $(DEST_HOST)/$(PROJECT)_crypto_$(TYPE)_$(SCHEME)_$(IMPLEMENTATION)_testvectors
+TARGET_NAME = $(shell echo $(IMPLEMENTATION_PATH) | sed 's@/@_@g')
+TYPE = $(shell echo $(IMPLEMENTATION_PATH) | sed -r 's@(.*/)?crypto_(kem)(/.*)@\2@')
+IMPLEMENTATION_SOURCES = $(wildcard $(IMPLEMENTATION_PATH)/*.c) $(wildcard $(IMPLEMENTATION_PATH)/*.s) $(wildcard $(IMPLEMENTATION_PATH)/*.S)
+IMPLEMENTATION_HEADERS = $(IMPLEMENTATION_PATH)/*.h
 
-$(DEST_HOST)/$(PROJECT)_crypto_$(TYPE)_$(SCHEME)_$(IMPLEMENTATION)_testvectors: $(COMMONSOURCES_HOST) crypto_$(TYPE)/$(SCHEME)/$(IMPLEMENTATION)/*.c
+.PHONY: all
+all:
+	@echo "Please use the scripts in this directory instead of using the Makefile"
+	@echo
+	@echo "If you really want to use it, please specify IMPLEMENTATION_PATH=path/to/impl"
+	@echo "and a target binary."
+	@echo "make clean also works"
+
+$(DEST_HOST)/%_testvectors: $(COMMONSOURCES_HOST) $(IMPLEMENTATION_SOURCES) $(IMPLEMENTATION_HEADERS)
 	mkdir -p $(DEST_HOST)
-	$(CC_HOST) -o $@ $(CFLAGS_HOST) crypto_$(TYPE)/testvectors-host.c $(COMMONSOURCES_HOST) crypto_$(TYPE)/$(SCHEME)/$(IMPLEMENTATION)/*.c \
-	-Icrypto_$(TYPE)/$(SCHEME)/$(IMPLEMENTATION) $(COMMONINCLUDES) $(LDFLAGS_HOST) -lm
+	$(CC_HOST) -o $@ \
+		$(CFLAGS_HOST) \
+		crypto_$(TYPE)/testvectors-host.c \
+		$(COMMONSOURCES_HOST) \
+		$(IMPLEMENTATION_SOURCES) \
+		-I$(IMPLEMENTATION_PATH) \
+		$(COMMONINCLUDES) \
+		$(LDFLAGS_HOST)
 
 $(DEST)/%.bin: elf/%.elf
 	mkdir -p $(DEST)
 	$(OBJCOPY) -Obinary $^ $@
 
+
 # pattern rules, intended to match % to the type of test (i.e. test, speed, stack)
 # note that this excludes testvectors, as that is a special case that provides its own randombytes
 # TODO use notrandombytes more generically rather than included in testvectors.c
-elf/$(PROJECT)_crypto_$(TYPE)_$(SCHEME)_$(IMPLEMENTATION)_%.elf: $(COMMONSOURCES_M4) $(RANDOMBYTES_M4) crypto_$(TYPE)/$(SCHEME)/$(IMPLEMENTATION)/*.c $(OPENCM3FILE) common/hal-stm32f4.c
+elf/$(TARGET_NAME)_%.elf: $(COMMONSOURCES_M4) $(RANDOMBYTES_M4) $(IMPLEMENTATION_SOURCES) $(IMPLEMENTATION_HEADERS) $(OPENCM3FILE) common/hal-stm32f4.c
 	mkdir -p elf
 	$(CC) -o $@ $(CFLAGS) \
-	crypto_$(TYPE)/$*.c $(COMMONSOURCES_M4) $(RANDOMBYTES_M4) crypto_$(TYPE)/$(SCHEME)/$(IMPLEMENTATION)/*.c common/hal-stm32f4.c \
-	-Icrypto_$(TYPE)/$(SCHEME)/$(IMPLEMENTATION) $(COMMONINCLUDES_M4) $(LDFLAGS)
+		crypto_$(TYPE)/$*.c $(COMMONSOURCES_M4) $(RANDOMBYTES_M4) $(IMPLEMENTATION_SOURCES) common/hal-stm32f4.c \
+		-I$(IMPLEMENTATION_PATH) $(COMMONINCLUDES_M4) $(LDFLAGS)
 
-elf/$(PROJECT)_crypto_$(TYPE)_$(SCHEME)_$(IMPLEMENTATION)_testvectors.elf: $(COMMONSOURCES_M4) crypto_$(TYPE)/$(SCHEME)/$(IMPLEMENTATION)/*.c $(OPENCM3FILE) common/hal-stm32f4.c
+elf/$(TARGET_NAME)_testvectors.elf: $(COMMONSOURCES_M4) $(IMPLEMENTATION_SOURCES) $(IMPLEMENTATION_HEADERS) $(OPENCM3FILE) common/hal-stm32f4.c
 	mkdir -p elf
 	$(CC) -o $@ $(CFLAGS) \
-	crypto_$(TYPE)/testvectors.c $(COMMONSOURCES_M4) crypto_$(TYPE)/$(SCHEME)/$(IMPLEMENTATION)/*.c common/hal-stm32f4.c \
-	-Icrypto_$(TYPE)/$(SCHEME)/$(IMPLEMENTATION) $(COMMONINCLUDES_M4) $(LDFLAGS)
+		crypto_$(TYPE)/testvectors.c $(COMMONSOURCES_M4) $(IMPLEMENTATION_SOURCES) common/hal-stm32f4.c \
+		-I$(IMPLEMENTATION_PATH) $(COMMONINCLUDES_M4) $(LDFLAGS)
 
-elf/$(PROJECT)_crypto_$(TYPE)_$(SCHEME)_$(IMPLEMENTATION)_hashing.elf: $(COMMONSOURCES_M4) crypto_$(TYPE)/$(SCHEME)/$(IMPLEMENTATION)/*.c $(OPENCM3FILE) common/hal-stm32f4.c
+elf/$(TARGET_NAME)_hashing.elf: $(COMMONSOURCES_M4) $(IMPLEMENTATION_SOURCES) $(IMPLEMENTATION_HEADERS) $(OPENCM3FILE) common/hal-stm32f4.c
 	mkdir -p elf
 	$(CC) -o $@ $(CFLAGS) -DPROFILE_HASHING \
-	crypto_$(TYPE)/hashing.c $(COMMONSOURCES_M4) $(RANDOMBYTES_M4) crypto_$(TYPE)/$(SCHEME)/$(IMPLEMENTATION)/*.c common/hal-stm32f4.c \
-	-Icrypto_$(TYPE)/$(SCHEME)/$(IMPLEMENTATION) $(COMMONINCLUDES_M4) $(LDFLAGS)
+		crypto_$(TYPE)/hashing.c $(COMMONSOURCES_M4) $(RANDOMBYTES_M4) $(IMPLEMENTATION_SOURCES) common/hal-stm32f4.c \
+		-I$(IMPLEMENTATION_PATH) $(COMMONINCLUDES_M4) $(LDFLAGS)
 
 $(OPENCM3FILE):
 	@if [ ! "`ls -A $(OPENCM3_DIR)`" ] ; then \
@@ -110,10 +108,6 @@ $(OPENCM3FILE):
 .PHONY: clean libclean
 
 clean:
-	find . -name \*.o -type f -exec rm -f {} \;
-	find . -name \*.d -type f -exec rm -f {} \;
-	find crypto_kem -name \*.a -type f -exec rm -f {} \;
-	find crypto_sign -name \*.a -type f -exec rm -f {} \;
 	rm -rf elf/
 	rm -rf bin/
 	rm -rf bin-host/
