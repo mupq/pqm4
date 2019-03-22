@@ -7,8 +7,8 @@ CFLAGS_HOST = -Wall -Wextra -O3
 AR_HOST = gcc-ar
 
 HEADERS = api.h config.h P751_internal.h
-SOURCES = ec_isogeny.c fpx.c P751.c sidh.c sike.c generic/fp_generic.c
-OBJECTS = P751.o generic/fp_generic.o
+SOURCES = ec_isogeny.c fpx.c P751.c sidh.c sike.c fp_generic.c
+OBJECTS = P751.o fp_generic.o
 
 OBJECTS_HOST = $(patsubst %.o,%_host.o,$(OBJECTS))
 

@@ -4,83 +4,83 @@
 * Abstract: portable modular arithmetic for P751
 *********************************************************************************************/
 
-#include "../P751_internal.h"
+#include "P751_internal.h"
 
 
 // Global constants
 extern const uint64_t p751[NWORDS_FIELD];
-extern const uint64_t p751p1[NWORDS_FIELD]; 
-extern const uint64_t p751x2[NWORDS_FIELD]; 
+extern const uint64_t p751p1[NWORDS_FIELD];
+extern const uint64_t p751x2[NWORDS_FIELD];
 
 
 __inline void fpadd751(const digit_t* a, const digit_t* b, digit_t* c)
 { // Modular addition, c = a+b mod p751.
-  // Inputs: a, b in [0, 2*p751-1] 
-  // Output: c in [0, 2*p751-1] 
+  // Inputs: a, b in [0, 2*p751-1]
+  // Output: c in [0, 2*p751-1]
     unsigned int i, carry = 0;
     digit_t mask;
 
     for (i = 0; i < NWORDS_FIELD; i++) {
-        ADDC(carry, a[i], b[i], carry, c[i]); 
+        ADDC(carry, a[i], b[i], carry, c[i]);
     }
 
     carry = 0;
     for (i = 0; i < NWORDS_FIELD; i++) {
-        SUBC(carry, c[i], ((digit_t*)p751x2)[i], carry, c[i]); 
+        SUBC(carry, c[i], ((digit_t*)p751x2)[i], carry, c[i]);
     }
     mask = 0 - (digit_t)carry;
 
     carry = 0;
     for (i = 0; i < NWORDS_FIELD; i++) {
-        ADDC(carry, c[i], ((digit_t*)p751x2)[i] & mask, carry, c[i]); 
+        ADDC(carry, c[i], ((digit_t*)p751x2)[i] & mask, carry, c[i]);
     }
-} 
+}
 
 
 __inline void fpsub751(const digit_t* a, const digit_t* b, digit_t* c)
 { // Modular subtraction, c = a-b mod p751.
-  // Inputs: a, b in [0, 2*p751-1] 
-  // Output: c in [0, 2*p751-1] 
+  // Inputs: a, b in [0, 2*p751-1]
+  // Output: c in [0, 2*p751-1]
     unsigned int i, borrow = 0;
     digit_t mask;
 
     for (i = 0; i < NWORDS_FIELD; i++) {
-        SUBC(borrow, a[i], b[i], borrow, c[i]); 
+        SUBC(borrow, a[i], b[i], borrow, c[i]);
     }
     mask = 0 - (digit_t)borrow;
 
     borrow = 0;
     for (i = 0; i < NWORDS_FIELD; i++) {
-        ADDC(borrow, c[i], ((digit_t*)p751x2)[i] & mask, borrow, c[i]); 
+        ADDC(borrow, c[i], ((digit_t*)p751x2)[i] & mask, borrow, c[i]);
     }
 }
 
 
 __inline void fpneg751(digit_t* a)
 { // Modular negation, a = -a mod p751.
-  // Input/output: a in [0, 2*p751-1] 
+  // Input/output: a in [0, 2*p751-1]
     unsigned int i, borrow = 0;
 
     for (i = 0; i < NWORDS_FIELD; i++) {
-        SUBC(borrow, ((digit_t*)p751x2)[i], a[i], borrow, a[i]); 
+        SUBC(borrow, ((digit_t*)p751x2)[i], a[i], borrow, a[i]);
     }
 }
 
 
 void fpdiv2_751(const digit_t* a, digit_t* c)
 { // Modular division by two, c = a/2 mod p751.
-  // Input : a in [0, 2*p751-1] 
-  // Output: c in [0, 2*p751-1] 
+  // Input : a in [0, 2*p751-1]
+  // Output: c in [0, 2*p751-1]
     unsigned int i, carry = 0;
     digit_t mask;
-        
+
     mask = 0 - (digit_t)(a[0] & 1);    // If a is odd compute a+p751
     for (i = 0; i < NWORDS_FIELD; i++) {
-        ADDC(carry, a[i], ((digit_t*)p751)[i] & mask, carry, c[i]); 
+        ADDC(carry, a[i], ((digit_t*)p751)[i] & mask, carry, c[i]);
     }
 
     mp_shiftr1(c, NWORDS_FIELD);
-} 
+}
 
 
 void fpcorrection751(digit_t* a)
@@ -89,19 +89,19 @@ void fpcorrection751(digit_t* a)
     digit_t mask;
 
     for (i = 0; i < NWORDS_FIELD; i++) {
-        SUBC(borrow, a[i], ((digit_t*)p751)[i], borrow, a[i]); 
+        SUBC(borrow, a[i], ((digit_t*)p751)[i], borrow, a[i]);
     }
     mask = 0 - (digit_t)borrow;
 
     borrow = 0;
     for (i = 0; i < NWORDS_FIELD; i++) {
-        ADDC(borrow, a[i], ((digit_t*)p751)[i] & mask, borrow, a[i]); 
+        ADDC(borrow, a[i], ((digit_t*)p751)[i] & mask, borrow, a[i]);
     }
 }
 
 
 void digit_x_digit(const digit_t a, const digit_t b, digit_t* c)
-{ // Digit multiplication, digit * digit -> 2-digit result    
+{ // Digit multiplication, digit * digit -> 2-digit result
     register digit_t al, ah, bl, bh, temp;
     digit_t albl, albh, ahbl, ahbh, res1, res2, res3, carry;
     digit_t mask_low = (digit_t)(-1) >> (sizeof(digit_t)*4), mask_high = (digit_t)(-1) << (sizeof(digit_t)*4);
@@ -119,53 +119,53 @@ void digit_x_digit(const digit_t a, const digit_t b, digit_t* c)
 
     res1 = albl >> (sizeof(digit_t) * 4);
     res2 = ahbl & mask_low;
-    res3 = albh & mask_low;  
+    res3 = albh & mask_low;
     temp = res1 + res2 + res3;
     carry = temp >> (sizeof(digit_t) * 4);
-    c[0] ^= temp << (sizeof(digit_t) * 4);    // C01   
+    c[0] ^= temp << (sizeof(digit_t) * 4);    // C01
 
     res1 = ahbl >> (sizeof(digit_t) * 4);
     res2 = albh >> (sizeof(digit_t) * 4);
     res3 = ahbh & mask_low;
     temp = res1 + res2 + res3 + carry;
-    c[1] = temp & mask_low;                   // C10 
-    carry = temp & mask_high; 
+    c[1] = temp & mask_low;                   // C10
+    carry = temp & mask_high;
     c[1] ^= (ahbh & mask_high) + carry;       // C11
 }
 
 
 void mp_mul(const digit_t* a, const digit_t* b, digit_t* c, const unsigned int nwords)
-{ // Multiprecision comba multiply, c = a*b, where lng(a) = lng(b) = nwords.   
+{ // Multiprecision comba multiply, c = a*b, where lng(a) = lng(b) = nwords.
     unsigned int i, j;
     digit_t t = 0, u = 0, v = 0, UV[2];
     unsigned int carry = 0;
-    
+
     for (i = 0; i < nwords; i++) {
         for (j = 0; j <= i; j++) {
-            MUL(a[j], b[i-j], UV+1, UV[0]); 
-            ADDC(0, UV[0], v, carry, v); 
-            ADDC(carry, UV[1], u, carry, u); 
+            MUL(a[j], b[i-j], UV+1, UV[0]);
+            ADDC(0, UV[0], v, carry, v);
+            ADDC(carry, UV[1], u, carry, u);
             t += carry;
         }
         c[i] = v;
-        v = u; 
+        v = u;
         u = t;
         t = 0;
     }
 
     for (i = nwords; i < 2*nwords-1; i++) {
         for (j = i-nwords+1; j < nwords; j++) {
-            MUL(a[j], b[i-j], UV+1, UV[0]); 
-            ADDC(0, UV[0], v, carry, v); 
-            ADDC(carry, UV[1], u, carry, u); 
+            MUL(a[j], b[i-j], UV+1, UV[0]);
+            ADDC(0, UV[0], v, carry, v);
+            ADDC(carry, UV[1], u, carry, u);
             t += carry;
         }
         c[i] = v;
-        v = u; 
+        v = u;
         u = t;
         t = 0;
     }
-    c[2*nwords-1] = v; 
+    c[2*nwords-1] = v;
 }
 
 
@@ -183,42 +183,42 @@ void rdc_mont(const dfelm_t ma, felm_t mc)
 
     for (i = 0; i < NWORDS_FIELD; i++) {
         for (j = 0; j < i; j++) {
-            if (j < (i-p751_ZERO_WORDS+1)) { 
+            if (j < (i-p751_ZERO_WORDS+1)) {
                 MUL(mc[j], ((digit_t*)p751p1)[i-j], UV+1, UV[0]);
-                ADDC(0, UV[0], v, carry, v); 
-                ADDC(carry, UV[1], u, carry, u); 
-                t += carry; 
+                ADDC(0, UV[0], v, carry, v);
+                ADDC(carry, UV[1], u, carry, u);
+                t += carry;
             }
         }
-        ADDC(0, v, ma[i], carry, v); 
-        ADDC(carry, u, 0, carry, u); 
-        t += carry; 
+        ADDC(0, v, ma[i], carry, v);
+        ADDC(carry, u, 0, carry, u);
+        t += carry;
         mc[i] = v;
         v = u;
         u = t;
         t = 0;
-    }    
+    }
 
     for (i = NWORDS_FIELD; i < 2*NWORDS_FIELD-1; i++) {
         if (count > 0) {
             count -= 1;
         }
         for (j = i-NWORDS_FIELD+1; j < NWORDS_FIELD; j++) {
-            if (j < (NWORDS_FIELD-count)) { 
+            if (j < (NWORDS_FIELD-count)) {
                 MUL(mc[j], ((digit_t*)p751p1)[i-j], UV+1, UV[0]);
-                ADDC(0, UV[0], v, carry, v); 
-                ADDC(carry, UV[1], u, carry, u); 
+                ADDC(0, UV[0], v, carry, v);
+                ADDC(carry, UV[1], u, carry, u);
                 t += carry;
             }
         }
-        ADDC(0, v, ma[i], carry, v); 
-        ADDC(carry, u, 0, carry, u); 
-        t += carry; 
+        ADDC(0, v, ma[i], carry, v);
+        ADDC(carry, u, 0, carry, u);
+        t += carry;
         mc[i-NWORDS_FIELD] = v;
         v = u;
         u = t;
         t = 0;
     }
-    ADDC(0, v, ma[2*NWORDS_FIELD-1], carry, v); 
+    ADDC(0, v, ma[2*NWORDS_FIELD-1], carry, v);
     mc[NWORDS_FIELD-1] = v;
 }
