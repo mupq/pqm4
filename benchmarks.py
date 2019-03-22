@@ -10,3 +10,6 @@ if __name__ == "__main__":
 
     test = mupq.SpeedBenchmark(M4Settings(), m4)
     test.test_all()
+
+    test = mupq.HashingBenchmark(M4Settings(), m4)
+    test.test_all()
