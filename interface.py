@@ -10,6 +10,8 @@ class M4Settings(mupq.PlatformSettings):
     scheme_folders = [  # mupq.PlatformSettings.scheme_folders + [
         ('pqm4', 'crypto_kem'),
         ('pqm4', 'crypto_sign'),
+        ('mupq', 'mupq/crypto_kem'),
+        ('mupq', 'mupq/crypto_sign')
     ]
 
     #: List of dicts, in each dict specify (Scheme class) attributes of the
