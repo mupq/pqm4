@@ -154,6 +154,8 @@ The **pqm4** framework automates testing and benchmarking for all schemes using 
 - `python3 benchmarks.py`: flashes the stack and speed binaries and writes the results to `benchmarks/stack/` and `benchmarks/speed/`. You may want to execute this several times for certain schemes for which the execution time varies significantly. 
 
 In case you don't want to include all schemes, pass a list of schemes you want to include to any of the scripts, e.g., `python3 test.py newhope1024cca sphincs-shake256-128s`. 
+In case you want to exclude certain schemes pass `--exclude`, e.g., `python3 test.py --exclude saber`
+
 
 The benchmark results (in `benchmarks/`) created by 
 `python3 benchmarks.py` can be automatically converted to the markdown table below using `python3 benchmarks_to_md.py`

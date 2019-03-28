@@ -28,9 +28,9 @@ class M4(mupq.Platform):
         self._dev = serial.Serial("/dev/ttyUSB0", 115200, timeout=10)
         return super().__enter__()
 
-    def __exit__(self):
+    def __exit__(self,*args, **kwargs):
         self._dev.close()
-        return super().__exit__()
+        return super().__exit__(*args, **kwargs)
 
     def device(self):
         return self._dev
