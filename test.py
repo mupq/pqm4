@@ -4,5 +4,6 @@ from interface import M4Settings, M4
 
 
 if __name__ == "__main__":
-    test = mupq.SimpleTest(M4Settings(), M4())
-    test.test_all()
+    with M4() as m4:
+        test = mupq.SimpleTest(M4Settings(), m4)
+        test.test_all()
