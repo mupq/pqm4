@@ -30,7 +30,7 @@ Currently **pqm4** contains implementations of the following post-quantum KEMs:
 * [NTRU-KEM-743](https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/submissions/NTRUEncrypt.zip)
 * [RLizard-1024-11](https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/submissions/Lizard.zip)
 * [Saber](https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/submissions/SABER.zip)
-* [SIKE-p571](https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/submissions/SIKE.zip)
+* [SIKE-p751](https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/submissions/SIKE.zip)
 * [Streamlined NTRU Prime 4591761](https://ntruprime.cr.yp.to/)
 
 Currently **pqm4** contains implementations of the following post-quantum signature schemes:
