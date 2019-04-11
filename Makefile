@@ -74,22 +74,22 @@ $(DEST)/%.bin: elf/%.elf
 # pattern rules, intended to match % to the type of test (i.e. test, speed, stack)
 # note that this excludes testvectors, as that is a special case that provides its own randombytes
 # TODO use notrandombytes more generically rather than included in testvectors.c
-elf/$(TARGET_NAME)_%.elf: $(COMMONSOURCES_M4) $(RANDOMBYTES_M4) $(IMPLEMENTATION_SOURCES) $(IMPLEMENTATION_HEADERS) $(OPENCM3FILE) common/hal-stm32f4.c
+elf/$(TARGET_NAME)_%.elf: mupq/crypto_$(TYPE)/%.c $(COMMONSOURCES_M4) $(RANDOMBYTES_M4) $(IMPLEMENTATION_SOURCES) $(IMPLEMENTATION_HEADERS) $(OPENCM3FILE) common/hal-stm32f4.c
 	mkdir -p elf
 	$(CC) -o $@ $(CFLAGS) \
-		crypto_$(TYPE)/$*.c $(COMMONSOURCES_M4) $(RANDOMBYTES_M4) $(IMPLEMENTATION_SOURCES) common/hal-stm32f4.c \
+		$< $(COMMONSOURCES_M4) $(RANDOMBYTES_M4) $(IMPLEMENTATION_SOURCES) common/hal-stm32f4.c \
 		-I$(IMPLEMENTATION_PATH) $(COMMONINCLUDES_M4) $(LDFLAGS)
 
-elf/$(TARGET_NAME)_testvectors.elf: $(COMMONSOURCES_M4) $(IMPLEMENTATION_SOURCES) $(IMPLEMENTATION_HEADERS) $(OPENCM3FILE) common/hal-stm32f4.c
+elf/$(TARGET_NAME)_testvectors.elf: mupq/crypto_$(TYPE)/testvectors.c $(COMMONSOURCES_M4) $(IMPLEMENTATION_SOURCES) $(IMPLEMENTATION_HEADERS) $(OPENCM3FILE) common/hal-stm32f4.c
 	mkdir -p elf
 	$(CC) -o $@ $(CFLAGS) \
-		crypto_$(TYPE)/testvectors.c $(COMMONSOURCES_M4) $(IMPLEMENTATION_SOURCES) common/hal-stm32f4.c \
+		$< $(COMMONSOURCES_M4) $(IMPLEMENTATION_SOURCES) common/hal-stm32f4.c \
 		-I$(IMPLEMENTATION_PATH) $(COMMONINCLUDES_M4) $(LDFLAGS)
 
-elf/$(TARGET_NAME)_hashing.elf: $(COMMONSOURCES_M4) $(IMPLEMENTATION_SOURCES) $(IMPLEMENTATION_HEADERS) $(OPENCM3FILE) common/hal-stm32f4.c
+elf/$(TARGET_NAME)_hashing.elf: mupq/crypto_$(TYPE)/hashing.c $(COMMONSOURCES_M4) $(IMPLEMENTATION_SOURCES) $(IMPLEMENTATION_HEADERS) $(OPENCM3FILE) common/hal-stm32f4.c
 	mkdir -p elf
 	$(CC) -o $@ $(CFLAGS) -DPROFILE_HASHING \
-		crypto_$(TYPE)/hashing.c $(COMMONSOURCES_M4) $(RANDOMBYTES_M4) $(IMPLEMENTATION_SOURCES) common/hal-stm32f4.c \
+		$< $(COMMONSOURCES_M4) $(RANDOMBYTES_M4) $(IMPLEMENTATION_SOURCES) common/hal-stm32f4.c \
 		-I$(IMPLEMENTATION_PATH) $(COMMONINCLUDES_M4) $(LDFLAGS)
 
 $(OPENCM3FILE):
