@@ -1,0 +1,19 @@
+Speed Evaluation
+Key Encapsulation Schemes
+Scheme,Implementation,Key Generation [cycles] (mean),Key Generation [cycles] (min),Key Generation [cycles] (max),Encapsulation [cycles] (mean),Encapsulation [cycles] (min),Encapsulation [cycles] (max),Decapsulation [cycles] (mean),Decapsulation [cycles] (min),Decapsulation [cycles] (max)
+kyber768 (1 executions),m4,1098786,1098786,1098786,1384731,1384731,1384731,1417090,1417090,1417090
+kyber768 (1 executions),ref,1269712,1269712,1269712,1677400,1677400,1677400,1828111,1828111,1828111
+Signature Schemes
+Scheme,Implementation,Key Generation [cycles] (mean),Key Generation [cycles] (min),Key Generation [cycles] (max),Sign [cycles] (mean),Sign [cycles] (min),Sign [cycles] (max),Verify [cycles] (mean),Verify [cycles] (min),Verify [cycles] (max)
+Memory Evaluation
+Key Encapsulation Schemes
+Scheme,Implementation,Key Generation [bytes],Encapsulation [bytes],Decapsulation [bytes]
+Signature Schemes
+Scheme,Implementation,Key Generation [bytes],Sign [bytes],Verify [bytes]
+Hashing Evaluation
+Key Encapsulation Schemes
+Scheme,Implementation,Key Generation [%],Encapsulation [%],Decapsulation [%]
+kyber768,m4,68.8,66.8,56.3
+kyber768,ref,59.6,55.2,43.6
+Signature Schemes
+Scheme,Implementation,Key Generation [%],Sign [%],Verify [%]
