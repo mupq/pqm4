@@ -9,11 +9,11 @@ class M4Settings(mupq.PlatformSettings):
     #: Specify folders to include
     scheme_folders = [  # mupq.PlatformSettings.scheme_folders + [
         ('pqm4', 'crypto_kem', ''),
-        #('pqm4', 'crypto_sign', ''),
+        ('pqm4', 'crypto_sign', ''),
         ('mupq', 'mupq/crypto_kem', ''),
-        #('mupq', 'mupq/crypto_sign', ''),
+        ('mupq', 'mupq/crypto_sign', ''),
         ('pqclean', 'mupq/pqclean/crypto_kem', "PQCLEAN"),
-        #('pqclean', 'mupq/pqclean/crypto_sign', "PQCLEAN")
+        ('pqclean', 'mupq/pqclean/crypto_sign', "PQCLEAN")
 
     ]
 

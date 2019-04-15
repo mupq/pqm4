@@ -59,8 +59,8 @@ all:
 $(DEST_HOST)/%_testvectors: $(COMMONSOURCES_HOST) $(IMPLEMENTATION_SOURCES) $(IMPLEMENTATION_HEADERS)
 	mkdir -p $(DEST_HOST)
 	$(CC_HOST) -o $@ \
-		$(CFLAGS_HOST) \
-		crypto_$(TYPE)/testvectors-host.c \
+		$(CFLAGS_HOST) -DMUPQ_NAMESPACE=$(MUPQ_NAMESPACE)\
+		mupq/crypto_$(TYPE)/testvectors-host.c \
 		$(COMMONSOURCES_HOST) \
 		$(IMPLEMENTATION_SOURCES) \
 		-I$(IMPLEMENTATION_PATH) \
