@@ -69,11 +69,11 @@ AES_Te0:
 .word 0x4182c341, 0x9929b099, 0x2d5a772d, 0x0f1e110f
 .word 0xb07bcbb0, 0x54a8fc54, 0xbb6dd6bb, 0x162c3a16
 
-@ void AES_128_keyschedule(const uint8_t *key,
+@ void aes128_keyexp_asm(const uint8_t *key,
 @       uint8_t *rk) {
-.global AES_128_keyschedule
-.type   AES_128_keyschedule,%function
-AES_128_keyschedule:
+.global aes128_keyexp_asm
+.type   aes128_keyexp_asm,%function
+aes128_keyexp_asm:
 
     //function prologue, preserve registers
     push {r4-r11}
@@ -362,11 +362,11 @@ AES_128_keyschedule:
 
 
 .align 2
-@ void AES_128_encrypt(const uint8_t *rk,
+@ void aes128_encrypt_asm(const uint8_t *rk,
 @       const uint8_t *in, uint8_t *out) {
-.global AES_128_encrypt
-.type   AES_128_encrypt,%function
-AES_128_encrypt:
+.global aes128_encrypt_asm
+.type   aes128_encrypt_asm,%function
+aes128_encrypt_asm:
 
     //function prologue, preserve registers and free r2
     push {r2,r4-r12,r14}
@@ -926,7 +926,7 @@ AES_128_encrypt:
     bfi r5, r1, #8, #8
     bfi r6, r2, #8, #8
     bfi r7, r3, #8, #8
-    
+
     uxtb r0, r9, ror #8
     uxtb r1, r10, ror #8
     uxtb r2, r11, ror #8
@@ -941,13 +941,13 @@ AES_128_encrypt:
     bfi r7, r3, #16, #8
 
     ldmia r14!, {r0-r3} //rk[40]-rk[43]
-    
+
     eor r0, r0, r4, ror #8
     eor r1, r1, r5, ror #8
     eor r2, r2, r6, ror #8
     pop.w {r4}
     eor r3, r3, r7, ror #8
-    
+
     //write output
     stm r4, {r0-r3}
 
