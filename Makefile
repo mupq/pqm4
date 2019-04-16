@@ -31,7 +31,7 @@ LDFLAGS_HOST =
 TYPE=kem
 
 COMMONSOURCES=mupq/common/fips202.c mupq/common/sha2.c
-COMMONSOURCES_HOST=$(COMMONSOURCES) mupq/common/keccakf1600.c mupq/pqclean/aes.c
+COMMONSOURCES_HOST=$(COMMONSOURCES) mupq/common/keccakf1600.c mupq/pqclean/common/aes.c
 COMMONSOURCES_M4=$(COMMONSOURCES) common/keccakf1600.S mupq/common/aes.c common/aes.S
 
 COMMONINCLUDES=-I"mupq/common"
