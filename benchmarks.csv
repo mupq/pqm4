@@ -1,21 +1,86 @@
 Speed Evaluation,,,,,,,,,,
 Key Encapsulation Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [cycles] (mean),Key Generation [cycles] (min),Key Generation [cycles] (max),Encapsulation [cycles] (mean),Encapsulation [cycles] (min),Encapsulation [cycles] (max),Decapsulation [cycles] (mean),Decapsulation [cycles] (min),Decapsulation [cycles] (max)
-kyber768 (2 executions),m4,1098748,1098710,1098786,1384692,1384654,1384731,1417052,1417014,1417090
-kyber768 (2 executions),ref,1269379,1269047,1269712,1677068,1676737,1677400,1827778,1827445,1828111
+frodo640-aes (100 executions),m4,220307317,220241077,220386311,223739226,223672948,223818372,218784713,218718418,218863869
+frodo640-cshake (100 executions),m4,81905542,81905542,81905542,86239829,86239829,86239829,86385540,86385540,86385540
+frodo640-cshake (100 executions),opt,94173002,94173002,94173002,107084620,107084620,107084620,107482437,107482437,107482437
+kyber1024 (100 executions),m4,1729819,1729068,1730683,2083028,2082278,2083893,2134685,2133934,2135550
+kyber1024 (100 executions),ref,1957251,1956503,1958004,2463004,2462257,2463758,2663791,2663043,2664544
+kyber512 (100 executions),m4,665609,665182,665980,903352,902925,903723,933528,933102,933900
+kyber512 (100 executions),ref,779417,779036,779771,1108241,1107860,1108595,1226180,1225798,1226534
+kyber768 (100 executions),m4,1098604,1098197,1099128,1384549,1384141,1385073,1416908,1416501,1417432
+kyber768 (100 executions),ref,1269336,1268667,1270035,1677026,1676357,1677725,1827734,1827065,1828433
+newhope1024cca (100 executions),m4,1220539,1220182,1220822,1902086,1901730,1902370,1925924,1925566,1926207
+newhope1024cca (100 executions),ref,1466552,1466131,1466899,2273026,2272605,2273374,2421633,2421212,2421980
+ntruhrss701 (100 executions),m4,145962064,145962064,145962064,403677,403677,403677,819323,819323,819323
+ntruhrss701 (100 executions),ref,189381286,189381286,189381286,4655513,4655513,4655513,13571758,13571758,13571758
+saber (100 executions),m4,894655,894655,894655,1161220,1161220,1161220,1204173,1204173,1204173
+saber (100 executions),ref,5907650,5907650,5907650,7843989,7843989,7843989,9554128,9554128,9554128
+sikep751 (2 executions),ref,3394424419,3394424419,3394424419,5500863298,5500863298,5500863298,5911088796,5911088796,5911088796
+sntrup4591761 (100 executions),ref,133607176,133607176,133607176,9683945,9683945,9683945,28586566,28586566,28586566
 Signature Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [cycles] (mean),Key Generation [cycles] (min),Key Generation [cycles] (max),Sign [cycles] (mean),Sign [cycles] (min),Sign [cycles] (max),Verify [cycles] (mean),Verify [cycles] (min),Verify [cycles] (max)
+dilithium (100 executions),m4,2304135,2303305,2304977,8738743,3118472,32461889,2297215,2296811,2297662
+dilithium (100 executions),ref,2755209,2754546,2756003,15593609,5001347,47568719,3015099,3014727,3015472
+qTesla-I (100 executions),ref,16181905,7759886,55665081,6528971,1408282,38101487,1038204,1031357,1066061
+qTesla-III-size (100 executions),ref,52911984,22057621,147552103,25535653,3263517,85027845,2268587,2263927,2296947
+qTesla-III-speed (100 executions),ref,34440396,19783861,112913102,10958955,3242541,39136486,2197445,2187892,2228424
+sphincs-shake256-128s (2 executions),ref,4036930116,4036930116,4036930116,56077640588,56077424990,56077856186,67353629,67137935,67569323
+
 Memory Evaluation,,,,,,,,,,
 Key Encapsulation Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [bytes],Encapsulation [bytes],Decapsulation [bytes],,,,,,
+frodo640-aes,m4,31240,51568,61944,,,,,,
+frodo640-cshake,m4,26304,41504,51880,,,,,,
+frodo640-cshake,opt,36560,58272,68640,,,,,,
+kyber1024,m4,15664,19352,20864,,,,,,
+kyber1024,ref,15664,19352,20864,,,,,,
+kyber512,m4,6456,9120,9928,,,,,,
+kyber512,ref,6456,9120,9928,,,,,,
 kyber768,m4,10544,13720,14880,,,,,,
 kyber768,ref,10544,13720,14880,,,,,,
+newhope1024cca,m4,11152,17448,19680,,,,,,
+newhope1024cca,ref,11152,17448,19680,,,,,,
+ntruhrss701,m4,23396,19492,22140,,,,,,
+ntruhrss701,ref,10032,8956,10204,,,,,,
+saber,m4,13248,15528,16624,,,,,,
+saber,ref,12616,14928,15992,,,,,,
+sikep751,ref,11544,11704,12256,,,,,,
+sntrup4591761,ref,14640,7232,12576,,,,,,
 Signature Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [bytes],Sign [bytes],Verify [bytes],,,,,,
+dilithium,m4,50896,86720,54904,,,,,,
+dilithium,ref,50896,86752,54936,,,,,,
+qTesla-I,ref,22512,29336,23128,,,,,,
+qTesla-III-size,ref,44016,58152,45732,,,,,,
+qTesla-III-speed,ref,44024,58144,45712,,,,,,
+sphincs-shake256-128s,ref,2936,3064,10800,,,,,,
+
 Hashing Evaluation,,,,,,,,,,
 Key Encapsulation Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [%],Encapsulation [%],Decapsulation [%],,,,,,
+frodo640-aes,m4,96.4,95.3,95.2,,,,,,
+frodo640-cshake,m4,90.4,88.9,88.7,,,,,,
+frodo640-cshake,opt,79.8,71.6,71.3,,,,,,
+kyber1024,m4,69.3,8928624395544.8,58.7,,,,,,
+kyber1024,ref,61.3,57.1,47.0,,,,,,
+kyber512,m4,68.3,66.2,54.4,,,,,,
+kyber512,ref,58.3,54.0,41.4,,,,,,
 kyber768,m4,68.9,66.8,56.3,,,,,,
 kyber768,ref,59.6,55.2,43.6,,,,,,
+newhope1024cca,m4,71.2,70.3,59.5,,,,,,
+newhope1024cca,ref,59.3,58.9,47.4,,,,,,
+ntruhrss701,m4,0.1,26.5,8.2,,,,,,
+ntruhrss701,ref,0.0,2.3,0.5,,,,,,
+saber,m4,53.1,52.9,41.5,,,,,,
+saber,ref,8.0,7.8,5.2,,,,,,
+sikep751,ref,0.0,0.0,0.0,,,,,,
+sntrup4591761,ref,0.0,0.3,0.1,,,,,,
 Signature Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [%],Sign [%],Verify [%],,,,,,
+dilithium,m4,73.4,42.3,66.7,,,,,,
+dilithium,ref,61.4,25.4,50.8,,,,,,
+qTesla-I,ref,63.5,27.8,32.4,,,,,,
+qTesla-III-size,ref,66.2,23.0,27.5,,,,,,
+qTesla-III-speed,ref,73.3,24.1,28.3,,,,,,
+sphincs-shake256-128s,ref,97.3,97.0,97.2,,,,,,
