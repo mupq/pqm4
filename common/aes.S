@@ -1,8 +1,10 @@
 .syntax unified
 .thumb
 
-.align 2
+.section .data.aestable
+.global AES_Te0
 .type AES_Te0,%object
+.align 2
 AES_Te0:
 .word 0x63c6a563, 0x7cf8847c, 0x77ee9977, 0x7bf68d7b
 .word 0xf2ff0df2, 0x6bd6bd6b, 0x6fdeb16f, 0xc59154c5
@@ -68,11 +70,14 @@ AES_Te0:
 .word 0xbf65dabf, 0xe6d731e6, 0x4284c642, 0x68d0b868
 .word 0x4182c341, 0x9929b099, 0x2d5a772d, 0x0f1e110f
 .word 0xb07bcbb0, 0x54a8fc54, 0xbb6dd6bb, 0x162c3a16
+.size AES_Te0,.-AES_Te0
 
+.section .text.aes128
 @ void aes128_keyexp_asm(const uint8_t *key,
 @       uint8_t *rk) {
 .global aes128_keyexp_asm
 .type   aes128_keyexp_asm,%function
+.align 2
 aes128_keyexp_asm:
 
     //function prologue, preserve registers
@@ -82,7 +87,7 @@ aes128_keyexp_asm:
     ldm r0, {r4-r7}
 
     //load table address once
-    adr r3, AES_Te0
+    ldr r3, =AES_Te0
 
     //round 1
     uxtb r8, r7, ror #8
@@ -359,36 +364,10 @@ aes128_keyexp_asm:
     //function epilogue, restore state
     pop {r4-r11}
     bx lr
+.size aes128_keyexp_asm,.-aes128_keyexp_asm
 
-
-.align 2
-@ void aes128_encrypt_asm(const uint8_t *rk,
-@       const uint8_t *in, uint8_t *out) {
-.global aes128_encrypt_asm
-.type   aes128_encrypt_asm,%function
-aes128_encrypt_asm:
-
-    //function prologue, preserve registers and free r2
-    push {r2,r4-r12,r14}
-
-    //load input
-    ldm r1, {r4-r7} //r1 now free to overwrite
-    //load key
-    ldmia r0!, {r8-r11}
-    mov.w r14, r0
-
-    //load table address once
-    adr r12, AES_Te0
-
-    //initial addroundkey
-    eor r4, r8
-    eor r5, r9
-    eor r6, r10
-    eor r7, r11
-
-    //round 1
-
-    ldmia r14!, {r8-r11} //rk[4]-rk[7]
+.macro aesencrypt_oddround
+    ldmia r14!, {r8-r11}
 
     uxtb r0, r4
     uxtb r1, r5
@@ -441,10 +420,10 @@ aes128_encrypt_asm:
     eor r9, r9, r1, ror #24
     eor r10, r10, r2, ror #24
     eor r11, r11, r3, ror #24
+.endm
 
-    //round 2
-
-    ldmia r14!, {r4-r7} //rk[8]-rk[11]
+.macro aesencrypt_evenround
+    ldmia r14!, {r4-r7}
 
     uxtb r0, r8
     uxtb r1, r9
@@ -497,401 +476,9 @@ aes128_encrypt_asm:
     eor r5, r5, r1, ror #24
     eor r6, r6, r2, ror #24
     eor r7, r7, r3, ror #24
+.endm
 
-    //round 3
-
-    ldmia r14!, {r8-r11} //rk[12]-rk[15]
-
-    uxtb r0, r4
-    uxtb r1, r5
-    uxtb r2, r6
-    uxtb r3, r7
-    ldr r0, [r12, r0, lsl #2]
-    ldr r1, [r12, r1, lsl #2]
-    ldr r2, [r12, r2, lsl #2]
-    ldr r3, [r12, r3, lsl #2]
-    eor r8, r8, r0, ror #16
-    eor r9, r9, r1, ror #16
-    eor r10, r10, r2, ror #16
-    eor r11, r11, r3, ror #16
-
-    uxtb r0, r5, ror #8
-    uxtb r1, r6, ror #8
-    uxtb r2, r7, ror #8
-    uxtb r3, r4, ror #8
-    ldr r0, [r12, r0, lsl #2]
-    ldr r1, [r12, r1, lsl #2]
-    ldr r2, [r12, r2, lsl #2]
-    ldr r3, [r12, r3, lsl #2]
-    eor r8, r8, r0, ror #8
-    eor r9, r9, r1, ror #8
-    eor r10, r10, r2, ror #8
-    eor r11, r11, r3, ror #8
-
-    uxtb r0, r6, ror #16
-    uxtb r1, r7, ror #16
-    uxtb r2, r4, ror #16
-    uxtb r3, r5, ror #16
-    ldr r0, [r12, r0, lsl #2]
-    ldr r1, [r12, r1, lsl #2]
-    ldr r2, [r12, r2, lsl #2]
-    ldr r3, [r12, r3, lsl #2]
-    eor r8, r0
-    eor r9, r1
-    eor r10, r2
-    eor r11, r3
-
-    uxtb r0, r7, ror #24
-    uxtb r1, r4, ror #24
-    uxtb r2, r5, ror #24
-    uxtb r3, r6, ror #24
-    ldr r0, [r12, r0, lsl #2]
-    ldr r1, [r12, r1, lsl #2]
-    ldr r2, [r12, r2, lsl #2]
-    ldr r3, [r12, r3, lsl #2]
-    eor r8, r8, r0, ror #24
-    eor r9, r9, r1, ror #24
-    eor r10, r10, r2, ror #24
-    eor r11, r11, r3, ror #24
-
-    //round 4
-
-    ldmia r14!, {r4-r7} //rk[16]-rk[19]
-
-    uxtb r0, r8
-    uxtb r1, r9
-    uxtb r2, r10
-    uxtb r3, r11
-    ldr r0, [r12, r0, lsl #2]
-    ldr r1, [r12, r1, lsl #2]
-    ldr r2, [r12, r2, lsl #2]
-    ldr r3, [r12, r3, lsl #2]
-    eor r4, r4, r0, ror #16
-    eor r5, r5, r1, ror #16
-    eor r6, r6, r2, ror #16
-    eor r7, r7, r3, ror #16
-
-    uxtb r0, r9, ror #8
-    uxtb r1, r10, ror #8
-    uxtb r2, r11, ror #8
-    uxtb r3, r8, ror #8
-    ldr r0, [r12, r0, lsl #2]
-    ldr r1, [r12, r1, lsl #2]
-    ldr r2, [r12, r2, lsl #2]
-    ldr r3, [r12, r3, lsl #2]
-    eor r4, r4, r0, ror #8
-    eor r5, r5, r1, ror #8
-    eor r6, r6, r2, ror #8
-    eor r7, r7, r3, ror #8
-
-    uxtb r0, r10, ror #16
-    uxtb r1, r11, ror #16
-    uxtb r2, r8, ror #16
-    uxtb r3, r9, ror #16
-    ldr r0, [r12, r0, lsl #2]
-    ldr r1, [r12, r1, lsl #2]
-    ldr r2, [r12, r2, lsl #2]
-    ldr r3, [r12, r3, lsl #2]
-    eor r4, r0
-    eor r5, r1
-    eor r6, r2
-    eor r7, r3
-
-    uxtb r0, r11, ror #24
-    uxtb r1, r8, ror #24
-    uxtb r2, r9, ror #24
-    uxtb r3, r10, ror #24
-    ldr r0, [r12, r0, lsl #2]
-    ldr r1, [r12, r1, lsl #2]
-    ldr r2, [r12, r2, lsl #2]
-    ldr r3, [r12, r3, lsl #2]
-    eor r4, r4, r0, ror #24
-    eor r5, r5, r1, ror #24
-    eor r6, r6, r2, ror #24
-    eor r7, r7, r3, ror #24
-
-    //round 5
-
-    ldmia r14!, {r8-r11} //rk[20]-rk[23]
-
-    uxtb r0, r4
-    uxtb r1, r5
-    uxtb r2, r6
-    uxtb r3, r7
-    ldr r0, [r12, r0, lsl #2]
-    ldr r1, [r12, r1, lsl #2]
-    ldr r2, [r12, r2, lsl #2]
-    ldr r3, [r12, r3, lsl #2]
-    eor r8, r8, r0, ror #16
-    eor r9, r9, r1, ror #16
-    eor r10, r10, r2, ror #16
-    eor r11, r11, r3, ror #16
-
-    uxtb r0, r5, ror #8
-    uxtb r1, r6, ror #8
-    uxtb r2, r7, ror #8
-    uxtb r3, r4, ror #8
-    ldr r0, [r12, r0, lsl #2]
-    ldr r1, [r12, r1, lsl #2]
-    ldr r2, [r12, r2, lsl #2]
-    ldr r3, [r12, r3, lsl #2]
-    eor r8, r8, r0, ror #8
-    eor r9, r9, r1, ror #8
-    eor r10, r10, r2, ror #8
-    eor r11, r11, r3, ror #8
-
-    uxtb r0, r6, ror #16
-    uxtb r1, r7, ror #16
-    uxtb r2, r4, ror #16
-    uxtb r3, r5, ror #16
-    ldr r0, [r12, r0, lsl #2]
-    ldr r1, [r12, r1, lsl #2]
-    ldr r2, [r12, r2, lsl #2]
-    ldr r3, [r12, r3, lsl #2]
-    eor r8, r0
-    eor r9, r1
-    eor r10, r2
-    eor r11, r3
-
-    uxtb r0, r7, ror #24
-    uxtb r1, r4, ror #24
-    uxtb r2, r5, ror #24
-    uxtb r3, r6, ror #24
-    ldr r0, [r12, r0, lsl #2]
-    ldr r1, [r12, r1, lsl #2]
-    ldr r2, [r12, r2, lsl #2]
-    ldr r3, [r12, r3, lsl #2]
-    eor r8, r8, r0, ror #24
-    eor r9, r9, r1, ror #24
-    eor r10, r10, r2, ror #24
-    eor r11, r11, r3, ror #24
-
-    //round 6
-
-    ldmia r14!, {r4-r7} //rk[24]-rk[27]
-
-    uxtb r0, r8
-    uxtb r1, r9
-    uxtb r2, r10
-    uxtb r3, r11
-    ldr r0, [r12, r0, lsl #2]
-    ldr r1, [r12, r1, lsl #2]
-    ldr r2, [r12, r2, lsl #2]
-    ldr r3, [r12, r3, lsl #2]
-    eor r4, r4, r0, ror #16
-    eor r5, r5, r1, ror #16
-    eor r6, r6, r2, ror #16
-    eor r7, r7, r3, ror #16
-
-    uxtb r0, r9, ror #8
-    uxtb r1, r10, ror #8
-    uxtb r2, r11, ror #8
-    uxtb r3, r8, ror #8
-    ldr r0, [r12, r0, lsl #2]
-    ldr r1, [r12, r1, lsl #2]
-    ldr r2, [r12, r2, lsl #2]
-    ldr r3, [r12, r3, lsl #2]
-    eor r4, r4, r0, ror #8
-    eor r5, r5, r1, ror #8
-    eor r6, r6, r2, ror #8
-    eor r7, r7, r3, ror #8
-
-    uxtb r0, r10, ror #16
-    uxtb r1, r11, ror #16
-    uxtb r2, r8, ror #16
-    uxtb r3, r9, ror #16
-    ldr r0, [r12, r0, lsl #2]
-    ldr r1, [r12, r1, lsl #2]
-    ldr r2, [r12, r2, lsl #2]
-    ldr r3, [r12, r3, lsl #2]
-    eor r4, r0
-    eor r5, r1
-    eor r6, r2
-    eor r7, r3
-
-    uxtb r0, r11, ror #24
-    uxtb r1, r8, ror #24
-    uxtb r2, r9, ror #24
-    uxtb r3, r10, ror #24
-    ldr r0, [r12, r0, lsl #2]
-    ldr r1, [r12, r1, lsl #2]
-    ldr r2, [r12, r2, lsl #2]
-    ldr r3, [r12, r3, lsl #2]
-    eor r4, r4, r0, ror #24
-    eor r5, r5, r1, ror #24
-    eor r6, r6, r2, ror #24
-    eor r7, r7, r3, ror #24
-
-    //round 7
-
-    ldmia r14!, {r8-r11} //rk[28]-rk[31]
-
-    uxtb r0, r4
-    uxtb r1, r5
-    uxtb r2, r6
-    uxtb r3, r7
-    ldr r0, [r12, r0, lsl #2]
-    ldr r1, [r12, r1, lsl #2]
-    ldr r2, [r12, r2, lsl #2]
-    ldr r3, [r12, r3, lsl #2]
-    eor r8, r8, r0, ror #16
-    eor r9, r9, r1, ror #16
-    eor r10, r10, r2, ror #16
-    eor r11, r11, r3, ror #16
-
-    uxtb r0, r5, ror #8
-    uxtb r1, r6, ror #8
-    uxtb r2, r7, ror #8
-    uxtb r3, r4, ror #8
-    ldr r0, [r12, r0, lsl #2]
-    ldr r1, [r12, r1, lsl #2]
-    ldr r2, [r12, r2, lsl #2]
-    ldr r3, [r12, r3, lsl #2]
-    eor r8, r8, r0, ror #8
-    eor r9, r9, r1, ror #8
-    eor r10, r10, r2, ror #8
-    eor r11, r11, r3, ror #8
-
-    uxtb r0, r6, ror #16
-    uxtb r1, r7, ror #16
-    uxtb r2, r4, ror #16
-    uxtb r3, r5, ror #16
-    ldr r0, [r12, r0, lsl #2]
-    ldr r1, [r12, r1, lsl #2]
-    ldr r2, [r12, r2, lsl #2]
-    ldr r3, [r12, r3, lsl #2]
-    eor r8, r0
-    eor r9, r1
-    eor r10, r2
-    eor r11, r3
-
-    uxtb r0, r7, ror #24
-    uxtb r1, r4, ror #24
-    uxtb r2, r5, ror #24
-    uxtb r3, r6, ror #24
-    ldr r0, [r12, r0, lsl #2]
-    ldr r1, [r12, r1, lsl #2]
-    ldr r2, [r12, r2, lsl #2]
-    ldr r3, [r12, r3, lsl #2]
-    eor r8, r8, r0, ror #24
-    eor r9, r9, r1, ror #24
-    eor r10, r10, r2, ror #24
-    eor r11, r11, r3, ror #24
-
-    //round 8
-
-    ldmia r14!, {r4-r7} //rk[32]-rk[35]
-
-    uxtb r0, r8
-    uxtb r1, r9
-    uxtb r2, r10
-    uxtb r3, r11
-    ldr r0, [r12, r0, lsl #2]
-    ldr r1, [r12, r1, lsl #2]
-    ldr r2, [r12, r2, lsl #2]
-    ldr r3, [r12, r3, lsl #2]
-    eor r4, r4, r0, ror #16
-    eor r5, r5, r1, ror #16
-    eor r6, r6, r2, ror #16
-    eor r7, r7, r3, ror #16
-
-    uxtb r0, r9, ror #8
-    uxtb r1, r10, ror #8
-    uxtb r2, r11, ror #8
-    uxtb r3, r8, ror #8
-    ldr r0, [r12, r0, lsl #2]
-    ldr r1, [r12, r1, lsl #2]
-    ldr r2, [r12, r2, lsl #2]
-    ldr r3, [r12, r3, lsl #2]
-    eor r4, r4, r0, ror #8
-    eor r5, r5, r1, ror #8
-    eor r6, r6, r2, ror #8
-    eor r7, r7, r3, ror #8
-
-    uxtb r0, r10, ror #16
-    uxtb r1, r11, ror #16
-    uxtb r2, r8, ror #16
-    uxtb r3, r9, ror #16
-    ldr r0, [r12, r0, lsl #2]
-    ldr r1, [r12, r1, lsl #2]
-    ldr r2, [r12, r2, lsl #2]
-    ldr r3, [r12, r3, lsl #2]
-    eor r4, r0
-    eor r5, r1
-    eor r6, r2
-    eor r7, r3
-
-    uxtb r0, r11, ror #24
-    uxtb r1, r8, ror #24
-    uxtb r2, r9, ror #24
-    uxtb r3, r10, ror #24
-    ldr r0, [r12, r0, lsl #2]
-    ldr r1, [r12, r1, lsl #2]
-    ldr r2, [r12, r2, lsl #2]
-    ldr r3, [r12, r3, lsl #2]
-    eor r4, r4, r0, ror #24
-    eor r5, r5, r1, ror #24
-    eor r6, r6, r2, ror #24
-    eor r7, r7, r3, ror #24
-
-    //round 9
-
-    ldmia r14!, {r8-r11} //rk[36]-rk[39]
-
-    uxtb r0, r4
-    uxtb r1, r5
-    uxtb r2, r6
-    uxtb r3, r7
-    ldr r0, [r12, r0, lsl #2]
-    ldr r1, [r12, r1, lsl #2]
-    ldr r2, [r12, r2, lsl #2]
-    ldr r3, [r12, r3, lsl #2]
-    eor r8, r8, r0, ror #16
-    eor r9, r9, r1, ror #16
-    eor r10, r10, r2, ror #16
-    eor r11, r11, r3, ror #16
-
-    uxtb r0, r5, ror #8
-    uxtb r1, r6, ror #8
-    uxtb r2, r7, ror #8
-    uxtb r3, r4, ror #8
-    ldr r0, [r12, r0, lsl #2]
-    ldr r1, [r12, r1, lsl #2]
-    ldr r2, [r12, r2, lsl #2]
-    ldr r3, [r12, r3, lsl #2]
-    eor r8, r8, r0, ror #8
-    eor r9, r9, r1, ror #8
-    eor r10, r10, r2, ror #8
-    eor r11, r11, r3, ror #8
-
-    uxtb r0, r6, ror #16
-    uxtb r1, r7, ror #16
-    uxtb r2, r4, ror #16
-    uxtb r3, r5, ror #16
-    ldr r0, [r12, r0, lsl #2]
-    ldr r1, [r12, r1, lsl #2]
-    ldr r2, [r12, r2, lsl #2]
-    ldr r3, [r12, r3, lsl #2]
-    eor r8, r0
-    eor r9, r1
-    eor r10, r2
-    eor r11, r3
-
-    uxtb r0, r7, ror #24
-    uxtb r1, r4, ror #24
-    uxtb r2, r5, ror #24
-    uxtb r3, r6, ror #24
-    ldr r0, [r12, r0, lsl #2]
-    ldr r1, [r12, r1, lsl #2]
-    ldr r2, [r12, r2, lsl #2]
-    ldr r3, [r12, r3, lsl #2]
-    eor r8, r8, r0, ror #24
-    eor r9, r9, r1, ror #24
-    eor r10, r10, r2, ror #24
-    eor r11, r11, r3, ror #24
-
-    //round 10
-
+.macro aesencrypt_finalround
     uxtb r0, r11, ror #24
     uxtb r1, r8, ror #24
     uxtb r2, r9, ror #24
@@ -939,6 +526,39 @@ aes128_encrypt_asm:
     bfi r5, r1, #16, #8
     bfi r6, r2, #16, #8
     bfi r7, r3, #16, #8
+.endm
+
+@ void aes128_encrypt_asm(const uint8_t *rk,
+@       const uint8_t *in, uint8_t *out) {
+.global aes128_encrypt_asm
+.type   aes128_encrypt_asm,%function
+.align 2
+aes128_encrypt_asm:
+
+    //function prologue, preserve registers and free r2
+    push {r2,r4-r12,r14}
+
+    //load input
+    ldm r1, {r4-r7} //r1 now free to overwrite
+    //load key
+    ldmia r0!, {r8-r11}
+    mov.w r14, r0
+
+    //load table address once
+    ldr r12, =AES_Te0
+
+    //initial addroundkey
+    eor r4, r8
+    eor r5, r9
+    eor r6, r10
+    eor r7, r11
+
+.rept 4
+    aesencrypt_oddround
+    aesencrypt_evenround
+.endr
+    aesencrypt_oddround
+    aesencrypt_finalround
 
     ldmia r14!, {r0-r3} //rk[40]-rk[43]
 
@@ -954,4 +574,715 @@ aes128_encrypt_asm:
     //function epilogue, restore state
     pop {r4-r12,r14}
     bx lr
+.size aes128_encrypt_asm,.-aes128_encrypt_asm
 
+.section .text.aes192
+@ void aes192_keyexp_asm(const uint8_t *key,
+@       uint8_t *rk) {
+.global aes192_keyexp_asm
+.type   aes192_keyexp_asm,%function
+.align 2
+aes192_keyexp_asm:
+
+    //function prologue, preserve registers
+    push {r4-r11}
+
+    //load key
+    ldm r0, {r2-r7}
+
+    //load table address once
+    ldr r0, =AES_Te0
+
+    //round 1
+    uxtb r8, r7, ror #8
+    uxtb r9, r7, ror #16
+    uxtb r10, r7, ror #24
+    uxtb r11, r7
+
+    ldrb r8, [r0, r8, lsl #2]
+    ldrb r9, [r0, r9, lsl #2]
+    ldrb r10, [r0, r10, lsl #2]
+    ldrb r11, [r0, r11, lsl #2]
+
+    eor r2, #0x00000001 //rcon
+    eor r2, r2, r8
+    eor r2, r2, r9, lsl #8
+    eor r2, r2, r10, lsl #16
+    eor r2, r2, r11, lsl #24 //rk[6]
+    eor r3, r2 //rk[7]
+    eor r4, r3 //rk[8]
+    eor r5, r4 //rk[9]
+    eor r6, r5 //rk[10]
+    eor r7, r6 //rk[11]
+
+    //write to memory
+    //stmia.w r1!, {r2-r7} is slower if we can use encoding T1!
+    str r2, [r1, #0]
+    str r3, [r1, #4]
+    str r4, [r1, #8]
+    str r5, [r1, #12]
+    str r6, [r1, #16]
+    str r7, [r1, #20]
+
+    //round 2
+    uxtb r8, r7, ror #8
+    uxtb r9, r7, ror #16
+    uxtb r10, r7, ror #24
+    uxtb r11, r7
+
+    ldrb r8, [r0, r8, lsl #2]
+    ldrb r9, [r0, r9, lsl #2]
+    ldrb r10, [r0, r10, lsl #2]
+    ldrb r11, [r0, r11, lsl #2]
+
+    eor r2, #0x00000002 //rcon
+    eor r2, r2, r8
+    eor r2, r2, r9, lsl #8
+    eor r2, r2, r10, lsl #16
+    eor r2, r2, r11, lsl #24 //rk[12]
+    eor r3, r2 //rk[13]
+    eor r4, r3 //rk[14]
+    eor r5, r4 //rk[15]
+    eor r6, r5 //rk[16]
+    eor r7, r6 //rk[17]
+
+    //write to memory
+    //stmia.w r1!, {r2-r7} is slower if we can use encoding T1!
+    str r2, [r1, #24]
+    str r3, [r1, #28]
+    str r4, [r1, #32]
+    str r5, [r1, #36]
+    str r6, [r1, #40]
+    str r7, [r1, #44]
+
+    //round 3
+    uxtb r8, r7, ror #8
+    uxtb r9, r7, ror #16
+    uxtb r10, r7, ror #24
+    uxtb r11, r7
+
+    ldrb r8, [r0, r8, lsl #2]
+    ldrb r9, [r0, r9, lsl #2]
+    ldrb r10, [r0, r10, lsl #2]
+    ldrb r11, [r0, r11, lsl #2]
+
+    eor r2, #0x00000004 //rcon
+    eor r2, r2, r8
+    eor r2, r2, r9, lsl #8
+    eor r2, r2, r10, lsl #16
+    eor r2, r2, r11, lsl #24 //rk[18]
+    eor r3, r2 //rk[19]
+    eor r4, r3 //rk[20]
+    eor r5, r4 //rk[21]
+    eor r6, r5 //rk[22]
+    eor r7, r6 //rk[23]
+
+    //write to memory
+    //stmia.w r1!, {r2-r7} is slower if we can use encoding T1!
+    str r2, [r1, #48]
+    str r3, [r1, #52]
+    str r4, [r1, #56]
+    str r5, [r1, #60]
+    str r6, [r1, #64]
+    str r7, [r1, #68]
+
+    //round 4
+    uxtb r8, r7, ror #8
+    uxtb r9, r7, ror #16
+    uxtb r10, r7, ror #24
+    uxtb r11, r7
+
+    ldrb r8, [r0, r8, lsl #2]
+    ldrb r9, [r0, r9, lsl #2]
+    ldrb r10, [r0, r10, lsl #2]
+    ldrb r11, [r0, r11, lsl #2]
+
+    eor r2, #0x00000008 //rcon
+    eor r2, r2, r8
+    eor r2, r2, r9, lsl #8
+    eor r2, r2, r10, lsl #16
+    eor r2, r2, r11, lsl #24 //rk[24]
+    eor r3, r2 //rk[25]
+    eor r4, r3 //rk[26]
+    eor r5, r4 //rk[27]
+    eor r6, r5 //rk[28]
+    eor r7, r6 //rk[29]
+
+    //write to memory
+    //stmia.w r1!, {r2-r7} is slower if we can use encoding T1!
+    str r2, [r1, #72]
+    str r3, [r1, #76]
+    str r4, [r1, #80]
+    str r5, [r1, #84]
+    str r6, [r1, #88]
+    str r7, [r1, #92]
+
+    //round 5
+    uxtb r8, r7, ror #8
+    uxtb r9, r7, ror #16
+    uxtb r10, r7, ror #24
+    uxtb r11, r7
+
+    ldrb r8, [r0, r8, lsl #2]
+    ldrb r9, [r0, r9, lsl #2]
+    ldrb r10, [r0, r10, lsl #2]
+    ldrb r11, [r0, r11, lsl #2]
+
+    eor r2, #0x00000010 //rcon
+    eor r2, r2, r8
+    eor r2, r2, r9, lsl #8
+    eor r2, r2, r10, lsl #16
+    eor r2, r2, r11, lsl #24 //rk[30]
+    eor r3, r2 //rk[31]
+    eor r4, r3 //rk[32]
+    eor r5, r4 //rk[33]
+    eor r6, r5 //rk[34]
+    eor r7, r6 //rk[35]
+
+    //write to memory
+    //stmia.w r1!, {r2-r7} is slower if we can use encoding T1!
+    str r2, [r1, #96]
+    str r3, [r1, #100]
+    str r4, [r1, #104]
+    str r5, [r1, #108]
+    str r6, [r1, #112]
+    str r7, [r1, #116]
+
+    add r1, #120
+
+    //round 6
+    uxtb r8, r7, ror #8
+    uxtb r9, r7, ror #16
+    uxtb r10, r7, ror #24
+    uxtb r11, r7
+
+    ldrb r8, [r0, r8, lsl #2]
+    ldrb r9, [r0, r9, lsl #2]
+    ldrb r10, [r0, r10, lsl #2]
+    ldrb r11, [r0, r11, lsl #2]
+
+    eor r2, #0x00000020 //rcon
+    eor r2, r2, r8
+    eor r2, r2, r9, lsl #8
+    eor r2, r2, r10, lsl #16
+    eor r2, r2, r11, lsl #24 //rk[36]
+    eor r3, r2 //rk[37]
+    eor r4, r3 //rk[38]
+    eor r5, r4 //rk[39]
+    eor r6, r5 //rk[40]
+    eor r7, r6 //rk[41]
+
+    //write to memory
+    //stmia.w r1!, {r2-r7} is slower if we can use encoding T1!
+    str r2, [r1, #0]
+    str r3, [r1, #4]
+    str r4, [r1, #8]
+    str r5, [r1, #12]
+    str r6, [r1, #16]
+    str r7, [r1, #20]
+
+    //round 7
+    uxtb r8, r7, ror #8
+    uxtb r9, r7, ror #16
+    uxtb r10, r7, ror #24
+    uxtb r11, r7
+
+    ldrb r8, [r0, r8, lsl #2]
+    ldrb r9, [r0, r9, lsl #2]
+    ldrb r10, [r0, r10, lsl #2]
+    ldrb r11, [r0, r11, lsl #2]
+
+    eor r2, #0x00000040 //rcon
+    eor r2, r2, r8
+    eor r2, r2, r9, lsl #8
+    eor r2, r2, r10, lsl #16
+    eor r2, r2, r11, lsl #24 //rk[42]
+    eor r3, r2 //rk[43]
+    eor r4, r3 //rk[44]
+    eor r5, r4 //rk[45]
+    eor r6, r5 //rk[46]
+    eor r7, r6 //rk[47]
+
+    //write to memory
+    //stmia.w r1!, {r2-r7} is slower if we can use encoding T1!
+    str r2, [r1, #24]
+    str r3, [r1, #28]
+    str r4, [r1, #32]
+    str r5, [r1, #36]
+    str r6, [r1, #40]
+    str r7, [r1, #44]
+
+    //round 8
+    uxtb r8, r7, ror #8
+    uxtb r9, r7, ror #16
+    uxtb r10, r7, ror #24
+    uxtb r11, r7
+
+    ldrb r8, [r0, r8, lsl #2]
+    ldrb r9, [r0, r9, lsl #2]
+    ldrb r10, [r0, r10, lsl #2]
+    ldrb r11, [r0, r11, lsl #2]
+
+    eor r2, #0x00000080 //rcon
+    eor r2, r2, r8
+    eor r2, r2, r9, lsl #8
+    eor r2, r2, r10, lsl #16
+    eor r2, r2, r11, lsl #24 //rk[48]
+    eor r3, r2 //rk[49]
+    eor r4, r3 //rk[50]
+    eor r5, r4 //rk[51]
+    //write to memory
+    //stmia.w r1!, {r2-r5} is slower if we can use encoding T1!
+    str r2, [r1, #48]
+    str r3, [r1, #52]
+    str r4, [r1, #56]
+    str r5, [r1, #60]
+
+    //function epilogue, restore state
+    pop {r4-r11}
+    bx lr
+.size aes192_keyexp_asm,.-aes192_keyexp_asm
+
+@ void aes192_encrypt_asm(const uint8_t *rk,
+@       const uint8_t *in, uint8_t *out) {
+.global aes192_encrypt_asm
+.type   aes192_encrypt_asm,%function
+.align 2
+aes192_encrypt_asm:
+
+    //function prologue, preserve registers and free r2
+    push {r2,r4-r12,r14}
+
+    //load input
+    ldm r1, {r4-r7} //r1 now free to overwrite
+    //load key
+    ldmia r0!, {r8-r11}
+    mov.w r14, r0
+
+    //load table address once
+    ldr r12, =AES_Te0
+
+    //initial addroundkey
+    eor r4, r8
+    eor r5, r9
+    eor r6, r10
+    eor r7, r11
+
+.rept 5
+    aesencrypt_oddround
+    aesencrypt_evenround
+.endr
+    aesencrypt_oddround
+    aesencrypt_finalround
+
+    ldmia r14!, {r0-r3} //rk[48]-rk[51]
+
+    eor r0, r0, r4, ror #8
+    eor r1, r1, r5, ror #8
+    eor r2, r2, r6, ror #8
+    pop.w {r4}
+    eor r3, r3, r7, ror #8
+
+    //write output
+    stm r4, {r0-r3}
+
+    //function epilogue, restore state
+    pop {r4-r12,r14}
+    bx lr
+.size aes192_encrypt_asm,.-aes192_encrypt_asm
+
+.section .text.aes256
+@ void aes256_keyexp_asm(const uint8_t *key,
+@       uint8_t *rk) {
+.global aes256_keyexp_asm
+.type   aes256_keyexp_asm,%function
+.align 2
+aes256_keyexp_asm:
+
+    //function prologue, preserve registers
+    push {r4-r12,r14}
+
+    //load key
+    ldm r0, {r2-r9}
+
+    //load table address once
+    ldr r0, =AES_Te0
+
+    //round 1
+    uxtb r10, r9, ror #8
+    uxtb r11, r9, ror #16
+    uxtb r12, r9, ror #24
+    uxtb r14, r9
+
+    ldrb r10, [r0, r10, lsl #2]
+    ldrb r11, [r0, r11, lsl #2]
+    ldrb r12, [r0, r12, lsl #2]
+    ldrb r14, [r0, r14, lsl #2]
+
+    eor r2, #0x00000001 //rcon
+    eor r2, r2, r10
+    eor r2, r2, r11, lsl #8
+    eor r2, r2, r12, lsl #16
+    eor r2, r2, r14, lsl #24 //rk[8]
+    eor r3, r2 //rk[9]
+    eor r4, r3 //rk[10]
+    eor r5, r4 //rk[11]
+
+    uxtb r10, r5, ror #16
+    uxtb r11, r5, ror #8
+    uxtb r12, r5
+    uxtb r14, r5, ror #24
+
+    ldrb r10, [r0, r10, lsl #2]
+    ldrb r11, [r0, r11, lsl #2]
+    ldrb r12, [r0, r12, lsl #2]
+    ldrb r14, [r0, r14, lsl #2]
+
+    eor r6, r6, r10, lsl #16
+    eor r6, r6, r11, lsl #8
+    eor r6, r12
+    eor r6, r6, r14, lsl #24 //rk[12]
+    eor r7, r6 //rk[13]
+    eor r8, r7 //rk[14]
+    eor r9, r8 //rk[15]
+
+    //write to memory
+    //stmia.w r1!, {r2-r9} is slower if we can use encoding T1!
+    str r2, [r1, #0]
+    str r3, [r1, #4]
+    str r4, [r1, #8]
+    str r5, [r1, #12]
+    str r6, [r1, #16]
+    str r7, [r1, #20]
+    str r8, [r1, #24]
+    str r9, [r1, #28]
+
+    //round 2
+    uxtb r10, r9, ror #8
+    uxtb r11, r9, ror #16
+    uxtb r12, r9, ror #24
+    uxtb r14, r9
+
+    ldrb r10, [r0, r10, lsl #2]
+    ldrb r11, [r0, r11, lsl #2]
+    ldrb r12, [r0, r12, lsl #2]
+    ldrb r14, [r0, r14, lsl #2]
+
+    eor r2, #0x00000002 //rcon
+    eor r2, r2, r10
+    eor r2, r2, r11, lsl #8
+    eor r2, r2, r12, lsl #16
+    eor r2, r2, r14, lsl #24 //rk[16]
+    eor r3, r2 //rk[17]
+    eor r4, r3 //rk[18]
+    eor r5, r4 //rk[19]
+
+    uxtb r10, r5, ror #16
+    uxtb r11, r5, ror #8
+    uxtb r12, r5
+    uxtb r14, r5, ror #24
+
+    ldrb r10, [r0, r10, lsl #2]
+    ldrb r11, [r0, r11, lsl #2]
+    ldrb r12, [r0, r12, lsl #2]
+    ldrb r14, [r0, r14, lsl #2]
+
+    eor r6, r6, r10, lsl #16
+    eor r6, r6, r11, lsl #8
+    eor r6, r12
+    eor r6, r6, r14, lsl #24 //rk[20]
+    eor r7, r6 //rk[21]
+    eor r8, r7 //rk[22]
+    eor r9, r8 //rk[23]
+
+    //write to memory
+    //stmia.w r1!, {r2-r9} is slower if we can use encoding T1!
+    str r2, [r1, #32]
+    str r3, [r1, #36]
+    str r4, [r1, #40]
+    str r5, [r1, #44]
+    str r6, [r1, #48]
+    str r7, [r1, #52]
+    str r8, [r1, #56]
+    str r9, [r1, #60]
+
+    //round 3
+    uxtb r10, r9, ror #8
+    uxtb r11, r9, ror #16
+    uxtb r12, r9, ror #24
+    uxtb r14, r9
+
+    ldrb r10, [r0, r10, lsl #2]
+    ldrb r11, [r0, r11, lsl #2]
+    ldrb r12, [r0, r12, lsl #2]
+    ldrb r14, [r0, r14, lsl #2]
+
+    eor r2, #0x00000004 //rcon
+    eor r2, r2, r10
+    eor r2, r2, r11, lsl #8
+    eor r2, r2, r12, lsl #16
+    eor r2, r2, r14, lsl #24 //rk[24]
+    eor r3, r2 //rk[25]
+    eor r4, r3 //rk[26]
+    eor r5, r4 //rk[27]
+
+    uxtb r10, r5, ror #16
+    uxtb r11, r5, ror #8
+    uxtb r12, r5
+    uxtb r14, r5, ror #24
+
+    ldrb r10, [r0, r10, lsl #2]
+    ldrb r11, [r0, r11, lsl #2]
+    ldrb r12, [r0, r12, lsl #2]
+    ldrb r14, [r0, r14, lsl #2]
+
+    eor r6, r6, r10, lsl #16
+    eor r6, r6, r11, lsl #8
+    eor r6, r12
+    eor r6, r6, r14, lsl #24 //rk[28]
+    eor r7, r6 //rk[29]
+    eor r8, r7 //rk[30]
+    eor r9, r8 //rk[31]
+
+    //write to memory
+    //stmia.w r1!, {r2-r9} is slower if we can use encoding T1!
+    str r2, [r1, #64]
+    str r3, [r1, #68]
+    str r4, [r1, #72]
+    str r5, [r1, #76]
+    str r6, [r1, #80]
+    str r7, [r1, #84]
+    str r8, [r1, #88]
+    str r9, [r1, #92]
+
+    //round 4
+    uxtb r10, r9, ror #8
+    uxtb r11, r9, ror #16
+    uxtb r12, r9, ror #24
+    uxtb r14, r9
+
+    ldrb r10, [r0, r10, lsl #2]
+    ldrb r11, [r0, r11, lsl #2]
+    ldrb r12, [r0, r12, lsl #2]
+    ldrb r14, [r0, r14, lsl #2]
+
+    eor r2, #0x00000008 //rcon
+    eor r2, r2, r10
+    eor r2, r2, r11, lsl #8
+    eor r2, r2, r12, lsl #16
+    eor r2, r2, r14, lsl #24 //rk[32]
+    eor r3, r2 //rk[33]
+    eor r4, r3 //rk[34]
+    eor r5, r4 //rk[35]
+
+    uxtb r10, r5, ror #16
+    uxtb r11, r5, ror #8
+    uxtb r12, r5
+    uxtb r14, r5, ror #24
+
+    ldrb r10, [r0, r10, lsl #2]
+    ldrb r11, [r0, r11, lsl #2]
+    ldrb r12, [r0, r12, lsl #2]
+    ldrb r14, [r0, r14, lsl #2]
+
+    eor r6, r6, r10, lsl #16
+    eor r6, r6, r11, lsl #8
+    eor r6, r12
+    eor r6, r6, r14, lsl #24 //rk[36]
+    eor r7, r6 //rk[37]
+    eor r8, r7 //rk[38]
+    eor r9, r8 //rk[39]
+
+    //write to memory
+    //stmia.w r1!, {r2-r9} is slower if we can use encoding T1!
+    str r2, [r1, #96]
+    str r3, [r1, #100]
+    str r4, [r1, #104]
+    str r5, [r1, #108]
+    str r6, [r1, #112]
+    str r7, [r1, #116]
+    str r8, [r1, #120]
+    str r9, [r1, #124]
+
+    add r1, #128
+
+    //round 5
+    uxtb r10, r9, ror #8
+    uxtb r11, r9, ror #16
+    uxtb r12, r9, ror #24
+    uxtb r14, r9
+
+    ldrb r10, [r0, r10, lsl #2]
+    ldrb r11, [r0, r11, lsl #2]
+    ldrb r12, [r0, r12, lsl #2]
+    ldrb r14, [r0, r14, lsl #2]
+
+    eor r2, #0x00000010 //rcon
+    eor r2, r2, r10
+    eor r2, r2, r11, lsl #8
+    eor r2, r2, r12, lsl #16
+    eor r2, r2, r14, lsl #24 //rk[40]
+    eor r3, r2 //rk[41]
+    eor r4, r3 //rk[42]
+    eor r5, r4 //rk[43]
+
+    uxtb r10, r5, ror #16
+    uxtb r11, r5, ror #8
+    uxtb r12, r5
+    uxtb r14, r5, ror #24
+
+    ldrb r10, [r0, r10, lsl #2]
+    ldrb r11, [r0, r11, lsl #2]
+    ldrb r12, [r0, r12, lsl #2]
+    ldrb r14, [r0, r14, lsl #2]
+
+    eor r6, r6, r10, lsl #16
+    eor r6, r6, r11, lsl #8
+    eor r6, r12
+    eor r6, r6, r14, lsl #24 //rk[44]
+    eor r7, r6 //rk[45]
+    eor r8, r7 //rk[46]
+    eor r9, r8 //rk[47]
+
+    //write to memory
+    //stmia.w r1!, {r2-r9} is slower if we can use encoding T1!
+    str r2, [r1, #0]
+    str r3, [r1, #4]
+    str r4, [r1, #8]
+    str r5, [r1, #12]
+    str r6, [r1, #16]
+    str r7, [r1, #20]
+    str r8, [r1, #24]
+    str r9, [r1, #28]
+
+    //round 6
+    uxtb r10, r9, ror #8
+    uxtb r11, r9, ror #16
+    uxtb r12, r9, ror #24
+    uxtb r14, r9
+
+    ldrb r10, [r0, r10, lsl #2]
+    ldrb r11, [r0, r11, lsl #2]
+    ldrb r12, [r0, r12, lsl #2]
+    ldrb r14, [r0, r14, lsl #2]
+
+    eor r2, #0x00000020 //rcon
+    eor r2, r2, r10
+    eor r2, r2, r11, lsl #8
+    eor r2, r2, r12, lsl #16
+    eor r2, r2, r14, lsl #24 //rk[48]
+    eor r3, r2 //rk[49]
+    eor r4, r3 //rk[50]
+    eor r5, r4 //rk[51]
+
+    uxtb r10, r5, ror #16
+    uxtb r11, r5, ror #8
+    uxtb r12, r5
+    uxtb r14, r5, ror #24
+
+    ldrb r10, [r0, r10, lsl #2]
+    ldrb r11, [r0, r11, lsl #2]
+    ldrb r12, [r0, r12, lsl #2]
+    ldrb r14, [r0, r14, lsl #2]
+
+    eor r6, r6, r10, lsl #16
+    eor r6, r6, r11, lsl #8
+    eor r6, r12
+    eor r6, r6, r14, lsl #24 //rk[52]
+    eor r7, r6 //rk[53]
+    eor r8, r7 //rk[54]
+    eor r9, r8 //rk[55]
+
+    //write to memory
+    //stmia.w r1!, {r2-r9} is slower if we can use encoding T1!
+    str r2, [r1, #32]
+    str r3, [r1, #36]
+    str r4, [r1, #40]
+    str r5, [r1, #44]
+    str r6, [r1, #48]
+    str r7, [r1, #52]
+    str r8, [r1, #56]
+    str r9, [r1, #60]
+
+    //round 7
+    uxtb r10, r9, ror #8
+    uxtb r11, r9, ror #16
+    uxtb r12, r9, ror #24
+    uxtb r14, r9
+
+    ldrb r10, [r0, r10, lsl #2]
+    ldrb r11, [r0, r11, lsl #2]
+    ldrb r12, [r0, r12, lsl #2]
+    ldrb r14, [r0, r14, lsl #2]
+
+    eor r2, #0x00000040 //rcon
+    eor r2, r2, r10
+    eor r2, r2, r11, lsl #8
+    eor r2, r2, r12, lsl #16
+    eor r2, r2, r14, lsl #24 //rk[56]
+    eor r3, r2 //rk[57]
+    eor r4, r3 //rk[58]
+    eor r5, r4 //rk[59]
+
+    //write to memory
+    //stmia.w r1!, {r2-r5} is slower if we can use encoding T1!
+    str r2, [r1, #64]
+    str r3, [r1, #68]
+    str r4, [r1, #72]
+    str r5, [r1, #76]
+
+    //function epilogue, restore state
+    pop {r4-r12,r14}
+    bx lr
+.size aes256_keyexp_asm,.-aes256_keyexp_asm
+
+.align 2
+.ltorg
+
+@ void aes256_encrypt_asm(const uint8_t *rk,
+@       const uint8_t *in, uint8_t *out) {
+.global aes256_encrypt_asm
+.type   aes256_encrypt_asm,%function
+.align 2
+aes256_encrypt_asm:
+
+    //function prologue, preserve registers and free r2
+    push {r2,r4-r12,r14}
+
+    //load input
+    ldm r1, {r4-r7} //r1 now free to overwrite
+    //load key
+    ldmia r0!, {r8-r11}
+    mov.w r14, r0
+
+    //load table address once
+    ldr r12, =AES_Te0
+
+    //initial addroundkey
+    eor r4, r8
+    eor r5, r9
+    eor r6, r10
+    eor r7, r11
+
+.rept 6
+    aesencrypt_oddround
+    aesencrypt_evenround
+.endr
+    aesencrypt_oddround
+    aesencrypt_finalround
+
+    ldmia r14!, {r0-r3} //rk[56]-rk[59]
+
+    eor r0, r0, r4, ror #8
+    eor r1, r1, r5, ror #8
+    eor r2, r2, r6, ror #8
+    pop.w {r4}
+    eor r3, r3, r7, ror #8
+
+    //write output
+    stm r4, {r0-r3}
+
+    //function epilogue, restore state
+    pop {r4-r12,r14}
+    bx lr
+.size aes256_encrypt_asm,.-aes256_encrypt_asm
