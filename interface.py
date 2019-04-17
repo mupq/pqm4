@@ -8,17 +8,21 @@ from mupq import mupq
 class M4Settings(mupq.PlatformSettings):
     #: Specify folders to include
     scheme_folders = [  # mupq.PlatformSettings.scheme_folders + [
-        ('pqm4', 'crypto_kem'),
-        ('pqm4', 'crypto_sign'),
-        ('mupq', 'mupq/crypto_kem'),
-        ('mupq', 'mupq/crypto_sign')
+        ('pqm4', 'crypto_kem', ''),
+        ('pqm4', 'crypto_sign', ''),
+        ('mupq', 'mupq/crypto_kem', ''),
+        ('mupq', 'mupq/crypto_sign', ''),
+        ('pqclean', 'mupq/pqclean/crypto_kem', "PQCLEAN"),
+        ('pqclean', 'mupq/pqclean/crypto_sign', "PQCLEAN")
+
     ]
 
     #: List of dicts, in each dict specify (Scheme class) attributes of the
     #: scheme with values, if all attributes match the scheme is skipped.
     skip_list = (
-        {'scheme': 'frodo640-aes', 'implementation': 'ref'},
-        {'scheme': 'frodo640-cshake', 'implementation': 'ref'},
+        {'scheme': 'frodokem640aes', 'implementation': 'clean'},
+        {'scheme': 'frodokem976aes', 'implementation': 'clean'},
+        {'scheme': 'frodokem1344aes', 'implementation': 'clean'}
     )
 
 

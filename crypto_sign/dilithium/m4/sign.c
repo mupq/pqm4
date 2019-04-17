@@ -1,6 +1,6 @@
-#include <stdint.h>
-#include "api.h"
-#include "params.h"
+  #include <stdint.h>
+  #include "api.h"
+  #include "params.h"
 #include "sign.h"
 #include "randombytes.h"
 #include "fips202.h"
@@ -183,9 +183,9 @@ int crypto_sign_keypair(unsigned char *pk, unsigned char *sk) {
 * Returns 0 (success)
 **************************************************/
 int crypto_sign(unsigned char *sm,
-                unsigned long long *smlen,
+                size_t *smlen,
                 const unsigned char *m,
-                unsigned long long mlen, 
+                size_t mlen, 
                 const unsigned char *sk) 
 {
   unsigned long long i, j;
@@ -303,9 +303,9 @@ int crypto_sign(unsigned char *sm,
 * Returns 0 if signed message could be verified correctly and -1 otherwise
 **************************************************/
 int crypto_sign_open(unsigned char *m,
-                     unsigned long long *mlen,
+                     size_t *mlen,
                      const unsigned char *sm,
-                     unsigned long long smlen,
+                     size_t smlen,
                      const unsigned char *pk)
 {
   unsigned long long i;
@@ -373,7 +373,7 @@ int crypto_sign_open(unsigned char *m,
 
   /* Signature verification failed */
   badsig:
-  *mlen = (unsigned long long) -1;
+  *mlen =  -1;
   for(i = 0; i < smlen; ++i)
     m[i] = 0;
   

@@ -30,9 +30,9 @@ LDFLAGS_HOST =
 # override as desired
 TYPE=kem
 
-COMMONSOURCES=mupq/common/fips202.c mupq/common/sha2.c mupq/common/aes.c mupq/common/rijndael.c
-COMMONSOURCES_HOST=$(COMMONSOURCES) mupq/common/keccakf1600.c
-COMMONSOURCES_M4=$(COMMONSOURCES) common/keccakf1600.S
+COMMONSOURCES=mupq/common/fips202.c mupq/common/sha2.c
+COMMONSOURCES_HOST=$(COMMONSOURCES) mupq/common/keccakf1600.c mupq/pqclean/common/aes.c
+COMMONSOURCES_M4=$(COMMONSOURCES) common/keccakf1600.S mupq/common/aes.c common/aes.S
 
 COMMONINCLUDES=-I"mupq/common"
 COMMONINCLUDES_M4=$(COMMONINCLUDES) -I"common"
@@ -52,14 +52,15 @@ all:
 	@echo "Please use the scripts in this directory instead of using the Makefile"
 	@echo
 	@echo "If you really want to use it, please specify IMPLEMENTATION_PATH=path/to/impl"
-	@echo "and a target binary."
+	@echo "and a target binary, e.g.,"
+	@echo "make IMPLEMENTATION_PATH=crypto_kem/kyber768/m4 bin/crypto_kem_kyber768_m4_test.bin"
 	@echo "make clean also works"
 
 $(DEST_HOST)/%_testvectors: $(COMMONSOURCES_HOST) $(IMPLEMENTATION_SOURCES) $(IMPLEMENTATION_HEADERS)
 	mkdir -p $(DEST_HOST)
 	$(CC_HOST) -o $@ \
-		$(CFLAGS_HOST) \
-		crypto_$(TYPE)/testvectors-host.c \
+		$(CFLAGS_HOST) -DMUPQ_NAMESPACE=$(MUPQ_NAMESPACE)\
+		mupq/crypto_$(TYPE)/testvectors-host.c \
 		$(COMMONSOURCES_HOST) \
 		$(IMPLEMENTATION_SOURCES) \
 		-I$(IMPLEMENTATION_PATH) \
@@ -76,19 +77,19 @@ $(DEST)/%.bin: elf/%.elf
 # TODO use notrandombytes more generically rather than included in testvectors.c
 elf/$(TARGET_NAME)_%.elf: mupq/crypto_$(TYPE)/%.c $(COMMONSOURCES_M4) $(RANDOMBYTES_M4) $(IMPLEMENTATION_SOURCES) $(IMPLEMENTATION_HEADERS) $(OPENCM3FILE) common/hal-stm32f4.c
 	mkdir -p elf
-	$(CC) -o $@ $(CFLAGS) \
+	$(CC) -o $@ $(CFLAGS) -DMUPQ_NAMESPACE=$(MUPQ_NAMESPACE) \
 		$< $(COMMONSOURCES_M4) $(RANDOMBYTES_M4) $(IMPLEMENTATION_SOURCES) common/hal-stm32f4.c \
 		-I$(IMPLEMENTATION_PATH) $(COMMONINCLUDES_M4) $(LDFLAGS)
 
 elf/$(TARGET_NAME)_testvectors.elf: mupq/crypto_$(TYPE)/testvectors.c $(COMMONSOURCES_M4) $(IMPLEMENTATION_SOURCES) $(IMPLEMENTATION_HEADERS) $(OPENCM3FILE) common/hal-stm32f4.c
 	mkdir -p elf
-	$(CC) -o $@ $(CFLAGS) \
+	$(CC) -o $@ $(CFLAGS) -DMUPQ_NAMESPACE=$(MUPQ_NAMESPACE)\
 		$< $(COMMONSOURCES_M4) $(IMPLEMENTATION_SOURCES) common/hal-stm32f4.c \
 		-I$(IMPLEMENTATION_PATH) $(COMMONINCLUDES_M4) $(LDFLAGS)
 
 elf/$(TARGET_NAME)_hashing.elf: mupq/crypto_$(TYPE)/hashing.c $(COMMONSOURCES_M4) $(IMPLEMENTATION_SOURCES) $(IMPLEMENTATION_HEADERS) $(OPENCM3FILE) common/hal-stm32f4.c
 	mkdir -p elf
-	$(CC) -o $@ $(CFLAGS) -DPROFILE_HASHING \
+	$(CC) -o $@ $(CFLAGS) -DPROFILE_HASHING -DMUPQ_NAMESPACE=$(MUPQ_NAMESPACE) \
 		$< $(COMMONSOURCES_M4) $(RANDOMBYTES_M4) $(IMPLEMENTATION_SOURCES) common/hal-stm32f4.c \
 		-I$(IMPLEMENTATION_PATH) $(COMMONINCLUDES_M4) $(LDFLAGS)
 
