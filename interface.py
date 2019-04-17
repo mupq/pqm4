@@ -20,8 +20,6 @@ class M4Settings(mupq.PlatformSettings):
     #: List of dicts, in each dict specify (Scheme class) attributes of the
     #: scheme with values, if all attributes match the scheme is skipped.
     skip_list = (
-        {'scheme': 'frodo640-aes', 'implementation': 'ref'},
-        {'scheme': 'frodo640-cshake', 'implementation': 'ref'},
         {'scheme': 'frodokem640aes', 'implementation': 'clean'},
         {'scheme': 'frodokem976aes', 'implementation': 'clean'},
         {'scheme': 'frodokem1344aes', 'implementation': 'clean'}
