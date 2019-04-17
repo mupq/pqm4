@@ -15,3 +15,6 @@ if __name__ == "__main__":
 
         test = mupq.HashingBenchmark(M4Settings(), m4)
         test.test_all(sys.argv[1:])
+
+        test = mupq.SizeBenchmark(M4Settings(), m4)
+        test.test_all(sys.argv[1:])

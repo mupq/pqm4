@@ -93,6 +93,21 @@ elf/$(TARGET_NAME)_hashing.elf: mupq/crypto_$(TYPE)/hashing.c $(COMMONSOURCES_M4
 		$< $(COMMONSOURCES_M4) $(RANDOMBYTES_M4) $(IMPLEMENTATION_SOURCES) common/hal-stm32f4.c \
 		-I$(IMPLEMENTATION_PATH) $(COMMONINCLUDES_M4) $(LDFLAGS)
 
+obj/$(TARGET_NAME)_%.o: $(IMPLEMENTATION_PATH)/%.c $(IMPLEMENTATION_HEADERS)
+	mkdir -p obj
+	$(CC) -o $@ -c $(CFLAGS) -DMUPQ_NAMESPACE=$(MUPQ_NAMESPACE) \
+		-I$(IMPLEMENTATION_PATH) $(COMMONINCLUDES_M4) $<
+
+obj/$(TARGET_NAME)_%.o: $(IMPLEMENTATION_PATH)/%.s $(IMPLEMENTATION_HEADERS)
+	mkdir -p obj
+	$(CC) -o $@ -c $(CFLAGS) -DMUPQ_NAMESPACE=$(MUPQ_NAMESPACE) \
+		-I$(IMPLEMENTATION_PATH) $(COMMONINCLUDES_M4) $<
+
+obj/$(TARGET_NAME)_%.o: $(IMPLEMENTATION_PATH)/%.S $(IMPLEMENTATION_HEADERS)
+	mkdir -p obj
+	$(CC) -o $@ -c $(CFLAGS) -DMUPQ_NAMESPACE=$(MUPQ_NAMESPACE) \
+		-I$(IMPLEMENTATION_PATH) $(COMMONINCLUDES_M4) $<
+
 $(OPENCM3FILE):
 	@if [ ! "`ls -A $(OPENCM3_DIR)`" ] ; then \
 		printf "######## ERROR ########\n"; \
@@ -113,7 +128,6 @@ clean:
 	rm -rf bin/
 	rm -rf bin-host/
 	rm -rf obj/
-	rm -rf obj-host/
 	rm -rf testvectors/
 	rm -rf benchmarks/
 
