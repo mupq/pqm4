@@ -2,9 +2,9 @@
 ## Key Encapsulation Schemes
 | scheme | implementation | key generation [cycles] | encapsulation [cycles] | decapsulation [cycles] |
 | ------ | -------------- | ----------------------- | ---------------------- | ---------------------- |
-| frodo640-aes (100 executions) | m4 | AVG: 220,307,317 <br /> MIN: 220,241,077 <br /> MAX: 220,386,311 | AVG: 223,739,226 <br /> MIN: 223,672,948 <br /> MAX: 223,818,372 | AVG: 218,784,713 <br /> MIN: 218,718,418 <br /> MAX: 218,863,869 |
-| frodo640-cshake (100 executions) | m4 | AVG: 81,905,542 <br /> MIN: 81,905,542 <br /> MAX: 81,905,542 | AVG: 86,239,829 <br /> MIN: 86,239,829 <br /> MAX: 86,239,829 | AVG: 86,385,540 <br /> MIN: 86,385,540 <br /> MAX: 86,385,540 |
-| frodo640-cshake (100 executions) | opt | AVG: 94,173,002 <br /> MIN: 94,173,002 <br /> MAX: 94,173,002 | AVG: 107,084,620 <br /> MIN: 107,084,620 <br /> MAX: 107,084,620 | AVG: 107,482,437 <br /> MIN: 107,482,437 <br /> MAX: 107,482,437 |
+| frodokem640aes (100 executions) | m4 | AVG: 220,307,317 <br /> MIN: 220,241,077 <br /> MAX: 220,386,311 | AVG: 223,739,226 <br /> MIN: 223,672,948 <br /> MAX: 223,818,372 | AVG: 218,784,713 <br /> MIN: 218,718,418 <br /> MAX: 218,863,869 |
+| frodokem640cshake (100 executions) | m4 | AVG: 81,905,542 <br /> MIN: 81,905,542 <br /> MAX: 81,905,542 | AVG: 86,239,829 <br /> MIN: 86,239,829 <br /> MAX: 86,239,829 | AVG: 86,385,540 <br /> MIN: 86,385,540 <br /> MAX: 86,385,540 |
+| frodokem640cshake (100 executions) | opt | AVG: 94,173,002 <br /> MIN: 94,173,002 <br /> MAX: 94,173,002 | AVG: 107,084,620 <br /> MIN: 107,084,620 <br /> MAX: 107,084,620 | AVG: 107,482,437 <br /> MIN: 107,482,437 <br /> MAX: 107,482,437 |
 | kyber1024 (100 executions) | m4 | AVG: 1,729,819 <br /> MIN: 1,729,068 <br /> MAX: 1,730,683 | AVG: 2,083,028 <br /> MIN: 2,082,278 <br /> MAX: 2,083,893 | AVG: 2,134,685 <br /> MIN: 2,133,934 <br /> MAX: 2,135,550 |
 | kyber1024 (100 executions) | ref | AVG: 1,957,251 <br /> MIN: 1,956,503 <br /> MAX: 1,958,004 | AVG: 2,463,004 <br /> MIN: 2,462,257 <br /> MAX: 2,463,758 | AVG: 2,663,791 <br /> MIN: 2,663,043 <br /> MAX: 2,664,544 |
 | kyber512 (100 executions) | m4 | AVG: 665,609 <br /> MIN: 665,182 <br /> MAX: 665,980 | AVG: 903,352 <br /> MIN: 902,925 <br /> MAX: 903,723 | AVG: 933,528 <br /> MIN: 933,102 <br /> MAX: 933,900 |
@@ -34,9 +34,9 @@
 ## Key Encapsulation Schemes
 | Scheme | Implementation | Key Generation [bytes] | Encapsulation [bytes] | Decapsulation [bytes] |
 | ------ | -------------- | ---------------------- | --------------------- | --------------------- |
-| frodo640-aes | m4 | 31,240 | 51,568 | 61,944 |
-| frodo640-cshake | m4 | 26,304 | 41,504 | 51,880 |
-| frodo640-cshake | opt | 36,560 | 58,272 | 68,640 |
+| frodokem640aes | m4 | 31,240 | 51,568 | 61,944 |
+| frodokem640cshake | m4 | 26,304 | 41,504 | 51,880 |
+| frodokem640cshake | opt | 36,560 | 58,272 | 68,640 |
 | kyber1024 | m4 | 15,664 | 19,352 | 20,864 |
 | kyber1024 | ref | 15,664 | 19,352 | 20,864 |
 | kyber512 | m4 | 6,456 | 9,120 | 9,928 |
@@ -66,9 +66,9 @@
 ## Key Encapsulation Schemes
 | Scheme | Implementation | Key Generation [%] | Encapsulation [%] | Decapsulation [%] |
 | ------ | -------------- | ------------------ | ----------------- | ----------------- |
-| frodo640-aes | m4 | 96.4% | 95.3% | 95.2% |
-| frodo640-cshake | m4 | 90.4% | 88.9% | 88.7% |
-| frodo640-cshake | opt | 79.8% | 71.6% | 71.3% |
+| frodokem640aes | m4 | 96.4% | 95.3% | 95.2% |
+| frodokem640cshake | m4 | 90.4% | 88.9% | 88.7% |
+| frodokem640cshake | opt | 79.8% | 71.6% | 71.3% |
 | kyber1024 | m4 | 69.3% | 67.5% | 58.7% |
 | kyber1024 | ref | 61.3% | 57.1% | 47.0% |
 | kyber512 | m4 | 68.3% | 66.2% | 54.4% |

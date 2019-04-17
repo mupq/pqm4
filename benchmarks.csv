@@ -1,9 +1,9 @@
 Speed Evaluation,,,,,,,,,,
 Key Encapsulation Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [cycles] (mean),Key Generation [cycles] (min),Key Generation [cycles] (max),Encapsulation [cycles] (mean),Encapsulation [cycles] (min),Encapsulation [cycles] (max),Decapsulation [cycles] (mean),Decapsulation [cycles] (min),Decapsulation [cycles] (max)
-frodo640-aes (100 executions),m4,220307317,220241077,220386311,223739226,223672948,223818372,218784713,218718418,218863869
-frodo640-cshake (100 executions),m4,81905542,81905542,81905542,86239829,86239829,86239829,86385540,86385540,86385540
-frodo640-cshake (100 executions),opt,94173002,94173002,94173002,107084620,107084620,107084620,107482437,107482437,107482437
+frodokem640aes (100 executions),m4,220307317,220241077,220386311,223739226,223672948,223818372,218784713,218718418,218863869
+frodokem640cshake (100 executions),m4,81905542,81905542,81905542,86239829,86239829,86239829,86385540,86385540,86385540
+frodokem640cshake (100 executions),opt,94173002,94173002,94173002,107084620,107084620,107084620,107482437,107482437,107482437
 kyber1024 (100 executions),m4,1729819,1729068,1730683,2083028,2082278,2083893,2134685,2133934,2135550
 kyber1024 (100 executions),ref,1957251,1956503,1958004,2463004,2462257,2463758,2663791,2663043,2664544
 kyber512 (100 executions),m4,665609,665182,665980,903352,902925,903723,933528,933102,933900
@@ -31,9 +31,9 @@ sphincs-shake256-128f-simple (1 executions),clean,65678196,65678196,65678196,207
 Memory Evaluation,,,,,,,,,,
 Key Encapsulation Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [bytes],Encapsulation [bytes],Decapsulation [bytes],,,,,,
-frodo640-aes,m4,31240,51568,61944,,,,,,
-frodo640-cshake,m4,26304,41504,51880,,,,,,
-frodo640-cshake,opt,36560,58272,68640,,,,,,
+frodokem640aes,m4,31240,51568,61944,,,,,,
+frodokem640cshake,m4,26304,41504,51880,,,,,,
+frodokem640cshake,opt,36560,58272,68640,,,,,,
 kyber1024,m4,15664,19352,20864,,,,,,
 kyber1024,ref,15664,19352,20864,,,,,,
 kyber512,m4,6456,9120,9928,,,,,,
@@ -61,9 +61,9 @@ sphincs-shake256-128f-simple,clean,2200,2304,2664,,,,,,
 Hashing Evaluation,,,,,,,,,,
 Key Encapsulation Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [%],Encapsulation [%],Decapsulation [%],,,,,,
-frodo640-aes,m4,96.4,95.3,95.2,,,,,,
-frodo640-cshake,m4,90.4,88.9,88.7,,,,,,
-frodo640-cshake,opt,79.8,71.6,71.3,,,,,,
+frodokem640aes,m4,96.4,95.3,95.2,,,,,,
+frodokem640cshake,m4,90.4,88.9,88.7,,,,,,
+frodokem640cshake,opt,79.8,71.6,71.3,,,,,,
 kyber1024,m4,69.3,67.5,58.7,,,,,,
 kyber1024,ref,61.3,57.1,47.0,,,,,,
 kyber512,m4,68.3,66.2,54.4,,,,,,
