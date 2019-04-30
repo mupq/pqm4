@@ -18,8 +18,8 @@ The design goals of the library are to offer
   of a reference implementation running host-side (i.e., on the computer the
   development board is connected to);
 * automated benchmarking for speed, stack usage, and code-size;
-* automated profiling of cycles spent in symmetric primitives (SHA-2, SHA-3, AES)
-* integration of reference implementations from [PQClean](https://github.com/PQClean/PQClean)
+* automated profiling of cycles spent in symmetric primitives (SHA-2, SHA-3, AES);
+* integration of reference implementations from [PQClean](https://github.com/PQClean/PQClean); and
 * easy integration of new schemes and implementations into the framework.
 
 
@@ -27,7 +27,7 @@ The design goals of the library are to offer
 
 For most of the schemes there are multiple implementations. 
 The naming scheme for these implementations is as follows:
-* `ref`: the reference implementation submitted to NIST ,
+* `ref`: the reference implementation submitted to NIST,
 * `opt`: an optimized implementation in plain C (e.g., the optimized implementation submitted to NIST),
 * `m4`: an implementation with Cortex-M4 specific optimizations (typically in assembly).
 
@@ -51,7 +51,7 @@ refer to the stlink Github page for instructions on how to [compile it from sour
 (in that case, be careful to use libusb-1.0.0-dev, not libusb-0.1).
 
 ### Python3 
-The benchmarking scripts used in **pqm4** require Python >= 3.6
+The benchmarking scripts used in **pqm4** require Python >= 3.6.
 
 ### Installing pyserial
 The host-side Python code requires the [pyserial](https://github.com/pyserial/pyserial) module. 
@@ -130,7 +130,7 @@ The benchmark results (in `benchmarks/`) created by
 `python3 benchmarks.py` can be automatically converted to a markdown table using `python3 convert_benchmarks.py md` or to csv using `python3 convert_benchmarks.py csv` 
 
 ## Benchmarks
-The current benchmark results can be found in (benchmarks.csv)[benchmarks.csv]
+The current benchmark results can be found in (benchmarks.csv)[benchmarks.csv].
 
 All cycle counts were obtained at 24MHz to avoid wait cycles due to the speed of the memory controller.
 For most schemes we report minimum, maximum, and average cycle counts of 100 executions.
@@ -145,8 +145,6 @@ The numbers were obtained with `arm-none-eabi-gcc 8.3.0` and libopencm3
 The **pqm4** build system is designed to make it very easy to add new schemes
 and implementations, if these implementations follow the NIST/SUPERCOP API.
 
-In case you want to add a scheme 
- 
 In the following we consider the example of adding the reference implementation
 of [NewHope-512-CPA-KEM](https://newhopecrypto.org) to **pqm4**:
 
