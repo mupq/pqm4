@@ -2,10 +2,10 @@
 Post-quantum crypto library for the ARM Cortex-M4
 
 ## Work in progress
-
 This is the v2 version of pqm4, which will abstract away a lot of things into the
-mupq parent project. Please make sure you have all the submodules when you work in this
-directory
+[mupq](https://github.com/mupq/mupq) parent project. 
+
+We are also working on upating the code to the round 2 variants. 
 
 ## Introduction
 The **pqm4** library, benchmarking and testing framework started as a result of the 
@@ -13,57 +13,21 @@ The **pqm4** library, benchmarking and testing framework started as a result of 
 It currently contains implementations post-quantum key-encapsulation mechanisms
 and post-quantum signature schemes targeting the ARM Cortex-M4 family of microcontrollers.
 The design goals of the library are to offer
-* a simple build system that generates an individual static library 
-  for each implementation of each scheme, which can simply be linked into
-  any software project;
 * automated functional testing on a widely available development board;
 * automated generation of test vectors and comparison against output
   of a reference implementation running host-side (i.e., on the computer the
   development board is connected to);
-* automated benchmarking for speed and stack usage; and
+* automated benchmarking for speed, stack usage, and code-size;
+* automated profiling of cycles spent in symmetric primitives (SHA-2, SHA-3, AES)
+* integration of reference implementations from [PQClean](https://github.com/PQClean/PQClean)
 * easy integration of new schemes and implementations into the framework.
-
-## pqm4 in second round of NISTPQC 
-
-As a result of the [Oxford PQC Workshop](https://www.maths.ox.ac.uk/events/conferences/oxford-post-quantum-cryptography-workshop), **pqm4** was extended to further support benchmarking for the second round of the NIST PQC competition. 
-Alongside simplifying the build and benchmarking system, the following changes were implemented:
-* move platform independent code to [mupq](https://github.com/mupq/mupq) to allow re-use of this code for other benchmarking projects like [pqriscv](https://github.com/mupq/pqriscv) 
-* integration of [PQClean](https://github.com/PQClean/PQClean) as a source for round 2 clean reference implementations
-* reporting of cycles spent in SHA-2, SHA-3, and AES 
-* reporting of code-size for all schemes 
 
 
 ## Schemes included in pqm4
-Currently **pqm4** contains implementations of the following post-quantum KEMs:
-* [FrodoKEM-640-AES](https://frodokem.org/)
-* [FrodoKEM-640-cSHAKE](https://frodokem.org/)
-* [Kyber-512](https://pq-crystals.org/kyber/)
-* [Kyber-768](https://pq-crystals.org/kyber/)
-* [Kyber-1024](https://pq-crystals.org/kyber/)
-* [NewHope-1024-CCA-KEM](https://newhopecrypto.org)
-* [NTRU-HRSS-KEM-701](https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/submissions/NTRU_HRSS_KEM.zip)
-* [Saber](https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/submissions/SABER.zip)
-* [SIKE-p571](https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/submissions/SIKE.zip)
-* [Streamlined NTRU Prime 4591761](https://ntruprime.cr.yp.to/)
-
-Currently **pqm4** contains implementations of the following post-quantum signature schemes:
-* [Dilithium-III](https://pq-crystals.org/dilithium/)
-* [qTesla-I](https://qTesla.org/)
-* [qTesla-III-size](https://qTesla.org/)
-* [qTesla-III-speed](https://qTesla.org/)
-* [SPHINCS+-SHAKE256-128s](https://sphincs.org)
-
-The schemes were selected according to the following criteria:
-* Restrict to [NIST round 1 candidates](https://csrc.nist.gov/Projects/Post-Quantum-Cryptography/Round-1-Submissions).
-* First focus on schemes and implementations resulting from the [PQCRYPTO project](https://pqcrypto.eu.org).
-* Choose parameters targeting NIST security level 3 by default, but
-  * choose parameters targeting a *higher* security level if there are no level-3 parameters, and
-  * choose parameters targeting a *lower* security level if level-3 parameters exceed the development board's resources (in particular RAM).
-* Restrict to schemes that have at least implementation of one parameter set that does not exceed the development board's resources.
 
 For most of the schemes there are multiple implementations. 
 The naming scheme for these implementations is as follows:
-* `ref`: the reference implementation submitted to NIST,
+* `ref`: the reference implementation submitted to NIST ,
 * `opt`: an optimized implementation in plain C (e.g., the optimized implementation submitted to NIST),
 * `m4`: an implementation with Cortex-M4 specific optimizations (typically in assembly).
 
@@ -85,6 +49,9 @@ To flash binaries onto the development board, **pqm4** is using [stlink](https:/
 Depending on your operating system, stlink may be available in your package manager -- if not, please
 refer to the stlink Github page for instructions on how to [compile it from source](https://github.com/texane/stlink/blob/master/doc/compiling.md) 
 (in that case, be careful to use libusb-1.0.0-dev, not libusb-0.1).
+
+### Python3 
+The benchmarking scripts used in **pqm4** require Python >= 3.6
 
 ### Installing pyserial
 The host-side Python code requires the [pyserial](https://github.com/pyserial/pyserial) module. 
@@ -118,7 +85,7 @@ cd libopencm3 && make
 ```
 
 ## API documentation
-The **pqm4** library uses the [NIST API](https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/example-files/api-notes.pdf). It is mandated for all included schemes.
+The **pqm4** library uses the [PQClean API](https://github.com/PQClean/PQClean). It is mandated for all included schemes.
 
 KEMs need to define `CRYPTO_SECRETKEYBYTES`, `CRYPTO_PUBLICKEYBYTES`, `CRYPTO_BYTES`, and `CRYPTO_CIPHERTEXTBYTES` and implement 
 ```c
@@ -130,62 +97,56 @@ int crypto_kem_dec(unsigned char *ss, const unsigned char *ct, const unsigned ch
 Signature schemes need to define `CRYPTO_SECRETKEYBYTES`, `CRYPTO_PUBLICKEYBYTES`, and `CRYPTO_BYTES` and implement
 ```c
 int crypto_sign_keypair(unsigned char *pk, unsigned char *sk);
-int crypto_sign(unsigned char *sm, unsigned long long *smlen, 
-		const unsigned char *msg, unsigned long long len, 
+int crypto_sign(unsigned char *sm, size_t *smlen, 
+		const unsigned char *msg, size_t len, 
                 const unsigned char *sk);
-int crypto_sign_open(unsigned char *m, unsigned long long *mlen,
-                     const unsigned char *sm, unsigned long long smlen,
+int crypto_sign_open(unsigned char *m, size_t *mlen,
+                     const unsigned char *sm, size_t smlen,
                      const unsigned char *pk);
 ```
 
+
 ## Running tests and benchmarks
-Executing `make` compiles five binaries for each implemenation which can be used to test and benchmark the schemes. For example, for the reference implementation of  [NewHope-1024-CCA-KEM](https://newhopecrypto.org) the following binaries are assembled: 
- - `bin/crypto_kem_newhope1024cca_ref_test.bin` tests if the scheme works as expected. For KEMs this tests if Alice and Bob derive the same shared key and for signature schemes it tests if a generated signature can be verified correctly. Several failure cases are also checked, see [crypto_kem/test.c](crypto_kem/test.c) and [crypto_sign/test.c](crypto_sign/test.c) for details.  
- - `bin/crypto_kem_newhope1024cca_ref_speed.bin` measures the runtime of `crypto_kem_keypair`, `crypto_kem_enc`, and `crypto_kem_dec` for KEMs and `crypto_sign_keypair`, `crypto_sign`, and `crypto_sign_open` for signatures. See [crypto_kem/speed.c](crypto_kem/speed.c) and [crypto_sign/speed.c](crypto_sign/speed.c).   
- - `bin/crypto_kem_newhope1024cca_ref_stack.bin` measures the stack consumption of each of the procedures involved. The memory allocated outside of the procedures (e.g., public keys, private keys, ciphertexts, signatures) is not included. See [crypto_kem/stack.c](crypto_kem/stack.c) and [crypto_sign/stack.c](crypto_sign/stack.c).    
- - `bin/crypto_kem_newhope1024cca_ref_testvectors.bin` uses a deterministic random number generator to generate testvectors for the implementation. These can be used to cross-check different implemenatations of the same scheme. See [crypto_kem/testvectors.c](crypto_kem/testvectors.c) and [crypto_sign/testvectors.c](crypto_sign/testvectors.c).   
-- `bin-host/crypto_kem_newhope1024cca_ref_testvectors` uses the same deterministic random number generator to create the testvectors on your host. See [crypto_kem/testvectors-host.c](crypto_kem/testvectors-host.c) and [crypto_sign/testvectors-host.c](crypto_sign/testvectors-host.c). 
+Executing `python3 build_everything.py` compiles six binaries for each implemenation which can be used to test and benchmark the schemes. For example, for the reference implementation of  [NewHope-1024-CCA-KEM](https://newhopecrypto.org) the following binaries are assembled: 
+ - `bin/crypto_kem_newhope1024cca_ref_test.bin` tests if the scheme works as expected. For KEMs this tests if Alice and Bob derive the same shared key and for signature schemes it tests if a generated signature can be verified correctly. Several failure cases are also checked, see [mupq/crypto_kem/test.c](mupq/crypto_kem/test.c) and [mupq/crypto_sign/test.c](mupq/crypto_sign/test.c) for details.  
+ - `bin/crypto_kem_newhope1024cca_ref_speed.bin` measures the runtime of `crypto_kem_keypair`, `crypto_kem_enc`, and `crypto_kem_dec` for KEMs and `crypto_sign_keypair`, `crypto_sign`, and `crypto_sign_open` for signatures. See [mupq/crypto_kem/speed.c](mupq/crypto_kem/speed.c) and [mupq/crypto_sign/speed.c](mupq/crypto_sign/speed.c).   
+ - `bin/crypto_kem_newhope1024cca_ref_hashing.bin` measures the cycles spent in SHA-2, SHA-3, and AES of `crypto_kem_keypair`, `crypto_kem_enc`, and `crypto_kem_dec` for KEMs and `crypto_sign_keypair`, `crypto_sign`, and `crypto_sign_open` for signatures. See [mupq/crypto_kem/hashing.c](mupq/crypto_kem/speed.c) and [mupq/crypto_sign/speed.c](mupq/crypto_sign/speed.c).   
+ - `bin/crypto_kem_newhope1024cca_ref_stack.bin` measures the stack consumption of each of the procedures involved. The memory allocated outside of the procedures (e.g., public keys, private keys, ciphertexts, signatures) is not included. See [mupq/crypto_kem/stack.c](mupq/crypto_kem/stack.c) and [mupq/crypto_sign/stack.c](mupq/crypto_sign/stack.c).    
+ - `bin/crypto_kem_newhope1024cca_ref_testvectors.bin` uses a deterministic random number generator to generate testvectors for the implementation. These can be used to cross-check different implemenatations of the same scheme. See [mupq/crypto_kem/testvectors.c](mupq/crypto_kem/testvectors.c) and [mupq/crypto_sign/testvectors.c](mupq/crypto_sign/testvectors.c).   
+- `bin-host/crypto_kem_newhope1024cca_ref_testvectors` uses the same deterministic random number generator to create the testvectors on your host. See [mupq/crypto_kem/testvectors-host.c](mupq/crypto_kem/testvectors-host.c) and [mupq/crypto_sign/testvectors-host.c](mupq/crypto_sign/testvectors-host.c). 
 
 The binaries can be flashed to your board using `st-flash`, e.g., `st-flash write bin/crypto_kem_newhope1024cca_ref_test.bin 0x8000000`. To receive the output, run `python3 hostside/host_unidirectional.py`. 
 
 The **pqm4** framework automates testing and benchmarking for all schemes using Python3 scripts: 
 - `python3 test.py`: flashes all test binaries to the boards and checks that no errors occur. 
 - `python3 testvectors.py`: flashes all testvector binaries to the boards and writes the testvectors to `testvectors/`. Additionally, it executes the reference implementations on your host machine. Afterwards, it checks the testvectors of different implementations of the same scheme for consistency. 
-- `python3 benchmarks.py`: flashes the stack and speed binaries and writes the results to `benchmarks/stack/` and `benchmarks/speed/`. You may want to execute this several times for certain schemes for which the execution time varies significantly. 
+- `python3 benchmarks.py`: flashes the stack and speed binaries and writes the results to `benchmarks/stack/` and `benchmarks/speed/`. You may want to execute this several times for certain schemes for which the execution time varies significantly.
 
 In case you don't want to include all schemes, pass a list of schemes you want to include to any of the scripts, e.g., `python3 test.py newhope1024cca sphincs-shake256-128s`. 
 In case you want to exclude certain schemes pass `--exclude`, e.g., `python3 test.py --exclude saber`
 
 
 The benchmark results (in `benchmarks/`) created by 
-`python3 benchmarks.py` can be automatically converted to the markdown table below using `python3 benchmarks_to_md.py`
+`python3 benchmarks.py` can be automatically converted to a markdown table using `python3 convert_benchmarks.py md` or to csv using `python3 convert_benchmarks.py csv` 
 
 ## Benchmarks
-The tables below list cycle counts and stack usage of the implementations currently included in **pqm4**.
+The current benchmark results can be found in (benchmarks.csv)[benchmarks.csv]
+
 All cycle counts were obtained at 24MHz to avoid wait cycles due to the speed of the memory controller.
 For most schemes we report minimum, maximum, and average cycle counts of 100 executions.
-For schemes with no cycle count variation we only did 10 executions. 
 For some particularly slow schemes we reduce the number of executions; the number of
 executions is reported in parentheses.
 
-The following numbers were obtained with `arm-none-eabi-gcc 8.2.0` and libopencm3
+The numbers were obtained with `arm-none-eabi-gcc 8.3.0` and libopencm3
 [@8b1ac58](https://github.com/libopencm3/libopencm3/commit/8b1ac585dfd6eb13938f2090bff6a78b836a0452)
 
 
-### Speed Evaluation
-#### Key Encapsulation Schemes
-*TODO*
-#### Signature Schemes
-*TODO*
-### Memory Evaluation
-#### Key Encapsulation Schemes
-*TODO*
-#### Signature Schemes
-*TODO*
-
 ## Adding new schemes and implementations
 The **pqm4** build system is designed to make it very easy to add new schemes
-and implementations, if these implementations follow the NIST/SUPERCOP API. 
+and implementations, if these implementations follow the NIST/SUPERCOP API.
+
+In case you want to add a scheme 
+ 
 In the following we consider the example of adding the reference implementation
 of [NewHope-512-CPA-KEM](https://newhopecrypto.org) to **pqm4**:
 
@@ -303,28 +264,10 @@ When referring to this framework in academic literature, please consider using t
 ```
 
 ## License
-Different parts of **pqm4** have different licenses. Specifically,
-* the files under `common/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
-* the files under `crypto_kem/frodo640-aes/` are under [MIT License](https://raw.githubusercontent.com/Microsoft/PQCrypto-LWEKE/master/LICENSE);
-* the files under `crypto_kem/frodo640-cshake/` are under [MIT License](https://raw.githubusercontent.com/Microsoft/PQCrypto-LWEKE/master/LICENSE);
-* the files under `crypto_kem/kindi/` are covered by the corresponding [IP statements submitted to NIST](https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/ip-statements/Kindi-Statements.pdf);
-* the files under `crypto_kem/kyber512/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
-* the files under `crypto_kem/kyber768/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
-* the files under `crypto_kem/kyber1024/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
-* the files under `crypto_kem/newhope1024cca/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
-* the files under `crypto_kem/ntruhrss701/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
-* the files under `crypto_kem/ntru-kem-743/` are in the [public domain](https://raw.githubusercontent.com/NTRUOpenSourceProject/ntru-crypto/master/LICENSE.md);
-* the files under `crypto_kem/rlizard-1024-11/` are covered by the corresponding [IP statements submitted to NIST](https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-1/ip-statements/Lizard-Statements.pdf);
-* the files under `crypto_kem/saber/` are in the [public domain](https://eprint.iacr.org/2018/682.pdf);
-* the files under `crypto_kem/sikep751/` are under [MIT License](https://raw.githubusercontent.com/Microsoft/PQCrypto-SIKE/master/LICENSE);
-* the files under `crypto_kem/sntrup4591761/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
-* the files under `crypto_sign/dilithium/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
-* the files under `crypto_sign/qTesla-I/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
-* the files under `crypto_sign/qTesla-III-size/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
-* the files under `crypto_sign/qTesla-III-speed/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
-* the files under `crypto_sign/sphincs-shake256-128s/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
-* the files under `hostside/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
-* the files under the submodule directory `libopencm3/` are under [LGPL3](https://raw.githubusercontent.com/libopencm3/libopencm3/master/COPYING.LGPL3);
-* the files `speed.c`, `stack.c`, `test.c`, `testvectors.c`, and `testvectors-host.c` in `crypto_kem/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/);
-* the files `speed.c`, `stack.c`, `test.c`, `testvectors.c`, and `testvectors-host.c` in `crypto_sign/` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/); and
-* the files `benchmarks.py`, `benchmarks_to_md.py`, `Makefile`, `README.md`, `test.py`, `testvectors.py`, and `utils.py` are in the [public domain](http://creativecommons.org/publicdomain/zero/1.0/).
+Different parts of **pqm4** have different licenses. 
+Each subdirectory containing implementations contains a LICENSE file stating 
+under what license that specific implementation is released. 
+The files in common contain licensing information at the top of the file (and 
+are currently either public domain or MIT). 
+All other code in this repository is released under the conditions of [CC0](http://creativecommons.org/publicdomain/zero/1.0/).
+
