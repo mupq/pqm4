@@ -93,3 +93,39 @@
 | qTesla-III-size | ref | 66.2% | 23.0% | 27.5% |
 | qTesla-III-speed | ref | 73.3% | 24.1% | 28.3% |
 | sphincs-shake256-128f-simple | clean | 96.4% | 96.2% | 99.1% |
+
+# Size Evaluation
+## Key Encapsulation Schemes
+| Scheme | Implementation | .text [bytes] | .data [bytes] | .bss [bytes] | Total [bytes] |
+| ------ | -------------- | ------------- | ------------- | ------------ | ------------- |
+| frodokem1344shake | clean | 5,820 | 0 | 0 | 5,820 |
+| frodokem640aes | m4 | 15,660 | 28 | 0 | 15,688 |
+| frodokem640shake | clean | 6,048 | 0 | 0 | 6,048 |
+| frodokem640shake | m4 | 15,720 | 28 | 0 | 15,748 |
+| frodokem640shake | opt | 13,904 | 28 | 0 | 13,932 |
+| frodokem976shake | clean | 5,692 | 0 | 0 | 5,692 |
+| kyber1024 | m4 | 12,638 | 0 | 0 | 12,638 |
+| kyber1024 | ref | 5,404 | 0 | 0 | 5,404 |
+| kyber512 | m4 | 12,522 | 0 | 0 | 12,522 |
+| kyber512 | ref | 5,288 | 0 | 0 | 5,288 |
+| kyber768 | clean | 5,312 | 0 | 0 | 5,312 |
+| kyber768 | m4 | 12,562 | 0 | 0 | 12,562 |
+| kyber768 | ref | 5,328 | 0 | 0 | 5,328 |
+| newhope1024cca | m4 | 7,068 | 6,144 | 0 | 13,212 |
+| newhope1024cca | ref | 5,684 | 6,144 | 0 | 11,828 |
+| ntruhps2048509 | clean | 6,864 | 0 | 0 | 6,864 |
+| ntruhrss701 | m4 | 132,436 | 0 | 0 | 132,436 |
+| ntruhrss701 | ref | 6,992 | 0 | 0 | 6,992 |
+| saber | m4 | 44,504 | 0 | 0 | 44,504 |
+| saber | ref | 5,620 | 0 | 0 | 5,620 |
+| sikep751 | ref | 21,040 | 0 | 0 | 21,040 |
+| sntrup4591761 | ref | 6,464 | 0 | 0 | 6,464 |
+## Signature Schemes
+| Scheme | Implementation | .text [bytes] | .data [bytes] | .bss [bytes] | Total [bytes] |
+| ------ | -------------- | ------------- | ------------- | ------------ | ------------- |
+| dilithium | m4 | 14,864 | 0 | 0 | 14,864 |
+| dilithium | ref | 9,788 | 0 | 0 | 9,788 |
+| qTesla-I | ref | 16,176 | 0 | 0 | 16,176 |
+| qTesla-III-size | ref | 24,804 | 0 | 0 | 24,804 |
+| qTesla-III-speed | ref | 23,716 | 0 | 0 | 23,716 |
+| sphincs-shake256-128f-simple | clean | 3,932 | 0 | 0 | 3,932 |
