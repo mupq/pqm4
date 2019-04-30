@@ -98,7 +98,7 @@ Signature schemes need to define `CRYPTO_SECRETKEYBYTES`, `CRYPTO_PUBLICKEYBYTES
 ```c
 int crypto_sign_keypair(unsigned char *pk, unsigned char *sk);
 int crypto_sign(unsigned char *sm, size_t *smlen, 
-		const unsigned char *msg, size_t len, 
+                const unsigned char *msg, size_t len,
                 const unsigned char *sk);
 int crypto_sign_open(unsigned char *m, size_t *mlen,
                      const unsigned char *sm, size_t smlen,
@@ -204,7 +204,7 @@ new subdirectory under `crypto_sign/`.
    Many schemes submitted to NIST use SHA-3, SHAKE or cSHAKE for hashing. 
    This is why **pqm4** comes with highly optimized Keccak code that is accessible
    from all KEM and signature implementations. 
-   Functions from the FIPS202 standard (and related publication SP 800-185) are defined in `common/fips202.h` as follows:
+   Functions from the FIPS202 standard (and related publication SP 800-185) are defined in `mupq/common/fips202.h` as follows:
    ```c
   void shake128_absorb(uint64_t *state, const unsigned char *input, unsigned int inlen);
   void shake128_squeezeblocks(unsigned char *output, unsigned long long nblocks, uint64_t *state);
@@ -238,7 +238,7 @@ new subdirectory under `crypto_sign/`.
   We've experimented with assembly-optimized SHA512, but found that the speed-up
   achievable with this compared to the C implementation from
   [SUPERCOP](http://bench.cr.yp.to/) is negligible
-  when compiled using `arm-none-eabi-gcc-8.2.0`.
+  when compiled using `arm-none-eabi-gcc-8.3.0`.
   For older compiler versions (e.g. `5.4.1`) hand-optimized assembly implementations
   were significantly faster.
   We've therefore decided to only include a C version of SHA384 and SHA512.
@@ -248,6 +248,24 @@ new subdirectory under `crypto_sign/`.
   int sha512(unsigned char *output, const unsigned char *input, unsigned long long inlen);
    ```
   Implementations can make use of this by including `sha2.h`.
+
+## Using optimized AES
+
+  Some schemes submitted to NIST make use of AES as a subroutine.
+  We included assembly-optimized implementations of AES-128/-192/-256 in ECB mode and in CTR mode.
+  The functions that can be used are stated in `mupq/common/aes.h` as follows:
+  ```c
+  void aes128_keyexp(aes128ctx *r, const unsigned char *key);
+  void aes128_ecb(unsigned char *out, const unsigned char *in, size_t nblocks, const aes128ctx *ctx);
+  void aes128_ctr(unsigned char *out, size_t outlen, const unsigned char *iv, const aes128ctx *ctx);
+  void aes192_keyexp(aes192ctx *r, const unsigned char *key);
+  void aes192_ecb(unsigned char *out, const unsigned char *in, size_t nblocks, const aes192ctx *ctx);
+  void aes192_ctr(unsigned char *out, size_t outlen, const unsigned char *iv, const aes192ctx *ctx);
+  void aes256_keyexp(aes256ctx *r, const unsigned char *key);
+  void aes256_ecb(unsigned char *out, const unsigned char *in, size_t nblocks, const aes256ctx *ctx);
+  void aes256_ctr(unsigned char *out, size_t outlen, const unsigned char *iv, const aes256ctx *ctx);
+  ```
+  Implementations can use these by including `aes.h`.
 
 ## Bibliography
 
