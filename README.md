@@ -19,11 +19,11 @@ The design goals of the library are to offer
 
 ## Changes in Round 2
 For the second round of the NIST PQC, **pqm4** was extended (see [#78](https://github.com/mupq/pqm4/pull/78)) with the following features:
-- common code was moved to [mupq](https://github.com/mupq/mupq) for reuse in [pqriscv](https://github.com/mupq/pqriscv)
-- much simpler build process
-- automated profiling of cycles spent in symmetric primitives (SHA-2, SHA-3, AES)
-- reporting of code-size
-- integration of clean implementations from [PQClean](https://github.com/PQClean/PQClean)
+- common code was moved to [mupq](https://github.com/mupq/mupq) for reuse in [pqriscv](https://github.com/mupq/pqriscv),
+- much simpler build process,
+- automated profiling of cycles spent in symmetric primitives (SHA-2, SHA-3, AES),
+- reporting of code-size,
+- integration of clean implementations from [PQClean](https://github.com/PQClean/PQClean).
 
 Not all schemes have been migrated to Round 2 code yet. See below for an overview.
 
@@ -116,7 +116,7 @@ git clone --recursive https://github.com/mupq/pqm4.git
 To test that everything builds execute `python3 build_everything.py`.
 
 ## API documentation
-The **pqm4** library uses the [PQClean API](https://github.com/PQClean/PQClean). It is mandated for all included schemes.
+The **pqm4** library uses the NIST/SUPERCOP/[PQClean API](https://github.com/PQClean/PQClean). It is mandated for all included schemes.
 
 KEMs need to define `CRYPTO_SECRETKEYBYTES`, `CRYPTO_PUBLICKEYBYTES`, `CRYPTO_BYTES`, and `CRYPTO_CIPHERTEXTBYTES` and implement 
 ```c
@@ -160,7 +160,7 @@ The benchmark results (in `benchmarks/`) created by
 `python3 benchmarks.py` can be automatically converted to a markdown table using `python3 convert_benchmarks.py md` or to csv using `python3 convert_benchmarks.py csv` 
 
 ## Benchmarks
-The current benchmark results can be found in (benchmarks.csv)[benchmarks.csv] and (benchmarks.md)[benchmarks.md]
+The current benchmark results can be found in (benchmarks.csv)[benchmarks.csv] and (benchmarks.md)[benchmarks.md].
 
 All cycle counts were obtained at 24MHz to avoid wait cycles due to the speed of the memory controller.
 For most schemes we report minimum, maximum, and average cycle counts of 100 executions.
@@ -168,9 +168,11 @@ For some particularly slow schemes we reduce the number of executions; the numbe
 executions is reported in parentheses.
 
 The numbers were obtained with `arm-none-eabi-gcc 8.3.0` and libopencm3
-[@8b1ac58](https://github.com/libopencm3/libopencm3/commit/8b1ac585dfd6eb13938f2090bff6a78b836a0452)
+[@8b1ac58](https://github.com/libopencm3/libopencm3/commit/8b1ac585dfd6eb13938f2090bff6a78b836a0452).
 
-The code-size measurements only include the code that is provided by the scheme implementation, i.e., exclude common code like hashing. 
+The code-size measurements only include the code that is provided by the scheme implementation, i.e., exclude common code like hashing or C standard library functions.
+The measurements are performed with `arm-none-eabi-size`.
+The size contributions to the `.text`, `.data`, and `.bss` sections are also listed separately.
 
 
 ## Adding new schemes and implementations
@@ -178,15 +180,15 @@ The **pqm4** build system is designed to make it very easy to add new schemes
 and implementations, if these implementations follow the NIST/SUPERCOP/PQClean API.
 
 In case you want to contribute a reference implementation, please open a pull request to [PQClean](https://github.com/PQClean/PQClean).
-In case you want to contribute an optimized C implementation, please open a pull request to [mupq](https://github.com/mupq/mupq)
+In case you want to contribute an optimized C implementation, please open a pull request to [mupq](https://github.com/mupq/mupq).
 In case you want to add an implementation optimized for the Cortex-M4, please open a pull request here.
  
-In the following we consider the example of adding the reference implementation
+In the following we consider the example of adding an M4-optimized implementation
 of [NewHope-512-CPA-KEM](https://newhopecrypto.org) to **pqm4**:
 
 1. Create a subdirectory for the new scheme under `crypto_kem/`; in the following we assume that this subdirectory is called `newhope512cpa`.
 1. Create a subdirectory `m4` under `crypto_kem/newhope512cpa/`.
-1. Copy all files of the reference implementation into this new subdirectory `crypto_kem/newhope512cpa/m4/`,
+1. Copy all files of the implementation into this new subdirectory `crypto_kem/newhope512cpa/m4/`,
    except for the file implementing the `randombytes` function (typically `PQCgenKAT_kem.c`).
 
 The procedure for adding a signature scheme is the same, except that it starts with creating a
