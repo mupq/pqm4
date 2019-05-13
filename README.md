@@ -32,11 +32,11 @@ Not all schemes have been migrated to Round 2 code yet. See below for an overvie
 | frodokem640aes | m4     | Round 1 |
 | frodokem640cshake | m4  | Round 1 |
 | frodokem640cshake | opt | Round 1 |
-| kyber1024 | m4          | Round 1 |
+| kyber1024 | m4          | Round 2 |
 | kyber1024 | clean       | Round 2 |
-| kyber512 | m4           | Round 1 |
+| kyber512 | m4           | Round 2 |
 | kyber512 | clean        | Round 2 |
-| kyber768 | m4           | Round 1 |
+| kyber768 | m4           | Round 2 |
 | kyber768 | clean        | Round 2 |
 | newhope1024cca   | m4   | Round 1 |
 | newhope1024cca   | ref  | Round 1 |
