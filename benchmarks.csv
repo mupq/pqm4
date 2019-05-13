@@ -1,6 +1,8 @@
 Speed Evaluation,,,,,,,,,,
 Key Encapsulation Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [cycles] (mean),Key Generation [cycles] (min),Key Generation [cycles] (max),Encapsulation [cycles] (mean),Encapsulation [cycles] (min),Encapsulation [cycles] (max),Decapsulation [cycles] (mean),Decapsulation [cycles] (min),Decapsulation [cycles] (max)
+firesaber (100 executions),m4,1448776,1448776,1448776,1786930,1786930,1786930,1853339,1853339,1853339
+firesaber (100 executions),ref,3815672,3815672,3815672,4745405,4745405,4745405,5402295,5402295,5402295
 frodokem640aes (100 executions),m4,220307317,220241077,220386311,223739226,223672948,223818372,218784713,218718418,218863869
 frodokem640cshake (100 executions),m4,81905542,81905542,81905542,86239829,86239829,86239829,86385540,86385540,86385540
 frodokem640cshake (100 executions),opt,94173002,94173002,94173002,107084620,107084620,107084620,107482437,107482437,107482437
@@ -10,6 +12,8 @@ kyber512 (100 executions),clean,650649,650329,650923,885502,885182,885776,985485
 kyber512 (100 executions),m4,515054,514777,515347,653073,652796,653366,621947,621670,622240
 kyber768 (100 executions),clean,1198162,1197817,1198627,1490635,1490290,1491099,1613690,1613345,1614155
 kyber768 (100 executions),m4,973127,972821,973664,1145472,1145166,1146009,1093972,1093666,1094509
+lightsaber (100 executions),m4,459965,459965,459965,651273,651273,651273,678810,678810,678810
+lightsaber (100 executions),ref,1051530,1051530,1051530,1538646,1538646,1538646,1861934,1861934,1861934
 newhope1024cca (100 executions),m4,1220539,1220182,1220822,1902086,1901730,1902370,1925924,1925566,1926207
 newhope1024cca (100 executions),ref,1466552,1466131,1466899,2273026,2272605,2273374,2421633,2421212,2421980
 ntruhps2048509 (100 executions),clean,111432235,111432235,111432235,2879179,2879179,2879179,7230769,7230769,7230769
@@ -17,8 +21,8 @@ ntruhps2048677 (100 executions),clean,195514237,195514237,195514237,4913788,4913
 ntruhps4096821 (100 executions),clean,295076232,295076232,295076232,7050535,7050535,7050535,18580558,18580558,18580558
 ntruhrss701 (100 executions),clean,213367434,213367434,213367434,4656330,4656330,4656330,13641230,13641230,13641230
 ntruhrss701 (100 executions),m4,145962064,145962064,145962064,403677,403677,403677,819323,819323,819323
-saber (100 executions),m4,894655,894655,894655,1161220,1161220,1161220,1204173,1204173,1204173
-saber (100 executions),ref,5907650,5907650,5907650,7843989,7843989,7843989,9554128,9554128,9554128
+saber (100 executions),m4,896035,896035,896035,1161849,1161849,1161849,1204633,1204633,1204633
+saber (100 executions),ref,2226935,2226935,2226935,2936240,2936240,2936240,3424601,3424601,3424601
 sikep751 (2 executions),ref,3394424419,3394424419,3394424419,5500863298,5500863298,5500863298,5911088796,5911088796,5911088796
 sntrup4591761 (100 executions),ref,133607176,133607176,133607176,9683945,9683945,9683945,28586566,28586566,28586566
 Signature Schemes,,,,,,,,,,
@@ -33,6 +37,8 @@ sphincs-shake256-128f-simple (1 executions),clean,65678196,65678196,65678196,207
 Memory Evaluation,,,,,,,,,,
 Key Encapsulation Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [bytes],Encapsulation [bytes],Decapsulation [bytes],,,,,,
+firesaber,m4,20144,23008,24592,,,,,,
+firesaber,ref,20144,23008,24488,,,,,,
 frodokem640aes,m4,31240,51568,61944,,,,,,
 frodokem640cshake,m4,26304,41504,51880,,,,,,
 frodokem640cshake,opt,36560,58272,68640,,,,,,
@@ -42,6 +48,8 @@ kyber512,clean,6472,9160,9896,,,,,,
 kyber512,m4,2944,2544,2552,,,,,,
 kyber768,clean,10568,13768,14856,,,,,,
 kyber768,m4,3456,3056,3064,,,,,,
+lightsaber,m4,9656,11392,12136,,,,,,
+lightsaber,ref,10024,11672,12504,,,,,,
 newhope1024cca,m4,11152,17448,19680,,,,,,
 newhope1024cca,ref,11152,17448,19680,,,,,,
 ntruhps2048509,clean,11768,6920,5184,,,,,,
@@ -49,8 +57,8 @@ ntruhps2048677,clean,15592,9128,6832,,,,,,
 ntruhps4096821,clean,18864,11016,8336,,,,,,
 ntruhrss701,clean,14208,7412,8604,,,,,,
 ntruhrss701,m4,23396,19492,22140,,,,,,
-saber,m4,13248,15528,16624,,,,,,
-saber,ref,12616,14928,15992,,,,,,
+saber,m4,13256,15544,16640,,,,,,
+saber,ref,13624,15912,17008,,,,,,
 sikep751,ref,11544,11704,12256,,,,,,
 sntrup4591761,ref,14640,7232,12576,,,,,,
 Signature Schemes,,,,,,,,,,
@@ -65,6 +73,8 @@ sphincs-shake256-128f-simple,clean,2200,2304,2664,,,,,,
 Hashing Evaluation,,,,,,,,,,
 Key Encapsulation Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [%],Encapsulation [%],Decapsulation [%],,,,,,
+firesaber,m4,49.4,49.3,40.0,,,,,,
+firesaber,ref,18.8,18.6,13.7,,,,,,
 frodokem640aes,m4,96.4,95.3,95.2,,,,,,
 frodokem640cshake,m4,90.4,88.9,88.7,,,,,,
 frodokem640cshake,opt,79.8,71.6,71.3,,,,,,
@@ -74,6 +84,8 @@ kyber512,clean,54.6,53.5,38.9,,,,,,
 kyber512,m4,68.8,72.4,61.6,,,,,,
 kyber768,clean,56.9,56.2,44.0,,,,,,
 kyber768,m4,70.0,73.1,64.8,,,,,,
+lightsaber,m4,56.5,55.7,42.0,,,,,,
+lightsaber,ref,24.7,23.6,15.3,,,,,,
 newhope1024cca,m4,71.2,70.3,59.5,,,,,,
 newhope1024cca,ref,59.3,58.9,47.4,,,,,,
 ntruhps2048509,clean,0.0,0.9,1.4,,,,,,
@@ -81,8 +93,8 @@ ntruhps2048677,clean,0.0,0.8,1.1,,,,,,
 ntruhps4096821,clean,0.0,0.6,0.9,,,,,,
 ntruhrss701,clean,0.0,0.8,1.1,,,,,,
 ntruhrss701,m4,0.1,26.5,8.2,,,,,,
-saber,m4,53.1,52.9,41.5,,,,,,
-saber,ref,8.0,7.8,5.2,,,,,,
+saber,m4,53.0,52.9,41.5,,,,,,
+saber,ref,21.3,20.9,14.6,,,,,,
 sikep751,ref,0.0,0.0,0.0,,,,,,
 sntrup4591761,ref,0.0,0.3,0.1,,,,,,
 Signature Schemes,,,,,,,,,,
@@ -97,6 +109,8 @@ sphincs-shake256-128f-simple,clean,96.4,96.2,99.1,,,,,,
 Size Evaluation,,,,,,,,,,
 Key Encapsulation Schemes,,,,,,,,,,
 Scheme,Implementation,.text [bytes],.data [bytes],.bss [bytes],Total [bytes],,,,,
+firesaber,m4,44184,0,0,44184,,,,,
+firesaber,ref,12244,0,0,12244,,,,,
 frodokem1344shake,clean,5820,0,0,5820,,,,,
 frodokem640aes,m4,15660,28,0,15688,,,,,
 frodokem640shake,clean,6048,0,0,6048,,,,,
@@ -109,6 +123,8 @@ kyber512,clean,4436,512,0,4948,,,,,
 kyber512,m4,10932,0,0,10932,,,,,
 kyber768,clean,4588,512,0,5100,,,,,
 kyber768,m4,11104,0,0,11104,,,,,
+lightsaber,m4,44916,0,0,44916,,,,,
+lightsaber,ref,12976,0,0,12976,,,,,
 newhope1024cca,m4,7068,6144,0,13212,,,,,
 newhope1024cca,ref,5684,6144,0,11828,,,,,
 ntruhps2048509,clean,6864,0,0,6864,,,,,
@@ -116,8 +132,8 @@ ntruhps2048677,clean,6884,0,0,6884,,,,,
 ntruhps4096821,clean,6624,0,0,6624,,,,,
 ntruhrss701,clean,6760,0,0,6760,,,,,
 ntruhrss701,m4,132436,0,0,132436,,,,,
-saber,m4,44504,0,0,44504,,,,,
-saber,ref,5620,0,0,5620,,,,,
+saber,m4,44468,0,0,44468,,,,,
+saber,ref,12524,0,0,12524,,,,,
 sikep751,ref,21040,0,0,21040,,,,,
 sntrup4591761,ref,6464,0,0,6464,,,,,
 Signature Schemes,,,,,,,,,,
