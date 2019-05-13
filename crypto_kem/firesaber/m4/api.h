@@ -18,8 +18,8 @@
 
 // Change the algorithm name
 //#define SABER_TYPE LightSaber
-#define SABER_TYPE Saber
-//#define SABER_TYPE FireSaber
+//#define SABER_TYPE Saber
+#define SABER_TYPE FireSaber
 
 //  Set these three values apropriately for your algorithm
 #if SABER_TYPE == LightSaber

@@ -29,6 +29,8 @@ Not all schemes have been migrated to Round 2 code yet. See below for an overvie
 
 | Scheme | Implementation | Code Version |
 | ------ | -------------- | ------------ |
+| firesaber | m4          | Round 2 |
+| firesaber | ref         | Round 2 |
 | frodokem640aes | m4     | Round 1 |
 | frodokem640cshake | m4  | Round 1 |
 | frodokem640cshake | opt | Round 1 |
@@ -38,15 +40,17 @@ Not all schemes have been migrated to Round 2 code yet. See below for an overvie
 | kyber512 | clean        | Round 2 |
 | kyber768 | m4           | Round 2 |
 | kyber768 | clean        | Round 2 |
+| lightsaber | m4         | Round 2 |
+| lightsaber | ref        | Round 2 |
 | newhope1024cca   | m4   | Round 1 |
 | newhope1024cca   | ref  | Round 1 |
 | ntruhps2048509 | clean  | Round 2 |
 | ntruhps2048677 | clean  | Round 2 |
 | ntruhps4096821 | clean  | Round 2 |
 | ntruhrss701 | m4        | Round 1 |
-| ntruhrss701 | clean     | Round 2 |
-| saber | m4              | Round 1 |
-| saber | ref             | Round 1 |
+| ntruhrss701 | ref       | Round 2 |
+| saber | m4              | Round 2 |
+| saber | ref             | Round 2 |
 | sikep751 | ref          | Round 1 |
 | sntrup4591761 | ref     | Round 1 |
 | dilithium | m4        | Round 1 |
@@ -62,7 +66,7 @@ Not all schemes have been migrated to Round 2 code yet. See below for an overvie
 
 For most of the schemes there are multiple implementations. 
 The naming scheme for these implementations is as follows:
-* `clean`: clean reference implementation from [PQClean](https://github.com/PQClean/PQClean)
+* `clean`: clean reference implementation from [PQClean](https://github.com/PQClean/PQClean),
 * `ref`: the reference implementation submitted to NIST (will be replaced by `clean` in the long term),
 * `opt`: an optimized implementation in plain C (e.g., the optimized implementation submitted to NIST),
 * `m4`: an implementation with Cortex-M4 specific optimizations (typically in assembly).
