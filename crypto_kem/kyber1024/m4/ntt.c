@@ -1,1 +1,1 @@
-../../kyber512/m4/ntt.c
+../../kyber768/m4/ntt.c
