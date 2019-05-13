@@ -162,7 +162,7 @@ The benchmark results (in `benchmarks/`) created by
 `python3 benchmarks.py` can be automatically converted to a markdown table using `python3 convert_benchmarks.py md` or to csv using `python3 convert_benchmarks.py csv` 
 
 ## Benchmarks
-The current benchmark results can be found in (benchmarks.csv)[benchmarks.csv] and (benchmarks.md)[benchmarks.md].
+The current benchmark results can be found in [benchmarks.csv](benchmarks.csv) or [benchmarks.md](benchmarks.md).
 
 All cycle counts were obtained at 24MHz to avoid wait cycles due to the speed of the memory controller.
 For most schemes we report minimum, maximum, and average cycle counts of 100 executions.
