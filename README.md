@@ -160,10 +160,10 @@ The **pqm4** framework automates testing and benchmarking for all schemes using 
 - `python3 benchmarks.py`: flashes the stack and speed binaries and writes the results to `benchmarks/stack/` and `benchmarks/speed/`. You may want to execute this several times for certain schemes for which the execution time varies significantly.
 
 In case you don't want to include all schemes, pass a list of schemes you want to include to any of the scripts, e.g., `python3 test.py newhope1024cca sphincs-shake256-128s`. 
-In case you want to exclude certain schemes pass `--exclude`, e.g., `python3 test.py --exclude saber`
+In case you want to exclude certain schemes pass `--exclude`, e.g., `python3 test.py --exclude saber`.
 
 The benchmark results (in `benchmarks/`) created by 
-`python3 benchmarks.py` can be automatically converted to a markdown table using `python3 convert_benchmarks.py md` or to csv using `python3 convert_benchmarks.py csv` 
+`python3 benchmarks.py` can be automatically converted to a markdown table using `python3 convert_benchmarks.py md` or to csv using `python3 convert_benchmarks.py csv`.
 
 ## Benchmarks
 The current benchmark results can be found in [benchmarks.csv](benchmarks.csv) or [benchmarks.md](benchmarks.md).
@@ -232,22 +232,39 @@ new subdirectory under `crypto_sign/`.
    The SHAKE and cSHAKE functions are also accessible via the absorb-squeezeblocks functions, which offer incremental
    output generation (but not incremental input handling).
 
-## Using optimized SHA384 and SHA512
+## Using optimized SHA-2
 
-  Some schemes submitted to NIST make use of SHA384 or SHA512 for hashing.
-  We've experimented with assembly-optimized SHA512, but found that the speed-up
+  Some schemes submitted to NIST use SHA-224, SHA-256, SHA-384, or SHA-512 for hashing.
+  We've experimented with assembly-optimized SHA-512, but found that the speed-up
   achievable with this compared to the C implementation from
   [SUPERCOP](http://bench.cr.yp.to/) is negligible
   when compiled using `arm-none-eabi-gcc-8.3.0`.
   For older compiler versions (e.g. `5.4.1`) hand-optimized assembly implementations
   were significantly faster.
-  We've therefore decided to only include a C version of SHA384 and SHA512.
+  We've therefore decided to only include a C version of the SHA-2 variants.
   The available functions are:
    ```c
-  int sha384(unsigned char *output, const unsigned char *input, unsigned long long inlen);
-  int sha512(unsigned char *output, const unsigned char *input, unsigned long long inlen);
-   ```
-  Implementations can make use of this by including `sha2.h`.
+  void sha224_inc_init(uint8_t *state);
+  void sha224_inc_blocks(uint8_t *state, const uint8_t *in, size_t inblocks);
+  void sha224_inc_finalize(uint8_t *out, uint8_t *state, const uint8_t *in, size_t inlen);
+  void sha224(uint8_t *out, const uint8_t *in, size_t inlen);
+
+  void sha256_inc_init(uint8_t *state);
+  void sha256_inc_blocks(uint8_t *state, const uint8_t *in, size_t inblocks);
+  void sha256_inc_finalize(uint8_t *out, uint8_t *state, const uint8_t *in, size_t inlen);
+  void sha256(uint8_t *out, const uint8_t *in, size_t inlen);
+
+  void sha384_inc_init(uint8_t *state);
+  void sha384_inc_blocks(uint8_t *state, const uint8_t *in, size_t inblocks);
+  void sha384_inc_finalize(uint8_t *out, uint8_t *state, const uint8_t *in, size_t inlen);
+  void sha384(uint8_t *out, const uint8_t *in, size_t inlen);
+
+  void sha512_inc_init(uint8_t *state);
+  void sha512_inc_blocks(uint8_t *state, const uint8_t *in, size_t inblocks);
+  void sha512_inc_finalize(uint8_t *out, uint8_t *state, const uint8_t *in, size_t inlen);
+  void sha512(uint8_t *out, const uint8_t *in, size_t inlen);
+  ```
+  Implementations can use these by including `sha2.h`.
 
 ## Using optimized AES
 
