@@ -48,7 +48,7 @@ Not all schemes have been migrated to Round 2 code yet. See below for an overvie
 | ntruhps2048677 | clean  | Round 2 |
 | ntruhps4096821 | clean  | Round 2 |
 | ntruhrss701 | m4        | Round 1 |
-| ntruhrss701 | ref       | Round 2 |
+| ntruhrss701 | clean     | Round 2 |
 | saber | m4              | Round 2 |
 | saber | ref             | Round 2 |
 | sikep751 | ref          | Round 1 |
