@@ -2,6 +2,8 @@
 ## Key Encapsulation Schemes
 | scheme | implementation | key generation [cycles] | encapsulation [cycles] | decapsulation [cycles] |
 | ------ | -------------- | ----------------------- | ---------------------- | ---------------------- |
+| firesaber (100 executions) | m4 | AVG: 1,448,776 <br /> MIN: 1,448,776 <br /> MAX: 1,448,776 | AVG: 1,786,930 <br /> MIN: 1,786,930 <br /> MAX: 1,786,930 | AVG: 1,853,339 <br /> MIN: 1,853,339 <br /> MAX: 1,853,339 |
+| firesaber (100 executions) | ref | AVG: 3,815,672 <br /> MIN: 3,815,672 <br /> MAX: 3,815,672 | AVG: 4,745,405 <br /> MIN: 4,745,405 <br /> MAX: 4,745,405 | AVG: 5,402,295 <br /> MIN: 5,402,295 <br /> MAX: 5,402,295 |
 | frodokem640aes (100 executions) | m4 | AVG: 41,840,515 <br /> MIN: 41,840,515 <br /> MAX: 41,840,515 | AVG: 45,248,630 <br /> MIN: 45,248,630 <br /> MAX: 45,248,630 | AVG: 45,394,452 <br /> MIN: 45,394,452 <br /> MAX: 45,394,452 |
 | frodokem640shake (100 executions) | m4 | AVG: 81,901,706 <br /> MIN: 81,901,706 <br /> MAX: 81,901,706 | AVG: 86,306,119 <br /> MIN: 86,306,119 <br /> MAX: 86,306,119 | AVG: 86,446,661 <br /> MIN: 86,446,661 <br /> MAX: 86,446,661 |
 | frodokem640shake (100 executions) | opt | AVG: 94,170,349 <br /> MIN: 94,170,349 <br /> MAX: 94,170,349 | AVG: 107,936,133 <br /> MIN: 107,936,133 <br /> MAX: 107,936,133 | AVG: 108,301,160 <br /> MIN: 108,301,160 <br /> MAX: 108,301,160 |
@@ -11,6 +13,8 @@
 | kyber512 (100 executions) | m4 | AVG: 514,291 <br /> MIN: 513,992 <br /> MAX: 514,547 | AVG: 652,769 <br /> MIN: 652,470 <br /> MAX: 653,025 | AVG: 621,245 <br /> MIN: 620,946 <br /> MAX: 621,501 |
 | kyber768 (100 executions) | clean | AVG: 1,196,692 <br /> MIN: 1,196,142 <br /> MAX: 1,197,186 | AVG: 1,489,909 <br /> MIN: 1,489,359 <br /> MAX: 1,490,403 | AVG: 1,613,744 <br /> MIN: 1,613,194 <br /> MAX: 1,614,238 |
 | kyber768 (100 executions) | m4 | AVG: 976,757 <br /> MIN: 976,205 <br /> MAX: 977,165 | AVG: 1,146,556 <br /> MIN: 1,146,021 <br /> MAX: 1,146,937 | AVG: 1,094,849 <br /> MIN: 1,094,314 <br /> MAX: 1,095,229 |
+| lightsaber (100 executions) | m4 | AVG: 459,965 <br /> MIN: 459,965 <br /> MAX: 459,965 | AVG: 651,273 <br /> MIN: 651,273 <br /> MAX: 651,273 | AVG: 678,810 <br /> MIN: 678,810 <br /> MAX: 678,810 |
+| lightsaber (100 executions) | ref | AVG: 1,051,530 <br /> MIN: 1,051,530 <br /> MAX: 1,051,530 | AVG: 1,538,646 <br /> MIN: 1,538,646 <br /> MAX: 1,538,646 | AVG: 1,861,934 <br /> MIN: 1,861,934 <br /> MAX: 1,861,934 |
 | newhope1024cca (100 executions) | m4 | AVG: 1,219,655 <br /> MIN: 1,219,347 <br /> MAX: 1,219,902 | AVG: 1,901,160 <br /> MIN: 1,900,853 <br /> MAX: 1,901,408 | AVG: 1,926,151 <br /> MIN: 1,925,843 <br /> MAX: 1,926,398 |
 | newhope1024cca (100 executions) | ref | AVG: 1,458,103 <br /> MIN: 1,457,793 <br /> MAX: 1,458,423 | AVG: 2,260,746 <br /> MIN: 2,260,436 <br /> MAX: 2,261,066 | AVG: 2,406,717 <br /> MIN: 2,406,407 <br /> MAX: 2,407,038 |
 | ntruhps2048509 (100 executions) | clean | AVG: 107,331,110 <br /> MIN: 107,331,110 <br /> MAX: 107,331,110 | AVG: 2,876,597 <br /> MIN: 2,876,597 <br /> MAX: 2,876,597 | AVG: 7,495,670 <br /> MIN: 7,495,670 <br /> MAX: 7,495,670 |
@@ -18,8 +22,8 @@
 | ntruhps4096821 (100 executions) | clean | AVG: 289,736,570 <br /> MIN: 289,736,570 <br /> MAX: 289,736,570 | AVG: 7,046,106 <br /> MIN: 7,046,106 <br /> MAX: 7,046,106 | AVG: 19,262,764 <br /> MIN: 19,262,764 <br /> MAX: 19,262,764 |
 | ntruhrss701 (100 executions) | clean | AVG: 208,992,073 <br /> MIN: 208,992,073 <br /> MAX: 208,992,073 | AVG: 4,656,818 <br /> MIN: 4,656,818 <br /> MAX: 4,656,818 | AVG: 14,142,725 <br /> MIN: 14,142,725 <br /> MAX: 14,142,725 |
 | ntruhrss701 (100 executions) | m4 | AVG: 151,375,242 <br /> MIN: 151,375,242 <br /> MAX: 151,375,242 | AVG: 404,638 <br /> MIN: 404,638 <br /> MAX: 404,638 | AVG: 822,834 <br /> MIN: 822,834 <br /> MAX: 822,834 |
-| saber (100 executions) | m4 | AVG: 897,150 <br /> MIN: 897,150 <br /> MAX: 897,150 | AVG: 1,161,259 <br /> MIN: 1,161,259 <br /> MAX: 1,161,259 | AVG: 1,203,120 <br /> MIN: 1,203,120 <br /> MAX: 1,203,120 |
-| saber (100 executions) | ref | AVG: 5,914,197 <br /> MIN: 5,914,197 <br /> MAX: 5,914,197 | AVG: 7,849,411 <br /> MIN: 7,849,411 <br /> MAX: 7,849,411 | AVG: 9,559,784 <br /> MIN: 9,559,784 <br /> MAX: 9,559,784 |
+| saber (100 executions) | m4 | AVG: 896,035 <br /> MIN: 896,035 <br /> MAX: 896,035 | AVG: 1,161,849 <br /> MIN: 1,161,849 <br /> MAX: 1,161,849 | AVG: 1,204,633 <br /> MIN: 1,204,633 <br /> MAX: 1,204,633 |
+| saber (100 executions) | ref | AVG: 2,226,935 <br /> MIN: 2,226,935 <br /> MAX: 2,226,935 | AVG: 2,936,240 <br /> MIN: 2,936,240 <br /> MAX: 2,936,240 | AVG: 3,424,601 <br /> MIN: 3,424,601 <br /> MAX: 3,424,601 |
 | sikep751 (1 executions) | ref | AVG: 3,297,085,829 <br /> MIN: 3,297,085,829 <br /> MAX: 3,297,085,829 | AVG: 5,344,139,655 <br /> MIN: 5,344,139,655 <br /> MAX: 5,344,139,655 | AVG: 5,742,073,708 <br /> MIN: 5,742,073,708 <br /> MAX: 5,742,073,708 |
 | sntrup4591761 (100 executions) | ref | AVG: 133,300,321 <br /> MIN: 133,300,321 <br /> MAX: 133,300,321 | AVG: 9,393,837 <br /> MIN: 9,393,837 <br /> MAX: 9,393,837 | AVG: 27,432,946 <br /> MIN: 27,432,946 <br /> MAX: 27,432,946 |
 ## Signature Schemes
@@ -35,6 +39,8 @@
 ## Key Encapsulation Schemes
 | Scheme | Implementation | Key Generation [bytes] | Encapsulation [bytes] | Decapsulation [bytes] |
 | ------ | -------------- | ---------------------- | --------------------- | --------------------- |
+| firesaber | m4 | 20,144 | 23,008 | 24,592 |
+| firesaber | ref | 20,144 | 23,008 | 24,488 |
 | frodokem640aes | m4 | 31,760 | 52,088 | 62,456 |
 | frodokem640shake | m4 | 26,384 | 41,584 | 51,952 |
 | frodokem640shake | opt | 36,640 | 58,352 | 68,720 |
@@ -44,6 +50,8 @@
 | kyber512 | m4 | 2,952 | 2,552 | 2,560 |
 | kyber768 | clean | 10,576 | 13,776 | 14,864 |
 | kyber768 | m4 | 3,848 | 3,128 | 3,072 |
+| lightsaber | m4 | 9,656 | 11,392 | 12,136 |
+| lightsaber | ref | 10,024 | 11,672 | 12,504 |
 | newhope1024cca | m4 | 11,192 | 17,448 | 19,688 |
 | newhope1024cca | ref | 11,192 | 17,448 | 19,656 |
 | ntruhps2048509 | clean | 11,784 | 6,896 | 5,192 |
@@ -52,7 +60,7 @@
 | ntruhrss701 | clean | 14,216 | 7,420 | 8,612 |
 | ntruhrss701 | m4 | 23,396 | 19,500 | 22,148 |
 | saber | m4 | 13,256 | 15,544 | 16,640 |
-| saber | ref | 12,624 | 15,016 | 16,008 |
+| saber | ref | 13,624 | 15,912 | 17,008 |
 | sikep751 | ref | 11,624 | 11,776 | 12,352 |
 | sntrup4591761 | ref | 14,656 | 7,304 | 12,656 |
 ## Signature Schemes
@@ -68,6 +76,8 @@
 ## Key Encapsulation Schemes
 | Scheme | Implementation | Key Generation [%] | Encapsulation [%] | Decapsulation [%] |
 | ------ | -------------- | ------------------ | ----------------- | ----------------- |
+| firesaber | m4 | 49.4% | 49.3% | 40.0% |
+| firesaber | ref | 18.8% | 18.6% | 13.7% |
 | frodokem640aes | m4 | 81.0% | 78.3% | 78.0% |
 | frodokem640shake | m4 | 90.4% | 88.8% | 88.7% |
 | frodokem640shake | opt | 79.8% | 71.0% | 70.8% |
@@ -77,6 +87,8 @@
 | kyber512 | m4 | 68.9% | 72.5% | 61.6% |
 | kyber768 | clean | 57.0% | 56.3% | 44.0% |
 | kyber768 | m4 | 69.7% | 73.0% | 64.8% |
+| lightsaber | m4 | 56.5% | 55.7% | 42.0% |
+| lightsaber | ref | 24.7% | 23.6% | 15.3% |
 | newhope1024cca | m4 | 71.2% | 70.4% | 59.5% |
 | newhope1024cca | ref | 59.6% | 59.2% | 47.7% |
 | ntruhps2048509 | clean | 0.0% | 0.9% | 1.4% |
@@ -84,8 +96,8 @@
 | ntruhps4096821 | clean | 0.0% | 0.6% | 0.9% |
 | ntruhrss701 | clean | 0.0% | 0.8% | 1.1% |
 | ntruhrss701 | m4 | 0.1% | 26.4% | 8.1% |
-| saber | m4 | 52.9% | 52.9% | 41.5% |
-| saber | ref | 8.0% | 7.8% | 5.2% |
+| saber | m4 | 53.0% | 52.9% | 41.5% |
+| saber | ref | 21.3% | 20.9% | 14.6% |
 | sikep751 | ref | 0.0% | 0.0% | 0.0% |
 | sntrup4591761 | ref | 0.0% | 0.3% | 0.1% |
 ## Signature Schemes
@@ -101,6 +113,8 @@
 ## Key Encapsulation Schemes
 | Scheme | Implementation | .text [bytes] | .data [bytes] | .bss [bytes] | Total [bytes] |
 | ------ | -------------- | ------------- | ------------- | ------------ | ------------- |
+| firesaber | m4 | 44,184 | 0 | 0 | 44,184 |
+| firesaber | ref | 12,244 | 0 | 0 | 12,244 |
 | frodokem640aes | m4 | 15,616 | 28 | 0 | 15,644 |
 | frodokem640shake | m4 | 15,648 | 28 | 0 | 15,676 |
 | frodokem640shake | opt | 13,908 | 28 | 0 | 13,936 |
@@ -110,6 +124,8 @@
 | kyber512 | m4 | 11,000 | 0 | 0 | 11,000 |
 | kyber768 | clean | 4,600 | 512 | 0 | 5,112 |
 | kyber768 | m4 | 11,400 | 0 | 0 | 11,400 |
+| lightsaber | m4 | 44,916 | 0 | 0 | 44,916 |
+| lightsaber | ref | 12,976 | 0 | 0 | 12,976 |
 | newhope1024cca | m4 | 7,048 | 6,144 | 0 | 13,192 |
 | newhope1024cca | ref | 5,652 | 6,144 | 0 | 11,796 |
 | ntruhps2048509 | clean | 6,916 | 0 | 0 | 6,916 |
@@ -117,8 +133,8 @@
 | ntruhps4096821 | clean | 6,684 | 0 | 0 | 6,684 |
 | ntruhrss701 | clean | 6,828 | 0 | 0 | 6,828 |
 | ntruhrss701 | m4 | 132,488 | 0 | 0 | 132,488 |
-| saber | m4 | 44,516 | 0 | 0 | 44,516 |
-| saber | ref | 5,624 | 0 | 0 | 5,624 |
+| saber | m4 | 44,468 | 0 | 0 | 44,468 |
+| saber | ref | 12,524 | 0 | 0 | 12,524 |
 | sikep751 | ref | 20,992 | 0 | 0 | 20,992 |
 | sntrup4591761 | ref | 6,452 | 0 | 0 | 6,452 |
 ## Signature Schemes
