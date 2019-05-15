@@ -54,7 +54,10 @@ Not all schemes have been migrated to Round 2 code yet. See below for an overvie
 | ntruhrss701 | clean     | Round 2 |
 | saber | m4              | Round 2 |
 | saber | ref             | Round 2 |
-| sikep751 | ref          | Round 1 |
+| sikep434 | opt          | Round 2 |
+| sikep503 | opt          | Round 2 |
+| sikep610 | opt          | Round 2 |
+| sikep751 | opt          | Round 2 |
 | sntrup4591761 | ref     | Round 1 |
 | dilithium | m4        | Round 1 |
 | dilithium | ref       | Round 1 |

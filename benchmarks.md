@@ -27,7 +27,10 @@
 | ntruhrss701 (100 executions) | m4 | AVG: 151,375,242 <br /> MIN: 151,375,242 <br /> MAX: 151,375,242 | AVG: 404,638 <br /> MIN: 404,638 <br /> MAX: 404,638 | AVG: 822,834 <br /> MIN: 822,834 <br /> MAX: 822,834 |
 | saber (100 executions) | m4 | AVG: 896,035 <br /> MIN: 896,035 <br /> MAX: 896,035 | AVG: 1,161,849 <br /> MIN: 1,161,849 <br /> MAX: 1,161,849 | AVG: 1,204,633 <br /> MIN: 1,204,633 <br /> MAX: 1,204,633 |
 | saber (100 executions) | ref | AVG: 2,226,935 <br /> MIN: 2,226,935 <br /> MAX: 2,226,935 | AVG: 2,936,240 <br /> MIN: 2,936,240 <br /> MAX: 2,936,240 | AVG: 3,424,601 <br /> MIN: 3,424,601 <br /> MAX: 3,424,601 |
-| sikep751 (1 executions) | ref | AVG: 3,297,085,829 <br /> MIN: 3,297,085,829 <br /> MAX: 3,297,085,829 | AVG: 5,344,139,655 <br /> MIN: 5,344,139,655 <br /> MAX: 5,344,139,655 | AVG: 5,742,073,708 <br /> MIN: 5,742,073,708 <br /> MAX: 5,742,073,708 |
+| sikep434 (1 executions) | opt | AVG: 650,735,516 <br /> MIN: 650,735,516 <br /> MAX: 650,735,516 | AVG: 1,065,631,547 <br /> MIN: 1,065,631,547 <br /> MAX: 1,065,631,547 | AVG: 1,136,703,605 <br /> MIN: 1,136,703,605 <br /> MAX: 1,136,703,605 |
+| sikep503 (1 executions) | opt | AVG: 985,032,805 <br /> MIN: 985,032,805 <br /> MAX: 985,032,805 | AVG: 1,623,893,046 <br /> MIN: 1,623,893,046 <br /> MAX: 1,623,893,046 | AVG: 1,726,538,272 <br /> MIN: 1,726,538,272 <br /> MAX: 1,726,538,272 |
+| sikep610 (1 executions) | opt | AVG: 1,819,652,559 <br /> MIN: 1,819,652,559 <br /> MAX: 1,819,652,559 | AVG: 3,348,669,891 <br /> MIN: 3,348,669,891 <br /> MAX: 3,348,669,891 | AVG: 3,368,114,366 <br /> MIN: 3,368,114,366 <br /> MAX: 3,368,114,366 |
+| sikep751 (1 executions) | opt | AVG: 3,296,225,272 <br /> MIN: 3,296,225,272 <br /> MAX: 3,296,225,272 | AVG: 5,347,056,677 <br /> MIN: 5,347,056,677 <br /> MAX: 5,347,056,677 | AVG: 5,742,522,048 <br /> MIN: 5,742,522,048 <br /> MAX: 5,742,522,048 |
 | sntrup4591761 (100 executions) | ref | AVG: 133,300,321 <br /> MIN: 133,300,321 <br /> MAX: 133,300,321 | AVG: 9,393,837 <br /> MIN: 9,393,837 <br /> MAX: 9,393,837 | AVG: 27,432,946 <br /> MIN: 27,432,946 <br /> MAX: 27,432,946 |
 ## Signature Schemes
 | scheme | implementation | key generation [cycles] | sign [cycles] | verify [cycles] |
@@ -67,7 +70,10 @@
 | ntruhrss701 | m4 | 23,396 | 19,500 | 22,148 |
 | saber | m4 | 13,256 | 15,544 | 16,640 |
 | saber | ref | 13,624 | 15,912 | 17,008 |
-| sikep751 | ref | 11,624 | 11,776 | 12,352 |
+| sikep434 | opt | 6,776 | 7,088 | 7,424 |
+| sikep503 | opt | 6,848 | 7,232 | 7,600 |
+| sikep610 | opt | 10,080 | 10,512 | 10,968 |
+| sikep751 | opt | 11,624 | 11,768 | 12,328 |
 | sntrup4591761 | ref | 14,656 | 7,304 | 12,656 |
 ## Signature Schemes
 | Scheme | Implementation | Key Generation [bytes] | Sign [bytes] | Verify [bytes] |
@@ -107,7 +113,10 @@
 | ntruhrss701 | m4 | 0.1% | 26.4% | 8.1% |
 | saber | m4 | 53.0% | 52.9% | 41.5% |
 | saber | ref | 21.3% | 20.9% | 14.6% |
-| sikep751 | ref | 0.0% | 0.0% | 0.0% |
+| sikep434 | opt | 0.0% | 0.0% | 0.0% |
+| sikep503 | opt | 0.0% | 0.0% | 0.0% |
+| sikep610 | opt | 0.0% | 0.0% | 0.0% |
+| sikep751 | opt | 0.0% | 0.0% | 0.0% |
 | sntrup4591761 | ref | 0.0% | 0.3% | 0.1% |
 ## Signature Schemes
 | Scheme | Implementation | Key Generation [%] | Sign [%] | Verify [%] |
@@ -147,7 +156,10 @@
 | ntruhrss701 | m4 | 132,488 | 0 | 0 | 132,488 |
 | saber | m4 | 44,468 | 0 | 0 | 44,468 |
 | saber | ref | 12,524 | 0 | 0 | 12,524 |
-| sikep751 | ref | 20,992 | 0 | 0 | 20,992 |
+| sikep434 | opt | 30,368 | 0 | 0 | 30,368 |
+| sikep503 | opt | 31,376 | 0 | 0 | 31,376 |
+| sikep610 | opt | 20,064 | 0 | 0 | 20,064 |
+| sikep751 | opt | 21,692 | 0 | 0 | 21,692 |
 | sntrup4591761 | ref | 6,452 | 0 | 0 | 6,452 |
 ## Signature Schemes
 | Scheme | Implementation | .text [bytes] | .data [bytes] | .bss [bytes] | Total [bytes] |
