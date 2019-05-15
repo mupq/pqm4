@@ -22,7 +22,10 @@ class M4Settings(mupq.PlatformSettings):
     skip_list = (
         {'scheme': 'frodokem640aes', 'implementation': 'clean'},
         {'scheme': 'frodokem976aes', 'implementation': 'clean'},
-        {'scheme': 'frodokem1344aes', 'implementation': 'clean'}
+        {'scheme': 'frodokem1344aes', 'implementation': 'clean'},
+        {'scheme': 'frodokem640shake', 'implementation': 'clean'},
+        {'scheme': 'frodokem976shake', 'implementation': 'clean'},
+        {'scheme': 'frodokem1344shake', 'implementation': 'clean'}
     )
 
 
