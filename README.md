@@ -173,7 +173,7 @@ For most schemes we report minimum, maximum, and average cycle counts of 100 exe
 For some particularly slow schemes we reduce the number of executions; the number of
 executions is reported in parentheses.
 
-The numbers were obtained with `arm-none-eabi-gcc 8.3.0` and libopencm3
+The numbers were obtained with `arm-none-eabi-gcc 9.1.0` and libopencm3
 [@8b1ac58](https://github.com/libopencm3/libopencm3/commit/8b1ac585dfd6eb13938f2090bff6a78b836a0452).
 
 The code-size measurements only include the code that is provided by the scheme implementation, i.e., exclude common code like hashing or C standard library functions.
