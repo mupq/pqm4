@@ -26,7 +26,10 @@ ntruhrss701 (100 executions),clean,208992073,208992073,208992073,4656818,4656818
 ntruhrss701 (100 executions),m4,151375242,151375242,151375242,404638,404638,404638,822834,822834,822834
 saber (100 executions),m4,896035,896035,896035,1161849,1161849,1161849,1204633,1204633,1204633
 saber (100 executions),ref,2226935,2226935,2226935,2936240,2936240,2936240,3424601,3424601,3424601
-sikep751 (1 executions),ref,3297085829,3297085829,3297085829,5344139655,5344139655,5344139655,5742073708,5742073708,5742073708
+sikep434 (1 executions),opt,650735516,650735516,650735516,1065631547,1065631547,1065631547,1136703605,1136703605,1136703605
+sikep503 (1 executions),opt,985032805,985032805,985032805,1623893046,1623893046,1623893046,1726538272,1726538272,1726538272
+sikep610 (1 executions),opt,1819652559,1819652559,1819652559,3348669891,3348669891,3348669891,3368114366,3368114366,3368114366
+sikep751 (1 executions),opt,3296225272,3296225272,3296225272,5347056677,5347056677,5347056677,5742522048,5742522048,5742522048
 sntrup4591761 (100 executions),ref,133300321,133300321,133300321,9393837,9393837,9393837,27432946,27432946,27432946
 Signature Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [cycles] (mean),Key Generation [cycles] (min),Key Generation [cycles] (max),Sign [cycles] (mean),Sign [cycles] (min),Sign [cycles] (max),Verify [cycles] (mean),Verify [cycles] (min),Verify [cycles] (max)
@@ -64,7 +67,10 @@ ntruhrss701,clean,14216,7420,8612,,,,,,
 ntruhrss701,m4,23396,19500,22148,,,,,,
 saber,m4,13256,15544,16640,,,,,,
 saber,ref,13624,15912,17008,,,,,,
-sikep751,ref,11624,11776,12352,,,,,,
+sikep434,opt,6776,7088,7424,,,,,,
+sikep503,opt,6848,7232,7600,,,,,,
+sikep610,opt,10080,10512,10968,,,,,,
+sikep751,opt,11624,11768,12328,,,,,,
 sntrup4591761,ref,14656,7304,12656,,,,,,
 Signature Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [bytes],Sign [bytes],Verify [bytes],,,,,,
@@ -102,7 +108,10 @@ ntruhrss701,clean,0.0,0.8,1.1,,,,,,
 ntruhrss701,m4,0.1,26.4,8.1,,,,,,
 saber,m4,53.0,52.9,41.5,,,,,,
 saber,ref,21.3,20.9,14.6,,,,,,
-sikep751,ref,0.0,0.0,0.0,,,,,,
+sikep434,opt,0.0,0.0,0.0,,,,,,
+sikep503,opt,0.0,0.0,0.0,,,,,,
+sikep610,opt,0.0,0.0,0.0,,,,,,
+sikep751,opt,0.0,0.0,0.0,,,,,,
 sntrup4591761,ref,0.0,0.3,0.1,,,,,,
 Signature Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [%],Sign [%],Verify [%],,,,,,
@@ -140,7 +149,10 @@ ntruhrss701,clean,6828,0,0,6828,,,,,
 ntruhrss701,m4,132488,0,0,132488,,,,,
 saber,m4,44468,0,0,44468,,,,,
 saber,ref,12524,0,0,12524,,,,,
-sikep751,ref,20992,0,0,20992,,,,,
+sikep434,opt,30368,0,0,30368,,,,,
+sikep503,opt,31376,0,0,31376,,,,,
+sikep610,opt,20064,0,0,20064,,,,,
+sikep751,opt,21692,0,0,21692,,,,,
 sntrup4591761,ref,6452,0,0,6452,,,,,
 Signature Schemes,,,,,,,,,,
 Scheme,Implementation,.text [bytes],.data [bytes],.bss [bytes],Total [bytes],,,,,
