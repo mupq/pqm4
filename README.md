@@ -31,9 +31,9 @@ Not all schemes have been migrated to Round 2 code yet. See below for an overvie
 | ------ | -------------- | ------------ |
 | firesaber | m4          | Round 2 |
 | firesaber | ref         | Round 2 |
-| frodokem640aes | m4     | Round 1 |
-| frodokem640cshake | m4  | Round 1 |
-| frodokem640cshake | opt | Round 1 |
+| frodokem640aes | m4     | **Round 1** |
+| frodokem640cshake | m4  | **Round 1** |
+| frodokem640cshake | opt | **Round 1** |
 | kyber1024 | m4          | Round 2 |
 | kyber1024 | clean       | Round 2 |
 | kyber512 | m4           | Round 2 |
@@ -45,12 +45,12 @@ Not all schemes have been migrated to Round 2 code yet. See below for an overvie
 | lac128 | ref            | Round 2 |
 | lac192 | ref            | Round 2 |
 | lac256 | ref            | Round 2 |
-| newhope1024cca   | m4   | Round 1 |
-| newhope1024cca   | ref  | Round 1 |
+| newhope1024cca   | m4   | **Round 1** |
+| newhope1024cca   | ref  | **Round 1** |
 | ntruhps2048509 | clean  | Round 2 |
 | ntruhps2048677 | clean  | Round 2 |
 | ntruhps4096821 | clean  | Round 2 |
-| ntruhrss701 | m4        | Round 1 |
+| ntruhrss701 | m4        | **Round 1** |
 | ntruhrss701 | clean     | Round 2 |
 | saber | m4              | Round 2 |
 | saber | ref             | Round 2 |
@@ -58,12 +58,12 @@ Not all schemes have been migrated to Round 2 code yet. See below for an overvie
 | sikep503 | opt          | Round 2 |
 | sikep610 | opt          | Round 2 |
 | sikep751 | opt          | Round 2 |
-| sntrup4591761 | ref     | Round 1 |
-| dilithium | m4        | Round 1 |
-| dilithium | ref       | Round 1 |
-| qTesla-I | ref        | Round 1 |
-| qTesla-III-size | ref | Round 1 |
-| qTesla-III-speed| ref | Round 1 |
+| sntrup4591761 | ref     | **Round 1** |
+| dilithium | m4        | **Round 1** |
+| dilithium | ref       | **Round 1** |
+| qTesla-I | ref        | **Round 1** |
+| qTesla-III-size | ref | **Round 1** |
+| qTesla-III-speed| ref | **Round 1** |
 | sphincs-shake256-128f-simple | clean | Round 2|
 
 
