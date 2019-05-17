@@ -38,7 +38,42 @@ dilithium (100 executions),ref,2753926,2753249,2755062,16545038,5001347,11236703
 qTesla-I (100 executions),ref,17620191,7796886,51360640,7988638,1406175,37213645,1051553,1047049,1074466
 qTesla-III-size (100 executions),ref,55273328,22103613,178866064,23659201,3184719,115077824,2257931,2250078,2286733
 qTesla-III-speed (100 executions),ref,32775258,19878936,113404261,9477183,3133995,41726976,2209618,2204032,2236124
-sphincs-shake256-128f-simple (1 executions),clean,65652221,65652221,65652221,2069365694,2069365694,2069365694,82204019,82204019,82204019
+sphincs-haraka-128f-robust (1 executions),clean,125493736,125493736,125493736,4720156509,4720156509,4720156509,196103540,196103540,196103540
+sphincs-haraka-128f-simple (1 executions),clean,91770060,91770060,91770060,3286409908,3286409908,3286409908,136522968,136522968,136522968
+sphincs-haraka-128s-robust (1 executions),clean,3994078037,3994078037,3994078037,76355806675,76355806675,76355806675,90503982,90503982,90503982
+sphincs-haraka-128s-simple (1 executions),clean,2913690564,2913690564,2913690564,52263758103,52263758103,52263758103,62469217,62469217,62469217
+sphincs-haraka-192f-robust (1 executions),clean,186298605,186298605,186298605,5628829365,5628829365,5628829365,312841777,312841777,312841777
+sphincs-haraka-192f-simple (1 executions),clean,135187443,135187443,135187443,3878154505,3878154505,3878154505,216987235,216987235,216987235
+sphincs-haraka-192s-robust (1 executions),clean,5940452620,5940452620,5940452620,5940452620,5940452620,5940452620,190010600183,190010600183,190010600183
+sphincs-haraka-192s-simple (1 executions),clean,4303035491,4303035491,4303035491,115536324243,115536324243,115536324243,86699644,86699644,86699644
+sphincs-haraka-256f-robust (1 executions),clean,498410260,498410260,498410260,14072875513,14072875513,14072875513,333271171,333271171,333271171
+sphincs-haraka-256f-simple (1 executions),clean,359364375,359364375,359364375,9598675448,9598675448,9598675448,231877653,231877653,231877653
+sphincs-haraka-256s-robust (1 executions),clean,7963824050,7963824050,7963824050,126866112920,126866112920,126866112920,182132900,182132900,182132900
+sphincs-haraka-256s-simple (1 executions),clean,5738088144,5738088144,5738088144,84936048049,84936048049,84936048049,122757191,122757191,122757191
+sphincs-sha256-128f-robust (1 executions),clean,31756635,31756635,31756635,952977815,952977815,952977815,42386275,42386275,42386275
+sphincs-sha256-128f-simple (1 executions),clean,16552135,16552135,16552135,521963206,521963206,521963206,20850719,20850719,20850719
+sphincs-sha256-128s-robust (1 executions),clean,1016232559,1016232559,1016232559,14062448255,14062448255,14062448255,17573655,17573655,17573655
+sphincs-sha256-128s-simple (1 executions),clean,529857276,529857276,529857276,7879641509,7879641509,7879641509,9001108,9001108,9001108
+sphincs-sha256-192f-robust (1 executions),clean,46992024,46992024,46992024,1301607186,1301607186,1301607186,70469375,70469375,70469375
+sphincs-sha256-192f-simple (1 executions),clean,24355501,24355501,24355501,687693467,687693467,687693467,35097457,35097457,35097457
+sphincs-sha256-192s-robust (1 executions),clean,1503938303,1503938303,1503938303,34385423488,34385423488,34385423488,26669148,26669148,26669148
+sphincs-sha256-192s-simple (1 executions),clean,779440632,779440632,779440632,19040306594,19040306594,19040306594,13893351,13893351,13893351
+sphincs-sha256-256f-robust (1 executions),clean,172077921,172077921,172077921,4015978844,4015978844,4015978844,99321414,99321414,99321414
+sphincs-sha256-256f-simple (1 executions),clean,64184968,64184968,64184968,1554168401,1554168401,1554168401,36182488,36182488,36182488
+sphincs-sha256-256s-robust (1 executions),clean,2752951213,2752951213,2752951213,33843524630,33843524630,33843524630,51684917,51684917,51684917
+sphincs-sha256-256s-simple (1 executions),clean,1026709354,1026709354,1026709354,13261223456,13261223456,13261223456,18016773,18016773,18016773
+sphincs-shake256-128f-robust (1 executions),clean,125414981,125414981,125414981,3768632975,3768632975,3768632975,170079038,170079038,170079038
+sphincs-shake256-128f-simple (1 executions),clean,65652221,65652221,65652221,2071760810,2071760810,2071760810,86340855,86340855,86340855
+sphincs-shake256-128s-robust (1 executions),clean,4014132491,4014132491,4014132491,55743252284,55743252284,55743252284,67161474,67161474,67161474
+sphincs-shake256-128s-simple (1 executions),clean,2101290023,2101290023,2101290023,31171364976,31171364976,31171364976,36490062,36490062,36490062
+sphincs-shake256-192f-robust (1 executions),clean,183459272,183459272,183459272,4900079285,4900079285,4900079285,259335291,259335291,259335291
+sphincs-shake256-192f-simple (1 executions),clean,96097954,96097954,96097954,2618217124,2618217124,2618217124,135957606,135957606,135957606
+sphincs-shake256-192s-robust (1 executions),clean,5871537061,5871537061,5871537061,113206409590,113206409590,113206409590,101442435,101442435,101442435
+sphincs-shake256-192s-simple (1 executions),clean,3075539641,3075539641,3075539641,64888702756,64888702756,64888702756,52870591,52870591,52870591
+sphincs-shake256-256f-robust (1 executions),clean,484212750,484212750,484212750,10711617658,10711617658,10711617658,264321983,264321983,264321983
+sphincs-shake256-256f-simple (1 executions),clean,253708675,253708675,253708675,5805228113,5805228113,5805228113,135723122,135723122,135723122
+sphincs-shake256-256s-robust (1 executions),clean,7746063229,7746063229,7746063229,88108495856,88108495856,88108495856,127277532,127277532,127277532
+sphincs-shake256-256s-simple (1 executions),clean,4058075714,4058075714,4058075714,48363054240,48363054240,48363054240,64507752,64507752,64507752
 Memory Evaluation,,,,,,,,,,
 Key Encapsulation Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [bytes],Encapsulation [bytes],Decapsulation [bytes],,,,,,
@@ -79,7 +114,42 @@ dilithium,ref,50960,86784,54904,,,,,,
 qTesla-I,ref,22592,29440,23096,,,,,,
 qTesla-III-size,ref,44088,58248,45752,,,,,,
 qTesla-III-speed,ref,44088,58144,45736,,,,,,
+sphincs-haraka-128f-robust,clean,2424,2400,2772,,,,,,
+sphincs-haraka-128f-simple,clean,2316,2400,2772,,,,,,
+sphincs-haraka-128s-robust,clean,2608,2568,2092,,,,,,
+sphincs-haraka-128s-simple,clean,2608,2568,2120,,,,,,
+sphincs-haraka-192f-robust,clean,3768,3872,4128,,,,,,
+sphincs-haraka-192f-simple,clean,3768,3872,4100,,,,,,
+sphincs-haraka-192s-robust,clean,4112,4008,3472,,,,,,
+sphincs-haraka-192s-simple,clean,4112,4008,3472,,,,,,
+sphincs-haraka-256f-robust,clean,5752,5792,5364,,,,,,
+sphincs-haraka-256f-simple,clean,5832,5792,5392,,,,,,
+sphincs-haraka-256s-robust,clean,6104,5936,5336,,,,,,
+sphincs-haraka-256s-simple,clean,6104,5936,5416,,,,,,
+sphincs-sha256-128f-robust,clean,2248,2408,2704,,,,,,
+sphincs-sha256-128f-simple,clean,2192,2248,2544,,,,,,
+sphincs-sha256-128s-robust,clean,2464,2496,2024,,,,,,
+sphincs-sha256-128s-simple,clean,2304,2336,1872,,,,,,
+sphincs-sha256-192f-robust,clean,3784,3808,4040,,,,,,
+sphincs-sha256-192f-simple,clean,3512,3640,3872,,,,,,
+sphincs-sha256-192s-robust,clean,4048,3944,3384,,,,,,
+sphincs-sha256-192s-simple,clean,3880,3776,3216,,,,,,
+sphincs-sha256-256f-robust,clean,5776,5736,5360,,,,,,
+sphincs-sha256-256f-simple,clean,5600,5560,5184,,,,,,
+sphincs-sha256-256s-robust,clean,6048,5880,5360,,,,,,
+sphincs-sha256-256s-simple,clean,5872,5704,5080,,,,,,
+sphincs-shake256-128f-robust,clean,2272,2368,2664,,,,,,
 sphincs-shake256-128f-simple,clean,2208,2368,2664,,,,,,
+sphincs-shake256-128s-robust,clean,2424,2456,2000,,,,,,
+sphincs-shake256-128s-simple,clean,2424,2456,2000,,,,,,
+sphincs-shake256-192f-robust,clean,3744,3768,4000,,,,,,
+sphincs-shake256-192f-simple,clean,3640,3768,3999,,,,,,
+sphincs-shake256-192s-robust,clean,4008,3904,3448,,,,,,
+sphincs-shake256-192s-simple,clean,4008,3904,3448,,,,,,
+sphincs-shake256-256f-robust,clean,5736,5696,5320,,,,,,
+sphincs-shake256-256f-simple,clean,5736,5696,5320,,,,,,
+sphincs-shake256-256s-robust,clean,6008,5840,5320,,,,,,
+sphincs-shake256-256s-simple,clean,6008,5840,5320,,,,,,
 Hashing Evaluation,,,,,,,,,,
 Key Encapsulation Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [%],Encapsulation [%],Decapsulation [%],,,,,,
@@ -120,7 +190,42 @@ dilithium,ref,61.4,25.1,50.9,,,,,,
 qTesla-I,ref,63.3,28.2,32.0,,,,,,
 qTesla-III-size,ref,65.9,23.4,27.7,,,,,,
 qTesla-III-speed,ref,73.0,24.9,28.2,,,,,,
-sphincs-shake256-128f-simple,clean,96.4,96.0,96.3,,,,,,
+sphincs-haraka-128f-robust,clean,0.0,0.0,0.0,,,,,,
+sphincs-haraka-128f-simple,clean,0.0,0.0,0.0,,,,,,
+sphincs-haraka-128s-robust,clean,0.0,0.0,0.0,,,,,,
+sphincs-haraka-128s-simple,clean,0.0,0.0,0.0,,,,,,
+sphincs-haraka-192f-robust,clean,0.0,0.0,0.0,,,,,,
+sphincs-haraka-192f-simple,clean,0.0,0.0,0.0,,,,,,
+sphincs-haraka-192s-robust,clean,0.0,0.0,0.0,,,,,,
+sphincs-haraka-192s-simple,clean,0.0,0.0,0.0,,,,,,
+sphincs-haraka-256f-robust,clean,0.0,0.0,0.0,,,,,,
+sphincs-haraka-256f-simple,clean,0.0,0.0,0.0,,,,,,
+sphincs-haraka-256s-robust,clean,0.0,0.0,0.0,,,,,,
+sphincs-haraka-256s-simple,clean,0.0,0.0,0.0,,,,,,
+sphincs-sha256-128f-robust,clean,89.7,89.1,89.8,,,,,,
+sphincs-sha256-128f-simple,clean,88.2,88.6,88.2,,,,,,
+sphincs-sha256-128s-robust,clean,89.0,89.2,89.7,,,,,,
+sphincs-sha256-128s-simple,clean,88.2,87.3,88.1,,,,,,
+sphincs-sha256-192f-robust,clean,89.3,89.4,86.3,,,,,,
+sphincs-sha256-192f-simple,clean,88.0,89.1,88.2,,,,,,
+sphincs-sha256-192s-robust,clean,89.3,89.9,89.8,,,,,,
+sphincs-sha256-192s-simple,clean,87.7,88.3,88.5,,,,,,
+sphincs-sha256-256f-robust,clean,92.5,92.7,92.8,,,,,,
+sphincs-sha256-256f-simple,clean,87.8,87.9,88.1,,,,,,
+sphincs-sha256-256s-robust,clean,92.4,92.5,93.0,,,,,,
+sphincs-sha256-256s-simple,clean,87.4,88.1,88.3,,,,,,
+sphincs-shake256-128f-robust,clean,95.8,97.5,97.8,,,,,,
+sphincs-shake256-128f-simple,clean,96.4,96.2,90.6,,,,,,
+sphincs-shake256-128s-robust,clean,97.6,97.5,97.8,,,,,,
+sphincs-shake256-128s-simple,clean,96.3,96.2,96.3,,,,,,
+sphincs-shake256-192f-robust,clean,96.4,97.5,97.7,,,,,,
+sphincs-shake256-192f-simple,clean,96.3,96.2,96.3,,,,,,
+sphincs-shake256-192s-robust,clean,97.7,97.4,97.7,,,,,,
+sphincs-shake256-192s-simple,clean,96.2,96.0,96.3,,,,,,
+sphincs-shake256-256f-robust,clean,97.6,97.6,97.6,,,,,,
+sphincs-shake256-256f-simple,clean,96.3,96.2,96.2,,,,,,
+sphincs-shake256-256s-robust,clean,97.6,97.5,97.6,,,,,,
+sphincs-shake256-256s-simple,clean,96.3,96.1,96.2,,,,,,
 Size Evaluation,,,,,,,,,,
 Key Encapsulation Schemes,,,,,,,,,,
 Scheme,Implementation,.text [bytes],.data [bytes],.bss [bytes],Total [bytes],,,,,
@@ -161,4 +266,39 @@ dilithium,ref,9700,0,0,9700,,,,,
 qTesla-I,ref,16348,0,0,16348,,,,,
 qTesla-III-size,ref,24912,0,0,24912,,,,,
 qTesla-III-speed,ref,23812,0,0,23812,,,,,
+sphincs-haraka-128f-robust,clean,17192,0,1280,18472,,,,,
+sphincs-haraka-128f-simple,clean,17028,0,1280,18308,,,,,
+sphincs-haraka-128s-robust,clean,17500,0,1280,18780,,,,,
+sphincs-haraka-128s-simple,clean,17336,0,1280,18616,,,,,
+sphincs-haraka-192f-robust,clean,17140,0,1280,18420,,,,,
+sphincs-haraka-192f-simple,clean,16940,0,1280,18220,,,,,
+sphincs-haraka-192s-robust,clean,17432,0,1280,18712,,,,,
+sphincs-haraka-192s-simple,clean,17232,0,1280,18512,,,,,
+sphincs-haraka-256f-robust,clean,17528,0,1280,18808,,,,,
+sphincs-haraka-256f-simple,clean,17240,0,1280,18520,,,,,
+sphincs-haraka-256s-robust,clean,17736,0,1280,19016,,,,,
+sphincs-haraka-256s-simple,clean,17448,0,1280,18728,,,,,
+sphincs-sha256-128f-robust,clean,4860,0,40,4900,,,,,
+sphincs-sha256-128f-simple,clean,4628,0,40,4668,,,,,
+sphincs-sha256-128s-robust,clean,5160,0,40,5200,,,,,
+sphincs-sha256-128s-simple,clean,4928,0,40,4968,,,,,
+sphincs-sha256-192f-robust,clean,4948,0,40,4988,,,,,
+sphincs-sha256-192f-simple,clean,4636,0,40,4676,,,,,
+sphincs-sha256-192s-robust,clean,5244,0,40,5284,,,,,
+sphincs-sha256-192s-simple,clean,4932,0,40,4972,,,,,
+sphincs-sha256-256f-robust,clean,5468,0,40,5508,,,,,
+sphincs-sha256-256f-simple,clean,5044,0,40,5084,,,,,
+sphincs-sha256-256s-robust,clean,5676,0,40,5716,,,,,
+sphincs-sha256-256s-simple,clean,5252,0,40,5292,,,,,
+sphincs-shake256-128f-robust,clean,4096,0,0,4096,,,,,
 sphincs-shake256-128f-simple,clean,3896,0,0,3896,,,,,
+sphincs-shake256-128s-robust,clean,4404,0,0,4404,,,,,
+sphincs-shake256-128s-simple,clean,4204,0,0,4204,,,,,
+sphincs-shake256-192f-robust,clean,4108,0,0,4108,,,,,
+sphincs-shake256-192f-simple,clean,3856,0,0,3856,,,,,
+sphincs-shake256-192s-robust,clean,4400,0,0,4400,,,,,
+sphincs-shake256-192s-simple,clean,4148,0,0,4148,,,,,
+sphincs-shake256-256f-robust,clean,4480,0,0,4480,,,,,
+sphincs-shake256-256f-simple,clean,4172,0,0,4172,,,,,
+sphincs-shake256-256s-robust,clean,4684,0,0,4684,,,,,
+sphincs-shake256-256s-simple,clean,4380,0,0,4380,,,,,
