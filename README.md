@@ -64,7 +64,42 @@ Not all schemes have been migrated to Round 2 code yet. See below for an overvie
 | qTesla-I | ref        | **Round 1** |
 | qTesla-III-size | ref | **Round 1** |
 | qTesla-III-speed| ref | **Round 1** |
+| sphincs-haraka-128f-robust | clean | Round 2|
+| sphincs-haraka-128f-simple | clean | Round 2|
+| sphincs-haraka-128s-robust | clean | Round 2|
+| sphincs-haraka-128s-simple | clean | Round 2|
+| sphincs-haraka-192f-robust | clean | Round 2|
+| sphincs-haraka-192f-simple | clean | Round 2|
+| sphincs-haraka-192s-robust | clean | Round 2|
+| sphincs-haraka-192s-simple | clean | Round 2|
+| sphincs-haraka-256f-robust | clean | Round 2|
+| sphincs-haraka-256f-simple | clean | Round 2|
+| sphincs-haraka-256s-robust | clean | Round 2|
+| sphincs-haraka-256s-simple | clean | Round 2|
+| sphincs-sha256-128f-robust | clean | Round 2|
+| sphincs-sha256-128f-simple | clean | Round 2|
+| sphincs-sha256-128s-robust | clean | Round 2|
+| sphincs-sha256-128s-simple | clean | Round 2|
+| sphincs-sha256-192f-robust | clean | Round 2|
+| sphincs-sha256-192f-simple | clean | Round 2|
+| sphincs-sha256-192s-robust | clean | Round 2|
+| sphincs-sha256-192s-simple | clean | Round 2|
+| sphincs-sha256-256f-robust | clean | Round 2|
+| sphincs-sha256-256f-simple | clean | Round 2|
+| sphincs-sha256-256s-robust | clean | Round 2|
+| sphincs-sha256-256s-simple | clean | Round 2|
+| sphincs-shake256-128f-robust | clean | Round 2|
 | sphincs-shake256-128f-simple | clean | Round 2|
+| sphincs-shake256-128s-robust | clean | Round 2|
+| sphincs-shake256-128s-simple | clean | Round 2|
+| sphincs-shake256-192f-robust | clean | Round 2|
+| sphincs-shake256-192f-simple | clean | Round 2|
+| sphincs-shake256-192s-robust | clean | Round 2|
+| sphincs-shake256-192s-simple | clean | Round 2|
+| sphincs-shake256-256f-robust | clean | Round 2|
+| sphincs-shake256-256f-simple | clean | Round 2|
+| sphincs-shake256-256s-robust | clean | Round 2|
+| sphincs-shake256-256s-simple | clean | Round 2|
 
 
 

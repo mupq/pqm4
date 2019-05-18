@@ -26,6 +26,8 @@ class M4Settings(mupq.PlatformSettings):
         {'scheme': 'frodokem640shake', 'implementation': 'clean'},
         {'scheme': 'frodokem976shake', 'implementation': 'clean'},
         {'scheme': 'frodokem1344shake', 'implementation': 'clean'}
+        {'scheme': 'mqdss-48', 'implementation': 'clean'}
+        {'scheme': 'mqdss-64', 'implementation': 'clean'}
     )
 
 
