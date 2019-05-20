@@ -15,6 +15,6 @@ void owcpa_enc(unsigned char *c,
         const unsigned char *pk);
 
 int owcpa_dec(unsigned char *rm,
-                                        const unsigned char *ciphertext,
-                                        const unsigned char *secretkey);
+        const unsigned char *ciphertext,
+        const unsigned char *secretkey);
 #endif

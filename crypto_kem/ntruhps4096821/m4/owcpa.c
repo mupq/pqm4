@@ -19,6 +19,25 @@ static int owcpa_check_r(const poly *r) {
     return (int) t;
 }
 
+static int owcpa_check_m(const poly *m) {
+    /* Check that m is in message space. */
+    /* Note: Assumes that m has coefficients in {0,1,2}. */
+    int i;
+    uint64_t t = 0;
+    uint16_t p1 = 0;
+    uint16_t m1 = 0;
+    for (i = 0; i < NTRU_N; i++) {
+        p1 += m->coeffs[i] & 0x01;
+        m1 += (m->coeffs[i] & 0x02) >> 1;
+    }
+    /* Need p1 = m1 and p1 + m1 = NTRU_WEIGHT */
+    t |= p1 ^ m1;
+    t |= (p1 + m1) ^ NTRU_WEIGHT;
+    t = (~t + 1); // two's complement
+    t >>= 63;
+    return (int) t;
+}
+
 void owcpa_samplemsg(unsigned char msg[NTRU_OWCPA_MSGBYTES],
         const unsigned char seed[NTRU_SAMPLE_RM_BYTES]) {
     poly r, m;
@@ -51,10 +70,9 @@ void owcpa_keypair(unsigned char *pk,
     poly_Z3_to_Zq(f);
     poly_Z3_to_Zq(g);
 
-    /* G = 3*(x-1)*g */
-    poly_Rq_mul_x_minus_1(G, g);
+    /* G = 3*g */
     for (i = 0; i < NTRU_N; i++) {
-        G->coeffs[i] = MODQ(3 * G->coeffs[i]);
+        G->coeffs[i] = MODQ(3 * g->coeffs[i]);
     }
 
     poly_Rq_mul(Gf, G, f);
@@ -97,8 +115,8 @@ void owcpa_enc(unsigned char *c,
 }
 
 int owcpa_dec(unsigned char *rm,
-                                        const unsigned char *ciphertext,
-                                        const unsigned char *secretkey) {
+        const unsigned char *ciphertext,
+        const unsigned char *secretkey) {
     int i;
     int fail;
     poly x1, x2, x3, x4;
@@ -124,6 +142,7 @@ int owcpa_dec(unsigned char *rm,
     /* r (defined as b/h mod (q, Phi_n)) and m are in the message space.       */
     /* (m can take any value in S3 in NTRU_HRSS) */
     fail = 0;
+    fail |= owcpa_check_m(m);
 
     /* b = c - Lift(m) mod (q, x^n - 1) */
     poly_lift(liftm, m);

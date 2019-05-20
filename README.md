@@ -48,10 +48,13 @@ Not all schemes have been migrated to Round 2 code yet. See below for an overvie
 | newhope1024cca   | m4   | **Round 1** |
 | newhope1024cca   | ref  | **Round 1** |
 | ntruhps2048509 | clean  | Round 2 |
+| ntruhps2048509 | m4     | Round 2 |
 | ntruhps2048677 | clean  | Round 2 |
+| ntruhps2048677 | m4     | Round 2 |
 | ntruhps4096821 | clean  | Round 2 |
-| ntruhrss701 | m4        | **Round 1** |
+| ntruhps4096821 | m4     | Round 2 |
 | ntruhrss701 | clean     | Round 2 |
+| ntruhrss701 | m4        | Round 2 |
 | saber | m4              | Round 2 |
 | saber | ref             | Round 2 |
 | sikep434 | opt          | Round 2 |
