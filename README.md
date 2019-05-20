@@ -45,8 +45,12 @@ Not all schemes have been migrated to Round 2 code yet. See below for an overvie
 | lac128 | ref            | Round 2 |
 | lac192 | ref            | Round 2 |
 | lac256 | ref            | Round 2 |
-| newhope1024cca   | m4   | **Round 1** |
-| newhope1024cca   | ref  | **Round 1** |
+| newhope1024cca   |clean | Round 2 |
+| newhope1024cca   | m4   | Round 2 |
+| newhope1024cpa   |clean | Round 2 |
+| newhope1024cpa   | m4   | Round 2 |
+| newhope512cca   |clean  | Round 2 |
+| newhope512cpa   |clean  | Round 2 |
 | ntruhps2048509 | clean  | Round 2 |
 | ntruhps2048677 | clean  | Round 2 |
 | ntruhps4096821 | clean  | Round 2 |
