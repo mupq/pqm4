@@ -18,8 +18,12 @@
 | lac256 (100 executions) | ref | AVG: 7,665,769 <br /> MIN: 7,652,402 <br /> MAX: 7,681,209 | AVG: 13,533,851 <br /> MIN: 13,517,064 <br /> MAX: 13,553,209 | AVG: 21,125,257 <br /> MIN: 21,108,384 <br /> MAX: 21,144,510 |
 | lightsaber (100 executions) | m4 | AVG: 459,965 <br /> MIN: 459,965 <br /> MAX: 459,965 | AVG: 651,273 <br /> MIN: 651,273 <br /> MAX: 651,273 | AVG: 678,810 <br /> MIN: 678,810 <br /> MAX: 678,810 |
 | lightsaber (100 executions) | ref | AVG: 1,051,530 <br /> MIN: 1,051,530 <br /> MAX: 1,051,530 | AVG: 1,538,646 <br /> MIN: 1,538,646 <br /> MAX: 1,538,646 | AVG: 1,861,934 <br /> MIN: 1,861,934 <br /> MAX: 1,861,934 |
-| newhope1024cca (100 executions) | m4 | AVG: 1,219,655 <br /> MIN: 1,219,347 <br /> MAX: 1,219,902 | AVG: 1,901,160 <br /> MIN: 1,900,853 <br /> MAX: 1,901,408 | AVG: 1,926,151 <br /> MIN: 1,925,843 <br /> MAX: 1,926,398 |
-| newhope1024cca (100 executions) | ref | AVG: 1,458,103 <br /> MIN: 1,457,793 <br /> MAX: 1,458,423 | AVG: 2,260,746 <br /> MIN: 2,260,436 <br /> MAX: 2,261,066 | AVG: 2,406,717 <br /> MIN: 2,406,407 <br /> MAX: 2,407,038 |
+| newhope1024cca (100 executions) | clean | AVG: 1,460,167 <br /> MIN: 1,459,836 <br /> MAX: 1,460,406 | AVG: 2,264,773 <br /> MIN: 2,264,441 <br /> MAX: 2,265,011 | AVG: 2,410,906 <br /> MIN: 2,410,574 <br /> MAX: 2,411,144 |
+| newhope1024cca (100 executions) | m4 | AVG: 1,219,908 <br /> MIN: 1,219,630 <br /> MAX: 1,220,245 | AVG: 1,903,231 <br /> MIN: 1,902,954 <br /> MAX: 1,903,568 | AVG: 1,927,505 <br /> MIN: 1,927,227 <br /> MAX: 1,927,843 |
+| newhope1024cpa (100 executions) | clean | AVG: 1,274,813 <br /> MIN: 1,274,572 <br /> MAX: 1,275,142 | AVG: 1,857,055 <br /> MIN: 1,856,813 <br /> MAX: 1,857,383 | AVG: 327,778 <br /> MIN: 327,778 <br /> MAX: 327,778 |
+| newhope1024cpa (100 executions) | m4 | AVG: 1,034,955 <br /> MIN: 1,034,659 <br /> MAX: 1,035,274 | AVG: 1,495,457 <br /> MIN: 1,495,161 <br /> MAX: 1,495,776 | AVG: 206,112 <br /> MIN: 206,112 <br /> MAX: 206,112 |
+| newhope512cca (100 executions) | clean | AVG: 719,785 <br /> MIN: 719,577 <br /> MAX: 720,072 | AVG: 1,134,083 <br /> MIN: 1,133,875 <br /> MAX: 1,134,370 | AVG: 1,192,460 <br /> MIN: 1,192,253 <br /> MAX: 1,192,748 |
+| newhope512cpa (100 executions) | clean | AVG: 628,310 <br /> MIN: 628,073 <br /> MAX: 628,508 | AVG: 915,293 <br /> MIN: 915,056 <br /> MAX: 915,491 | AVG: 163,222 <br /> MIN: 163,222 <br /> MAX: 163,222 |
 | ntruhps2048509 (100 executions) | clean | AVG: 107,331,110 <br /> MIN: 107,331,110 <br /> MAX: 107,331,110 | AVG: 2,876,597 <br /> MIN: 2,876,597 <br /> MAX: 2,876,597 | AVG: 7,495,670 <br /> MIN: 7,495,670 <br /> MAX: 7,495,670 |
 | ntruhps2048509 (100 executions) | m4 | AVG: 77,698,713 <br /> MIN: 77,698,713 <br /> MAX: 77,698,713 | AVG: 645,329 <br /> MIN: 645,329 <br /> MAX: 645,329 | AVG: 542,439 <br /> MIN: 542,439 <br /> MAX: 542,439 |
 | ntruhps2048677 (100 executions) | clean | AVG: 196,228,850 <br /> MIN: 196,228,850 <br /> MAX: 196,228,850 | AVG: 4,909,724 <br /> MIN: 4,909,724 <br /> MAX: 4,909,724 | AVG: 13,157,491 <br /> MIN: 13,157,491 <br /> MAX: 13,157,491 |
@@ -99,8 +103,12 @@
 | lac256 | ref | 4,452 | 8,676 | 10,116 |
 | lightsaber | m4 | 9,656 | 11,392 | 12,136 |
 | lightsaber | ref | 10,024 | 11,672 | 12,504 |
-| newhope1024cca | m4 | 11,192 | 17,448 | 19,688 |
-| newhope1024cca | ref | 11,192 | 17,448 | 19,656 |
+| newhope1024cca | clean | 11,120 | 17,400 | 19,608 |
+| newhope1024cca | m4 | 11,152 | 17,400 | 19,640 |
+| newhope1024cpa | clean | 11,096 | 17,288 | 8,308 |
+| newhope1024cpa | m4 | 11,128 | 17,288 | 8,328 |
+| newhope512cca | clean | 5,992 | 9,208 | 10,328 |
+| newhope512cpa | clean | 5,968 | 9,128 | 4,248 |
 | ntruhps2048509 | clean | 11,784 | 6,896 | 5,192 |
 | ntruhps2048509 | m4 | 21,412 | 15,452 | 14,828 |
 | ntruhps2048677 | clean | 15,608 | 9,104 | 6,840 |
@@ -180,8 +188,12 @@
 | lac256 | ref | 3.4% | 2.5% | 1.6% |
 | lightsaber | m4 | 56.5% | 55.7% | 42.0% |
 | lightsaber | ref | 24.7% | 23.6% | 15.3% |
-| newhope1024cca | m4 | 71.2% | 70.4% | 59.5% |
-| newhope1024cca | ref | 59.6% | 59.2% | 47.7% |
+| newhope1024cca | clean | 59.5% | 59.1% | 47.6% |
+| newhope1024cca | m4 | 71.2% | 70.3% | 59.5% |
+| newhope1024cpa | clean | 53.9% | 50.2% | 4.3% |
+| newhope1024cpa | m4 | 66.3% | 62.2% | 6.8% |
+| newhope512cca | clean | 61.4% | 61.5% | 49.9% |
+| newhope512cpa | clean | 56.1% | 52.4% | 8.6% |
 | ntruhps2048509 | clean | 0.0% | 0.9% | 1.4% |
 | ntruhps2048509 | m4 | 0.0% | 4.1% | 19.0% |
 | ntruhps2048677 | clean | 0.0% | 0.8% | 1.1% |
@@ -261,8 +273,12 @@
 | lac256 | ref | 29,876 | 72 | 296 | 30,244 |
 | lightsaber | m4 | 44,916 | 0 | 0 | 44,916 |
 | lightsaber | ref | 12,976 | 0 | 0 | 12,976 |
-| newhope1024cca | m4 | 7,048 | 6,144 | 0 | 13,192 |
-| newhope1024cca | ref | 5,652 | 6,144 | 0 | 11,796 |
+| newhope1024cca | clean | 10,780 | 0 | 0 | 10,780 |
+| newhope1024cca | m4 | 12,176 | 0 | 0 | 12,176 |
+| newhope1024cpa | clean | 10,384 | 0 | 0 | 10,384 |
+| newhope1024cpa | m4 | 11,780 | 0 | 0 | 11,780 |
+| newhope512cca | clean | 7,016 | 0 | 0 | 7,016 |
+| newhope512cpa | clean | 6,620 | 0 | 0 | 6,620 |
 | ntruhps2048509 | clean | 6,916 | 0 | 0 | 6,916 |
 | ntruhps2048509 | m4 | 89,140 | 0 | 0 | 89,140 |
 | ntruhps2048677 | clean | 6,960 | 0 | 0 | 6,960 |
