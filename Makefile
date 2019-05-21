@@ -1,7 +1,7 @@
 OPENCM3DIR  = ./libopencm3
 OPENCM3NAME = opencm3_stm32f4
 OPENCM3FILE = $(OPENCM3DIR)/lib/lib$(OPENCM3NAME).a
-LDSCRIPT    = stm32f405x6.ld
+LDSCRIPT    = ldscripts/stm32f405x6.ld
 
 PREFIX     ?= arm-none-eabi
 CC          = $(PREFIX)-gcc
@@ -17,9 +17,6 @@ CFLAGS     += -O3 \
               -Wundef -Wshadow \
               -I$(OPENCM3DIR)/include \
               -fno-common $(ARCH_FLAGS) -MD $(DEFINES)
-LDFLAGS    += --static -Wl,--start-group -lc -lgcc -lnosys -Wl,--end-group \
-              -T$(LDSCRIPT) -nostartfiles -Wl,--gc-sections \
-               $(ARCH_FLAGS) -L$(OPENCM3DIR)/lib -lm -l$(OPENCM3NAME)
 
 CC_HOST    = gcc
 LD_HOST    = gcc
@@ -46,6 +43,15 @@ TARGET_NAME = $(shell echo $(IMPLEMENTATION_PATH) | sed 's@/@_@g')
 TYPE = $(shell echo $(IMPLEMENTATION_PATH) | sed -r 's@(.*/)?crypto_(kem|sign)(/.*)@\2@')
 IMPLEMENTATION_SOURCES = $(wildcard $(IMPLEMENTATION_PATH)/*.c) $(wildcard $(IMPLEMENTATION_PATH)/*.s) $(wildcard $(IMPLEMENTATION_PATH)/*.S)
 IMPLEMENTATION_HEADERS = $(IMPLEMENTATION_PATH)/*.h
+
+# allow schemes to use implementation-specific linker scripts
+ifeq ("$(wildcard ldscripts/$(TARGET_NAME).ld)","")
+    LDSCRIPT = ldscripts/$(TARGET_NAME).ld
+endif
+
+LDFLAGS    += --static -Wl,--start-group -lc -lgcc -lnosys -Wl,--end-group \
+              -T$(LDSCRIPT) -nostartfiles -Wl,--gc-sections \
+               $(ARCH_FLAGS) -L$(OPENCM3DIR)/lib -lm -l$(OPENCM3NAME)
 
 .PHONY: all
 all:
