@@ -45,7 +45,7 @@ IMPLEMENTATION_SOURCES = $(wildcard $(IMPLEMENTATION_PATH)/*.c) $(wildcard $(IMP
 IMPLEMENTATION_HEADERS = $(IMPLEMENTATION_PATH)/*.h
 
 # allow schemes to use implementation-specific linker scripts
-ifeq ("$(wildcard ldscripts/$(TARGET_NAME).ld)","")
+ifneq ("$(wildcard ldscripts/$(TARGET_NAME).ld)","")
     LDSCRIPT = ldscripts/$(TARGET_NAME).ld
 endif
 
