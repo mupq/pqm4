@@ -173,24 +173,43 @@ new subdirectory under `crypto_sign/`.
    from all KEM and signature implementations. 
    Functions from the FIPS202 standard (and related publication SP 800-185) are defined in `mupq/common/fips202.h` as follows:
    ```c
-  void shake128_absorb(uint64_t *state, const unsigned char *input, unsigned int inlen);
-  void shake128_squeezeblocks(unsigned char *output, unsigned long long nblocks, uint64_t *state);
-  void shake128(unsigned char *output, unsigned long long outlen, const unsigned char *input,  unsigned long long inlen);
+  void shake128_absorb(shake128ctx *state, const uint8_t *input, size_t inlen);
+  void shake128_squeezeblocks(uint8_t *output, size_t nblocks, shake128ctx *state);
+  void shake128(uint8_t *output, size_t outlen, const uint8_t *input, size_t inlen);
 
-  void cshake128_simple_absorb(uint64_t *state, uint16_t cstm, const unsigned char *in, unsigned long long inlen);
-  void cshake128_simple_squeezeblocks(unsigned char *output, unsigned long long nblocks, uint64_t *state);
-  void cshake128_simple(unsigned char *output, unsigned long long outlen, uint16_t cstm, const unsigned char *in, unsigned long long inlen);
+  void shake128_inc_init(shake128incctx *state);
+  void shake128_inc_absorb(shake128incctx *state, const uint8_t *input, size_t inlen);
+  void shake128_inc_finalize(shake128incctx *state);
+  void shake128_inc_squeeze(uint8_t *output, size_t outlen, shake128incctx *state);
 
-  void shake256_absorb(uint64_t *state, const unsigned char *input, unsigned int inlen);
-  void shake256_squeezeblocks(unsigned char *output, unsigned long long nblocks, uint64_t *state);
-  void shake256(unsigned char *output, unsigned long long outlen, const unsigned char *input,  unsigned long long inlen);
+  void cshake128_simple_absorb(shake128ctx *state, uint16_t cstm, const uint8_t *input, size_t inlen);
+  void cshake128_simple_squeezeblocks(uint8_t *output, size_t nblocks, shake128ctx *state);
+  void cshake128_simple(uint8_t *output, size_t outlen, uint16_t cstm, const uint8_t *input, size_t inlen);
 
-  void cshake256_simple_absorb(uint64_t *state, uint16_t cstm, const unsigned char *in, unsigned long long inlen);
-  void cshake256_simple_squeezeblocks(unsigned char *output, unsigned long long nblocks, uint64_t *state);
-  void cshake256_simple(unsigned char *output, unsigned long long outlen, uint16_t cstm, const unsigned char *in, unsigned long long inlen);
+  void shake256_absorb(shake256ctx *state, const uint8_t *input, size_t inlen);
+  void shake256_squeezeblocks(uint8_t *output, size_t nblocks, shake256ctx *state);
+  void shake256(uint8_t *output, size_t outlen, const uint8_t *input, size_t inlen);
 
-  void sha3_256(unsigned char *output, const unsigned char *input,  unsigned long long inlen);
-  void sha3_512(unsigned char *output, const unsigned char *input,  unsigned long long inlen);
+  void shake256_inc_init(shake256incctx *state);
+  void shake256_inc_absorb(shake256incctx *state, const uint8_t *input, size_t inlen);
+  void shake256_inc_finalize(shake256incctx *state);
+  void shake256_inc_squeeze(uint8_t *output, size_t outlen, shake256incctx *state);
+
+  void cshake256_simple_absorb(shake256ctx *state, uint16_t cstm, const uint8_t *input, size_t inlen);
+  void cshake256_simple_squeezeblocks(uint8_t *output, size_t nblocks, shake256ctx *state);
+  void cshake256_simple(uint8_t *output, size_t outlen, uint16_t cstm, const uint8_t *input, size_t inlen);
+
+  void sha3_256_inc_init(sha3_256incctx *state);
+  void sha3_256_inc_absorb(sha3_256incctx *state, const uint8_t *input, size_t inlen);
+  void sha3_256_inc_finalize(uint8_t *output, sha3_256incctx *state);
+
+  void sha3_256(uint8_t *output, const uint8_t *input, size_t inlen);
+
+  void sha3_512_inc_init(sha3_512incctx *state);
+  void sha3_512_inc_absorb(sha3_512incctx *state, const uint8_t *input, size_t inlen);
+  void sha3_512_inc_finalize(uint8_t *output, sha3_512incctx *state);
+
+  void sha3_512(uint8_t *output, const uint8_t *input, size_t inlen);
    ```
    Implementations that want to make use of these optimized routines simply include 
    `fips202.h`. The API for `sha3_256` and `sha3_512` follows the 
@@ -198,6 +217,7 @@ new subdirectory under `crypto_sign/`.
    The API for `shake256` and `shake512` is very similar, except that it supports variable-length output.
    The SHAKE and cSHAKE functions are also accessible via the absorb-squeezeblocks functions, which offer incremental
    output generation (but not incremental input handling).
+   The variants with `_inc_` offer both incremental input handling and output generation.
 
 ## Using optimized SHA-2
 
@@ -211,24 +231,24 @@ new subdirectory under `crypto_sign/`.
   We've therefore decided to only include a C version of the SHA-2 variants.
   The available functions are:
    ```c
-  void sha224_inc_init(uint8_t *state);
-  void sha224_inc_blocks(uint8_t *state, const uint8_t *in, size_t inblocks);
-  void sha224_inc_finalize(uint8_t *out, uint8_t *state, const uint8_t *in, size_t inlen);
+  void sha224_inc_init(sha224ctx *state);
+  void sha224_inc_blocks(sha224ctx *state, const uint8_t *in, size_t inblocks);
+  void sha224_inc_finalize(uint8_t *out, sha224ctx *state, const uint8_t *in, size_t inlen);
   void sha224(uint8_t *out, const uint8_t *in, size_t inlen);
 
-  void sha256_inc_init(uint8_t *state);
-  void sha256_inc_blocks(uint8_t *state, const uint8_t *in, size_t inblocks);
-  void sha256_inc_finalize(uint8_t *out, uint8_t *state, const uint8_t *in, size_t inlen);
+  void sha256_inc_init(sha256ctx *state);
+  void sha256_inc_blocks(sha256ctx *state, const uint8_t *in, size_t inblocks);
+  void sha256_inc_finalize(uint8_t *out, sha256ctx *state, const uint8_t *in, size_t inlen);
   void sha256(uint8_t *out, const uint8_t *in, size_t inlen);
 
-  void sha384_inc_init(uint8_t *state);
-  void sha384_inc_blocks(uint8_t *state, const uint8_t *in, size_t inblocks);
-  void sha384_inc_finalize(uint8_t *out, uint8_t *state, const uint8_t *in, size_t inlen);
+  void sha384_inc_init(sha384ctx *state);
+  void sha384_inc_blocks(sha384ctx *state, const uint8_t *in, size_t inblocks);
+  void sha384_inc_finalize(uint8_t *out, sha384ctx *state, const uint8_t *in, size_t inlen);
   void sha384(uint8_t *out, const uint8_t *in, size_t inlen);
 
-  void sha512_inc_init(uint8_t *state);
-  void sha512_inc_blocks(uint8_t *state, const uint8_t *in, size_t inblocks);
-  void sha512_inc_finalize(uint8_t *out, uint8_t *state, const uint8_t *in, size_t inlen);
+  void sha512_inc_init(sha512ctx *state);
+  void sha512_inc_blocks(sha512ctx *state, const uint8_t *in, size_t inblocks);
+  void sha512_inc_finalize(uint8_t *out, sha512ctx *state, const uint8_t *in, size_t inlen);
   void sha512(uint8_t *out, const uint8_t *in, size_t inlen);
   ```
   Implementations can use these by including `sha2.h`.
