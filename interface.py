@@ -21,11 +21,16 @@ class M4Settings(mupq.PlatformSettings):
     #: scheme with values, if all attributes match the scheme is skipped.
     skip_list = (
         {'scheme': 'frodokem640aes', 'implementation': 'clean'},
+        {'scheme': 'frodokem640aes', 'implementation': 'opt'},
         {'scheme': 'frodokem976aes', 'implementation': 'clean'},
+        {'scheme': 'frodokem976aes', 'implementation': 'opt'},
         {'scheme': 'frodokem1344aes', 'implementation': 'clean'},
+        {'scheme': 'frodokem1344aes', 'implementation': 'opt'},
         {'scheme': 'frodokem640shake', 'implementation': 'clean'},
         {'scheme': 'frodokem976shake', 'implementation': 'clean'},
+        {'scheme': 'frodokem976shake', 'implementation': 'opt'},
         {'scheme': 'frodokem1344shake', 'implementation': 'clean'},
+        {'scheme': 'frodokem1344shake', 'implementation': 'opt'},
         {'scheme': 'mqdss-48', 'implementation': 'clean'},
         {'scheme': 'mqdss-64', 'implementation': 'clean'},
     )
