@@ -10,11 +10,11 @@
 
 /*************************************************
 * Name:        expand_mat
-* 
+*
 * Description: Implementation of ExpandA. Generates matrix A with uniformly
 *              random coefficients a_{i,j} by performing rejection
 *              sampling on the output stream of SHAKE128(rho|i|j).
-*              
+*
 * Arguments:   - polyvecl mat[K]: output matrix
 *              - const unsigned char rho[]: byte array containing seed rho
 **************************************************/
@@ -54,31 +54,32 @@ void expand_mat(polyvecl mat[K], const unsigned char rho[SEEDBYTES]) {
 
 /*************************************************
 * Name:        challenge
-* 
+*
 * Description: Implementation of H. Samples polynomial with 60 nonzero
 *              coefficients in {-1,1} using the output stream of
 *              SHAKE256(mu|w1).
-*              
+*
 * Arguments:   - poly *c: pointer to output polynomial
 *              - const unsigned char mu[]: byte array containing mu
 *              - const polyveck *w1: pointer to vector w1
 **************************************************/
 void challenge(poly *c,
                const unsigned char mu[CRHBYTES],
-               const polyveck *w1) 
+               const polyveck *w1)
 {
   unsigned int i, b, pos;
   unsigned char inbuf[CRHBYTES + K*POLW1_SIZE_PACKED];
   unsigned char outbuf[SHAKE256_RATE];
-  uint64_t state[25], signs, mask;
+  uint64_t signs, mask;
+  shake256ctx state;
 
   for(i = 0; i < CRHBYTES; ++i)
     inbuf[i] = mu[i];
   for(i = 0; i < K; ++i)
     polyw1_pack(inbuf + CRHBYTES + i*POLW1_SIZE_PACKED, w1->vec+i);
 
-  shake256_absorb(state, inbuf, sizeof(inbuf));
-  shake256_squeezeblocks(outbuf, 1, state);
+  shake256_absorb(&state, inbuf, sizeof(inbuf));
+  shake256_squeezeblocks(outbuf, 1, &state);
 
   signs = 0;
   for(i = 0; i < 8; ++i)
@@ -93,7 +94,7 @@ void challenge(poly *c,
   for(i = 196; i < 256; ++i) {
     do {
       if(pos >= SHAKE256_RATE) {
-        shake256_squeezeblocks(outbuf, 1, state);
+        shake256_squeezeblocks(outbuf, 1, &state);
         pos = 0;
       }
 
@@ -185,8 +186,8 @@ int crypto_sign_keypair(unsigned char *pk, unsigned char *sk) {
 int crypto_sign(unsigned char *sm,
                 size_t *smlen,
                 const unsigned char *m,
-                size_t mlen, 
-                const unsigned char *sk) 
+                size_t mlen,
+                const unsigned char *sk)
 {
   unsigned long long i, j;
   unsigned int n;
@@ -328,7 +329,7 @@ int crypto_sign_open(unsigned char *m,
   /* Compute CRH(CRH(rho, t1), msg) using m as "playground" buffer */
   for(i = 0; i < CRYPTO_PUBLICKEYBYTES; ++i)
     m[CRYPTO_BYTES - CRYPTO_PUBLICKEYBYTES + i] = pk[i];
-  
+
   if(sm != m)
     for(i = 0; i < *mlen; ++i)
       m[CRYPTO_BYTES + i] = sm[CRYPTO_BYTES + i];
@@ -338,7 +339,7 @@ int crypto_sign_open(unsigned char *m,
   shake256(mu, CRHBYTES, m + CRYPTO_BYTES - CRHBYTES, CRHBYTES + *mlen);
 
   expand_mat(mat, rho);
-  
+
   /* Matrix-vector multiplication; compute Az - c2^dt1 */
   polyvecl_ntt(&z);
   for(i = 0; i < K ; ++i)
@@ -368,7 +369,7 @@ int crypto_sign_open(unsigned char *m,
   /* All good, copy msg, return 0 */
   for(i = 0; i < *mlen; ++i)
     m[i] = sm[CRYPTO_BYTES + i];
-  
+
   return 0;
 
   /* Signature verification failed */
@@ -376,6 +377,6 @@ int crypto_sign_open(unsigned char *m,
   *mlen =  -1;
   for(i = 0; i < smlen; ++i)
     m[i] = 0;
-  
+
   return -1;
 }
