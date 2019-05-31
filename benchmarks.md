@@ -47,8 +47,8 @@
 ## Signature Schemes
 | scheme | implementation | key generation [cycles] | sign [cycles] | verify [cycles] |
 | ------ | -------------- | ----------------------- | ------------- | --------------- |
-| dilithium (100 executions) | m4 | AVG: 2,302,877 <br /> MIN: 2,302,131 <br /> MAX: 2,303,775 | AVG: 9,456,759 <br /> MIN: 3,118,360 <br /> MAX: 45,556,652 | AVG: 2,296,615 <br /> MIN: 2,296,063 <br /> MAX: 2,296,962 |
-| dilithium (100 executions) | ref | AVG: 2,753,926 <br /> MIN: 2,753,249 <br /> MAX: 2,755,062 | AVG: 16,545,038 <br /> MIN: 5,001,347 <br /> MAX: 112,367,034 | AVG: 3,014,547 <br /> MIN: 3,014,142 <br /> MAX: 3,014,999 |
+| dilithium2 (100 executions) | m4 | AVG: 2,302,877 <br /> MIN: 2,302,131 <br /> MAX: 2,303,775 | AVG: 9,456,759 <br /> MIN: 3,118,360 <br /> MAX: 45,556,652 | AVG: 2,296,615 <br /> MIN: 2,296,063 <br /> MAX: 2,296,962 |
+| dilithium2 (100 executions) | ref | AVG: 2,753,926 <br /> MIN: 2,753,249 <br /> MAX: 2,755,062 | AVG: 16,545,038 <br /> MIN: 5,001,347 <br /> MAX: 112,367,034 | AVG: 3,014,547 <br /> MIN: 3,014,142 <br /> MAX: 3,014,999 |
 | qTesla-I (100 executions) | ref | AVG: 17,620,191 <br /> MIN: 7,796,886 <br /> MAX: 51,360,640 | AVG: 7,988,638 <br /> MIN: 1,406,175 <br /> MAX: 37,213,645 | AVG: 1,051,553 <br /> MIN: 1,047,049 <br /> MAX: 1,074,466 |
 | qTesla-III-size (100 executions) | ref | AVG: 55,273,328 <br /> MIN: 22,103,613 <br /> MAX: 178,866,064 | AVG: 23,659,201 <br /> MIN: 3,184,719 <br /> MAX: 115,077,824 | AVG: 2,257,931 <br /> MIN: 2,250,078 <br /> MAX: 2,286,733 |
 | qTesla-III-speed (100 executions) | ref | AVG: 32,775,258 <br /> MIN: 19,878,936 <br /> MAX: 113,404,261 | AVG: 9,477,183 <br /> MIN: 3,133,995 <br /> MAX: 41,726,976 | AVG: 2,209,618 <br /> MIN: 2,204,032 <br /> MAX: 2,236,124 |
@@ -137,8 +137,8 @@
 ## Signature Schemes
 | Scheme | Implementation | Key Generation [bytes] | Sign [bytes] | Verify [bytes] |
 | ------ | -------------- | ---------------------- | ------------ | -------------- |
-| dilithium | m4 | 50,960 | 86,720 | 55,008 |
-| dilithium | ref | 50,960 | 86,784 | 54,904 |
+| dilithium2 | m4 | 50,960 | 86,720 | 55,008 |
+| dilithium2 | ref | 50,960 | 86,784 | 54,904 |
 | qTesla-I | ref | 22,592 | 29,440 | 23,096 |
 | qTesla-III-size | ref | 44,088 | 58,248 | 45,752 |
 | qTesla-III-speed | ref | 44,088 | 58,144 | 45,736 |
@@ -227,8 +227,8 @@
 ## Signature Schemes
 | Scheme | Implementation | Key Generation [%] | Sign [%] | Verify [%] |
 | ------ | -------------- | ------------------ | -------- | ---------- |
-| dilithium | m4 | 73.4% | 42.5% | 66.7% |
-| dilithium | ref | 61.4% | 25.1% | 50.9% |
+| dilithium2 | m4 | 73.4% | 42.5% | 66.7% |
+| dilithium2 | ref | 61.4% | 25.1% | 50.9% |
 | qTesla-I | ref | 63.3% | 28.2% | 32.0% |
 | qTesla-III-size | ref | 65.9% | 23.4% | 27.7% |
 | qTesla-III-speed | ref | 73.0% | 24.9% | 28.2% |
@@ -317,8 +317,8 @@
 ## Signature Schemes
 | Scheme | Implementation | .text [bytes] | .data [bytes] | .bss [bytes] | Total [bytes] |
 | ------ | -------------- | ------------- | ------------- | ------------ | ------------- |
-| dilithium | m4 | 14,776 | 0 | 0 | 14,776 |
-| dilithium | ref | 9,700 | 0 | 0 | 9,700 |
+| dilithium2 | m4 | 14,776 | 0 | 0 | 14,776 |
+| dilithium2 | ref | 9,700 | 0 | 0 | 9,700 |
 | qTesla-I | ref | 16,348 | 0 | 0 | 16,348 |
 | qTesla-III-size | ref | 24,912 | 0 | 0 | 24,912 |
 | qTesla-III-speed | ref | 23,812 | 0 | 0 | 23,812 |
