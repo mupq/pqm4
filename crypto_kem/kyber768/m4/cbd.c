@@ -1,5 +1,4 @@
 #include "cbd.h"
-
 #include "params.h"
 
 #include <stdint.h>
@@ -33,6 +32,7 @@ static uint32_t load32_littleendian(const unsigned char *x) {
 *
 * Arguments:   - poly *r:                  pointer to output polynomial
 *              - const unsigned char *buf: pointer to input byte array
+*              - int add:                  boolean to indicate to accumulate into r
 **************************************************/
 void cbd(poly *r, const unsigned char *buf, int add) {
     uint32_t d, t;

@@ -375,44 +375,44 @@ doublebasemul_asm:
   poly3 .req r14
   mov  q, #3329
   movt q, #62209
-      ldr poly0, [aptr], #4
-      ldr poly1, [bptr], #4
-      ldr poly2, [aptr], #4
-      ldr poly3, [bptr], #4
+  ldr poly0, [aptr], #4
+  ldr poly1, [bptr], #4
+  ldr poly2, [aptr], #4
+  ldr poly3, [bptr], #4
 
-      //basemul(r->coeffs + 4 * i, a->coeffs + 4 * i, b->coeffs + 4 * i, zetas[64 + i]);
-      smultt tmp, poly0, poly1
-      montgomery_packed q, tmp, tmp2
-      smultb tmp2, tmp2, zeta
-      montgomery_packed q, tmp2, tmp
-      smulbb tmp2, poly0, poly1
-      montgomery_packed q, tmp2, tmp3
-      // r[0] in upper half of tmp
+  //basemul(r->coeffs + 4 * i, a->coeffs + 4 * i, b->coeffs + 4 * i, zetas[64 + i]);
+  smultt tmp, poly0, poly1
+  montgomery_packed q, tmp, tmp2
+  smultb tmp2, tmp2, zeta
+  montgomery_packed q, tmp2, tmp
+  smulbb tmp2, poly0, poly1
+  montgomery_packed q, tmp2, tmp3
+  // r[0] in upper half of tmp
 
-      uadd16 tmp, tmp, tmp3
+  uadd16 tmp, tmp, tmp3
 
-      smuadx tmp2, poly0, poly1
-      montgomery_packed q, tmp2, tmp3
-      // r[1] in upper half of tmp3
-      pkhtb tmp, tmp3, tmp, asr#16
-      str tmp, [rptr], #4
+  smuadx tmp2, poly0, poly1
+  montgomery_packed q, tmp2, tmp3
+  // r[1] in upper half of tmp3
+  pkhtb tmp, tmp3, tmp, asr#16
+  str tmp, [rptr], #4
 
-      //basemul(r->coeffs + 4 * i + 2, a->coeffs + 4 * i + 2, b->coeffs + 4 * i + 2, - zetas[64 + i]);
-      smultt tmp, poly2, poly3
-      montgomery_packed q, tmp, tmp2
-      smultb tmp2, tmp2, zeta
-      montgomery_packed q, tmp2, tmp
-      smulbb tmp2, poly2, poly3
-      montgomery_packed q, tmp2, tmp3
-      // r[0] in upper half of tmp
+  //basemul(r->coeffs + 4 * i + 2, a->coeffs + 4 * i + 2, b->coeffs + 4 * i + 2, - zetas[64 + i]);
+  smultt tmp, poly2, poly3
+  montgomery_packed q, tmp, tmp2
+  smultb tmp2, tmp2, zeta
+  montgomery_packed q, tmp2, tmp
+  smulbb tmp2, poly2, poly3
+  montgomery_packed q, tmp2, tmp3
+  // r[0] in upper half of tmp
 
-      usub16 tmp, tmp3, tmp
+  usub16 tmp, tmp3, tmp
 
-      smuadx tmp2, poly2, poly3
-      montgomery_packed q, tmp2, tmp3
-      // r[1] in upper half of tmp3
-      pkhtb tmp, tmp3, tmp, asr#16
-      str tmp, [rptr], #4
+  smuadx tmp2, poly2, poly3
+  montgomery_packed q, tmp2, tmp3
+  // r[1] in upper half of tmp3
+  pkhtb tmp, tmp3, tmp, asr#16
+  str tmp, [rptr], #4
 
   pop {r4-r11, pc}
 
@@ -420,165 +420,165 @@ doublebasemul_asm:
 .type basemul_asm, %function
 .align 2
 basemul_asm:
-  push {r4-r11, lr}
+    push {r4-r11, lr}
 
-  .unreq poly0
-  .unreq poly1
-  .unreq poly2
-  .unreq poly3
-  .unreq q
-  .unreq tmp
-  .unreq tmp2
-  .unreq tmp3
-  .unreq loopctr
-  .unreq zeta
-  rptr .req r0
-  aptr .req r1
-  bptr .req r2
-  zetaptr .req r3
-  poly0 .req r4
-  poly1 .req r5
-  q    .req r6
-  poly2 .req r7
-  tmp  .req r8
-  tmp2 .req r9
-  tmp3 .req r10
+    .unreq poly0
+    .unreq poly1
+    .unreq poly2
+    .unreq poly3
+    .unreq q
+    .unreq tmp
+    .unreq tmp2
+    .unreq tmp3
+    .unreq loopctr
+    .unreq zeta
+    rptr .req r0
+    aptr .req r1
+    bptr .req r2
+    zetaptr .req r3
+    poly0 .req r4
+    poly1 .req r5
+    q    .req r6
+    poly2 .req r7
+    tmp  .req r8
+    tmp2 .req r9
+    tmp3 .req r10
 
-  loopctr .req r11
-  zeta    .req r12
-  poly3 .req r14
+    loopctr .req r11
+    zeta    .req r12
+    poly3 .req r14
 
-  mov  q, #3329
-  movt q, #62209
+    mov  q, #3329
+    movt q, #62209
 
-  mov loopctr, #64
-  loop:
-      ldr poly0, [aptr], #4
-      ldr poly1, [bptr], #4
-      ldr poly2, [aptr], #4
-      ldr poly3, [bptr], #4
-      ldrh zeta, [zetaptr], #2
+    mov loopctr, #64
+    loop:
+        ldr poly0, [aptr], #4
+        ldr poly1, [bptr], #4
+        ldr poly2, [aptr], #4
+        ldr poly3, [bptr], #4
+        ldrh zeta, [zetaptr], #2
 
-      //basemul(r->coeffs + 4 * i, a->coeffs + 4 * i, b->coeffs + 4 * i, zetas[64 + i]);
-      smultt tmp, poly0, poly1
-      montgomery_packed q, tmp, tmp2
-      smultb tmp2, tmp2, zeta
-      montgomery_packed q, tmp2, tmp
-      smulbb tmp2, poly0, poly1
-      montgomery_packed q, tmp2, tmp3
-      // r[0] in upper half of tmp
+        //basemul(r->coeffs + 4 * i, a->coeffs + 4 * i, b->coeffs + 4 * i, zetas[64 + i]);
+        smultt tmp, poly0, poly1
+        montgomery_packed q, tmp, tmp2
+        smultb tmp2, tmp2, zeta
+        montgomery_packed q, tmp2, tmp
+        smulbb tmp2, poly0, poly1
+        montgomery_packed q, tmp2, tmp3
+        // r[0] in upper half of tmp
 
-      uadd16 tmp, tmp, tmp3
+        uadd16 tmp, tmp, tmp3
 
-      smuadx tmp2, poly0, poly1
-      montgomery_packed q, tmp2, tmp3
-      // r[1] in upper half of tmp3
-      pkhtb tmp, tmp3, tmp, asr#16
-      str tmp, [rptr], #4
+        smuadx tmp2, poly0, poly1
+        montgomery_packed q, tmp2, tmp3
+        // r[1] in upper half of tmp3
+        pkhtb tmp, tmp3, tmp, asr#16
+        str tmp, [rptr], #4
 
-      //basemul(r->coeffs + 4 * i + 2, a->coeffs + 4 * i + 2, b->coeffs + 4 * i + 2, - zetas[64 + i]);
-      smultt tmp, poly2, poly3
-      montgomery_packed q, tmp, tmp2
-      smultb tmp2, tmp2, zeta
-      montgomery_packed q, tmp2, tmp
-      smulbb tmp2, poly2, poly3
-      montgomery_packed q, tmp2, tmp3
-      // r[0] in upper half of tmp
+        //basemul(r->coeffs + 4 * i + 2, a->coeffs + 4 * i + 2, b->coeffs + 4 * i + 2, - zetas[64 + i]);
+        smultt tmp, poly2, poly3
+        montgomery_packed q, tmp, tmp2
+        smultb tmp2, tmp2, zeta
+        montgomery_packed q, tmp2, tmp
+        smulbb tmp2, poly2, poly3
+        montgomery_packed q, tmp2, tmp3
+        // r[0] in upper half of tmp
 
-      usub16 tmp, tmp3, tmp
+        usub16 tmp, tmp3, tmp
 
-      smuadx tmp2, poly2, poly3
-      montgomery_packed q, tmp2, tmp3
-      // r[1] in upper half of tmp3
-      pkhtb tmp, tmp3, tmp, asr#16
-      str tmp, [rptr], #4
-  subs loopctr, #1
-  bne loop
-  pop {r4-r11, pc}
+        smuadx tmp2, poly2, poly3
+        montgomery_packed q, tmp2, tmp3
+        // r[1] in upper half of tmp3
+        pkhtb tmp, tmp3, tmp, asr#16
+        str tmp, [rptr], #4
+    subs loopctr, #1
+    bne loop
+    pop {r4-r11, pc}
 
 .global basemul_asm_acc
 .type basemul_asm_acc, %function
 .align 2
 basemul_asm_acc:
-push {r4-r11, lr}
+    push {r4-r11, lr}
 
-.unreq poly0
-.unreq poly1
-.unreq poly2
-.unreq poly3
-.unreq q
-.unreq tmp
-.unreq tmp2
-.unreq tmp3
-.unreq loopctr
-.unreq zeta
-rptr .req r0
-aptr .req r1
-bptr .req r2
-zetaptr .req r3
-poly0 .req r4
-poly1 .req r5
-q    .req r6
-poly2 .req r7
-tmp  .req r8
-tmp2 .req r9
-tmp3 .req r10
+    .unreq poly0
+    .unreq poly1
+    .unreq poly2
+    .unreq poly3
+    .unreq q
+    .unreq tmp
+    .unreq tmp2
+    .unreq tmp3
+    .unreq loopctr
+    .unreq zeta
+    rptr .req r0
+    aptr .req r1
+    bptr .req r2
+    zetaptr .req r3
+    poly0 .req r4
+    poly1 .req r5
+    q    .req r6
+    poly2 .req r7
+    tmp  .req r8
+    tmp2 .req r9
+    tmp3 .req r10
 
-loopctr .req r11
-zeta    .req r12
-poly3 .req r14
+    loopctr .req r11
+    zeta    .req r12
+    poly3 .req r14
 
-mov  q, #3329
-movt q, #62209
+    mov  q, #3329
+    movt q, #62209
 
-mov loopctr, #64
-loop2:
-    ldr poly0, [aptr], #4
-    ldr poly1, [bptr], #4
-    ldr poly2, [aptr], #4
-    ldr poly3, [bptr], #4
-    ldrh zeta, [zetaptr], #2
+    mov loopctr, #64
+    loop2:
+        ldr poly0, [aptr], #4
+        ldr poly1, [bptr], #4
+        ldr poly2, [aptr], #4
+        ldr poly3, [bptr], #4
+        ldrh zeta, [zetaptr], #2
 
-    //basemul(r->coeffs + 4 * i, a->coeffs + 4 * i, b->coeffs + 4 * i, zetas[64 + i]);
-    smultt tmp, poly0, poly1
-    montgomery_packed q, tmp, tmp2
-    smultb tmp2, tmp2, zeta
-    montgomery_packed q, tmp2, tmp
-    smulbb tmp2, poly0, poly1
-    montgomery_packed q, tmp2, tmp3
-    // r[0] in upper half of tmp
+        //basemul(r->coeffs + 4 * i, a->coeffs + 4 * i, b->coeffs + 4 * i, zetas[64 + i]);
+        smultt tmp, poly0, poly1
+        montgomery_packed q, tmp, tmp2
+        smultb tmp2, tmp2, zeta
+        montgomery_packed q, tmp2, tmp
+        smulbb tmp2, poly0, poly1
+        montgomery_packed q, tmp2, tmp3
+        // r[0] in upper half of tmp
 
-    uadd16 tmp, tmp, tmp3
+        uadd16 tmp, tmp, tmp3
 
-    smuadx tmp2, poly0, poly1
-    montgomery_packed q, tmp2, tmp3
-    // r[1] in upper half of tmp3
-    pkhtb tmp, tmp3, tmp, asr#16
-    ldr tmp3, [rptr]
-    uadd16 tmp, tmp, tmp3
-    str tmp, [rptr], #4
+        smuadx tmp2, poly0, poly1
+        montgomery_packed q, tmp2, tmp3
+        // r[1] in upper half of tmp3
+        pkhtb tmp, tmp3, tmp, asr#16
+        ldr tmp3, [rptr]
+        uadd16 tmp, tmp, tmp3
+        str tmp, [rptr], #4
 
-    //basemul(r->coeffs + 4 * i + 2, a->coeffs + 4 * i + 2, b->coeffs + 4 * i + 2, - zetas[64 + i]);
-    smultt tmp, poly2, poly3
-    montgomery_packed q, tmp, tmp2
-    smultb tmp2, tmp2, zeta
-    montgomery_packed q, tmp2, tmp
-    smulbb tmp2, poly2, poly3
-    montgomery_packed q, tmp2, tmp3
-    // r[0] in upper half of tmp
+        //basemul(r->coeffs + 4 * i + 2, a->coeffs + 4 * i + 2, b->coeffs + 4 * i + 2, - zetas[64 + i]);
+        smultt tmp, poly2, poly3
+        montgomery_packed q, tmp, tmp2
+        smultb tmp2, tmp2, zeta
+        montgomery_packed q, tmp2, tmp
+        smulbb tmp2, poly2, poly3
+        montgomery_packed q, tmp2, tmp3
+        // r[0] in upper half of tmp
 
-    usub16 tmp, tmp3, tmp
+        usub16 tmp, tmp3, tmp
 
-    smuadx tmp2, poly2, poly3
-    montgomery_packed q, tmp2, tmp3
-    // r[1] in upper half of tmp3
-    pkhtb tmp, tmp3, tmp, asr#16
-    ldr tmp3, [rptr]
-    uadd16 tmp, tmp, tmp3
-    str tmp, [rptr], #4
-subs loopctr, #1
-bne loop2
-pop {r4-r11, pc}
+        smuadx tmp2, poly2, poly3
+        montgomery_packed q, tmp2, tmp3
+        // r[1] in upper half of tmp3
+        pkhtb tmp, tmp3, tmp, asr#16
+        ldr tmp3, [rptr]
+        uadd16 tmp, tmp, tmp3
+        str tmp, [rptr], #4
+    subs loopctr, #1
+    bne loop2
+    pop {r4-r11, pc}
 
 .align 2
 .global pointwise_sub
