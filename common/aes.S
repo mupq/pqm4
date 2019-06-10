@@ -84,7 +84,11 @@ aes128_keyexp_asm:
     push {r4-r11}
 
     //load key
-    ldm r0, {r4-r7}
+    //pointer may be non-aligned, so avoid using ldm/stm
+    ldr r4, [r0, #0]
+    ldr r5, [r0, #4]
+    ldr r6, [r0, #8]
+    ldr r7, [r0, #12]
 
     //load table address once
     ldr r3, =AES_Te0
@@ -110,7 +114,6 @@ aes128_keyexp_asm:
     eor r7, r6 //rk[7]
 
     //write to memory
-    //stmia.w r1!, {r4-r7} is slower if we can use encoding T1!
     str r4, [r1, #0]
     str r5, [r1, #4]
     str r6, [r1, #8]
@@ -137,7 +140,6 @@ aes128_keyexp_asm:
     eor r7, r6 //rk[11]
 
     //write to memory
-    //stmia.w r1!, {r4-r7} is slower if we can use encoding T1!
     str r4, [r1, #16]
     str r5, [r1, #20]
     str r6, [r1, #24]
@@ -164,7 +166,6 @@ aes128_keyexp_asm:
     eor r7, r6 //rk[15]
 
     //write to memory
-    //stmia.w r1!, {r4-r7} is slower if we can use encoding T1!
     str r4, [r1, #32]
     str r5, [r1, #36]
     str r6, [r1, #40]
@@ -191,7 +192,6 @@ aes128_keyexp_asm:
     eor r7, r6 //rk[19]
 
     //write to memory
-    //stmia.w r1!, {r4-r7} is slower if we can use encoding T1!
     str r4, [r1, #48]
     str r5, [r1, #52]
     str r6, [r1, #56]
@@ -218,7 +218,6 @@ aes128_keyexp_asm:
     eor r7, r6 //rk[23]
 
     //write to memory
-    //stmia.w r1!, {r4-r7} is slower if we can use encoding T1!
     str r4, [r1, #64]
     str r5, [r1, #68]
     str r6, [r1, #72]
@@ -245,7 +244,6 @@ aes128_keyexp_asm:
     eor r7, r6 //rk[27]
 
     //write to memory
-    //stmia.w r1!, {r4-r7} is slower if we can use encoding T1!
     str r4, [r1, #80]
     str r5, [r1, #84]
     str r6, [r1, #88]
@@ -272,7 +270,6 @@ aes128_keyexp_asm:
     eor r7, r6 //rk[31]
 
     //write to memory
-    //stmia.w r1!, {r4-r7} is slower if we can use encoding T1!
     str r4, [r1, #96]
     str r5, [r1, #100]
     str r6, [r1, #104]
@@ -299,7 +296,6 @@ aes128_keyexp_asm:
     eor r7, r6 //rk[35]
 
     //write to memory
-    //stmia.w r1!, {r4-r7} is slower if we can use encoding T1!
     str r4, [r1, #112]
     str r5, [r1, #116]
     str r6, [r1, #120]
@@ -328,7 +324,6 @@ aes128_keyexp_asm:
     eor r7, r6 //rk[39]
 
     //write to memory
-    //stmia.w r1!, {r4-r7} is slower if we can use encoding T1!
     str r4, [r1, #0]
     str r5, [r1, #4]
     str r6, [r1, #8]
@@ -355,7 +350,6 @@ aes128_keyexp_asm:
     eor r7, r6 //rk[43]
 
     //write to memory
-    //stmia.w r1!, {r4-r7} is slower if we can use encoding T1!
     str r4, [r1, #16]
     str r5, [r1, #20]
     str r6, [r1, #24]
@@ -367,7 +361,10 @@ aes128_keyexp_asm:
 .size aes128_keyexp_asm,.-aes128_keyexp_asm
 
 .macro aesencrypt_oddround
-    ldmia r14!, {r8-r11}
+    ldr r8, [r14], #4
+    ldr r9, [r14], #4
+    ldr r10, [r14], #4
+    ldr r11, [r14], #4
 
     uxtb r0, r4
     uxtb r1, r5
@@ -423,7 +420,10 @@ aes128_keyexp_asm:
 .endm
 
 .macro aesencrypt_evenround
-    ldmia r14!, {r4-r7}
+    ldr r4, [r14], #4
+    ldr r5, [r14], #4
+    ldr r6, [r14], #4
+    ldr r7, [r14], #4
 
     uxtb r0, r8
     uxtb r1, r9
@@ -539,9 +539,16 @@ aes128_encrypt_asm:
     push {r2,r4-r12,r14}
 
     //load input
-    ldm r1, {r4-r7} //r1 now free to overwrite
+    ldr r4, [r1, #0]
+    ldr r5, [r1, #4]
+    ldr r6, [r1, #8]
+    ldr r7, [r1, #12]
+    //r1 now free to overwrite
     //load key
-    ldmia r0!, {r8-r11}
+    ldr r8, [r0], #4
+    ldr r9, [r0], #4
+    ldr r10, [r0], #4
+    ldr r11, [r0], #4
     mov.w r14, r0
 
     //load table address once
@@ -560,7 +567,11 @@ aes128_encrypt_asm:
     aesencrypt_oddround
     aesencrypt_finalround
 
-    ldmia r14!, {r0-r3} //rk[40]-rk[43]
+    //rk[40]-rk[43]
+    ldr r0, [r14, #0]
+    ldr r1, [r14, #4]
+    ldr r2, [r14, #8]
+    ldr r3, [r14, #12]
 
     eor r0, r0, r4, ror #8
     eor r1, r1, r5, ror #8
@@ -569,7 +580,10 @@ aes128_encrypt_asm:
     eor r3, r3, r7, ror #8
 
     //write output
-    stm r4, {r0-r3}
+    str r0, [r4, #0]
+    str r1, [r4, #4]
+    str r2, [r4, #8]
+    str r3, [r4, #12]
 
     //function epilogue, restore state
     pop {r4-r12,r14}
@@ -588,7 +602,12 @@ aes192_keyexp_asm:
     push {r4-r11}
 
     //load key
-    ldm r0, {r2-r7}
+    ldr r2, [r0, #0]
+    ldr r3, [r0, #4]
+    ldr r4, [r0, #8]
+    ldr r5, [r0, #12]
+    ldr r6, [r0, #16]
+    ldr r7, [r0, #20]
 
     //load table address once
     ldr r0, =AES_Te0
@@ -616,7 +635,6 @@ aes192_keyexp_asm:
     eor r7, r6 //rk[11]
 
     //write to memory
-    //stmia.w r1!, {r2-r7} is slower if we can use encoding T1!
     str r2, [r1, #0]
     str r3, [r1, #4]
     str r4, [r1, #8]
@@ -647,7 +665,6 @@ aes192_keyexp_asm:
     eor r7, r6 //rk[17]
 
     //write to memory
-    //stmia.w r1!, {r2-r7} is slower if we can use encoding T1!
     str r2, [r1, #24]
     str r3, [r1, #28]
     str r4, [r1, #32]
@@ -678,7 +695,6 @@ aes192_keyexp_asm:
     eor r7, r6 //rk[23]
 
     //write to memory
-    //stmia.w r1!, {r2-r7} is slower if we can use encoding T1!
     str r2, [r1, #48]
     str r3, [r1, #52]
     str r4, [r1, #56]
@@ -709,7 +725,6 @@ aes192_keyexp_asm:
     eor r7, r6 //rk[29]
 
     //write to memory
-    //stmia.w r1!, {r2-r7} is slower if we can use encoding T1!
     str r2, [r1, #72]
     str r3, [r1, #76]
     str r4, [r1, #80]
@@ -740,7 +755,6 @@ aes192_keyexp_asm:
     eor r7, r6 //rk[35]
 
     //write to memory
-    //stmia.w r1!, {r2-r7} is slower if we can use encoding T1!
     str r2, [r1, #96]
     str r3, [r1, #100]
     str r4, [r1, #104]
@@ -773,7 +787,6 @@ aes192_keyexp_asm:
     eor r7, r6 //rk[41]
 
     //write to memory
-    //stmia.w r1!, {r2-r7} is slower if we can use encoding T1!
     str r2, [r1, #0]
     str r3, [r1, #4]
     str r4, [r1, #8]
@@ -804,7 +817,6 @@ aes192_keyexp_asm:
     eor r7, r6 //rk[47]
 
     //write to memory
-    //stmia.w r1!, {r2-r7} is slower if we can use encoding T1!
     str r2, [r1, #24]
     str r3, [r1, #28]
     str r4, [r1, #32]
@@ -832,7 +844,6 @@ aes192_keyexp_asm:
     eor r4, r3 //rk[50]
     eor r5, r4 //rk[51]
     //write to memory
-    //stmia.w r1!, {r2-r5} is slower if we can use encoding T1!
     str r2, [r1, #48]
     str r3, [r1, #52]
     str r4, [r1, #56]
@@ -854,9 +865,16 @@ aes192_encrypt_asm:
     push {r2,r4-r12,r14}
 
     //load input
-    ldm r1, {r4-r7} //r1 now free to overwrite
+    ldr r4, [r1, #0]
+    ldr r5, [r1, #4]
+    ldr r6, [r1, #8]
+    ldr r7, [r1, #12]
+    //r1 now free to overwrite
     //load key
-    ldmia r0!, {r8-r11}
+    ldr r8, [r0], #4
+    ldr r9, [r0], #4
+    ldr r10, [r0], #4
+    ldr r11, [r0], #4
     mov.w r14, r0
 
     //load table address once
@@ -875,7 +893,11 @@ aes192_encrypt_asm:
     aesencrypt_oddround
     aesencrypt_finalround
 
-    ldmia r14!, {r0-r3} //rk[48]-rk[51]
+    //rk[48]-rk[51]
+    ldr r0, [r14, #0]
+    ldr r1, [r14, #4]
+    ldr r2, [r14, #8]
+    ldr r3, [r14, #12]
 
     eor r0, r0, r4, ror #8
     eor r1, r1, r5, ror #8
@@ -884,7 +906,10 @@ aes192_encrypt_asm:
     eor r3, r3, r7, ror #8
 
     //write output
-    stm r4, {r0-r3}
+    str r0, [r4, #0]
+    str r1, [r4, #4]
+    str r2, [r4, #8]
+    str r3, [r4, #12]
 
     //function epilogue, restore state
     pop {r4-r12,r14}
@@ -903,7 +928,14 @@ aes256_keyexp_asm:
     push {r4-r12,r14}
 
     //load key
-    ldm r0, {r2-r9}
+    ldr r2, [r0, #0]
+    ldr r3, [r0, #4]
+    ldr r4, [r0, #8]
+    ldr r5, [r0, #12]
+    ldr r6, [r0, #16]
+    ldr r7, [r0, #20]
+    ldr r8, [r0, #24]
+    ldr r9, [r0, #28]
 
     //load table address once
     ldr r0, =AES_Te0
@@ -947,7 +979,6 @@ aes256_keyexp_asm:
     eor r9, r8 //rk[15]
 
     //write to memory
-    //stmia.w r1!, {r2-r9} is slower if we can use encoding T1!
     str r2, [r1, #0]
     str r3, [r1, #4]
     str r4, [r1, #8]
@@ -996,7 +1027,6 @@ aes256_keyexp_asm:
     eor r9, r8 //rk[23]
 
     //write to memory
-    //stmia.w r1!, {r2-r9} is slower if we can use encoding T1!
     str r2, [r1, #32]
     str r3, [r1, #36]
     str r4, [r1, #40]
@@ -1045,7 +1075,6 @@ aes256_keyexp_asm:
     eor r9, r8 //rk[31]
 
     //write to memory
-    //stmia.w r1!, {r2-r9} is slower if we can use encoding T1!
     str r2, [r1, #64]
     str r3, [r1, #68]
     str r4, [r1, #72]
@@ -1094,7 +1123,6 @@ aes256_keyexp_asm:
     eor r9, r8 //rk[39]
 
     //write to memory
-    //stmia.w r1!, {r2-r9} is slower if we can use encoding T1!
     str r2, [r1, #96]
     str r3, [r1, #100]
     str r4, [r1, #104]
@@ -1145,7 +1173,6 @@ aes256_keyexp_asm:
     eor r9, r8 //rk[47]
 
     //write to memory
-    //stmia.w r1!, {r2-r9} is slower if we can use encoding T1!
     str r2, [r1, #0]
     str r3, [r1, #4]
     str r4, [r1, #8]
@@ -1194,7 +1221,6 @@ aes256_keyexp_asm:
     eor r9, r8 //rk[55]
 
     //write to memory
-    //stmia.w r1!, {r2-r9} is slower if we can use encoding T1!
     str r2, [r1, #32]
     str r3, [r1, #36]
     str r4, [r1, #40]
@@ -1225,7 +1251,6 @@ aes256_keyexp_asm:
     eor r5, r4 //rk[59]
 
     //write to memory
-    //stmia.w r1!, {r2-r5} is slower if we can use encoding T1!
     str r2, [r1, #64]
     str r3, [r1, #68]
     str r4, [r1, #72]
@@ -1250,9 +1275,16 @@ aes256_encrypt_asm:
     push {r2,r4-r12,r14}
 
     //load input
-    ldm r1, {r4-r7} //r1 now free to overwrite
+    ldr r4, [r1, #0]
+    ldr r5, [r1, #4]
+    ldr r6, [r1, #8]
+    ldr r7, [r1, #12]
+    //r1 now free to overwrite
     //load key
-    ldmia r0!, {r8-r11}
+    ldr r8, [r0], #4
+    ldr r9, [r0], #4
+    ldr r10, [r0], #4
+    ldr r11, [r0], #4
     mov.w r14, r0
 
     //load table address once
@@ -1271,7 +1303,11 @@ aes256_encrypt_asm:
     aesencrypt_oddround
     aesencrypt_finalround
 
-    ldmia r14!, {r0-r3} //rk[56]-rk[59]
+    //rk[56]-rk[59]
+    ldr r0, [r14, #0]
+    ldr r1, [r14, #4]
+    ldr r2, [r14, #8]
+    ldr r3, [r14, #12]
 
     eor r0, r0, r4, ror #8
     eor r1, r1, r5, ror #8
@@ -1280,7 +1316,10 @@ aes256_encrypt_asm:
     eor r3, r3, r7, ror #8
 
     //write output
-    stm r4, {r0-r3}
+    str r0, [r4, #0]
+    str r1, [r4, #4]
+    str r2, [r4, #8]
+    str r3, [r4, #12]
 
     //function epilogue, restore state
     pop {r4-r12,r14}
