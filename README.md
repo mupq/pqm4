@@ -26,7 +26,7 @@ For the second round of the NIST PQC, **pqm4** was extended (see [#78](https://g
 - integration of clean implementations from [PQClean](https://github.com/PQClean/PQClean).
 
 **Not all schemes have been migrated to Round 2 code yet: 
-FrodoKEM, Dilithium, and qTesla are still Round 1 implementations**.
+FrodoKEM and qTesla are still Round 1 implementations**.
 
 
 ## Schemes included in pqm4
