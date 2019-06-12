@@ -1,6 +1,10 @@
 Speed Evaluation,,,,,,,,,,
 Key Encapsulation Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [cycles] (mean),Key Generation [cycles] (min),Key Generation [cycles] (max),Encapsulation [cycles] (mean),Encapsulation [cycles] (min),Encapsulation [cycles] (max),Decapsulation [cycles] (mean),Decapsulation [cycles] (min),Decapsulation [cycles] (max)
+babybear (100 executions),opt,596665,596665,596665,752117,752117,752117,1142773,1142773,1142773
+babybear (100 executions),ref,3968931,3968931,3968931,5802693,5802693,5802693,11704641,11704641,11704641
+babybear-ephem (100 executions),opt,596664,596664,596664,767860,767860,767860,231728,231728,231728
+babybear-ephem (100 executions),ref,3968935,3968935,3968935,5817861,5817861,5817861,1948755,1948755,1948755
 firesaber (100 executions),m4,1448776,1448776,1448776,1786930,1786930,1786930,1853339,1853339,1853339
 firesaber (100 executions),ref,3815672,3815672,3815672,4745405,4745405,4745405,5402295,5402295,5402295
 frodokem640aes (100 executions),m4,41840515,41840515,41840515,45248630,45248630,45248630,45394452,45394452,45394452
@@ -17,6 +21,10 @@ lac192 (100 executions),ref,7532180,7525427,7539476,9986506,9979643,9993693,1745
 lac256 (100 executions),ref,7665769,7652402,7681209,13533851,13517064,13553209,21125257,21108384,21144510
 lightsaber (100 executions),m4,459965,459965,459965,651273,651273,651273,678810,678810,678810
 lightsaber (100 executions),ref,1051530,1051530,1051530,1538646,1538646,1538646,1861934,1861934,1861934
+mamabear (100 executions),opt,1195048,1195048,1195048,1402955,1402955,1402955,1955496,1955496,1955496
+mamabear (100 executions),ref,8774109,8774109,8774109,11501206,11501206,11501206,23131816,23131816,23131816
+mamabear-ephem (100 executions),opt,1206350,1206350,1206350,1431341,1431341,1431341,320233,320233,320233
+mamabear-ephem (100 executions),ref,8783565,8783565,8783565,11525870,11525870,11525870,2876105,2876105,2876105
 newhope1024cca (100 executions),clean,1460167,1459836,1460406,2264773,2264441,2265011,2410906,2410574,2411144
 newhope1024cca (100 executions),m4,1219908,1219630,1220245,1903231,1902954,1903568,1927505,1927227,1927843
 newhope1024cpa (100 executions),clean,1274813,1274572,1275142,1857055,1856813,1857383,327778,327778,327778
@@ -34,6 +42,10 @@ ntruhrss701 (100 executions),m4,154676705,154676705,154676705,402784,402784,4027
 ntrulpr653 (100 executions),ref,54824768,54824768,54824768,109094505,109094505,109094505,163062035,163062035,163062035
 ntrulpr761 (100 executions),ref,74265583,74265583,74265583,147846761,147846761,147846761,221088122,221088122,221088122
 ntrulpr857 (100 executions),ref,94016969,94016969,94016969,187235730,187235730,187235730,280075965,280075965,280075965
+papabear (100 executions),opt,2014216,2014216,2014216,2276138,2276138,2276138,3000239,3000239,3000239
+papabear (100 executions),ref,15478896,15478896,15478896,19098191,19098191,19098191,38361009,38361009,38361009
+papabear-ephem (100 executions),opt,2029284,2029284,2029284,2308148,2308148,2308148,411623,411623,411623
+papabear-ephem (100 executions),ref,15490269,15490269,15490269,19126020,19126020,19126020,3803444,3803444,3803444
 saber (100 executions),m4,896035,896035,896035,1161849,1161849,1161849,1204633,1204633,1204633
 saber (100 executions),ref,2226935,2226935,2226935,2936240,2936240,2936240,3424601,3424601,3424601
 sikep434 (1 executions),opt,650735516,650735516,650735516,1065631547,1065631547,1065631547,1136703605,1136703605,1136703605
@@ -99,6 +111,10 @@ sphincs-shake256-256s-simple (1 executions),clean,4058075714,4058075714,40580757
 Memory Evaluation,,,,,,,,,,
 Key Encapsulation Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [bytes],Encapsulation [bytes],Decapsulation [bytes],,,,,,
+babybear,opt,3104,2976,5112,,,,,,
+babybear,ref,6168,6088,10192,,,,,,
+babybear-ephem,opt,3104,3008,2440,,,,,,
+babybear-ephem,ref,6168,6088,4864,,,,,,
 firesaber,m4,20144,23008,24592,,,,,,
 firesaber,ref,20144,23008,24488,,,,,,
 frodokem640aes,m4,31760,52088,62456,,,,,,
@@ -115,6 +131,10 @@ lac192,ref,4344,7464,8664,,,,,,
 lac256,ref,4452,8676,10116,,,,,,
 lightsaber,m4,9656,11392,12136,,,,,,
 lightsaber,ref,10024,11672,12504,,,,,,
+mamabear,opt,3592,3464,6072,,,,,,
+mamabear,ref,6792,6712,11600,,,,,,
+mamabear-ephem,opt,3592,3488,2920,,,,,,
+mamabear-ephem,ref,6792,6712,4864,,,,,,
 newhope1024cca,clean,11120,17400,19608,,,,,,
 newhope1024cca,m4,11152,17400,19640,,,,,,
 newhope1024cpa,clean,11096,17288,8308,,,,,,
@@ -132,6 +152,10 @@ ntruhrss701,m4,27580,19372,20580,,,,,,
 ntrulpr653,ref,12204,19652,23068,,,,,,
 ntrulpr761,ref,14044,22492,26524,,,,,,
 ntrulpr857,ref,15692,25068,29628,,,,,,
+papabear,opt,4072,3944,7032,,,,,,
+papabear,ref,7416,7344,13008,,,,,,
+papabear-ephem,opt,4072,3968,3400,,,,,,
+papabear-ephem,ref,7416,7336,4864,,,,,,
 saber,m4,13256,15544,16640,,,,,,
 saber,ref,13624,15912,17008,,,,,,
 sikep434,opt,6776,7088,7424,,,,,,
@@ -197,6 +221,10 @@ sphincs-shake256-256s-simple,clean,6008,5840,5320,,,,,,
 Hashing Evaluation,,,,,,,,,,
 Key Encapsulation Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [%],Encapsulation [%],Decapsulation [%],,,,,,
+babybear,opt,55.2,47.5,41.9,,,,,,
+babybear,ref,8.4,6.2,6.5,,,,,,
+babybear-ephem,opt,55.2,48.4,35.8,,,,,,
+babybear-ephem,ref,8.4,6.5,4.3,,,,,,
 firesaber,m4,49.4,49.3,40.0,,,,,,
 firesaber,ref,18.8,18.6,13.7,,,,,,
 frodokem640aes,m4,81.0,78.3,78.0,,,,,,
@@ -213,6 +241,10 @@ lac192,ref,1.9,2.1,1.2,,,,,,
 lac256,ref,3.4,2.5,1.6,,,,,,
 lightsaber,m4,56.5,55.7,42.0,,,,,,
 lightsaber,ref,24.7,23.6,15.3,,,,,,
+mamabear,opt,53.9,47.9,43.3,,,,,,
+mamabear,ref,7.4,5.9,6.1,,,,,,
+mamabear-ephem,opt,53.4,47.9,34.3,,,,,,
+mamabear-ephem,ref,7.4,6.0,3.9,,,,,,
 newhope1024cca,clean,59.5,59.1,47.6,,,,,,
 newhope1024cca,m4,71.2,70.3,59.5,,,,,,
 newhope1024cpa,clean,53.9,50.2,4.3,,,,,,
@@ -230,6 +262,10 @@ ntruhrss701,m4,0.0,9.7,17.3,,,,,,
 ntrulpr653,ref,0.5,0.5,0.3,,,,,,
 ntrulpr761,ref,0.4,0.4,0.2,,,,,,
 ntrulpr857,ref,0.3,0.4,0.2,,,,,,
+papabear,opt,52.7,47.9,44.0,,,,,,
+papabear,ref,6.9,5.8,6.0,,,,,,
+papabear-ephem,opt,52.3,47.9,33.2,,,,,,
+papabear-ephem,ref,6.9,5.8,3.6,,,,,,
 saber,m4,53.0,52.9,41.5,,,,,,
 saber,ref,21.3,20.9,14.6,,,,,,
 sikep434,opt,0.0,0.0,0.0,,,,,,
@@ -295,6 +331,10 @@ sphincs-shake256-256s-simple,clean,96.3,96.1,96.2,,,,,,
 Size Evaluation,,,,,,,,,,
 Key Encapsulation Schemes,,,,,,,,,,
 Scheme,Implementation,.text [bytes],.data [bytes],.bss [bytes],Total [bytes],,,,,
+babybear,opt,5627,0,0,5627,,,,,
+babybear,ref,4922,0,0,4922,,,,,
+babybear-ephem,opt,4985,0,0,4985,,,,,
+babybear-ephem,ref,4892,0,0,4892,,,,,
 firesaber,m4,44184,0,0,44184,,,,,
 firesaber,ref,12244,0,0,12244,,,,,
 frodokem640aes,m4,15616,28,0,15644,,,,,
@@ -311,6 +351,10 @@ lac192,ref,21196,72,152,21420,,,,,
 lac256,ref,29876,72,296,30244,,,,,
 lightsaber,m4,44916,0,0,44916,,,,,
 lightsaber,ref,12976,0,0,12976,,,,,
+mamabear,opt,5623,0,0,5623,,,,,
+mamabear,ref,5414,0,0,5414,,,,,
+mamabear-ephem,opt,4917,0,0,4917,,,,,
+mamabear-ephem,ref,4900,0,0,4900,,,,,
 newhope1024cca,clean,10780,0,0,10780,,,,,
 newhope1024cca,m4,12176,0,0,12176,,,,,
 newhope1024cpa,clean,10384,0,0,10384,,,,,
@@ -328,6 +372,10 @@ ntruhrss701,m4,132224,0,0,132224,,,,,
 ntrulpr653,ref,4516,0,0,4516,,,,,
 ntrulpr761,ref,4632,0,0,4632,,,,,
 ntrulpr857,ref,4696,0,0,4696,,,,,
+papabear,opt,5559,0,0,5559,,,,,
+papabear,ref,5398,0,0,5398,,,,,
+papabear-ephem,opt,4877,0,0,4877,,,,,
+papabear-ephem,ref,4908,0,0,4908,,,,,
 saber,m4,44468,0,0,44468,,,,,
 saber,ref,12524,0,0,12524,,,,,
 sikep434,opt,30368,0,0,30368,,,,,
