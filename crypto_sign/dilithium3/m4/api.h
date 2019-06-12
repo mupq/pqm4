@@ -4,12 +4,12 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#define MODE 2
 
-#define CRYPTO_PUBLICKEYBYTES 1184U
-#define CRYPTO_SECRETKEYBYTES 2800U
-#define CRYPTO_BYTES 2044U
-#define CRYPTO_ALGNAME "Dilithium2"
+#define CRYPTO_PUBLICKEYBYTES 1472U
+#define CRYPTO_SECRETKEYBYTES 3504U
+#define CRYPTO_BYTES 2701U
+
+#define CRYPTO_ALGNAME "Dilithium3"
 
 int crypto_sign_keypair(uint8_t *pk, uint8_t *sk);
 

@@ -45,8 +45,12 @@ sntrup761 (100 executions),ref,757107092,757107092,757107092,74398441,74398441,7
 sntrup857 (100 executions),ref,961965366,961965366,961965366,94154502,94154502,94154502,286203168,286203168,286203168
 Signature Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [cycles] (mean),Key Generation [cycles] (min),Key Generation [cycles] (max),Sign [cycles] (mean),Sign [cycles] (min),Sign [cycles] (max),Verify [cycles] (mean),Verify [cycles] (min),Verify [cycles] (max)
-dilithium2 (100 executions),m4,2302877,2302131,2303775,9456759,3118360,45556652,2296615,2296063,2296962
-dilithium2 (100 executions),ref,2753926,2753249,2755062,16545038,5001347,112367034,3014547,3014142,3014999
+dilithium2 (100 executions),clean,1752194,1751051,1764500,9342087,3486474,26959258,2035881,2035522,2036394
+dilithium2 (100 executions),m4,1400412,1399149,1425295,6157001,2000255,33459692,1461284,1460880,1461658
+dilithium3 (100 executions),clean,2733423,2732625,2734257,14885750,4809910,78585023,2946998,2946203,2947530
+dilithium3 (100 executions),m4,2282485,2281621,2283222,9289499,2927627,35651483,2228898,2228423,2229477
+dilithium4 (100 executions),clean,3647486,3647083,3647892,13615651,6313249,43824110,4035259,4034802,4035897
+dilithium4 (100 executions),m4,3097421,3097005,3097731,8468805,4033922,20081029,3173500,3172863,3174125
 luov-48-43-222-chacha (100 executions),ref,41347565,41077732,41585440,123878410,123825414,123912572,95330045,95317535,95343473
 luov-48-43-222-keccak (100 executions),ref,53900163,53649451,54074274,135960322,135913707,136018359,107793279,107783143,107803188
 luov-64-61-302-chacha (100 executions),ref,109063798,108677813,109472193,405205796,405092541,405292253,269012028,268981066,269034087
@@ -139,8 +143,12 @@ sntrup761,ref,16248,16028,19156,,,,,,
 sntrup857,ref,18264,17908,21444,,,,,,
 Signature Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [bytes],Sign [bytes],Verify [bytes],,,,,,
-dilithium2,m4,50960,86720,55008,,,,,,
-dilithium2,ref,50960,86784,54904,,,,,,
+dilithium2,clean,36424,61312,40664,,,,,,
+dilithium2,m4,36424,61312,40664,,,,,,
+dilithium3,clean,50752,81792,55000,,,,,,
+dilithium3,m4,50752,81792,55000,,,,,,
+dilithium4,clean,67136,104408,71472,,,,,,
+dilithium4,m4,67136,104408,71472,,,,,,
 luov-48-43-222-chacha,ref,2968,4720,2732,,,,,,
 luov-48-43-222-keccak,ref,3240,4872,3120,,,,,,
 luov-64-61-302-chacha,ref,3736,6896,4504,,,,,,
@@ -233,8 +241,12 @@ sntrup761,ref,0.0,0.5,0.1,,,,,,
 sntrup857,ref,0.0,0.4,0.1,,,,,,
 Signature Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [%],Sign [%],Verify [%],,,,,,
-dilithium2,m4,73.4,42.5,66.7,,,,,,
-dilithium2,ref,61.4,25.1,50.9,,,,,,
+dilithium2,clean,56.6,25.1,47.1,,,,,,
+dilithium2,m4,70.8,44.4,65.6,,,,,,
+dilithium3,clean,61.4,26.9,51.4,,,,,,
+dilithium3,m4,73.5,45.6,68.0,,,,,,
+dilithium4,clean,62.1,30.2,54.6,,,,,,
+dilithium4,m4,73.1,49.8,69.4,,,,,,
 luov-48-43-222-chacha,ref,0.3,0.1,0.0,,,,,,
 luov-48-43-222-keccak,ref,30.7,12.2,15.3,,,,,,
 luov-64-61-302-chacha,ref,0.2,0.1,0.0,,,,,,
@@ -327,8 +339,12 @@ sntrup761,ref,6164,0,0,6164,,,,,
 sntrup857,ref,6148,0,0,6148,,,,,
 Signature Schemes,,,,,,,,,,
 Scheme,Implementation,.text [bytes],.data [bytes],.bss [bytes],Total [bytes],,,,,
-dilithium2,m4,14776,0,0,14776,,,,,
-dilithium2,ref,9700,0,0,9700,,,,,
+dilithium2,clean,11336,0,0,11336,,,,,
+dilithium2,m4,13948,0,0,13948,,,,,
+dilithium3,clean,11144,0,0,11144,,,,,
+dilithium3,m4,13756,0,0,13756,,,,,
+dilithium4,clean,11240,0,0,11240,,,,,
+dilithium4,m4,13852,0,0,13852,,,,,
 luov-48-43-222-chacha,ref,405722,36,0,405758,,,,,
 luov-48-43-222-keccak,ref,405730,36,0,405766,,,,,
 luov-64-61-302-chacha,ref,405412,36,0,405448,,,,,

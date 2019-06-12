@@ -362,8 +362,8 @@ static unsigned int rej_eta(uint32_t *a,
 
     ctr = pos = 0;
     while (ctr < len && pos < buflen) {
-        t0 = buf[pos] & 0x0F;
-        t1 = buf[pos++] >> 4;
+        t0 = buf[pos] & 0x07;
+        t1 = buf[pos++] >> 5;
 
         if (t0 <= 2 * ETA) {
             a[ctr++] = Q + ETA - t0;
@@ -508,10 +508,19 @@ void polyeta_pack(unsigned char *r, const poly *a) {
     unsigned int i;
     unsigned char t[8];
 
-    for (i = 0; i < N / 2; ++i) {
-        t[0] = (uint8_t) (Q + ETA - a->coeffs[2 * i + 0]);
-        t[1] = (uint8_t) (Q + ETA - a->coeffs[2 * i + 1]);
-        r[i] = (uint8_t) (t[0] | (t[1] << 4));
+    for (i = 0; i < N / 8; ++i) {
+        t[0] = (uint8_t) (Q + ETA - a->coeffs[8 * i + 0]);
+        t[1] = (uint8_t) (Q + ETA - a->coeffs[8 * i + 1]);
+        t[2] = (uint8_t) (Q + ETA - a->coeffs[8 * i + 2]);
+        t[3] = (uint8_t) (Q + ETA - a->coeffs[8 * i + 3]);
+        t[4] = (uint8_t) (Q + ETA - a->coeffs[8 * i + 4]);
+        t[5] = (uint8_t) (Q + ETA - a->coeffs[8 * i + 5]);
+        t[6] = (uint8_t) (Q + ETA - a->coeffs[8 * i + 6]);
+        t[7] = (uint8_t) (Q + ETA - a->coeffs[8 * i + 7]);
+
+        r[3 * i + 0]  = (uint8_t) ((t[0] >> 0) | (t[1] << 3) | (t[2] << 6));
+        r[3 * i + 1]  = (uint8_t) ((t[2] >> 2) | (t[3] << 1) | (t[4] << 4) | (t[5] << 7));
+        r[3 * i + 2]  = (uint8_t) ((t[5] >> 1) | (t[6] << 2) | (t[7] << 5));
     }
 }
 
@@ -526,11 +535,25 @@ void polyeta_pack(unsigned char *r, const poly *a) {
 **************************************************/
 void polyeta_unpack(poly *r, const unsigned char *a) {
     unsigned int i;
-    for (i = 0; i < N / 2; ++i) {
-        r->coeffs[2 * i + 0] = a[i] & 0x0F;
-        r->coeffs[2 * i + 1] = a[i] >> 4;
-        r->coeffs[2 * i + 0] = Q + ETA - r->coeffs[2 * i + 0];
-        r->coeffs[2 * i + 1] = Q + ETA - r->coeffs[2 * i + 1];
+
+    for (i = 0; i < N / 8; ++i) {
+        r->coeffs[8 * i + 0] = a[3 * i + 0] & 0x07;
+        r->coeffs[8 * i + 1] = (a[3 * i + 0] >> 3) & 0x07;
+        r->coeffs[8 * i + 2] = (uint32_t) ((a[3 * i + 0] >> 6) | (a[3 * i + 1] << 2)) & 0x07;
+        r->coeffs[8 * i + 3] = (a[3 * i + 1] >> 1) & 0x07;
+        r->coeffs[8 * i + 4] = (a[3 * i + 1] >> 4) & 0x07;
+        r->coeffs[8 * i + 5] = (uint32_t) ((a[3 * i + 1] >> 7) | (a[3 * i + 2] << 1)) & 0x07;
+        r->coeffs[8 * i + 6] = (a[3 * i + 2] >> 2) & 0x07;
+        r->coeffs[8 * i + 7] = (a[3 * i + 2] >> 5) & 0x07;
+
+        r->coeffs[8 * i + 0] = Q + ETA - r->coeffs[8 * i + 0];
+        r->coeffs[8 * i + 1] = Q + ETA - r->coeffs[8 * i + 1];
+        r->coeffs[8 * i + 2] = Q + ETA - r->coeffs[8 * i + 2];
+        r->coeffs[8 * i + 3] = Q + ETA - r->coeffs[8 * i + 3];
+        r->coeffs[8 * i + 4] = Q + ETA - r->coeffs[8 * i + 4];
+        r->coeffs[8 * i + 5] = Q + ETA - r->coeffs[8 * i + 5];
+        r->coeffs[8 * i + 6] = Q + ETA - r->coeffs[8 * i + 6];
+        r->coeffs[8 * i + 7] = Q + ETA - r->coeffs[8 * i + 7];
     }
 }
 

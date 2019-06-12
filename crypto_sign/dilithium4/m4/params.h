@@ -1,6 +1,7 @@
 #ifndef PARAMS_H
 #define PARAMS_H
 
+
 #define SEEDBYTES 32
 #define CRHBYTES 48
 #define N 256
@@ -12,15 +13,13 @@
 #define GAMMA2 (GAMMA1/2)
 #define ALPHA (2*GAMMA2)
 
-
-// DilithiumII parameters
-#define K 4
-#define L 3
-#define ETA 6
-#define SETABITS 4
-#define BETA 325
-#define OMEGA 80
-
+// DilithiumIV parameters
+#define K 6
+#define L 5
+#define ETA 3
+#define SETABITS 3
+#define BETA 175
+#define OMEGA 120
 
 #define POLT1_SIZE_PACKED ((N*(QBITS - D))/8)
 #define POLT0_SIZE_PACKED ((N*D)/8)
