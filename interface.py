@@ -13,8 +13,7 @@ class M4Settings(mupq.PlatformSettings):
         ('mupq', 'mupq/crypto_kem', ''),
         ('mupq', 'mupq/crypto_sign', ''),
         ('pqclean', 'mupq/pqclean/crypto_kem', "PQCLEAN"),
-        ('pqclean', 'mupq/pqclean/crypto_sign', "PQCLEAN")
-
+        ('pqclean', 'mupq/pqclean/crypto_sign', "PQCLEAN"),
     ]
 
     #: List of dicts, in each dict specify (Scheme class) attributes of the
@@ -28,6 +27,12 @@ class M4Settings(mupq.PlatformSettings):
         {'scheme': 'frodokem1344shake', 'implementation': 'clean'},
         {'scheme': 'mqdss-48', 'implementation': 'clean'},
         {'scheme': 'mqdss-64', 'implementation': 'clean'},
+        {'scheme': 'luov-80-76-363-chacha', 'implementation': 'ref'},
+        {'scheme': 'luov-80-76-363-keccak', 'implementation': 'ref'},
+        {'scheme': 'luov-8-82-323-chacha', 'implementation': 'ref'},
+        {'scheme': 'luov-8-82-323-keccak', 'implementation': 'ref'},
+        {'scheme': 'luov-8-107-371-chacha', 'implementation': 'ref'},
+        {'scheme': 'luov-8-107-371-keccak', 'implementation': 'ref'},
     )
 
 
