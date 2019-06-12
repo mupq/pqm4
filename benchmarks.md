@@ -2,6 +2,10 @@
 ## Key Encapsulation Schemes
 | scheme | implementation | key generation [cycles] | encapsulation [cycles] | decapsulation [cycles] |
 | ------ | -------------- | ----------------------- | ---------------------- | ---------------------- |
+| babybear (100 executions) | opt | AVG: 596,665 <br /> MIN: 596,665 <br /> MAX: 596,665 | AVG: 752,117 <br /> MIN: 752,117 <br /> MAX: 752,117 | AVG: 1,142,773 <br /> MIN: 1,142,773 <br /> MAX: 1,142,773 |
+| babybear (100 executions) | ref | AVG: 3,968,931 <br /> MIN: 3,968,931 <br /> MAX: 3,968,931 | AVG: 5,802,693 <br /> MIN: 5,802,693 <br /> MAX: 5,802,693 | AVG: 11,704,641 <br /> MIN: 11,704,641 <br /> MAX: 11,704,641 |
+| babybear-ephem (100 executions) | opt | AVG: 596,664 <br /> MIN: 596,664 <br /> MAX: 596,664 | AVG: 767,860 <br /> MIN: 767,860 <br /> MAX: 767,860 | AVG: 231,728 <br /> MIN: 231,728 <br /> MAX: 231,728 |
+| babybear-ephem (100 executions) | ref | AVG: 3,968,935 <br /> MIN: 3,968,935 <br /> MAX: 3,968,935 | AVG: 5,817,861 <br /> MIN: 5,817,861 <br /> MAX: 5,817,861 | AVG: 1,948,755 <br /> MIN: 1,948,755 <br /> MAX: 1,948,755 |
 | firesaber (100 executions) | m4 | AVG: 1,448,776 <br /> MIN: 1,448,776 <br /> MAX: 1,448,776 | AVG: 1,786,930 <br /> MIN: 1,786,930 <br /> MAX: 1,786,930 | AVG: 1,853,339 <br /> MIN: 1,853,339 <br /> MAX: 1,853,339 |
 | firesaber (100 executions) | ref | AVG: 3,815,672 <br /> MIN: 3,815,672 <br /> MAX: 3,815,672 | AVG: 4,745,405 <br /> MIN: 4,745,405 <br /> MAX: 4,745,405 | AVG: 5,402,295 <br /> MIN: 5,402,295 <br /> MAX: 5,402,295 |
 | frodokem640aes (100 executions) | m4 | AVG: 41,840,515 <br /> MIN: 41,840,515 <br /> MAX: 41,840,515 | AVG: 45,248,630 <br /> MIN: 45,248,630 <br /> MAX: 45,248,630 | AVG: 45,394,452 <br /> MIN: 45,394,452 <br /> MAX: 45,394,452 |
@@ -18,6 +22,10 @@
 | lac256 (100 executions) | ref | AVG: 7,665,769 <br /> MIN: 7,652,402 <br /> MAX: 7,681,209 | AVG: 13,533,851 <br /> MIN: 13,517,064 <br /> MAX: 13,553,209 | AVG: 21,125,257 <br /> MIN: 21,108,384 <br /> MAX: 21,144,510 |
 | lightsaber (100 executions) | m4 | AVG: 459,965 <br /> MIN: 459,965 <br /> MAX: 459,965 | AVG: 651,273 <br /> MIN: 651,273 <br /> MAX: 651,273 | AVG: 678,810 <br /> MIN: 678,810 <br /> MAX: 678,810 |
 | lightsaber (100 executions) | ref | AVG: 1,051,530 <br /> MIN: 1,051,530 <br /> MAX: 1,051,530 | AVG: 1,538,646 <br /> MIN: 1,538,646 <br /> MAX: 1,538,646 | AVG: 1,861,934 <br /> MIN: 1,861,934 <br /> MAX: 1,861,934 |
+| mamabear (100 executions) | opt | AVG: 1,195,048 <br /> MIN: 1,195,048 <br /> MAX: 1,195,048 | AVG: 1,402,955 <br /> MIN: 1,402,955 <br /> MAX: 1,402,955 | AVG: 1,955,496 <br /> MIN: 1,955,496 <br /> MAX: 1,955,496 |
+| mamabear (100 executions) | ref | AVG: 8,774,109 <br /> MIN: 8,774,109 <br /> MAX: 8,774,109 | AVG: 11,501,206 <br /> MIN: 11,501,206 <br /> MAX: 11,501,206 | AVG: 23,131,816 <br /> MIN: 23,131,816 <br /> MAX: 23,131,816 |
+| mamabear-ephem (100 executions) | opt | AVG: 1,206,350 <br /> MIN: 1,206,350 <br /> MAX: 1,206,350 | AVG: 1,431,341 <br /> MIN: 1,431,341 <br /> MAX: 1,431,341 | AVG: 320,233 <br /> MIN: 320,233 <br /> MAX: 320,233 |
+| mamabear-ephem (100 executions) | ref | AVG: 8,783,565 <br /> MIN: 8,783,565 <br /> MAX: 8,783,565 | AVG: 11,525,870 <br /> MIN: 11,525,870 <br /> MAX: 11,525,870 | AVG: 2,876,105 <br /> MIN: 2,876,105 <br /> MAX: 2,876,105 |
 | newhope1024cca (100 executions) | clean | AVG: 1,460,167 <br /> MIN: 1,459,836 <br /> MAX: 1,460,406 | AVG: 2,264,773 <br /> MIN: 2,264,441 <br /> MAX: 2,265,011 | AVG: 2,410,906 <br /> MIN: 2,410,574 <br /> MAX: 2,411,144 |
 | newhope1024cca (100 executions) | m4 | AVG: 1,219,908 <br /> MIN: 1,219,630 <br /> MAX: 1,220,245 | AVG: 1,903,231 <br /> MIN: 1,902,954 <br /> MAX: 1,903,568 | AVG: 1,927,505 <br /> MIN: 1,927,227 <br /> MAX: 1,927,843 |
 | newhope1024cpa (100 executions) | clean | AVG: 1,274,813 <br /> MIN: 1,274,572 <br /> MAX: 1,275,142 | AVG: 1,857,055 <br /> MIN: 1,856,813 <br /> MAX: 1,857,383 | AVG: 327,778 <br /> MIN: 327,778 <br /> MAX: 327,778 |
@@ -35,6 +43,10 @@
 | ntrulpr653 (100 executions) | ref | AVG: 54,824,768 <br /> MIN: 54,824,768 <br /> MAX: 54,824,768 | AVG: 109,094,505 <br /> MIN: 109,094,505 <br /> MAX: 109,094,505 | AVG: 163,062,035 <br /> MIN: 163,062,035 <br /> MAX: 163,062,035 |
 | ntrulpr761 (100 executions) | ref | AVG: 74,265,583 <br /> MIN: 74,265,583 <br /> MAX: 74,265,583 | AVG: 147,846,761 <br /> MIN: 147,846,761 <br /> MAX: 147,846,761 | AVG: 221,088,122 <br /> MIN: 221,088,122 <br /> MAX: 221,088,122 |
 | ntrulpr857 (100 executions) | ref | AVG: 94,016,969 <br /> MIN: 94,016,969 <br /> MAX: 94,016,969 | AVG: 187,235,730 <br /> MIN: 187,235,730 <br /> MAX: 187,235,730 | AVG: 280,075,965 <br /> MIN: 280,075,965 <br /> MAX: 280,075,965 |
+| papabear (100 executions) | opt | AVG: 2,014,216 <br /> MIN: 2,014,216 <br /> MAX: 2,014,216 | AVG: 2,276,138 <br /> MIN: 2,276,138 <br /> MAX: 2,276,138 | AVG: 3,000,239 <br /> MIN: 3,000,239 <br /> MAX: 3,000,239 |
+| papabear (100 executions) | ref | AVG: 15,478,896 <br /> MIN: 15,478,896 <br /> MAX: 15,478,896 | AVG: 19,098,191 <br /> MIN: 19,098,191 <br /> MAX: 19,098,191 | AVG: 38,361,009 <br /> MIN: 38,361,009 <br /> MAX: 38,361,009 |
+| papabear-ephem (100 executions) | opt | AVG: 2,029,284 <br /> MIN: 2,029,284 <br /> MAX: 2,029,284 | AVG: 2,308,148 <br /> MIN: 2,308,148 <br /> MAX: 2,308,148 | AVG: 411,623 <br /> MIN: 411,623 <br /> MAX: 411,623 |
+| papabear-ephem (100 executions) | ref | AVG: 15,490,269 <br /> MIN: 15,490,269 <br /> MAX: 15,490,269 | AVG: 19,126,020 <br /> MIN: 19,126,020 <br /> MAX: 19,126,020 | AVG: 3,803,444 <br /> MIN: 3,803,444 <br /> MAX: 3,803,444 |
 | saber (100 executions) | m4 | AVG: 896,035 <br /> MIN: 896,035 <br /> MAX: 896,035 | AVG: 1,161,849 <br /> MIN: 1,161,849 <br /> MAX: 1,161,849 | AVG: 1,204,633 <br /> MIN: 1,204,633 <br /> MAX: 1,204,633 |
 | saber (100 executions) | ref | AVG: 2,226,935 <br /> MIN: 2,226,935 <br /> MAX: 2,226,935 | AVG: 2,936,240 <br /> MIN: 2,936,240 <br /> MAX: 2,936,240 | AVG: 3,424,601 <br /> MIN: 3,424,601 <br /> MAX: 3,424,601 |
 | sikep434 (1 executions) | opt | AVG: 650,735,516 <br /> MIN: 650,735,516 <br /> MAX: 650,735,516 | AVG: 1,065,631,547 <br /> MIN: 1,065,631,547 <br /> MAX: 1,065,631,547 | AVG: 1,136,703,605 <br /> MIN: 1,136,703,605 <br /> MAX: 1,136,703,605 |
@@ -102,6 +114,10 @@
 ## Key Encapsulation Schemes
 | Scheme | Implementation | Key Generation [bytes] | Encapsulation [bytes] | Decapsulation [bytes] |
 | ------ | -------------- | ---------------------- | --------------------- | --------------------- |
+| babybear | opt | 3,104 | 2,976 | 5,112 |
+| babybear | ref | 6,168 | 6,088 | 10,192 |
+| babybear-ephem | opt | 3,104 | 3,008 | 2,440 |
+| babybear-ephem | ref | 6,168 | 6,088 | 4,864 |
 | firesaber | m4 | 20,144 | 23,008 | 24,592 |
 | firesaber | ref | 20,144 | 23,008 | 24,488 |
 | frodokem640aes | m4 | 31,760 | 52,088 | 62,456 |
@@ -118,6 +134,10 @@
 | lac256 | ref | 4,452 | 8,676 | 10,116 |
 | lightsaber | m4 | 9,656 | 11,392 | 12,136 |
 | lightsaber | ref | 10,024 | 11,672 | 12,504 |
+| mamabear | opt | 3,592 | 3,464 | 6,072 |
+| mamabear | ref | 6,792 | 6,712 | 11,600 |
+| mamabear-ephem | opt | 3,592 | 3,488 | 2,920 |
+| mamabear-ephem | ref | 6,792 | 6,712 | 4,864 |
 | newhope1024cca | clean | 11,120 | 17,400 | 19,608 |
 | newhope1024cca | m4 | 11,152 | 17,400 | 19,640 |
 | newhope1024cpa | clean | 11,096 | 17,288 | 8,308 |
@@ -135,6 +155,10 @@
 | ntrulpr653 | ref | 12,204 | 19,652 | 23,068 |
 | ntrulpr761 | ref | 14,044 | 22,492 | 26,524 |
 | ntrulpr857 | ref | 15,692 | 25,068 | 29,628 |
+| papabear | opt | 4,072 | 3,944 | 7,032 |
+| papabear | ref | 7,416 | 7,344 | 13,008 |
+| papabear-ephem | opt | 4,072 | 3,968 | 3,400 |
+| papabear-ephem | ref | 7,416 | 7,336 | 4,864 |
 | saber | m4 | 13,256 | 15,544 | 16,640 |
 | saber | ref | 13,624 | 15,912 | 17,008 |
 | sikep434 | opt | 6,776 | 7,088 | 7,424 |
@@ -202,6 +226,10 @@
 ## Key Encapsulation Schemes
 | Scheme | Implementation | Key Generation [%] | Encapsulation [%] | Decapsulation [%] |
 | ------ | -------------- | ------------------ | ----------------- | ----------------- |
+| babybear | opt | 55.2% | 47.5% | 41.9% |
+| babybear | ref | 8.4% | 6.2% | 6.5% |
+| babybear-ephem | opt | 55.2% | 48.4% | 35.8% |
+| babybear-ephem | ref | 8.4% | 6.5% | 4.3% |
 | firesaber | m4 | 49.4% | 49.3% | 40.0% |
 | firesaber | ref | 18.8% | 18.6% | 13.7% |
 | frodokem640aes | m4 | 81.0% | 78.3% | 78.0% |
@@ -216,6 +244,10 @@
 | lac128 | ref | 6.1% | 4.6% | 2.9% |
 | lac192 | ref | 1.9% | 2.1% | 1.2% |
 | lac256 | ref | 3.4% | 2.5% | 1.6% |
+| mamabear | opt | 53.9% | 47.9% | 43.3% |
+| mamabear | ref | 7.4% | 5.9% | 6.1% |
+| mamabear-ephem | opt | 53.4% | 47.9% | 34.3% |
+| mamabear-ephem | ref | 7.4% | 6.0% | 3.9% |
 | lightsaber | m4 | 56.5% | 55.7% | 42.0% |
 | lightsaber | ref | 24.7% | 23.6% | 15.3% |
 | newhope1024cca | clean | 59.5% | 59.1% | 47.6% |
@@ -235,6 +267,10 @@
 | ntrulpr653 | ref | 0.5% | 0.5% | 0.3% |
 | ntrulpr761 | ref | 0.4% | 0.4% | 0.2% |
 | ntrulpr857 | ref | 0.3% | 0.4% | 0.2% |
+| papabear | opt | 52.7% | 47.9% | 44.0% |
+| papabear | ref | 6.9% | 5.8% | 6.0% |
+| papabear-ephem | opt | 52.3% | 47.9% | 33.2% |
+| papabear-ephem | ref | 6.9% | 5.8% | 3.6% |
 | saber | m4 | 53.0% | 52.9% | 41.5% |
 | saber | ref | 21.3% | 20.9% | 14.6% |
 | sikep434 | opt | 0.0% | 0.0% | 0.0% |
@@ -302,6 +338,10 @@
 ## Key Encapsulation Schemes
 | Scheme | Implementation | .text [bytes] | .data [bytes] | .bss [bytes] | Total [bytes] |
 | ------ | -------------- | ------------- | ------------- | ------------ | ------------- |
+| babybear | opt | 5,627 | 0 | 0 | 5,627 |
+| babybear | ref | 4,922 | 0 | 0 | 4,922 |
+| babybear-ephem | opt | 4,985 | 0 | 0 | 4,985 |
+| babybear-ephem | ref | 4,892 | 0 | 0 | 4,892 |
 | firesaber | m4 | 44,184 | 0 | 0 | 44,184 |
 | firesaber | ref | 12,244 | 0 | 0 | 12,244 |
 | frodokem640aes | m4 | 15,616 | 28 | 0 | 15,644 |
@@ -318,6 +358,10 @@
 | lac256 | ref | 29,876 | 72 | 296 | 30,244 |
 | lightsaber | m4 | 44,916 | 0 | 0 | 44,916 |
 | lightsaber | ref | 12,976 | 0 | 0 | 12,976 |
+| mamabear | opt | 5,623 | 0 | 0 | 5,623 |
+| mamabear | ref | 5,414 | 0 | 0 | 5,414 |
+| mamabear-ephem | opt | 4,917 | 0 | 0 | 4,917 |
+| mamabear-ephem | ref | 4,900 | 0 | 0 | 4,900 |
 | newhope1024cca | clean | 10,780 | 0 | 0 | 10,780 |
 | newhope1024cca | m4 | 12,176 | 0 | 0 | 12,176 |
 | newhope1024cpa | clean | 10,384 | 0 | 0 | 10,384 |
@@ -335,6 +379,10 @@
 | ntrulpr653 | ref | 4,516 | 0 | 0 | 4,516 |
 | ntrulpr761 | ref | 4,632 | 0 | 0 | 4,632 |
 | ntrulpr857 | ref | 4,696 | 0 | 0 | 4,696 |
+| papabear | opt | 5,559 | 0 | 0 | 5,559 |
+| papabear | ref | 5,398 | 0 | 0 | 5,398 |
+| papabear-ephem | opt | 4,877 | 0 | 0 | 4,877 |
+| papabear-ephem | ref | 4,908 | 0 | 0 | 4,908 |
 | saber | m4 | 44,468 | 0 | 0 | 44,468 |
 | saber | ref | 12,524 | 0 | 0 | 12,524 |
 | sikep434 | opt | 30,368 | 0 | 0 | 30,368 |
