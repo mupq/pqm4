@@ -171,7 +171,8 @@ new subdirectory under `crypto_sign/`.
    Many schemes submitted to NIST use SHA-3, SHAKE or cSHAKE for hashing. 
    This is why **pqm4** comes with highly optimized Keccak code that is accessible
    from all KEM and signature implementations. 
-   Functions from the FIPS202 standard (and related publication SP 800-185) are defined in `mupq/common/fips202.h` as follows:
+   Functions from the FIPS202 standard are defined in `mupq/common/fips202.h` as follows:
+
    ```c
   void shake128_absorb(shake128ctx *state, const uint8_t *input, size_t inlen);
   void shake128_squeezeblocks(uint8_t *output, size_t nblocks, shake128ctx *state);
@@ -182,10 +183,6 @@ new subdirectory under `crypto_sign/`.
   void shake128_inc_finalize(shake128incctx *state);
   void shake128_inc_squeeze(uint8_t *output, size_t outlen, shake128incctx *state);
 
-  void cshake128_simple_absorb(shake128ctx *state, uint16_t cstm, const uint8_t *input, size_t inlen);
-  void cshake128_simple_squeezeblocks(uint8_t *output, size_t nblocks, shake128ctx *state);
-  void cshake128_simple(uint8_t *output, size_t outlen, uint16_t cstm, const uint8_t *input, size_t inlen);
-
   void shake256_absorb(shake256ctx *state, const uint8_t *input, size_t inlen);
   void shake256_squeezeblocks(uint8_t *output, size_t nblocks, shake256ctx *state);
   void shake256(uint8_t *output, size_t outlen, const uint8_t *input, size_t inlen);
@@ -194,10 +191,6 @@ new subdirectory under `crypto_sign/`.
   void shake256_inc_absorb(shake256incctx *state, const uint8_t *input, size_t inlen);
   void shake256_inc_finalize(shake256incctx *state);
   void shake256_inc_squeeze(uint8_t *output, size_t outlen, shake256incctx *state);
-
-  void cshake256_simple_absorb(shake256ctx *state, uint16_t cstm, const uint8_t *input, size_t inlen);
-  void cshake256_simple_squeezeblocks(uint8_t *output, size_t nblocks, shake256ctx *state);
-  void cshake256_simple(uint8_t *output, size_t outlen, uint16_t cstm, const uint8_t *input, size_t inlen);
 
   void sha3_256_inc_init(sha3_256incctx *state);
   void sha3_256_inc_absorb(sha3_256incctx *state, const uint8_t *input, size_t inlen);
@@ -211,11 +204,30 @@ new subdirectory under `crypto_sign/`.
 
   void sha3_512(uint8_t *output, const uint8_t *input, size_t inlen);
    ```
+
+  Functions from the related publication SP 800-185 (cSHAKE) are defined in `mupq/common/sp800-185.h`:
+
+  ```c
+  void cshake128_inc_init(shake128incctx *state, const uint8_t *name, size_t namelen, const uint8_t *cstm, size_t cstmlen);
+  void cshake128_inc_absorb(shake128incctx *state, const uint8_t *input, size_t inlen);
+  void cshake128_inc_finalize(shake128incctx *state);
+  void cshake128_inc_squeeze(uint8_t *output, size_t outlen, shake128incctx *state);
+
+  void cshake128(uint8_t *output, size_t outlen, const uint8_t *name, size_t namelen, const uint8_t *cstm, size_t cstmlen, const uint8_t *input, size_t inlen);
+
+  void cshake256_inc_init(shake256incctx *state, const uint8_t *name, size_t namelen, const uint8_t *cstm, size_t cstmlen);
+  void cshake256_inc_absorb(shake256incctx *state, const uint8_t *input, size_t inlen);
+  void cshake256_inc_finalize(shake256incctx *state);
+  void cshake256_inc_squeeze(uint8_t *output, size_t outlen, shake256incctx *state);
+
+  void cshake256(uint8_t *output, size_t outlen, const uint8_t *name, size_t namelen, const uint8_t* cstm, size_t cstmlen, const uint8_t *input, size_t inlen);
+  ```
+
    Implementations that want to make use of these optimized routines simply include 
-   `fips202.h`. The API for `sha3_256` and `sha3_512` follows the 
+   `fips202.h` (or `sp800-185.h`). The API for `sha3_256` and `sha3_512` follows the 
    [SUPERCOP hash API](http://bench.cr.yp.to/call-hash.html).
-   The API for `shake256` and `shake512` is very similar, except that it supports variable-length output.
-   The SHAKE and cSHAKE functions are also accessible via the absorb-squeezeblocks functions, which offer incremental
+   The API for `shake128` and `shake256` is very similar, except that it supports variable-length output.
+   The SHAKE functions are also accessible via the absorb-squeezeblocks functions, which offer incremental
    output generation (but not incremental input handling).
    The variants with `_inc_` offer both incremental input handling and output generation.
 
