@@ -14,17 +14,13 @@
 #include "params.h"
 
 extern uint16_t xs(const uint16_t *s, const int16_t *a_row);
-int mul_add_as_plus_e(uint16_t *out, const uint16_t *s, const uint16_t *e, const uint8_t *seed_A) {
+int mul_add_as_plus_e(uint16_t *out, const uint16_t *s, const uint8_t *seed_A) {
     // Generate-and-multiply: generate matrix A (N x N) row-wise, multiply by s on the right.
     // Inputs: s, e (N x N_BAR)
     // Output: out = A*s + e (N x N_BAR)
     int k;
     uint16_t i;
     int16_t a_row[4 * PARAMS_N];
-
-    for (i = 0; i < (PARAMS_N * PARAMS_NBAR); i += 2) {
-        *((uint32_t *)&out[i]) = *((uint32_t *)&e[i]);
-    }
 
     uint8_t seed_A_separated[2 + BYTES_SEED_A];
     uint16_t *seed_A_origin = (uint16_t *)&seed_A_separated;
@@ -52,17 +48,14 @@ int mul_add_as_plus_e(uint16_t *out, const uint16_t *s, const uint16_t *e, const
 }
 
 
+
 extern void sa(uint16_t *out,  const uint16_t *s, const uint16_t *a);
-int mul_add_sa_plus_e(uint16_t *out, const uint16_t *s, const uint16_t *e, const uint8_t *seed_A) {
+int mul_add_sa_plus_e(uint16_t *out, const uint16_t *s, const uint8_t *seed_A) {
     // Generate-and-multiply: generate matrix A (N x N) column-wise, multiply by s' on the left.
     // Inputs: s', e' (N_BAR x N)
     // Output: out = s'*A + e' (N_BAR x N)
     int i;
     uint16_t kk;
-    for (i = 0; i < (PARAMS_N * PARAMS_NBAR); i += 2) {
-        *((uint32_t *)&out[i]) = *((uint32_t *)&e[i]);
-    }
-
     uint16_t a_cols[8 * PARAMS_N];
 
     uint8_t seed_A_separated[2 + BYTES_SEED_A];

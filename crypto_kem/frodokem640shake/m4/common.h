@@ -1,11 +1,11 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-int mul_add_as_plus_e(uint16_t *out, const uint16_t *s, const uint16_t *e, const uint8_t *seed_A);
-int mul_add_sa_plus_e(uint16_t *out, const uint16_t *s, const uint16_t *e, const uint8_t *seed_A);
+int mul_add_as_plus_e(uint16_t *out, const uint16_t *s, const uint8_t *seed_A);
+int mul_add_sa_plus_e(uint16_t *out, const uint16_t *s, const uint8_t *seed_A);
 void sample_n(uint16_t *s, size_t n);
 void mul_bs(uint16_t *out, const uint16_t *b, const uint16_t *s);
-void mul_add_sb_plus_e(uint16_t *out, const uint16_t *b, const uint16_t *s, const uint16_t *e);
+void mul_add_sb_plus_e(uint16_t *out, const uint16_t *b, const uint16_t *s);
 void add(uint16_t *out, const uint16_t *a, const uint16_t *b);
 void sub(uint16_t *out, const uint16_t *a, const uint16_t *b);
 void key_encode(uint16_t *out, const uint16_t *in);

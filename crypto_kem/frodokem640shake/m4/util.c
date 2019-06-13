@@ -46,18 +46,11 @@ void mul_bs(uint16_t *out, const uint16_t *b, const uint16_t *s) {
 }
 
 void sb(uint16_t *out, const uint16_t *s, const uint16_t *a);
-void mul_add_sb_plus_e(uint16_t *out, const uint16_t *b, const uint16_t *s, const uint16_t *e) {
+void mul_add_sb_plus_e(uint16_t *out, const uint16_t *b, const uint16_t *s) {
     // Multiply by s on the left
     // Inputs: b (N x N_BAR), s (N_BAR x N), e (N_BAR x N_BAR)
     // Output: out = s*b + e (N_BAR x N_BAR)
-    int k;
-
-    for (k = 0; k < PARAMS_NBAR*PARAMS_NBAR; k++) {
-        out[k] = e[k];
-    }
-
-    
-    for (k = 0; k < PARAMS_N; k+=8) {
+    for (size_t k = 0; k < PARAMS_N; k+=8) {
       sb(out+0,s+k,b + k*PARAMS_NBAR+0);
       sb(out+1,s+k,b + k*PARAMS_NBAR+1);
       sb(out+2,s+k,b + k*PARAMS_NBAR+2);
