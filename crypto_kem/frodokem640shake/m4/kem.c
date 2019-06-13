@@ -25,8 +25,7 @@ int crypto_kem_keypair(uint8_t *pk, uint8_t *sk) {
     uint8_t *sk_S = &sk[CRYPTO_BYTES + CRYPTO_PUBLICKEYBYTES];
     uint8_t *sk_pkh = &sk[CRYPTO_BYTES + CRYPTO_PUBLICKEYBYTES + 2 * PARAMS_N * PARAMS_NBAR];
     uint16_t B[PARAMS_N * PARAMS_NBAR] = {0};
-    uint16_t S[2 * PARAMS_N * PARAMS_NBAR] = {0};           // contains secret data
-    uint16_t *E = &S[PARAMS_N * PARAMS_NBAR];               // contains secret data
+    uint16_t S[PARAMS_N * PARAMS_NBAR] = {0};           // contains secret data
     uint8_t randomness[2 * CRYPTO_BYTES + BYTES_SEED_A];    // contains secret data via randomness_s and randomness_seedSE
     uint8_t *randomness_s = &randomness[0];                 // contains secret data
     uint8_t *randomness_seedSE = &randomness[CRYPTO_BYTES]; // contains secret data
@@ -40,13 +39,18 @@ int crypto_kem_keypair(uint8_t *pk, uint8_t *sk) {
     // Generate S and E, and compute B = A*S + E. Generate A on-the-fly
     shake_input_seedSE[0] = 0x5F;
     memcpy(&shake_input_seedSE[1], randomness_seedSE, CRYPTO_BYTES);
-    shake((uint8_t *)S, 2 * PARAMS_N * PARAMS_NBAR * sizeof(uint16_t), shake_input_seedSE, 1 + CRYPTO_BYTES);
-    for (size_t i = 0; i < 2 * PARAMS_N * PARAMS_NBAR; i++) {
-        S[i] = LE_TO_UINT16(S[i]);
-    }
+   
+    shake128incctx state;
+    shake128_inc_init(&state);
+    shake128_inc_absorb(&state, shake_input_seedSE, 1 + CRYPTO_BYTES);
+    shake128_inc_finalize(&state);
+    shake128_inc_squeeze((uint8_t *)S, PARAMS_N * PARAMS_NBAR * sizeof(uint16_t), &state);
+    shake128_inc_squeeze((uint8_t *)B, PARAMS_N * PARAMS_NBAR * sizeof(uint16_t), &state);
+ 
     sample_n(S, PARAMS_N * PARAMS_NBAR);
-    sample_n(E, PARAMS_N * PARAMS_NBAR);
-    mul_add_as_plus_e(B, S, E, pk);
+    sample_n(B, PARAMS_N * PARAMS_NBAR);
+    
+    mul_add_as_plus_e(B, S, pk);
 
     // Encode the second part of the public key
     pack(pk_b, CRYPTO_PUBLICKEYBYTES - BYTES_SEED_A, B, PARAMS_N * PARAMS_NBAR, PARAMS_LOGQ);
@@ -64,7 +68,6 @@ int crypto_kem_keypair(uint8_t *pk, uint8_t *sk) {
 
     // Cleanup:
     clear_bytes((uint8_t *)S, PARAMS_N * PARAMS_NBAR * sizeof(uint16_t));
-    clear_bytes((uint8_t *)E, PARAMS_N * PARAMS_NBAR * sizeof(uint16_t));
     clear_bytes(randomness, 2 * CRYPTO_BYTES);
     clear_bytes(shake_input_seedSE, 1 + CRYPTO_BYTES);
     return 0;
@@ -81,9 +84,7 @@ int crypto_kem_enc(uint8_t *ct, uint8_t *ss, const uint8_t *pk) {
     uint16_t V[PARAMS_NBAR * PARAMS_NBAR] = {0};              // contains secret data
     uint16_t C[PARAMS_NBAR * PARAMS_NBAR] = {0};
     uint16_t Bp[PARAMS_N * PARAMS_NBAR] = {0};
-    uint16_t Sp[(2 * PARAMS_N + PARAMS_NBAR)*PARAMS_NBAR] = {0}; // contains secret data
-    uint16_t *Ep = &Sp[PARAMS_N * PARAMS_NBAR];               // contains secret data
-    uint16_t *Epp = &Sp[2 * PARAMS_N * PARAMS_NBAR];          // contains secret data
+    uint16_t Sp[PARAMS_N * PARAMS_NBAR] = {0}; // contains secret data
     uint8_t G2in[BYTES_PKHASH + BYTES_MU];                    // contains secret data via mu
     uint8_t *pkh = &G2in[0];
     uint8_t *mu = &G2in[BYTES_PKHASH];                        // contains secret data
@@ -103,19 +104,26 @@ int crypto_kem_enc(uint8_t *ct, uint8_t *ss, const uint8_t *pk) {
     // Generate Sp and Ep, and compute Bp = Sp*A + Ep. Generate A on-the-fly
     shake_input_seedSE[0] = 0x96;
     memcpy(&shake_input_seedSE[1], seedSE, CRYPTO_BYTES);
-    shake((uint8_t *)Sp, (2 * PARAMS_N + PARAMS_NBAR) * PARAMS_NBAR * sizeof(uint16_t), shake_input_seedSE, 1 + CRYPTO_BYTES);
-    for (size_t i = 0; i < (2 * PARAMS_N + PARAMS_NBAR) * PARAMS_NBAR; i++) {
-        Sp[i] = LE_TO_UINT16(Sp[i]);
-    }
+    
+
+    shake128incctx state;
+    shake128_inc_init(&state);
+    shake128_inc_absorb(&state, shake_input_seedSE, 1 + CRYPTO_BYTES);
+    shake128_inc_finalize(&state);
+    shake128_inc_squeeze((uint8_t *)Sp, PARAMS_N * PARAMS_NBAR * sizeof(uint16_t), &state);
+    shake128_inc_squeeze((uint8_t *)Bp, PARAMS_N * PARAMS_NBAR * sizeof(uint16_t), &state);
+    shake128_inc_squeeze((uint8_t *)V, PARAMS_NBAR * PARAMS_NBAR * sizeof(uint16_t), &state);
+    
+
     sample_n(Sp, PARAMS_N * PARAMS_NBAR);
-    sample_n(Ep, PARAMS_N * PARAMS_NBAR);
-    mul_add_sa_plus_e(Bp, Sp, Ep, pk_seedA);
+    sample_n(Bp, PARAMS_N * PARAMS_NBAR);
+    mul_add_sa_plus_e(Bp, Sp, pk_seedA);
     pack(ct_c1, (PARAMS_LOGQ * PARAMS_N * PARAMS_NBAR) / 8, Bp, PARAMS_N * PARAMS_NBAR, PARAMS_LOGQ);
 
     // Generate Epp, and compute V = Sp*B + Epp
-    sample_n(Epp, PARAMS_NBAR * PARAMS_NBAR);
+    sample_n(V, PARAMS_NBAR * PARAMS_NBAR);
     unpack(B, PARAMS_N * PARAMS_NBAR, pk_b, CRYPTO_PUBLICKEYBYTES - BYTES_SEED_A, PARAMS_LOGQ);
-    mul_add_sb_plus_e(V, B, Sp, Epp);
+    mul_add_sb_plus_e(V, B, Sp);
 
     // Encode mu, and compute C = V + enc(mu) (mod q)
     key_encode(C, (uint16_t *)mu);
@@ -130,8 +138,6 @@ int crypto_kem_enc(uint8_t *ct, uint8_t *ss, const uint8_t *pk) {
     // Cleanup:
     clear_bytes((uint8_t *)V, PARAMS_NBAR * PARAMS_NBAR * sizeof(uint16_t));
     clear_bytes((uint8_t *)Sp, PARAMS_N * PARAMS_NBAR * sizeof(uint16_t));
-    clear_bytes((uint8_t *)Ep, PARAMS_N * PARAMS_NBAR * sizeof(uint16_t));
-    clear_bytes((uint8_t *)Epp, PARAMS_NBAR * PARAMS_NBAR * sizeof(uint16_t));
     clear_bytes(mu, BYTES_MU);
     clear_bytes(G2out, 2 * CRYPTO_BYTES);
     clear_bytes(Fin_k, CRYPTO_BYTES);
@@ -148,9 +154,7 @@ int crypto_kem_dec(uint8_t *ss, const uint8_t *ct, const uint8_t *sk) {
     uint16_t C[PARAMS_NBAR * PARAMS_NBAR] = {0};
     uint16_t CC[PARAMS_NBAR * PARAMS_NBAR] = {0};
     uint16_t BBp[PARAMS_N * PARAMS_NBAR] = {0};
-    uint16_t Sp[(2 * PARAMS_N + PARAMS_NBAR)*PARAMS_NBAR] = {0}; // contains secret data
-    uint16_t *Ep = &Sp[PARAMS_N * PARAMS_NBAR];                  // contains secret data
-    uint16_t *Epp = &Sp[2 * PARAMS_N * PARAMS_NBAR];             // contains secret data
+    uint16_t Sp[PARAMS_N*PARAMS_NBAR] = {0}; // contains secret data
     const uint8_t *ct_c1 = &ct[0];
     const uint8_t *ct_c2 = &ct[(PARAMS_LOGQ * PARAMS_N * PARAMS_NBAR) / 8];
     const uint8_t *sk_s = &sk[0];
@@ -189,18 +193,25 @@ int crypto_kem_dec(uint8_t *ss, const uint8_t *ct, const uint8_t *sk) {
     // Generate Sp and Ep, and compute BBp = Sp*A + Ep. Generate A on-the-fly
     shake_input_seedSEprime[0] = 0x96;
     memcpy(&shake_input_seedSEprime[1], seedSEprime, CRYPTO_BYTES);
-    shake((uint8_t *)Sp, (2 * PARAMS_N + PARAMS_NBAR) * PARAMS_NBAR * sizeof(uint16_t), shake_input_seedSEprime, 1 + CRYPTO_BYTES);
-    for (size_t i = 0; i < (2 * PARAMS_N + PARAMS_NBAR) * PARAMS_NBAR; i++) {
-        Sp[i] = LE_TO_UINT16(Sp[i]);
-    }
+    
+    shake128incctx state;
+    shake128_inc_init(&state);
+    shake128_inc_absorb(&state, shake_input_seedSEprime, 1 + CRYPTO_BYTES);
+    shake128_inc_finalize(&state);
+    shake128_inc_squeeze((uint8_t *)Sp, PARAMS_N * PARAMS_NBAR * sizeof(uint16_t), &state);
+    shake128_inc_squeeze((uint8_t *)BBp, PARAMS_N * PARAMS_NBAR * sizeof(uint16_t), &state);
+    shake128_inc_squeeze((uint8_t *)W, PARAMS_NBAR * PARAMS_NBAR * sizeof(uint16_t), &state);
+    
+
+
     sample_n(Sp, PARAMS_N * PARAMS_NBAR);
-    sample_n(Ep, PARAMS_N * PARAMS_NBAR);
-    mul_add_sa_plus_e(BBp, Sp, Ep, pk_seedA);
+    sample_n(BBp, PARAMS_N * PARAMS_NBAR);
+    mul_add_sa_plus_e(BBp, Sp, pk_seedA);
 
     // Generate Epp, and compute W = Sp*B + Epp
-    sample_n(Epp, PARAMS_NBAR * PARAMS_NBAR);
+    sample_n(W, PARAMS_NBAR * PARAMS_NBAR);
     unpack(B, PARAMS_N * PARAMS_NBAR, pk_b, CRYPTO_PUBLICKEYBYTES - BYTES_SEED_A, PARAMS_LOGQ);
-    mul_add_sb_plus_e(W, B, Sp, Epp);
+    mul_add_sb_plus_e(W, B, Sp);
 
     // Encode mu, and compute CC = W + enc(mu') (mod q)
     key_encode(CC, (uint16_t *)muprime);
@@ -228,8 +239,6 @@ int crypto_kem_dec(uint8_t *ss, const uint8_t *ct, const uint8_t *sk) {
     clear_bytes((uint8_t *)W, PARAMS_NBAR * PARAMS_NBAR * sizeof(uint16_t));
     clear_bytes((uint8_t *)Sp, PARAMS_N * PARAMS_NBAR * sizeof(uint16_t));
     clear_bytes((uint8_t *)S, PARAMS_N * PARAMS_NBAR * sizeof(uint16_t));
-    clear_bytes((uint8_t *)Ep, PARAMS_N * PARAMS_NBAR * sizeof(uint16_t));
-    clear_bytes((uint8_t *)Epp, PARAMS_NBAR * PARAMS_NBAR * sizeof(uint16_t));
     clear_bytes(muprime, BYTES_MU);
     clear_bytes(G2out, 2 * CRYPTO_BYTES);
     clear_bytes(Fin_k, CRYPTO_BYTES);
