@@ -47,6 +47,42 @@
 | papabear (100 executions) | ref | AVG: 15,478,896 <br /> MIN: 15,478,896 <br /> MAX: 15,478,896 | AVG: 19,098,191 <br /> MIN: 19,098,191 <br /> MAX: 19,098,191 | AVG: 38,361,009 <br /> MIN: 38,361,009 <br /> MAX: 38,361,009 |
 | papabear-ephem (100 executions) | opt | AVG: 2,029,284 <br /> MIN: 2,029,284 <br /> MAX: 2,029,284 | AVG: 2,308,148 <br /> MIN: 2,308,148 <br /> MAX: 2,308,148 | AVG: 411,623 <br /> MIN: 411,623 <br /> MAX: 411,623 |
 | papabear-ephem (100 executions) | ref | AVG: 15,490,269 <br /> MIN: 15,490,269 <br /> MAX: 15,490,269 | AVG: 19,126,020 <br /> MIN: 19,126,020 <br /> MAX: 19,126,020 | AVG: 3,803,444 <br /> MIN: 3,803,444 <br /> MAX: 3,803,444 |
+| r5n1-1kemcca-0d (100 executions) | m4 | AVG: 5,553,096 <br /> MIN: 5,528,895 <br /> MAX: 5,584,754 | AVG: 4,437,003 <br /> MIN: 4,405,596 <br /> MAX: 4,472,572 | AVG: 5,279,762 <br /> MIN: 5,237,652 <br /> MAX: 5,312,018 |
+| r5n1-1kemcca-0d (100 executions) | opt | AVG: 5,388,610 <br /> MIN: 5,368,672 <br /> MAX: 5,413,369 | AVG: 5,692,748 <br /> MIN: 5,674,149 <br /> MAX: 5,706,188 | AVG: 6,535,000 <br /> MIN: 6,512,276 <br /> MAX: 6,564,933 |
+| r5n1-1kemcca-0d-sneik (100 executions) | m4 | AVG: 4,690,949 <br /> MIN: 4,683,669 <br /> MAX: 4,699,309 | AVG: 3,270,847 <br /> MIN: 3,249,060 <br /> MAX: 3,293,286 | AVG: 3,650,559 <br /> MIN: 3,627,413 <br /> MAX: 3,675,346 |
+| r5n1-1kemcca-0d-sneik (100 executions) | opt | AVG: 4,616,510 <br /> MIN: 4,610,675 <br /> MAX: 4,626,207 | AVG: 4,756,084 <br /> MIN: 4,745,225 <br /> MAX: 4,763,583 | AVG: 5,174,603 <br /> MIN: 5,163,035 <br /> MAX: 5,188,883 |
+| r5n1-3kemcca-0d (100 executions) | m4 | AVG: 8,891,809 <br /> MIN: 8,872,866 <br /> MAX: 8,918,344 | AVG: 7,424,266 <br /> MIN: 7,388,964 <br /> MAX: 7,481,433 | AVG: 8,449,118 <br /> MIN: 8,411,011 <br /> MAX: 8,504,217 |
+| r5n1-3kemcca-0d (100 executions) | opt | AVG: 8,614,772 <br /> MIN: 8,599,297 <br /> MAX: 8,646,754 | AVG: 9,366,074 <br /> MIN: 9,346,133 <br /> MAX: 9,396,630 | AVG: 10,390,737 <br /> MIN: 10,365,155 <br /> MAX: 10,436,552 |
+| r5n1-3kemcca-0d-sneik (100 executions) | m4 | AVG: 7,809,290 <br /> MIN: 7,801,462 <br /> MAX: 7,818,039 | AVG: 6,593,661 <br /> MIN: 6,565,082 <br /> MAX: 6,628,817 | AVG: 7,101,979 <br /> MIN: 7,070,458 <br /> MAX: 7,135,035 |
+| r5n1-3kemcca-0d-sneik (100 executions) | opt | AVG: 7,650,296 <br /> MIN: 7,642,603 <br /> MAX: 7,660,745 | AVG: 9,115,311 <br /> MIN: 9,108,152 <br /> MAX: 9,124,440 | AVG: 9,670,411 <br /> MIN: 9,659,421 <br /> MAX: 9,679,382 |
+| r5n1-5kemcca-0d (100 executions) | m4 | AVG: 32,784,752 <br /> MIN: 32,719,356 <br /> MAX: 32,866,917 | AVG: 21,838,175 <br /> MIN: 21,718,583 <br /> MAX: 21,929,039 | AVG: 25,468,525 <br /> MIN: 25,332,047 <br /> MAX: 25,615,365 |
+| r5n1-5kemcca-0d (100 executions) | opt | AVG: 31,668,323 <br /> MIN: 31,601,218 <br /> MAX: 31,732,915 | AVG: 30,323,237 <br /> MIN: 30,243,723 <br /> MAX: 30,380,873 | AVG: 33,960,444 <br /> MIN: 33,854,399 <br /> MAX: 34,050,103 |
+| r5n1-5kemcca-0d-sneik (100 executions) | m4 | AVG: 30,314,113 <br /> MIN: 30,280,467 <br /> MAX: 30,342,784 | AVG: 19,777,686 <br /> MIN: 19,687,342 <br /> MAX: 19,850,406 | AVG: 21,557,440 <br /> MIN: 21,444,697 <br /> MAX: 21,652,359 |
+| r5n1-5kemcca-0d-sneik (100 executions) | opt | AVG: 29,524,911 <br /> MIN: 29,482,326 <br /> MAX: 29,561,499 | AVG: 29,343,146 <br /> MIN: 29,315,436 <br /> MAX: 29,382,415 | AVG: 31,355,544 <br /> MIN: 31,309,866 <br /> MAX: 31,397,514 |
+| r5nd-1kemcca-0d (100 executions) | m4 | AVG: 304,296 <br /> MIN: 301,317 <br /> MAX: 308,338 | AVG: 456,780 <br /> MIN: 452,979 <br /> MAX: 460,278 | AVG: 540,076 <br /> MIN: 536,700 <br /> MAX: 543,587 |
+| r5nd-1kemcca-0d (100 executions) | opt | AVG: 385,047 <br /> MIN: 382,804 <br /> MAX: 386,718 | AVG: 553,492 <br /> MIN: 550,881 <br /> MAX: 555,237 | AVG: 652,222 <br /> MIN: 649,476 <br /> MAX: 654,859 |
+| r5nd-1kemcca-0d-sneik (100 executions) | m4 | AVG: 194,377 <br /> MIN: 190,889 <br /> MAX: 198,046 | AVG: 294,350 <br /> MIN: 191,562 <br /> MAX: 304,501 | AVG: 348,016 <br /> MIN: 299,103 <br /> MAX: 354,611 |
+| r5nd-1kemcca-0d-sneik (100 executions) | opt | AVG: 289,227 <br /> MIN: 287,104 <br /> MAX: 291,136 | AVG: 428,528 <br /> MIN: 289,030 <br /> MAX: 432,195 | AVG: 497,356 <br /> MIN: 427,519 <br /> MAX: 500,444 |
+| r5nd-1kemcca-5d (100 executions) | m4 | AVG: 341,725 <br /> MIN: 338,738 <br /> MAX: 346,915 | AVG: 541,305 <br /> MIN: 537,714 <br /> MAX: 545,321 | AVG: 724,861 <br /> MIN: 717,831 <br /> MAX: 730,985 |
+| r5nd-1kemcca-5d (100 executions) | opt | AVG: 441,336 <br /> MIN: 438,163 <br /> MAX: 444,859 | AVG: 715,940 <br /> MIN: 712,443 <br /> MAX: 719,170 | AVG: 974,817 <br /> MIN: 968,864 <br /> MAX: 981,257 |
+| r5nd-1kemcca-5d-sneik (100 executions) | m4 | AVG: 234,928 <br /> MIN: 231,907 <br /> MAX: 237,547 | AVG: 396,238 <br /> MIN: 235,242 <br /> MAX: 401,178 | AVG: 529,570 <br /> MIN: 398,170 <br /> MAX: 535,344 |
+| r5nd-1kemcca-5d-sneik (100 executions) | opt | AVG: 347,346 <br /> MIN: 345,355 <br /> MAX: 348,707 | AVG: 600,114 <br /> MIN: 596,389 <br /> MAX: 602,869 | AVG: 812,236 <br /> MIN: 808,255 <br /> MAX: 816,623 |
+| r5nd-3kemcca-0d (100 executions) | m4 | AVG: 1,014,871 <br /> MIN: 1,006,750 <br /> MAX: 1,032,856 | AVG: 1,443,502 <br /> MIN: 1,428,564 <br /> MAX: 1,462,606 | AVG: 1,876,446 <br /> MIN: 1,857,387 <br /> MAX: 1,904,893 |
+| r5nd-3kemcca-0d (100 executions) | opt | AVG: 1,390,259 <br /> MIN: 1,383,328 <br /> MAX: 1,405,827 | AVG: 2,014,897 <br /> MIN: 2,004,897 <br /> MAX: 2,030,421 | AVG: 2,643,688 <br /> MIN: 2,631,305 <br /> MAX: 2,671,949 |
+| r5nd-3kemcca-0d-sneik (100 executions) | m4 | AVG: 781,124 <br /> MIN: 773,703 <br /> MAX: 789,415 | AVG: 1,240,140 <br /> MIN: 1,230,369 <br /> MAX: 1,252,957 | AVG: 1,545,374 <br /> MIN: 1,533,305 <br /> MAX: 1,559,568 |
+| r5nd-3kemcca-0d-sneik (100 executions) | opt | AVG: 1,184,997 <br /> MIN: 1,180,390 <br /> MAX: 1,188,684 | AVG: 1,900,960 <br /> MIN: 1,895,436 <br /> MAX: 1,906,232 | AVG: 2,413,390 <br /> MIN: 2,406,473 <br /> MAX: 2,421,042 |
+| r5nd-3kemcca-5d (100 executions) | m4 | AVG: 674,743 <br /> MIN: 668,121 <br /> MAX: 680,580 | AVG: 1,011,757 <br /> MIN: 1,006,492 <br /> MAX: 1,016,326 | AVG: 1,303,079 <br /> MIN: 1,296,571 <br /> MAX: 1,311,190 |
+| r5nd-3kemcca-5d (100 executions) | opt | AVG: 903,289 <br /> MIN: 900,332 <br /> MAX: 907,829 | AVG: 1,390,057 <br /> MIN: 1,376,058 <br /> MAX: 1,393,573 | AVG: 1,830,592 <br /> MIN: 1,818,562 <br /> MAX: 1,837,349 |
+| r5nd-3kemcca-5d-sneik (100 executions) | m4 | AVG: 488,951 <br /> MIN: 483,711 <br /> MAX: 495,979 | AVG: 854,551 <br /> MIN: 850,891 <br /> MAX: 858,762 | AVG: 1,069,093 <br /> MIN: 1,063,550 <br /> MAX: 1,075,318 |
+| r5nd-3kemcca-5d-sneik (100 executions) | opt | AVG: 741,196 <br /> MIN: 738,284 <br /> MAX: 744,000 | AVG: 1,302,493 <br /> MIN: 1,299,620 <br /> MAX: 1,306,334 | AVG: 1,673,018 <br /> MIN: 1,668,991 <br /> MAX: 1,679,577 |
+| r5nd-5kemcca-0d (100 executions) | m4 | AVG: 1,356,508 <br /> MIN: 1,334,463 <br /> MAX: 1,375,504 | AVG: 1,945,123 <br /> MIN: 1,921,246 <br /> MAX: 1,960,484 | AVG: 2,498,516 <br /> MIN: 2,463,644 <br /> MAX: 2,517,480 |
+| r5nd-5kemcca-0d (100 executions) | opt | AVG: 1,903,143 <br /> MIN: 1,886,302 <br /> MAX: 1,911,439 | AVG: 2,782,242 <br /> MIN: 2,760,871 <br /> MAX: 2,793,586 | AVG: 3,627,662 <br /> MIN: 3,598,807 <br /> MAX: 3,644,682 |
+| r5nd-5kemcca-0d-sneik (100 executions) | m4 | AVG: 1,123,751 <br /> MIN: 1,111,035 <br /> MAX: 1,133,015 | AVG: 1,753,377 <br /> MIN: 1,741,799 <br /> MAX: 1,766,219 | AVG: 2,182,486 <br /> MIN: 2,169,353 <br /> MAX: 2,198,074 |
+| r5nd-5kemcca-0d-sneik (100 executions) | opt | AVG: 1,711,895 <br /> MIN: 1,705,415 <br /> MAX: 1,721,259 | AVG: 2,712,382 <br /> MIN: 2,708,610 <br /> MAX: 2,716,955 | AVG: 3,447,723 <br /> MIN: 3,436,071 <br /> MAX: 3,455,796 |
+| r5nd-5kemcca-5d (100 executions) | m4 | AVG: 1,228,319 <br /> MIN: 1,206,833 <br /> MAX: 1,241,541 | AVG: 1,782,156 <br /> MIN: 1,766,463 <br /> MAX: 1,792,894 | AVG: 2,332,469 <br /> MIN: 2,306,142 <br /> MAX: 2,351,536 |
+| r5nd-5kemcca-5d (100 executions) | opt | AVG: 1,710,318 <br /> MIN: 1,697,009 <br /> MAX: 1,719,162 | AVG: 2,571,737 <br /> MIN: 2,557,935 <br /> MAX: 2,579,964 | AVG: 3,426,802 <br /> MIN: 3,402,743 <br /> MAX: 3,441,638 |
+| r5nd-5kemcca-5d-sneik (100 executions) | m4 | AVG: 1,002,690 <br /> MIN: 992,802 <br /> MAX: 1,012,147 | AVG: 1,581,058 <br /> MIN: 1,573,205 <br /> MAX: 1,591,395 | AVG: 2,007,861 <br /> MIN: 1,999,794 <br /> MAX: 2,017,819 |
+| r5nd-5kemcca-5d-sneik (100 executions) | opt | AVG: 1,526,381 <br /> MIN: 1,522,133 <br /> MAX: 1,531,972 | AVG: 2,468,323 <br /> MIN: 2,460,371 <br /> MAX: 2,475,035 | AVG: 3,215,298 <br /> MIN: 3,206,919 <br /> MAX: 3,224,380 |
 | saber (100 executions) | m4 | AVG: 896,035 <br /> MIN: 896,035 <br /> MAX: 896,035 | AVG: 1,161,849 <br /> MIN: 1,161,849 <br /> MAX: 1,161,849 | AVG: 1,204,633 <br /> MIN: 1,204,633 <br /> MAX: 1,204,633 |
 | saber (100 executions) | ref | AVG: 2,226,935 <br /> MIN: 2,226,935 <br /> MAX: 2,226,935 | AVG: 2,936,240 <br /> MIN: 2,936,240 <br /> MAX: 2,936,240 | AVG: 3,424,601 <br /> MIN: 3,424,601 <br /> MAX: 3,424,601 |
 | sikep434 (1 executions) | opt | AVG: 650,735,516 <br /> MIN: 650,735,516 <br /> MAX: 650,735,516 | AVG: 1,065,631,547 <br /> MIN: 1,065,631,547 <br /> MAX: 1,065,631,547 | AVG: 1,136,703,605 <br /> MIN: 1,136,703,605 <br /> MAX: 1,136,703,605 |
@@ -159,6 +195,42 @@
 | papabear | ref | 7,416 | 7,344 | 13,008 |
 | papabear-ephem | opt | 4,072 | 3,968 | 3,400 |
 | papabear-ephem | ref | 7,416 | 7,336 | 4,864 |
+| r5n1-1kemcca-0d | m4 | 19,168 | 24,416 | 29,672 |
+| r5n1-1kemcca-0d | opt | 19,168 | 24,416 | 29,672 |
+| r5n1-1kemcca-0d-sneik | m4 | 18,704 | 24,096 | 29,352 |
+| r5n1-1kemcca-0d-sneik | opt | 18,856 | 24,248 | 29,504 |
+| r5n1-3kemcca-0d | m4 | 26,576 | 35,552 | 44,440 |
+| r5n1-3kemcca-0d | opt | 26,576 | 35,552 | 44,440 |
+| r5n1-3kemcca-0d-sneik | m4 | 26,128 | 35,224 | 44,112 |
+| r5n1-3kemcca-0d-sneik | opt | 26,280 | 35,376 | 44,264 |
+| r5n1-5kemcca-0d | m4 | 40,272 | 54,696 | 65,535 |
+| r5n1-5kemcca-0d | opt | 40,272 | 54,696 | 57,343 |
+| r5n1-5kemcca-0d-sneik | m4 | 39,808 | 54,368 | 65,535 |
+| r5n1-5kemcca-0d-sneik | opt | 39,960 | 54,520 | 68,840 |
+| r5nd-1kemcca-0d | m4 | 4,704 | 5,528 | 6,224 |
+| r5nd-1kemcca-0d | opt | 4,704 | 5,528 | 6,224 |
+| r5nd-1kemcca-0d-sneik | m4 | 4,208 | 5,096 | 5,792 |
+| r5nd-1kemcca-0d-sneik | opt | 4,360 | 5,248 | 5,944 |
+| r5nd-1kemcca-5d | m4 | 4,055 | 4,879 | 5,447 |
+| r5nd-1kemcca-5d | opt | 4,056 | 4,880 | 5,448 |
+| r5nd-1kemcca-5d-sneik | m4 | 3,560 | 4,520 | 5,088 |
+| r5nd-1kemcca-5d-sneik | opt | 3,712 | 4,672 | 5,240 |
+| r5nd-3kemcca-0d | m4 | 6,280 | 8,024 | 9,000 |
+| r5nd-3kemcca-0d | opt | 6,280 | 7,992 | 9,000 |
+| r5nd-3kemcca-0d-sneik | m4 | 5,792 | 7,640 | 8,648 |
+| r5nd-3kemcca-0d-sneik | opt | 5,944 | 7,792 | 8,800 |
+| r5nd-3kemcca-5d | m4 | 5,808 | 7,080 | 7,960 |
+| r5nd-3kemcca-5d | opt | 5,808 | 7,080 | 7,960 |
+| r5nd-3kemcca-5d-sneik | m4 | 5,320 | 6,736 | 7,616 |
+| r5nd-3kemcca-5d-sneik | opt | 5,472 | 6,888 | 7,768 |
+| r5nd-5kemcca-0d | m4 | 7,760 | 10,080 | 11,416 |
+| r5nd-5kemcca-0d | opt | 7,760 | 10,080 | 11,384 |
+| r5nd-5kemcca-0d-sneik | m4 | 7,272 | 9,728 | 11,032 |
+| r5nd-5kemcca-0d-sneik | opt | 7,424 | 9,880 | 11,184 |
+| r5nd-5kemcca-5d | m4 | 7,264 | 8,872 | 9,968 |
+| r5nd-5kemcca-5d | opt | 7,264 | 8,872 | 9,968 |
+| r5nd-5kemcca-5d-sneik | m4 | 6,776 | 8,520 | 9,616 |
+| r5nd-5kemcca-5d-sneik | opt | 6,928 | 8,672 | 9,768 |
 | saber | m4 | 13,256 | 15,544 | 16,640 |
 | saber | ref | 13,624 | 15,912 | 17,008 |
 | sikep434 | opt | 6,776 | 7,088 | 7,424 |
@@ -271,6 +343,42 @@
 | papabear | ref | 6.9% | 5.8% | 6.0% |
 | papabear-ephem | opt | 52.3% | 47.9% | 33.2% |
 | papabear-ephem | ref | 6.9% | 5.8% | 3.6% |
+| r5n1-1kemcca-0d | m4 | 20.5% | 93.5% | 46.1% |
+| r5n1-1kemcca-0d | opt | 21.1% | 33.6% | 37.8% |
+| r5n1-1kemcca-0d-sneik | m4 | 0.0% | 0.0% | 0.0% |
+| r5n1-1kemcca-0d-sneik | opt | 0.0% | 0.0% | 0.0% |
+| r5n1-3kemcca-0d | m4 | 16.6% | 41.2% | 43.7% |
+| r5n1-3kemcca-0d | opt | 17.0% | 32.9% | 35.9% |
+| r5n1-3kemcca-0d-sneik | m4 | 0.0% | 0.0% | 0.0% |
+| r5n1-3kemcca-0d-sneik | opt | 0.0% | 0.0% | 0.0% |
+| r5n1-5kemcca-0d | m4 | 11.6% | 18.1% | 34.6% |
+| r5n1-5kemcca-0d | opt | 12.0% | 20.9% | 26.5% |
+| r5n1-5kemcca-0d-sneik | m4 | 0.0% | 0.0% | 0.0% |
+| r5n1-5kemcca-0d-sneik | opt | 0.0% | 0.0% | 0.0% |
+| r5nd-1kemcca-0d | m4 | 46.6% | 56.4% | 54.6% |
+| r5nd-1kemcca-0d | opt | 36.9% | 46.8% | 45.6% |
+| r5nd-1kemcca-0d-sneik | m4 | 0.0% | 0.0% | 0.0% |
+| r5nd-1kemcca-0d-sneik | opt | 0.0% | 0.0% | 0.0% |
+| r5nd-1kemcca-5d | m4 | 40.4% | 42.6% | 40.2% |
+| r5nd-1kemcca-5d | opt | 31.6% | 32.5% | 30.3% |
+| r5nd-1kemcca-5d-sneik | m4 | 0.0% | 0.0% | 0.0% |
+| r5nd-1kemcca-5d-sneik | opt | 0.0% | 0.0% | 0.0% |
+| r5nd-3kemcca-0d | m4 | 30.9% | 34.9% | 35.4% |
+| r5nd-3kemcca-0d | opt | 22.8% | 25.2% | 25.5% |
+| r5nd-3kemcca-0d-sneik | m4 | 0.0% | 0.0% | 0.0% |
+| r5nd-3kemcca-0d-sneik | opt | 0.0% | 0.0% | 0.0% |
+| r5nd-3kemcca-5d | m4 | 36.7% | 40.7% | 39.0% |
+| r5nd-3kemcca-5d | opt | 27.7% | 29.9% | 28.1% |
+| r5nd-3kemcca-5d-sneik | m4 | 0.0% | 0.0% | 0.0% |
+| r5nd-3kemcca-5d-sneik | opt | 0.0% | 0.0% | 0.0% |
+| r5nd-5kemcca-0d | m4 | 27.1% | 30.9% | 31.1% |
+| r5nd-5kemcca-0d | opt | 19.6% | 22.1% | 22.0% |
+| r5nd-5kemcca-0d-sneik | m4 | 0.0% | 0.0% | 0.0% |
+| r5nd-5kemcca-0d-sneik | opt | 0.0% | 0.0% | 0.0% |
+| r5nd-5kemcca-5d | m4 | 28.8% | 31.9% | 32.0% |
+| r5nd-5kemcca-5d | opt | 21.1% | 22.4% | 22.2% |
+| r5nd-5kemcca-5d-sneik | m4 | 0.0% | 0.0% | 0.0% |
+| r5nd-5kemcca-5d-sneik | opt | 0.0% | 0.0% | 0.0% |
 | saber | m4 | 53.0% | 52.9% | 41.5% |
 | saber | ref | 21.3% | 20.9% | 14.6% |
 | sikep434 | opt | 0.0% | 0.0% | 0.0% |
@@ -383,6 +491,42 @@
 | papabear | ref | 5,398 | 0 | 0 | 5,398 |
 | papabear-ephem | opt | 4,877 | 0 | 0 | 4,877 |
 | papabear-ephem | ref | 4,908 | 0 | 0 | 4,908 |
+| r5n1-1kemcca-0d | m4 | 3,297 | 0 | 0 | 3,297 |
+| r5n1-1kemcca-0d | opt | 4,055 | 0 | 0 | 4,055 |
+| r5n1-1kemcca-0d-sneik | m4 | 4,808 | 0 | 0 | 4,808 |
+| r5n1-1kemcca-0d-sneik | opt | 6,591 | 0 | 0 | 6,591 |
+| r5n1-3kemcca-0d | m4 | 3,425 | 0 | 0 | 3,425 |
+| r5n1-3kemcca-0d | opt | 4,539 | 0 | 0 | 4,539 |
+| r5n1-3kemcca-0d-sneik | m4 | 4,916 | 0 | 0 | 4,916 |
+| r5n1-3kemcca-0d-sneik | opt | 7,055 | 0 | 0 | 7,055 |
+| r5n1-5kemcca-0d | m4 | 3,473 | 0 | 0 | 3,473 |
+| r5n1-5kemcca-0d | opt | 4,615 | 0 | 0 | 4,615 |
+| r5n1-5kemcca-0d-sneik | m4 | 4,972 | 0 | 0 | 4,972 |
+| r5n1-5kemcca-0d-sneik | opt | 7,139 | 0 | 0 | 7,139 |
+| r5nd-1kemcca-0d | m4 | 2,651 | 0 | 0 | 2,651 |
+| r5nd-1kemcca-0d | opt | 2,685 | 0 | 0 | 2,685 |
+| r5nd-1kemcca-0d-sneik | m4 | 4,146 | 0 | 0 | 4,146 |
+| r5nd-1kemcca-0d-sneik | opt | 5,205 | 0 | 0 | 5,205 |
+| r5nd-1kemcca-5d | m4 | 5,623 | 0 | 0 | 5,623 |
+| r5nd-1kemcca-5d | opt | 5,713 | 0 | 0 | 5,713 |
+| r5nd-1kemcca-5d-sneik | m4 | 7,114 | 0 | 0 | 7,114 |
+| r5nd-1kemcca-5d-sneik | opt | 8,229 | 0 | 0 | 8,229 |
+| r5nd-3kemcca-0d | m4 | 2,879 | 0 | 0 | 2,879 |
+| r5nd-3kemcca-0d | opt | 2,961 | 0 | 0 | 2,961 |
+| r5nd-3kemcca-0d-sneik | m4 | 4,374 | 0 | 0 | 4,374 |
+| r5nd-3kemcca-0d-sneik | opt | 5,481 | 0 | 0 | 5,481 |
+| r5nd-3kemcca-5d | m4 | 6,975 | 0 | 0 | 6,975 |
+| r5nd-3kemcca-5d | opt | 7,005 | 0 | 0 | 7,005 |
+| r5nd-3kemcca-5d-sneik | m4 | 8,470 | 0 | 0 | 8,470 |
+| r5nd-3kemcca-5d-sneik | opt | 9,525 | 0 | 0 | 9,525 |
+| r5nd-5kemcca-0d | m4 | 2,927 | 0 | 0 | 2,927 |
+| r5nd-5kemcca-0d | opt | 3,005 | 0 | 0 | 3,005 |
+| r5nd-5kemcca-0d-sneik | m4 | 4,410 | 0 | 0 | 4,410 |
+| r5nd-5kemcca-0d-sneik | opt | 5,513 | 0 | 0 | 5,513 |
+| r5nd-5kemcca-5d | m4 | 4,507 | 0 | 0 | 4,507 |
+| r5nd-5kemcca-5d | opt | 4,545 | 0 | 0 | 4,545 |
+| r5nd-5kemcca-5d-sneik | m4 | 6,002 | 0 | 0 | 6,002 |
+| r5nd-5kemcca-5d-sneik | opt | 7,065 | 0 | 0 | 7,065 |
 | saber | m4 | 44,468 | 0 | 0 | 44,468 |
 | saber | ref | 12,524 | 0 | 0 | 12,524 |
 | sikep434 | opt | 30,368 | 0 | 0 | 30,368 |
