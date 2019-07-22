@@ -61,9 +61,9 @@ ntt_fast:
   q           .req r14
   barrettconst .req r12
 
-  mov q, #3329
+  movw q, #3329
   # contains qinv in lower halfword, and 20159 in upper halfword (constant used in barrett)
-  mov  qinv, #62209
+  movw  qinv, #62209
   movt barrettconst, #20159
 
   ### LAYER 7+6
@@ -220,10 +220,10 @@ invntt_fast:
   barrettconst        .req r12
   q                   .req r14
 
-  mov  q, #3329
+  movw  q, #3329
   movt q, #3329
   # contains qinv in lower halfword, and 20159 in upper halfword (constant used in barrett)
-  mov  qinv, #62209
+  movw  qinv, #62209
   movt barrettconst, #20159
   ### LAYER 1 (skip layer 0)
   mov loopctr, #32
@@ -373,7 +373,7 @@ doublebasemul_asm:
 
   loopctr .req r11
   poly3 .req r14
-  mov  q, #3329
+  movw  q, #3329
   movt q, #62209
   ldr poly0, [aptr], #4
   ldr poly1, [bptr], #4
@@ -448,7 +448,7 @@ basemul_asm:
     zeta    .req r12
     poly3 .req r14
 
-    mov  q, #3329
+    movw  q, #3329
     movt q, #62209
 
     mov loopctr, #64
@@ -528,7 +528,7 @@ basemul_asm_acc:
     zeta    .req r12
     poly3 .req r14
 
-    mov  q, #3329
+    movw  q, #3329
     movt q, #62209
 
     mov loopctr, #64
