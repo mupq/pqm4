@@ -6,7 +6,6 @@
 #include "randombytes.h"
 #include "sign.h"
 #include "symmetric.h"
-#include "hal.h"
 #include <stdint.h>
 
 /*************************************************
@@ -40,10 +39,7 @@ void expand_mat(polyvecl mat[K], const unsigned char rho[SEEDBYTES]) {
 *              - const unsigned char mu[]: byte array containing mu
 *              - const polyveck *w1: pointer to vector w1
 **************************************************/
-void challenge(poly *c,
-                                        const unsigned char mu[CRHBYTES],
-                                        const polyveck *w1)
-                                        {
+void challenge(poly *c, const unsigned char mu[CRHBYTES], const polyveck *w1){
     unsigned int i, b, pos;
     uint64_t signs;
     unsigned char inbuf[CRHBYTES + K * POLW1_SIZE_PACKED];
