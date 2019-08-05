@@ -9,31 +9,6 @@
 #include "hal.h"
 #include <stdint.h>
 
-#define RANDOMIZED_SIGNING 0
-
-#define POLY_MASK_1_SIGN 0X9ABDCD93
-#define POLY_MASK_2_SIGN 0X91CB0C2C
-
-static int shift_lfsr(unsigned int *lfsr, unsigned int polynomial_mask)
-{
-    int feedback;
-
-    feedback = *lfsr & 1;
-    *lfsr >>= 1;
-    if(feedback == 1)
-        *lfsr ^= polynomial_mask;
-    return *lfsr;
-}
-
-static int get_random(void)
-{
-    static unsigned int lfsr_1 = 0xC1C2C3C4;
-    static unsigned int lfsr_2 = 0xA9A8A7A6;
-    shift_lfsr(&lfsr_1, POLY_MASK_1_SIGN);
-    shift_lfsr(&lfsr_2, POLY_MASK_2_SIGN);
-    return ((shift_lfsr(&lfsr_1, POLY_MASK_1_SIGN) ^ shift_lfsr(&lfsr_2, POLY_MASK_2_SIGN)) & 0XFF);
-}
-
 /*************************************************
 * Name:        expand_mat
 *
@@ -136,11 +111,7 @@ int crypto_sign_keypair(uint8_t *pk, uint8_t *sk) {
     polyveck s2, t, t1, t0;
 
     /* Expand 32 bytes of randomness into rho, rhoprime and key */
-    // randombytes(seedbuf, 3 * SEEDBYTES);
-
-    /* Expand 32 bytes of randomness into rho, rhoprime and key */
-    for(int i = 0;i<3*SEEDBYTES;i++)
-      seedbuf[i] = get_random();
+    randombytes(seedbuf, 3 * SEEDBYTES);
 
     rho = seedbuf;
     rhoprime = seedbuf + SEEDBYTES;
@@ -195,11 +166,6 @@ int crypto_sign_signature(
     polyveck t0, s2, w, w1, w0;
     polyveck h, cs2, ct0;
 
-    for (i = 0; i < mlen; i++)
-    {
-        sig[CRYPTO_BYTES + i] = m[i];
-    }
-
     rho = seedbuf;
     tr = rho + SEEDBYTES;
     key = tr + CRHBYTES;
@@ -216,11 +182,7 @@ int crypto_sign_signature(
     shake256_inc_finalize(&state);
     shake256_inc_squeeze(mu, CRHBYTES, &state);
 
-    #if RANDOMIZED_SIGNING == 0
-        crh(rhoprime, key, SEEDBYTES + CRHBYTES);
-    #else
-        randombytes(rhoprime, CRHBYTES);
-    #endif
+    crh(rhoprime, key, SEEDBYTES + CRHBYTES);
 
     /* Expand matrix and transform vectors */
     expand_mat(mat, rho);
@@ -258,19 +220,9 @@ rej:
         poly_invntt_montgomery(&cs2.vec[i]);
         if(poly_sub_freeze_chk_norm(w0.vec+i, w0.vec+i, cs2.vec+i, GAMMA2 - BETA))
         {
-            // time_taken = cpucycles_overhead() - time_taken;
-            // total_signing_time += time_taken;
-            // printf("Rejected at wccs2\n");
-            // time_taken = cpucycles_stop() - time_taken - timing_overhead;
-            // total_signing_time += time_taken;
             goto rej;
         }
     }
-    // polyveck_sub(&w0, &w0, &cs2);
-    // polyveck_freeze(&w0);
-    // if (polyveck_chknorm(&w0, GAMMA2 - BETA)) {
-    //     goto rej;
-    // }
 
     /* Compute z, reject if it reveals secret */
     for (i = 0; i < L; ++i) {
@@ -278,31 +230,9 @@ rej:
         poly_invntt_montgomery(&z.vec[i]);
         if(poly_add_freeze_chk_norm(z.vec+i, z.vec+i, y.vec+i, GAMMA1 - BETA))
         {
-        // t_end = systick_get_value();
-        // printcycles("", (t_start+overflowcnt*2400000llu)-t_end);
-        // computations++;
-        // poly_freeze(z.vec+i);
-        // computations++;
-        // if(poly_chknorm(z.vec+i, GAMMA1 - BETA))
-        // {
-            // computations++;
-            // printf("Rejected at z norm...\n");
-            // computations_total += computations;
-            // fprintf(f1,"Rejected at z norm...\n");
-            // fprintf(f2,"Rejected at z norm...\n");
-            // time_taken = cpucycles_overhead() - time_taken;
-            // total_signing_time += time_taken;
-            // printf("Rejected at zstep\n");
-            // time_taken = cpucycles_stop() - time_taken - timing_overhead;
-            // total_signing_time += time_taken;
             goto rej;
         }
     }
-    // polyvecl_add(&z, &z, &y);
-    // polyvecl_freeze(&z);
-    // if (polyvecl_chknorm(&z, GAMMA1 - BETA)) {
-    //     goto rej;
-    // }
 
     /* Compute hints for w1 */
     for (i = 0; i < K; ++i) {
@@ -310,21 +240,9 @@ rej:
         poly_invntt_montgomery(&ct0.vec[i]);
         if(poly_csubq_chknorm(ct0.vec+i, GAMMA2))
         {
-        // if(poly_chknorm(ct0.vec+i, GAMMA2))
-        // {
-          // time_taken = cpucycles_overhead() - time_taken;
-          // total_signing_time += time_taken;
-          // printf("Rejected at ct0\n");
-          // time_taken = cpucycles_stop() - time_taken - timing_overhead;
-          // total_signing_time += time_taken;
           goto rej;
         }
     }
-
-    // polyveck_csubq(&ct0);
-    // if (polyveck_chknorm(&ct0, GAMMA2)) {
-    //     goto rej;
-    // }
 
     polyveck_add(&w0, &w0, &ct0);
     polyveck_csubq(&w0);
@@ -430,10 +348,13 @@ int crypto_sign(uint8_t *sm,
         const uint8_t *sk) {
     size_t i;
     int rc;
+    for (i = 0; i < mlen; i++)
+    {
+        sm[CRYPTO_BYTES + i] = m[i];
+    }
     rc = crypto_sign_signature(sm, smlen, m, mlen, sk);
     *smlen += mlen;
     return rc;
-
 }
 
 /*************************************************

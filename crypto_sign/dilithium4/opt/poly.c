@@ -6,22 +6,6 @@
 #include "symmetric.h"
 #include <stdint.h>
 
-
-// /*************************************************
-// * Name:        poly_reduce
-// *
-// * Description: Reduce all coefficients of input polynomial to representative
-// *              in [0,2*Q[.
-// *
-// * Arguments:   - poly *a: pointer to input/output polynomial
-// **************************************************/
-// void poly_reduce(poly *a) {
-//     unsigned int i;
-//     for (i = 0; i < N; ++i) {
-//         a->coeffs[i] = reduce32(a->coeffs[i]);
-//     }
-// }
-
 /*************************************************
 * Name:        poly_reduce
 *
@@ -75,24 +59,8 @@ void poly_reduce(poly *a) {
       t = b & 0x7FFFFF;
       b >>= 23;
       a->coeffs[i+7] = t + (b << 13) - b;
-    // a->coeffs[i] = reduce32(a->coeffs[i]);
   }
 }
-
-// /*************************************************
-// * Name:        poly_csubq
-// *
-// * Description: For all coefficients of input polynomial subtract Q if
-// *              coefficient is bigger than Q.
-// *
-// * Arguments:   - poly *a: pointer to input/output polynomial
-// **************************************************/
-// void poly_csubq(poly *a) {
-//     unsigned int i;
-//     for (i = 0; i < N; ++i) {
-//         a->coeffs[i] = csubq(a->coeffs[i]);
-//     }
-// }
 
 /*************************************************
 * Name:        poly_csubq
@@ -130,25 +98,8 @@ void poly_csubq(poly *a) {
 
     a->coeffs[i+7] -= Q;
     a->coeffs[i+7] += ((int32_t)a->coeffs[i+7] >> 31) & Q;
-    // return a;
-    // a->coeffs[i] = csubq(a->coeffs[i]);
   }
 }
-
-// /*************************************************
-// * Name:        poly_freeze
-// *
-// * Description: Reduce all coefficients of the polynomial to standard
-// *              representatives.
-// *
-// * Arguments:   - poly *a: pointer to input/output polynomial
-// **************************************************/
-// void poly_freeze(poly *a) {
-//     unsigned int i;
-//     for (i = 0; i < N; ++i) {
-//         a->coeffs[i] = freeze(a->coeffs[i]);
-//     }
-// }
 
 /*************************************************
 * Name:        poly_freeze
@@ -211,25 +162,8 @@ void poly_freeze(poly *a) {
     a->coeffs[i+7] = t + (a->coeffs[i+7] << 13) - a->coeffs[i+7];
     a->coeffs[i+7] -= Q;
     a->coeffs[i+7] += ((int32_t)a->coeffs[i+7] >> 31) & Q;
-    // a->coeffs[i] = freeze(a->coeffs[i]);
   }
 }
-
-// /*************************************************
-// * Name:        poly_add
-// *
-// * Description: Add polynomials. No modular reduction is performed.
-// *
-// * Arguments:   - poly *c: pointer to output polynomial
-// *              - const poly *a: pointer to first summand
-// *              - const poly *b: pointer to second summand
-// **************************************************/
-// void poly_add(poly *c, const poly *a, const poly *b)  {
-//     unsigned int i;
-//     for (i = 0; i < N; ++i) {
-//         c->coeffs[i] = a->coeffs[i] + b->coeffs[i];
-//     }
-// }
 
 /*************************************************
 * Name:        poly_add
@@ -257,25 +191,6 @@ void poly_add(poly *c, const poly *a, const poly *b)  {
 
 }
 
-// /*************************************************
-// * Name:        poly_sub
-// *
-// * Description: Subtract polynomials. Assumes coefficients of second input
-// *              polynomial to be less than 2*Q. No modular reduction is
-// *              performed.
-// *
-// * Arguments:   - poly *c: pointer to output polynomial
-// *              - const poly *a: pointer to first input polynomial
-// *              - const poly *b: pointer to second input polynomial to be
-// *                               subtraced from first input polynomial
-// **************************************************/
-// void poly_sub(poly *c, const poly *a, const poly *b) {
-//     unsigned int i;
-//     for (i = 0; i < N; ++i) {
-//         c->coeffs[i] = a->coeffs[i] + 2 * Q - b->coeffs[i];
-//     }
-// }
-
 /*************************************************
 * Name:        poly_sub
 *
@@ -290,7 +205,6 @@ void poly_add(poly *c, const poly *a, const poly *b)  {
 **************************************************/
 void poly_sub(poly *c, const poly *a, const poly *b) {
   unsigned int i;
-  // DBENCH_START();
 
   for(i = 0; i < N; i=i+8)
   {
@@ -304,23 +218,7 @@ void poly_sub(poly *c, const poly *a, const poly *b) {
     c->coeffs[i+7] = a->coeffs[i+7] + 2*Q - b->coeffs[i+7];
   }
 
-  // DBENCH_STOP(*tadd);
 }
-
-// /*************************************************
-// * Name:        poly_shiftl
-// *
-// * Description: Multiply polynomial by 2^D without modular reduction. Assumes
-// *              input coefficients to be less than 2^{32-D}.
-// *
-// * Arguments:   - poly *a: pointer to input/output polynomial
-// **************************************************/
-// void poly_shiftl(poly *a) {
-//     unsigned int i;
-//     for (i = 0; i < N; ++i) {
-//         a->coeffs[i] <<= D;
-//     }
-// }
 
 /*************************************************
 * Name:        poly_shiftl
@@ -370,27 +268,6 @@ void poly_ntt(poly *a) {
 void poly_invntt_montgomery(poly *a) {
     inv_ntt_asm(a->coeffs);
 }
-
-// /*************************************************
-// * Name:        poly_pointwise_invmontgomery
-// *
-// * Description: Pointwise multiplication of polynomials in NTT domain
-// *              representation and multiplication of resulting polynomial
-// *              with 2^{-32}. Output coefficients are less than 2*Q if input
-// *              coefficient are less than 22*Q.
-// *
-// * Arguments:   - poly *c: pointer to output polynomial
-// *              - const poly *a: pointer to first input polynomial
-// *              - const poly *b: pointer to second input polynomial
-// **************************************************/
-// void poly_pointwise_invmontgomery(poly *c, const poly *a, const poly *b) {
-//     unsigned int i;
-//
-//     for (i = 0; i < N; ++i) {
-//         c->coeffs[i] = montgomery_reduce((uint64_t)a->coeffs[i] * b->coeffs[i]);
-//     }
-//
-// }
 
 /*************************************************
 * Name:        poly_pointwise_invmontgomery
@@ -471,27 +348,6 @@ void poly_pointwise_invmontgomery(poly *c, const poly *a, const poly *b)
   }
 }
 
-// /*************************************************
-// * Name:        poly_power2round
-// *
-// * Description: For all coefficients c of the input polynomial,
-// *              compute c0, c1 such that c mod Q = c1*2^D + c0
-// *              with -2^{D-1} < c0 <= 2^{D-1}. Assumes coefficients to be
-// *              standard representatives.
-// *
-// * Arguments:   - poly *a1: pointer to output polynomial with coefficients c1
-// *              - poly *a0: pointer to output polynomial with coefficients Q + a0
-// *              - const poly *v: pointer to input polynomial
-// **************************************************/
-// void poly_power2round(poly *a1, poly *a0, const poly *a) {
-//     unsigned int i;
-//
-//     for (i = 0; i < N; ++i) {
-//         a1->coeffs[i] = power2round(a->coeffs[i], &a0->coeffs[i]);
-//     }
-//
-// }
-
 /*************************************************
 * Name:        poly_power2round
 *
@@ -570,27 +426,6 @@ void poly_power2round(poly *a1, poly *a0, const poly *a) {
 
   }
 }
-
-// /*************************************************
-// * Name:        poly_decompose
-// *
-// * Description: For all coefficients c of the input polynomial,
-// *              compute high and low bits c0, c1 such c mod Q = c1*ALPHA + c0
-// *              with -ALPHA/2 < c0 <= ALPHA/2 except c1 = (Q-1)/ALPHA where we
-// *              set c1 = 0 and -ALPHA/2 <= c0 = c mod Q - Q < 0.
-// *              Assumes coefficients to be standard representatives.
-// *
-// * Arguments:   - poly *a1: pointer to output polynomial with coefficients c1
-// *              - poly *a0: pointer to output polynomial with coefficients Q + a0
-// *              - const poly *c: pointer to input polynomial
-// **************************************************/
-// void poly_decompose(poly *a1, poly *a0, const poly *a) {
-//     unsigned int i;
-//
-//     for (i = 0; i < N; ++i) {
-//         a1->coeffs[i] = decompose(a->coeffs[i], &a0->coeffs[i]);
-//     }
-// }
 
 /*************************************************
 * Name:        poly_decompose
@@ -763,30 +598,6 @@ void poly_decompose(poly *a1, poly *a0, const poly *a) {
 
 }
 
-// /*************************************************
-// * Name:        poly_make_hint
-// *
-// * Description: Compute hint polynomial. The coefficients of which indicate
-// *              whether the low bits of the corresponding coefficient of
-// *              the input polynomial overflow into the high bits.
-// *
-// * Arguments:   - poly *h: pointer to output hint polynomial
-// *              - const poly *a0: pointer to low part of input polynomial
-// *              - const poly *a1: pointer to high part of input polynomial
-// *
-// * Returns number of 1 bits.
-// **************************************************/
-// unsigned int poly_make_hint(poly *h, const poly *a0, const poly *a1) {
-//     unsigned int i, s = 0;
-//
-//     for (i = 0; i < N; ++i) {
-//         h->coeffs[i] = make_hint(a0->coeffs[i], a1->coeffs[i]);
-//         s += h->coeffs[i];
-//     }
-//
-//     return s;
-// }
-
 /*************************************************
 * Name:        poly_make_hint
 *
@@ -803,11 +614,6 @@ void poly_decompose(poly *a1, poly *a0, const poly *a) {
 unsigned int poly_make_hint(poly *h, const poly *a0, const poly *a1)
 {
   unsigned int i, s = 0;
-  // int32_t t, u;
-  // uint32_t temp;
-  // //
-  // uint32_t temp1;
-  // uint32_t ans1,ans2;
 
 for(i = 0; i < N; i=i+8)
 {
@@ -909,10 +715,6 @@ void poly_use_hint(poly *a, const poly *b, const poly *h) {
     int32_t t, u;
     uint32_t temp;
 
-    // for (i = 0; i < N; ++i) {
-    //     a->coeffs[i] = use_hint(b->coeffs[i], h->coeffs[i]);
-    // }
-
     for (i = 0; i < N; i=i+8)
     {
         // /* Centralized remainder mod ALPHA */
@@ -933,21 +735,17 @@ void poly_use_hint(poly *a, const poly *b, const poly *h) {
         a0 = Q + t - (temp >> 4);
         a1 = temp & 0xF;
 
-        // a1 = decompose(b->coeffs[i], &a0);
         if (h->coeffs[i] == 0)
         {
             a->coeffs[i] = a1;
-            // return a1;
         }
         else if (a0 > Q)
         {
             a->coeffs[i] = (a1 + 1) & 0xF;
-            // return (a1 + 1) & 0xF;
         }
         else
         {
             a->coeffs[i] = (a1 - 1) & 0xF;
-            // return (a1 - 1) & 0xF;
         }
 
         // /* Centralized remainder mod ALPHA */
@@ -968,21 +766,17 @@ void poly_use_hint(poly *a, const poly *b, const poly *h) {
         a0 = Q + t - (temp >> 4);
         a1 = temp & 0xF;
 
-        // a1 = decompose(b->coeffs[i], &a0);
         if (h->coeffs[i+1] == 0)
         {
             a->coeffs[i+1] = a1;
-            // return a1;
         }
         else if (a0 > Q)
         {
             a->coeffs[i+1] = (a1 + 1) & 0xF;
-            // return (a1 + 1) & 0xF;
         }
         else
         {
             a->coeffs[i+1] = (a1 - 1) & 0xF;
-            // return (a1 - 1) & 0xF;
         }
 
         // /* Centralized remainder mod ALPHA */
@@ -1003,21 +797,17 @@ void poly_use_hint(poly *a, const poly *b, const poly *h) {
         a0 = Q + t - (temp >> 4);
         a1 = temp & 0xF;
 
-        // a1 = decompose(b->coeffs[i], &a0);
         if (h->coeffs[i+2] == 0)
         {
             a->coeffs[i+2] = a1;
-            // return a1;
         }
         else if (a0 > Q)
         {
             a->coeffs[i+2] = (a1 + 1) & 0xF;
-            // return (a1 + 1) & 0xF;
         }
         else
         {
             a->coeffs[i+2] = (a1 - 1) & 0xF;
-            // return (a1 - 1) & 0xF;
         }
 
         // /* Centralized remainder mod ALPHA */
@@ -1038,21 +828,17 @@ void poly_use_hint(poly *a, const poly *b, const poly *h) {
         a0 = Q + t - (temp >> 4);
         a1 = temp & 0xF;
 
-        // a1 = decompose(b->coeffs[i], &a0);
         if (h->coeffs[i+3] == 0)
         {
             a->coeffs[i+3] = a1;
-            // return a1;
         }
         else if (a0 > Q)
         {
             a->coeffs[i+3] = (a1 + 1) & 0xF;
-            // return (a1 + 1) & 0xF;
         }
         else
         {
             a->coeffs[i+3] = (a1 - 1) & 0xF;
-            // return (a1 - 1) & 0xF;
         }
 
         // /* Centralized remainder mod ALPHA */
@@ -1073,21 +859,17 @@ void poly_use_hint(poly *a, const poly *b, const poly *h) {
         a0 = Q + t - (temp >> 4);
         a1 = temp & 0xF;
 
-        // a1 = decompose(b->coeffs[i], &a0);
         if (h->coeffs[i+4] == 0)
         {
             a->coeffs[i+4] = a1;
-            // return a1;
         }
         else if (a0 > Q)
         {
             a->coeffs[i+4] = (a1 + 1) & 0xF;
-            // return (a1 + 1) & 0xF;
         }
         else
         {
             a->coeffs[i+4] = (a1 - 1) & 0xF;
-            // return (a1 - 1) & 0xF;
         }
 
         // /* Centralized remainder mod ALPHA */
@@ -1112,17 +894,14 @@ void poly_use_hint(poly *a, const poly *b, const poly *h) {
         if (h->coeffs[i+5] == 0)
         {
             a->coeffs[i+5] = a1;
-            // return a1;
         }
         else if (a0 > Q)
         {
             a->coeffs[i+5] = (a1 + 1) & 0xF;
-            // return (a1 + 1) & 0xF;
         }
         else
         {
             a->coeffs[i+5] = (a1 - 1) & 0xF;
-            // return (a1 - 1) & 0xF;
         }
 
         // /* Centralized remainder mod ALPHA */
@@ -1143,21 +922,17 @@ void poly_use_hint(poly *a, const poly *b, const poly *h) {
         a0 = Q + t - (temp >> 4);
         a1 = temp & 0xF;
 
-        // a1 = decompose(b->coeffs[i], &a0);
         if (h->coeffs[i+6] == 0)
         {
             a->coeffs[i+6] = a1;
-            // return a1;
         }
         else if (a0 > Q)
         {
             a->coeffs[i+6] = (a1 + 1) & 0xF;
-            // return (a1 + 1) & 0xF;
         }
         else
         {
             a->coeffs[i+6] = (a1 - 1) & 0xF;
-            // return (a1 - 1) & 0xF;
         }
 
         // /* Centralized remainder mod ALPHA */
@@ -1178,33 +953,30 @@ void poly_use_hint(poly *a, const poly *b, const poly *h) {
         a0 = Q + t - (temp >> 4);
         a1 = temp & 0xF;
 
-        // a1 = decompose(b->coeffs[i], &a0);
         if (h->coeffs[i+7] == 0)
         {
             a->coeffs[i+7] = a1;
-            // return a1;
         }
         else if (a0 > Q)
         {
             a->coeffs[i+7] = (a1 + 1) & 0xF;
-            // return (a1 + 1) & 0xF;
         }
         else
         {
             a->coeffs[i+7] = (a1 - 1) & 0xF;
-            // return (a1 - 1) & 0xF;
         }
     }
 }
 
 /*************************************************
-* Name:        poly_add_freeze_chk_norm
+* Name:        poly_sub_freeze_chk_norm
 *
-* Description: Add polynomials. No modular reduction is performed.
+* Description: Combination of subtraction, freeze and check_norm functions.
 *
 * Arguments:   - poly *c: pointer to output polynomial
 *              - poly *a: pointer to first summand
 *              - poly *b: pointer to second summand
+               -
 **************************************************/
 int poly_sub_freeze_chk_norm(poly *c, const poly *a, const poly *b, uint32_t B)
 {
@@ -1215,7 +987,6 @@ int poly_sub_freeze_chk_norm(poly *c, const poly *a, const poly *b, uint32_t B)
 
     for(i = 0; i < N; i=i+8)
     {
-      // c->coeffs[i] = freeze(a->coeffs[i] + b->coeffs[i]);
 
         temp2 = a->coeffs[i] + 2*Q - b->coeffs[i];
         temp = temp2 & 0x7FFFFF;
@@ -1380,11 +1151,12 @@ int poly_sub_freeze_chk_norm(poly *c, const poly *a, const poly *b, uint32_t B)
 /*************************************************
 * Name:        poly_add_freeze_chk_norm
 *
-* Description: Add polynomials. No modular reduction is performed.
+* Description: Combination of Addition, freeze and check_norm functions.
 *
 * Arguments:   - poly *c: pointer to output polynomial
 *              - poly *a: pointer to first summand
 *              - poly *b: pointer to second summand
+               - uint32_t B: norm bound
 **************************************************/
 int poly_add_freeze_chk_norm(poly *c, const poly *a, const poly *b, uint32_t B)
 {
@@ -1532,12 +1304,12 @@ int poly_add_freeze_chk_norm(poly *c, const poly *a, const poly *b, uint32_t B)
 }
 
 /*************************************************
-* Name:        poly_freeze_chk_norm
+* Name:        poly_csubq_chknorm
 *
-* Description: Reduce all coefficients of polynomial to standard
-*              representatives.
+* Description: Combination of csubq and checknorm functions...
 *
 * Arguments:   - poly *a: pointer to input/output polynomial
+                uint32_t B: norm bound
 **************************************************/
 int poly_csubq_chknorm(poly *a, uint32_t B) {
   unsigned int i;
@@ -1545,10 +1317,8 @@ int poly_csubq_chknorm(poly *a, uint32_t B) {
 
   for(i = 0; i < N; i=i+8)
   {
-      // printf("I am here\n");
     a->coeffs[i] -= Q;
     a->coeffs[i] += ((int32_t)a->coeffs[i] >> 31) & Q;
-    // a->coeffs[i] = csubq(a->coeffs[i]);
     t = (Q-1)/2 - a->coeffs[i];
     t ^= (t >> 31);
     t = (Q-1)/2 - t;
@@ -1558,7 +1328,6 @@ int poly_csubq_chknorm(poly *a, uint32_t B) {
 
     a->coeffs[i+1] -= Q;
     a->coeffs[i+1] += ((int32_t)a->coeffs[i+1] >> 31) & Q;
-    // a->coeffs[i] = csubq(a->coeffs[i]);
     t = (Q-1)/2 - a->coeffs[i+1];
     t ^= (t >> 31);
     t = (Q-1)/2 - t;
@@ -1568,7 +1337,6 @@ int poly_csubq_chknorm(poly *a, uint32_t B) {
 
     a->coeffs[i+2] -= Q;
     a->coeffs[i+2] += ((int32_t)a->coeffs[i+2] >> 31) & Q;
-    // a->coeffs[i] = csubq(a->coeffs[i]);
     t = (Q-1)/2 - a->coeffs[i+2];
     t ^= (t >> 31);
     t = (Q-1)/2 - t;
@@ -1578,7 +1346,6 @@ int poly_csubq_chknorm(poly *a, uint32_t B) {
 
     a->coeffs[i+3] -= Q;
     a->coeffs[i+3] += ((int32_t)a->coeffs[i+3] >> 31) & Q;
-    // a->coeffs[i] = csubq(a->coeffs[i]);
     t = (Q-1)/2 - a->coeffs[i+3];
     t ^= (t >> 31);
     t = (Q-1)/2 - t;
@@ -1587,7 +1354,6 @@ int poly_csubq_chknorm(poly *a, uint32_t B) {
     return 1;
     a->coeffs[i+4] -= Q;
     a->coeffs[i+4] += ((int32_t)a->coeffs[i+4] >> 31) & Q;
-    // a->coeffs[i] = csubq(a->coeffs[i]);
     t = (Q-1)/2 - a->coeffs[i+4];
     t ^= (t >> 31);
     t = (Q-1)/2 - t;
@@ -1597,7 +1363,6 @@ int poly_csubq_chknorm(poly *a, uint32_t B) {
 
     a->coeffs[i+5] -= Q;
     a->coeffs[i+5] += ((int32_t)a->coeffs[i+5] >> 31) & Q;
-    // a->coeffs[i] = csubq(a->coeffs[i]);
     t = (Q-1)/2 - a->coeffs[i+5];
     t ^= (t >> 31);
     t = (Q-1)/2 - t;
@@ -1607,7 +1372,6 @@ int poly_csubq_chknorm(poly *a, uint32_t B) {
 
     a->coeffs[i+6] -= Q;
     a->coeffs[i+6] += ((int32_t)a->coeffs[i+6] >> 31) & Q;
-    // a->coeffs[i] = csubq(a->coeffs[i]);
     t = (Q-1)/2 - a->coeffs[i+6];
     t ^= (t >> 31);
     t = (Q-1)/2 - t;
@@ -1617,7 +1381,6 @@ int poly_csubq_chknorm(poly *a, uint32_t B) {
 
     a->coeffs[i+7] -= Q;
     a->coeffs[i+7] += ((int32_t)a->coeffs[i+7] >> 31) & Q;
-    // a->coeffs[i] = csubq(a->coeffs[i]);
     t = (Q-1)/2 - a->coeffs[i+7];
     t ^= (t >> 31);
     t = (Q-1)/2 - t;
