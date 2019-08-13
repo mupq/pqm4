@@ -356,7 +356,7 @@ aes128_keyexp_asm:
     str r7, [r1, #28]
 
     //function epilogue, restore state
-    pop.w {r4-r11}
+    pop {r4-r11}
     bx lr
 .size aes128_keyexp_asm,.-aes128_keyexp_asm
 
@@ -586,7 +586,7 @@ aes128_encrypt_asm:
     str r3, [r4, #12]
 
     //function epilogue, restore state
-    pop.w {r4-r12,r14}
+    pop {r4-r12,r14}
     bx lr
 .size aes128_encrypt_asm,.-aes128_encrypt_asm
 
