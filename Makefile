@@ -16,7 +16,7 @@ CFLAGS     += -O3 \
               -Wredundant-decls -Wmissing-prototypes -Wstrict-prototypes \
               -Wundef -Wshadow \
               -I$(OPENCM3DIR)/include \
-              -fno-common $(ARCH_FLAGS) -MD $(DEFINES) -std=c99
+              -fno-common $(ARCH_FLAGS) -MD $(DEFINES)
 
 CC_HOST    = gcc
 LD_HOST    = gcc
