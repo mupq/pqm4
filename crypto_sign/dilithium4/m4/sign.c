@@ -6,6 +6,7 @@
 #include "randombytes.h"
 #include "sign.h"
 #include "symmetric.h"
+
 #include <stdint.h>
 
 /*************************************************
@@ -39,7 +40,9 @@ void expand_mat(polyvecl mat[K], const unsigned char rho[SEEDBYTES]) {
 *              - const unsigned char mu[]: byte array containing mu
 *              - const polyveck *w1: pointer to vector w1
 **************************************************/
-void challenge(poly *c, const unsigned char mu[CRHBYTES], const polyveck *w1){
+void challenge(poly *c,
+                                        const unsigned char mu[CRHBYTES],
+                                        const polyveck *w1) {
     unsigned int i, b, pos;
     uint64_t signs;
     unsigned char inbuf[CRHBYTES + K * POLW1_SIZE_PACKED];
@@ -108,7 +111,6 @@ int crypto_sign_keypair(uint8_t *pk, uint8_t *sk) {
 
     /* Expand 32 bytes of randomness into rho, rhoprime and key */
     randombytes(seedbuf, 3 * SEEDBYTES);
-
     rho = seedbuf;
     rhoprime = seedbuf + SEEDBYTES;
     key = seedbuf + 2 * SEEDBYTES;
@@ -150,8 +152,7 @@ int crypto_sign_keypair(uint8_t *pk, uint8_t *sk) {
 
 int crypto_sign_signature(
     uint8_t *sig, size_t *siglen,
-    const uint8_t *m, size_t mlen, const uint8_t *sk)
-    {
+    const uint8_t *m, size_t mlen, const uint8_t *sk) {
     unsigned long long i;
     unsigned int n;
     unsigned char seedbuf[2 * SEEDBYTES + 3 * CRHBYTES];
@@ -168,6 +169,7 @@ int crypto_sign_signature(
     mu = key + SEEDBYTES;
     rhoprime = mu + CRHBYTES;
     unpack_sk(rho, key, tr, &s1, &s2, &t0, sk);
+
 
     // use incremental hash API instead of copying around buffers
     /* Compute CRH(tr, msg) */
@@ -210,8 +212,7 @@ rej:
 
     /* Check that subtracting cs2 does not change high bits of w and low bits
      * do not reveal secret information */
-    for (i = 0; i < K; ++i)
-    {
+    for (i = 0; i < K; ++i) {
         poly_pointwise_invmontgomery(&cs2.vec[i], &chat, &s2.vec[i]);
         poly_invntt_montgomery(&cs2.vec[i]);
         if(poly_sub_freeze_chk_norm(w0.vec+i, w0.vec+i, cs2.vec+i, GAMMA2 - BETA))
@@ -344,13 +345,13 @@ int crypto_sign(uint8_t *sm,
         const uint8_t *sk) {
     size_t i;
     int rc;
-    for (i = 0; i < mlen; i++)
-    {
+    for (i = 0; i < mlen; i++) {
         sm[CRYPTO_BYTES + i] = m[i];
     }
     rc = crypto_sign_signature(sm, smlen, m, mlen, sk);
     *smlen += mlen;
     return rc;
+
 }
 
 /*************************************************
