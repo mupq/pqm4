@@ -96,11 +96,11 @@
 | scheme | implementation | key generation [cycles] | sign [cycles] | verify [cycles] |
 | ------ | -------------- | ----------------------- | ------------- | --------------- |
 | dilithium2 (100 executions) | clean | AVG: 1,752,194 <br /> MIN: 1,751,051 <br /> MAX: 1,764,500 | AVG: 9,342,087 <br /> MIN: 3,486,474 <br /> MAX: 26,959,258 | AVG: 2,035,881 <br /> MIN: 2,035,522 <br /> MAX: 2,036,394 |
-| dilithium2 (100 executions) | m4 | AVG: 1,400,412 <br /> MIN: 1,399,149 <br /> MAX: 1,425,295 | AVG: 6,157,001 <br /> MIN: 2,000,255 <br /> MAX: 33,459,692 | AVG: 1,461,284 <br /> MIN: 1,460,880 <br /> MAX: 1,461,658 |
+| dilithium2 (100 executions) | m4 | AVG: 1,321,024 <br /> MIN: 1,320,179 <br /> MAX: 1,333,559 | AVG: 4,532,604 <br /> MIN: 1,816,743 <br /> MAX: 15,928,444 | AVG: 1,380,727 <br /> MIN: 1,380,351 <br /> MAX: 1,381,001 |
 | dilithium3 (100 executions) | clean | AVG: 2,733,423 <br /> MIN: 2,732,625 <br /> MAX: 2,734,257 | AVG: 14,885,750 <br /> MIN: 4,809,910 <br /> MAX: 78,585,023 | AVG: 2,946,998 <br /> MIN: 2,946,203 <br /> MAX: 2,947,530 |
-| dilithium3 (100 executions) | m4 | AVG: 2,282,485 <br /> MIN: 2,281,621 <br /> MAX: 2,283,222 | AVG: 9,289,499 <br /> MIN: 2,927,627 <br /> MAX: 35,651,483 | AVG: 2,228,898 <br /> MIN: 2,228,423 <br /> MAX: 2,229,477 |
+| dilithium3 (100 executions) | m4 | AVG: 2,161,469 <br /> MIN: 2,160,789 <br /> MAX: 2,162,172 | AVG: 6,466,018 <br /> MIN: 2,672,040 <br /> MAX: 26,348,899 | AVG: 2,103,914 <br /> MIN: 2,103,465 <br /> MAX: 2,104,240 |
 | dilithium4 (100 executions) | clean | AVG: 3,647,486 <br /> MIN: 3,647,083 <br /> MAX: 3,647,892 | AVG: 13,615,651 <br /> MIN: 6,313,249 <br /> MAX: 43,824,110 | AVG: 4,035,259 <br /> MIN: 4,034,802 <br /> MAX: 4,035,897 |
-| dilithium4 (100 executions) | m4 | AVG: 3,097,421 <br /> MIN: 3,097,005 <br /> MAX: 3,097,731 | AVG: 8,468,805 <br /> MIN: 4,033,922 <br /> MAX: 20,081,029 | AVG: 3,173,500 <br /> MIN: 3,172,863 <br /> MAX: 3,174,125 |
+| dilithium4 (100 executions) | m4 | AVG: 2,925,880 <br /> MIN: 2,925,380 <br /> MAX: 2,926,447 | AVG: 7,155,716 <br /> MIN: 3,697,113 <br /> MAX: 22,557,945 | AVG: 2,995,784 <br /> MIN: 2,995,334 <br /> MAX: 2,996,176 |
 | luov-48-43-222-chacha (100 executions) | ref | AVG: 41,347,565 <br /> MIN: 41,077,732 <br /> MAX: 41,585,440 | AVG: 123,878,410 <br /> MIN: 123,825,414 <br /> MAX: 123,912,572 | AVG: 95,330,045 <br /> MIN: 95,317,535 <br /> MAX: 95,343,473 |
 | luov-48-43-222-keccak (100 executions) | ref | AVG: 53,900,163 <br /> MIN: 53,649,451 <br /> MAX: 54,074,274 | AVG: 135,960,322 <br /> MIN: 135,913,707 <br /> MAX: 136,018,359 | AVG: 107,793,279 <br /> MIN: 107,783,143 <br /> MAX: 107,803,188 |
 | luov-64-61-302-chacha (100 executions) | ref | AVG: 109,063,798 <br /> MIN: 108,677,813 <br /> MAX: 109,472,193 | AVG: 405,205,796 <br /> MIN: 405,092,541 <br /> MAX: 405,292,253 | AVG: 269,012,028 <br /> MIN: 268,981,066 <br /> MAX: 269,034,087 |
@@ -396,11 +396,11 @@
 | Scheme | Implementation | Key Generation [%] | Sign [%] | Verify [%] |
 | ------ | -------------- | ------------------ | -------- | ---------- |
 | dilithium2 | clean | 56.6% | 25.1% | 47.1% |
-| dilithium2 | m4 | 70.8% | 44.4% | 65.6% |
+| dilithium2 | m4 | 75.0% | 52.2% | 70.3% |
 | dilithium3 | clean | 61.4% | 26.9% | 51.4% |
-| dilithium3 | m4 | 73.5% | 45.6% | 68.0% |
+| dilithium3 | m4 | 77.6% | 53.4% | 72.5% |
 | dilithium4 | clean | 62.1% | 30.2% | 54.6% |
-| dilithium4 | m4 | 73.1% | 49.8% | 69.4% |
+| dilithium4 | m4 | 77.4% | 55.9% | 73.9% |
 | luov-48-43-222-chacha | ref | 0.3% | 0.1% | 0.0% |
 | luov-48-43-222-keccak | ref | 30.7% | 12.2% | 15.3% |
 | luov-64-61-302-chacha | ref | 0.2% | 0.1% | 0.0% |
@@ -546,11 +546,11 @@
 | Scheme | Implementation | .text [bytes] | .data [bytes] | .bss [bytes] | Total [bytes] |
 | ------ | -------------- | ------------- | ------------- | ------------ | ------------- |
 | dilithium2 | clean | 11,336 | 0 | 0 | 11,336 |
-| dilithium2 | m4 | 13,948 | 0 | 0 | 13,948 |
+| dilithium2 | m4 | 18,124 | 0 | 0 | 18,124 |
 | dilithium3 | clean | 11,144 | 0 | 0 | 11,144 |
-| dilithium3 | m4 | 13,756 | 0 | 0 | 13,756 |
+| dilithium3 | m4 | 17,972 | 0 | 0 | 17,972 |
 | dilithium4 | clean | 11,240 | 0 | 0 | 11,240 |
-| dilithium4 | m4 | 13,852 | 0 | 0 | 13,852 |
+| dilithium4 | m4 | 18,080 | 0 | 0 | 18,080 |
 | luov-48-43-222-chacha | ref | 405,722 | 36 | 0 | 405,758 |
 | luov-48-43-222-keccak | ref | 405,730 | 36 | 0 | 405,766 |
 | luov-64-61-302-chacha | ref | 405,412 | 36 | 0 | 405,448 |
