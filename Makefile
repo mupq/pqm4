@@ -22,7 +22,7 @@ CC_HOST    = gcc
 LD_HOST    = gcc
 
 CFLAGS_HOST = -O3 -Wall -Wextra -Wpedantic
-LDFLAGS_HOST =
+LDFLAGS_HOST = -lm
 
 # override as desired
 TYPE=kem

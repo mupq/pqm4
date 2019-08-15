@@ -101,6 +101,15 @@
 | dilithium3 (100 executions) | m4 | AVG: 2,161,469 <br /> MIN: 2,160,789 <br /> MAX: 2,162,172 | AVG: 6,466,018 <br /> MIN: 2,672,040 <br /> MAX: 26,348,899 | AVG: 2,103,914 <br /> MIN: 2,103,465 <br /> MAX: 2,104,240 |
 | dilithium4 (100 executions) | clean | AVG: 3,647,486 <br /> MIN: 3,647,083 <br /> MAX: 3,647,892 | AVG: 13,615,651 <br /> MIN: 6,313,249 <br /> MAX: 43,824,110 | AVG: 4,035,259 <br /> MIN: 4,034,802 <br /> MAX: 4,035,897 |
 | dilithium4 (100 executions) | m4 | AVG: 2,925,880 <br /> MIN: 2,925,380 <br /> MAX: 2,926,447 | AVG: 7,155,716 <br /> MIN: 3,697,113 <br /> MAX: 22,557,945 | AVG: 2,995,784 <br /> MIN: 2,995,334 <br /> MAX: 2,996,176 |
+| falcon1024 (100 executions) | m4-ct | AVG: 480,910,965 <br /> MIN: 318,710,413 <br /> MAX: 995,619,272 | AVG: 83,482,883 <br /> MIN: 83,258,612 <br /> MAX: 83,659,383 | AVG: 977,140 <br /> MIN: 966,990 <br /> MAX: 985,312 |
+| falcon1024 (100 executions) | opt-ct | AVG: 690,147,063 <br /> MIN: 393,308,866 <br /> MAX: 1,952,834,094 | AVG: 136,596,407 <br /> MIN: 136,419,138 <br /> MAX: 136,826,634 | AVG: 978,558 <br /> MIN: 967,484 <br /> MAX: 985,578 |
+| falcon1024 (100 executions) | opt-leaktime | AVG: 446,074,512 <br /> MIN: 290,113,568 <br /> MAX: 961,301,420 | AVG: 72,915,615 <br /> MIN: 72,598,158 <br /> MAX: 73,227,996 | AVG: 978,401 <br /> MIN: 967,573 <br /> MAX: 985,409 |
+| falcon512 (100 executions) | m4-ct | AVG: 197,793,925 <br /> MIN: 115,046,457 <br /> MAX: 578,436,945 | AVG: 38,090,446 <br /> MIN: 37,971,516 <br /> MAX: 38,244,753 | AVG: 474,052 <br /> MIN: 465,554 <br /> MAX: 481,949 |
+| falcon512 (100 executions) | opt-ct | AVG: 229,088,624 <br /> MIN: 147,666,429 <br /> MAX: 812,925,530 | AVG: 62,225,400 <br /> MIN: 62,051,681 <br /> MAX: 62,393,401 | AVG: 473,964 <br /> MIN: 465,996 <br /> MAX: 481,597 |
+| falcon512 (100 executions) | opt-leaktime | AVG: 166,773,689 <br /> MIN: 102,904,024 <br /> MAX: 358,074,358 | AVG: 33,709,488 <br /> MIN: 33,475,429 <br /> MAX: 33,923,052 | AVG: 475,227 <br /> MIN: 465,282 <br /> MAX: 482,730 |
+| falcon512-tree (100 executions) | m4-ct | AVG: 201,459,670 <br /> MIN: 130,210,248 <br /> MAX: 454,050,554 | AVG: 17,181,744 <br /> MIN: 17,062,306 <br /> MAX: 17,295,452 | AVG: 475,278 <br /> MIN: 465,806 <br /> MAX: 481,258 |
+| falcon512-tree (100 executions) | opt-ct | AVG: 267,136,946 <br /> MIN: 173,342,269 <br /> MAX: 527,937,744 | AVG: 27,257,531 <br /> MIN: 27,124,430 <br /> MAX: 27,416,575 | AVG: 474,934 <br /> MIN: 465,123 <br /> MAX: 481,855 |
+| falcon512-tree (100 executions) | opt-leaktime | AVG: 187,864,184 <br /> MIN: 114,425,808 <br /> MAX: 555,918,408 | AVG: 17,778,541 <br /> MIN: 17,608,010 <br /> MAX: 17,944,731 | AVG: 473,928 <br /> MIN: 465,072 <br /> MAX: 481,948 |
 | luov-48-43-222-chacha (100 executions) | ref | AVG: 41,347,565 <br /> MIN: 41,077,732 <br /> MAX: 41,585,440 | AVG: 123,878,410 <br /> MIN: 123,825,414 <br /> MAX: 123,912,572 | AVG: 95,330,045 <br /> MIN: 95,317,535 <br /> MAX: 95,343,473 |
 | luov-48-43-222-keccak (100 executions) | ref | AVG: 53,900,163 <br /> MIN: 53,649,451 <br /> MAX: 54,074,274 | AVG: 135,960,322 <br /> MIN: 135,913,707 <br /> MAX: 136,018,359 | AVG: 107,793,279 <br /> MIN: 107,783,143 <br /> MAX: 107,803,188 |
 | luov-64-61-302-chacha (100 executions) | ref | AVG: 109,063,798 <br /> MIN: 108,677,813 <br /> MAX: 109,472,193 | AVG: 405,205,796 <br /> MIN: 405,092,541 <br /> MAX: 405,292,253 | AVG: 269,012,028 <br /> MIN: 268,981,066 <br /> MAX: 269,034,087 |
@@ -251,6 +260,15 @@
 | dilithium3 | m4 | 50,752 | 81,792 | 55,000 |
 | dilithium4 | clean | 67,136 | 104,408 | 71,472 |
 | dilithium4 | m4 | 67,136 | 104,408 | 71,472 |
+| falcon1024 | m4-ct | 1,680 | 2,680 | 512 |
+| falcon1024 | opt-ct | 1,680 | 2,612 | 512 |
+| falcon1024 | opt-leaktime | 1,632 | 2,716 | 512 |
+| falcon512 | m4-ct | 1,680 | 2,484 | 512 |
+| falcon512 | opt-ct | 1,680 | 2,524 | 512 |
+| falcon512 | opt-leaktime | 1,640 | 2,728 | 512 |
+| falcon512-tree | m4-ct | 1,656 | 2,452 | 512 |
+| falcon512-tree | opt-ct | 1,664 | 2,492 | 512 |
+| falcon512-tree | opt-leaktime | 1,632 | 2,776 | 512 |
 | luov-48-43-222-chacha | ref | 2,968 | 4,720 | 2,732 |
 | luov-48-43-222-keccak | ref | 3,240 | 4,872 | 3,120 |
 | luov-64-61-302-chacha | ref | 3,736 | 6,896 | 4,504 |
@@ -401,6 +419,15 @@
 | dilithium3 | m4 | 77.6% | 53.4% | 72.5% |
 | dilithium4 | clean | 62.1% | 30.2% | 54.6% |
 | dilithium4 | m4 | 77.4% | 55.9% | 73.9% |
+| falcon1024 | m4-ct | 11.2% | 0.5% | 36.4% |
+| falcon1024 | opt-ct | 7.9% | 0.3% | 34.2% |
+| falcon1024 | opt-leaktime | 11.6% | 0.6% | 34.2% |
+| falcon512 | m4-ct | 15.3% | 0.5% | 35.9% |
+| falcon512 | opt-ct | 13.0% | 0.4% | 40.4% |
+| falcon512 | opt-leaktime | 18.4% | 0.6% | 35.8% |
+| falcon512-tree | m4-ct | 12.8% | 1.2% | 35.9% |
+| falcon512-tree | opt-ct | 12.0% | 0.8% | 35.8% |
+| falcon512-tree | opt-leaktime | 16.0% | 1.1% | 35.8% |
 | luov-48-43-222-chacha | ref | 0.3% | 0.1% | 0.0% |
 | luov-48-43-222-keccak | ref | 30.7% | 12.2% | 15.3% |
 | luov-64-61-302-chacha | ref | 0.2% | 0.1% | 0.0% |
@@ -551,6 +578,15 @@
 | dilithium3 | m4 | 17,972 | 0 | 0 | 17,972 |
 | dilithium4 | clean | 11,240 | 0 | 0 | 11,240 |
 | dilithium4 | m4 | 18,080 | 0 | 0 | 18,080 |
+| falcon1024 | m4-ct | 77,335 | 0 | 79,872 | 157,207 |
+| falcon1024 | opt-ct | 76,203 | 0 | 79,872 | 156,075 |
+| falcon1024 | opt-leaktime | 71,947 | 0 | 79,872 | 151,819 |
+| falcon512 | m4-ct | 77,335 | 0 | 39,936 | 117,271 |
+| falcon512 | opt-ct | 76,203 | 0 | 39,936 | 116,139 |
+| falcon512 | opt-leaktime | 71,947 | 0 | 39,936 | 111,883 |
+| falcon512-tree | m4-ct | 77,067 | 0 | 27,648 | 104,715 |
+| falcon512-tree | opt-ct | 75,935 | 0 | 27,648 | 103,583 |
+| falcon512-tree | opt-leaktime | 71,679 | 0 | 27,648 | 99,327 |
 | luov-48-43-222-chacha | ref | 405,722 | 36 | 0 | 405,758 |
 | luov-48-43-222-keccak | ref | 405,730 | 36 | 0 | 405,766 |
 | luov-64-61-302-chacha | ref | 405,412 | 36 | 0 | 405,448 |
