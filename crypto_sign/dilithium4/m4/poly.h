@@ -16,6 +16,10 @@ void poly_add(poly *c, const poly *a, const poly *b);
 void poly_sub(poly *c, const poly *a, const poly *b);
 void poly_shiftl(poly *a);
 
+int poly_add_freeze_chk_norm(poly *c, const poly *a, const poly *b, uint32_t B);
+int poly_sub_freeze_chk_norm(poly *c, const poly *a, const poly *b, uint32_t B);
+int poly_csubq_chknorm(poly *c, uint32_t B);
+
 void poly_ntt(poly *a);
 void poly_invntt_montgomery(poly *a);
 void poly_pointwise_invmontgomery(poly *c, const poly *a, const poly *b);

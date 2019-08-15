@@ -215,33 +215,30 @@ rej:
     for (i = 0; i < K; ++i) {
         poly_pointwise_invmontgomery(&cs2.vec[i], &chat, &s2.vec[i]);
         poly_invntt_montgomery(&cs2.vec[i]);
-    }
-    polyveck_sub(&w0, &w0, &cs2);
-    polyveck_freeze(&w0);
-    if (polyveck_chknorm(&w0, GAMMA2 - BETA)) {
-        goto rej;
+        if(poly_sub_freeze_chk_norm(w0.vec+i, w0.vec+i, cs2.vec+i, GAMMA2 - BETA))
+        {
+            goto rej;
+        }
     }
 
     /* Compute z, reject if it reveals secret */
     for (i = 0; i < L; ++i) {
         poly_pointwise_invmontgomery(&z.vec[i], &chat, &s1.vec[i]);
         poly_invntt_montgomery(&z.vec[i]);
-    }
-    polyvecl_add(&z, &z, &y);
-    polyvecl_freeze(&z);
-    if (polyvecl_chknorm(&z, GAMMA1 - BETA)) {
-        goto rej;
+        if(poly_add_freeze_chk_norm(z.vec+i, z.vec+i, y.vec+i, GAMMA1 - BETA))
+        {
+            goto rej;
+        }
     }
 
     /* Compute hints for w1 */
     for (i = 0; i < K; ++i) {
         poly_pointwise_invmontgomery(&ct0.vec[i], &chat, &t0.vec[i]);
         poly_invntt_montgomery(&ct0.vec[i]);
-    }
-
-    polyveck_csubq(&ct0);
-    if (polyveck_chknorm(&ct0, GAMMA2)) {
-        goto rej;
+        if(poly_csubq_chknorm(ct0.vec+i, GAMMA2))
+        {
+          goto rej;
+        }
     }
 
     polyveck_add(&w0, &w0, &ct0);
@@ -402,4 +399,3 @@ badsig:
 
     return -1;
 }
-

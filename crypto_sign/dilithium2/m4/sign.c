@@ -6,7 +6,6 @@
 #include "randombytes.h"
 #include "sign.h"
 #include "symmetric.h"
-
 #include <stdint.h>
 
 /*************************************************
@@ -40,9 +39,7 @@ void expand_mat(polyvecl mat[K], const unsigned char rho[SEEDBYTES]) {
 *              - const unsigned char mu[]: byte array containing mu
 *              - const polyveck *w1: pointer to vector w1
 **************************************************/
-void challenge(poly *c,
-                                        const unsigned char mu[CRHBYTES],
-                                        const polyveck *w1) {
+void challenge(poly *c, const unsigned char mu[CRHBYTES], const polyveck *w1){
     unsigned int i, b, pos;
     uint64_t signs;
     unsigned char inbuf[CRHBYTES + K * POLW1_SIZE_PACKED];
@@ -111,6 +108,7 @@ int crypto_sign_keypair(uint8_t *pk, uint8_t *sk) {
 
     /* Expand 32 bytes of randomness into rho, rhoprime and key */
     randombytes(seedbuf, 3 * SEEDBYTES);
+
     rho = seedbuf;
     rhoprime = seedbuf + SEEDBYTES;
     key = seedbuf + 2 * SEEDBYTES;
@@ -152,7 +150,8 @@ int crypto_sign_keypair(uint8_t *pk, uint8_t *sk) {
 
 int crypto_sign_signature(
     uint8_t *sig, size_t *siglen,
-    const uint8_t *m, size_t mlen, const uint8_t *sk) {
+    const uint8_t *m, size_t mlen, const uint8_t *sk)
+    {
     unsigned long long i;
     unsigned int n;
     unsigned char seedbuf[2 * SEEDBYTES + 3 * CRHBYTES];
@@ -169,7 +168,6 @@ int crypto_sign_signature(
     mu = key + SEEDBYTES;
     rhoprime = mu + CRHBYTES;
     unpack_sk(rho, key, tr, &s1, &s2, &t0, sk);
-
 
     // use incremental hash API instead of copying around buffers
     /* Compute CRH(tr, msg) */
@@ -212,36 +210,34 @@ rej:
 
     /* Check that subtracting cs2 does not change high bits of w and low bits
      * do not reveal secret information */
-    for (i = 0; i < K; ++i) {
+    for (i = 0; i < K; ++i)
+    {
         poly_pointwise_invmontgomery(&cs2.vec[i], &chat, &s2.vec[i]);
         poly_invntt_montgomery(&cs2.vec[i]);
-    }
-    polyveck_sub(&w0, &w0, &cs2);
-    polyveck_freeze(&w0);
-    if (polyveck_chknorm(&w0, GAMMA2 - BETA)) {
-        goto rej;
+        if(poly_sub_freeze_chk_norm(w0.vec+i, w0.vec+i, cs2.vec+i, GAMMA2 - BETA))
+        {
+            goto rej;
+        }
     }
 
     /* Compute z, reject if it reveals secret */
     for (i = 0; i < L; ++i) {
         poly_pointwise_invmontgomery(&z.vec[i], &chat, &s1.vec[i]);
         poly_invntt_montgomery(&z.vec[i]);
-    }
-    polyvecl_add(&z, &z, &y);
-    polyvecl_freeze(&z);
-    if (polyvecl_chknorm(&z, GAMMA1 - BETA)) {
-        goto rej;
+        if(poly_add_freeze_chk_norm(z.vec+i, z.vec+i, y.vec+i, GAMMA1 - BETA))
+        {
+            goto rej;
+        }
     }
 
     /* Compute hints for w1 */
     for (i = 0; i < K; ++i) {
         poly_pointwise_invmontgomery(&ct0.vec[i], &chat, &t0.vec[i]);
         poly_invntt_montgomery(&ct0.vec[i]);
-    }
-
-    polyveck_csubq(&ct0);
-    if (polyveck_chknorm(&ct0, GAMMA2)) {
-        goto rej;
+        if(poly_csubq_chknorm(ct0.vec+i, GAMMA2))
+        {
+          goto rej;
+        }
     }
 
     polyveck_add(&w0, &w0, &ct0);
@@ -348,13 +344,13 @@ int crypto_sign(uint8_t *sm,
         const uint8_t *sk) {
     size_t i;
     int rc;
-    for (i = 0; i < mlen; i++) {
+    for (i = 0; i < mlen; i++)
+    {
         sm[CRYPTO_BYTES + i] = m[i];
     }
     rc = crypto_sign_signature(sm, smlen, m, mlen, sk);
     *smlen += mlen;
     return rc;
-
 }
 
 /*************************************************
@@ -402,4 +398,3 @@ badsig:
 
     return -1;
 }
-

@@ -12,6 +12,10 @@ void poly_reduce(poly *a);
 void poly_csubq(poly *a);
 void poly_freeze(poly *a);
 
+int poly_add_freeze_chk_norm(poly *c, const poly *a, const poly *b, uint32_t B);
+int poly_sub_freeze_chk_norm(poly *c, const poly *a, const poly *b, uint32_t B);
+int poly_csubq_chknorm(poly *c, uint32_t B);
+
 void poly_add(poly *c, const poly *a, const poly *b);
 void poly_sub(poly *c, const poly *a, const poly *b);
 void poly_shiftl(poly *a);
