@@ -116,11 +116,6 @@
 | luov-64-61-302-keccak (100 executions) | ref | AVG: 148,680,619 <br /> MIN: 148,155,686 <br /> MAX: 149,194,782 | AVG: 441,086,753 <br /> MIN: 441,025,976 <br /> MAX: 441,153,566 | AVG: 318,677,042 <br /> MIN: 318,656,650 <br /> MAX: 318,699,951 |
 | luov-8-58-237-chacha (100 executions) | ref | AVG: 66,072,054 <br /> MIN: 65,711,390 <br /> MAX: 66,460,756 | AVG: 101,874,776 <br /> MIN: 99,834,968 <br /> MAX: 199,249,932 | AVG: 77,433,705 <br /> MIN: 77,416,684 <br /> MAX: 77,440,674 |
 | luov-8-58-237-keccak (100 executions) | ref | AVG: 87,785,091 <br /> MIN: 87,463,523 <br /> MAX: 88,201,213 | AVG: 119,711,856 <br /> MIN: 119,664,894 <br /> MAX: 119,739,349 | AVG: 81,240,915 <br /> MIN: 81,226,737 <br /> MAX: 81,247,471 |
-| qTesla-I (100 executions) | ref | AVG: 6,748,008 <br /> MIN: 4,718,221 <br /> MAX: 15,145,360 | AVG: 5,830,914 <br /> MIN: 1,066,990 <br /> MAX: 25,186,007 | AVG: 787,773 <br /> MIN: 784,665 <br /> MAX: 812,221 |
-| qTesla-II (100 executions) | ref | AVG: 111,498,880 <br /> MIN: 84,950,740 <br /> MAX: 179,001,129 | AVG: 18,734,861 <br /> MIN: 4,469,357 <br /> MAX: 87,168,944 | AVG: 3,227,979 <br /> MIN: 3,222,264 <br /> MAX: 3,276,264 |
-| qTesla-III (100 executions) | ref | AVG: 19,834,717 <br /> MIN: 12,853,165 <br /> MAX: 83,232,862 | AVG: 6,846,333 <br /> MIN: 2,357,125 <br /> MAX: 41,571,316 | AVG: 1,651,066 <br /> MIN: 1,648,681 <br /> MAX: 1,677,254 |
-| qTesla-V (100 executions) | ref | AVG: 114,962,361 <br /> MIN: 40,526,204 <br /> MAX: 538,341,171 | AVG: 24,436,890 <br /> MIN: 5,656,004 <br /> MAX: 93,661,870 | AVG: 3,736,553 <br /> MIN: 3,720,942 <br /> MAX: 3,828,317 |
-| qTesla-V-size (100 executions) | ref | AVG: 2,648,199,757 <br /> MIN: 2,519,641,787 <br /> MAX: 3,004,394,141 | AVG: 42,516,447 <br /> MIN: 9,783,877 <br /> MAX: 182,213,541 | AVG: 7,102,967 <br /> MIN: 7,081,486 <br /> MAX: 7,160,993 |
 | sphincs-haraka-128f-robust (1 executions) | clean | AVG: 125,493,736 <br /> MIN: 125,493,736 <br /> MAX: 125,493,736 | AVG: 4,720,156,509 <br /> MIN: 4,720,156,509 <br /> MAX: 4,720,156,509 | AVG: 196,103,540 <br /> MIN: 196,103,540 <br /> MAX: 196,103,540 |
 | sphincs-haraka-128f-simple (1 executions) | clean | AVG: 91,770,060 <br /> MIN: 91,770,060 <br /> MAX: 91,770,060 | AVG: 3,286,409,908 <br /> MIN: 3,286,409,908 <br /> MAX: 3,286,409,908 | AVG: 136,522,968 <br /> MIN: 136,522,968 <br /> MAX: 136,522,968 |
 | sphincs-haraka-128s-robust (1 executions) | clean | AVG: 3,994,078,037 <br /> MIN: 3,994,078,037 <br /> MAX: 3,994,078,037 | AVG: 76,355,806,675 <br /> MIN: 76,355,806,675 <br /> MAX: 76,355,806,675 | AVG: 90,503,982 <br /> MIN: 90,503,982 <br /> MAX: 90,503,982 |
@@ -275,11 +270,6 @@
 | luov-64-61-302-keccak | ref | 4,152 | 7,144 | 4,928 |
 | luov-8-58-237-chacha | ref | 3,216 | 3,224 | 1,440 |
 | luov-8-58-237-keccak | ref | 3,632 | 3,216 | 2,144 |
-| qTesla-I | ref | 17,632 | 19,224 | 15,024 |
-| qTesla-II | ref | 19,080 | 34,792 | 26,240 |
-| qTesla-III | ref | 30,200 | 37,376 | 29,080 |
-| qTesla-V | ref | 55,744 | 77,240 | 60,848 |
-| qTesla-V-size | ref | 47,552 | 68,928 | 52,096 |
 | sphincs-haraka-128f-robust | clean | 2,424 | 2,400 | 2,772 |
 | sphincs-haraka-128f-simple | clean | 2,316 | 2,400 | 2,772 |
 | sphincs-haraka-128s-robust | clean | 2,608 | 2,568 | 2,092 |
@@ -434,11 +424,6 @@
 | luov-64-61-302-keccak | ref | 33.3% | 11.3% | 15.5% |
 | luov-8-58-237-chacha | ref | 0.3% | 0.2% | 0.0% |
 | luov-8-58-237-keccak | ref | 30.6% | 22.5% | 32.9% |
-| qTesla-I | ref | 18.7% | 39.5% | 44.3% |
-| qTesla-II | ref | 5.9% | 11.7% | 14.8% |
-| qTesla-III | ref | 27.6% | 34.8% | 39.4% |
-| qTesla-V | ref | 28.7% | 30.0% | 41.1% |
-| qTesla-V-size | ref | 1.7% | 12.2% | 16.6% |
 | sphincs-haraka-128f-robust | clean | 0.0% | 0.0% | 0.0% |
 | sphincs-haraka-128f-simple | clean | 0.0% | 0.0% | 0.0% |
 | sphincs-haraka-128s-robust | clean | 0.0% | 0.0% | 0.0% |
@@ -593,11 +578,6 @@
 | luov-64-61-302-keccak | ref | 405,452 | 36 | 0 | 405,488 |
 | luov-8-58-237-chacha | ref | 404,920 | 36 | 0 | 404,956 |
 | luov-8-58-237-keccak | ref | 404,924 | 36 | 0 | 404,960 |
-| qTesla-I | ref | 13,512 | 0 | 0 | 13,512 |
-| qTesla-II | ref | 18,832 | 0 | 7,204 | 26,036 |
-| qTesla-III | ref | 17,400 | 0 | 0 | 17,400 |
-| qTesla-V | ref | 29,536 | 0 | 0 | 29,536 |
-| qTesla-V-size | ref | 22,892 | 0 | 14,372 | 37,264 |
 | sphincs-haraka-128f-robust | clean | 17,192 | 0 | 1,280 | 18,472 |
 | sphincs-haraka-128f-simple | clean | 17,028 | 0 | 1,280 | 18,308 |
 | sphincs-haraka-128s-robust | clean | 17,500 | 0 | 1,280 | 18,780 |
