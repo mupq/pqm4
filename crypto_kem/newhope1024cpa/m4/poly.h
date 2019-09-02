@@ -1,20 +1,24 @@
 #ifndef POLY_H
 #define POLY_H
 
-#include "params.h"
 #include <stdint.h>
+#include "params.h"
 
-/*
+/* 
  * Elements of R_q = Z_q[X]/(X^n + 1). Represents polynomial
- * coeffs[0] + X*coeffs[1] + X^2*xoeffs[2] + ... + X^{n-1}*coeffs[n-1]
+ * coeffs[0] + X*coeffs[1] + X^2*xoeffs[2] + ... + X^{n-1}*coeffs[n-1] 
  */
 typedef struct {
-    uint16_t coeffs[NEWHOPE_N];
-} poly;
+  int16_t coeffs[NEWHOPE_N];
+} poly __attribute__ ((aligned (32)));
 
 void poly_uniform(poly *a, const unsigned char *seed);
 void poly_sample(poly *r, const unsigned char *seed, unsigned char nonce);
 void poly_add(poly *r, const poly *a, const poly *b);
+
+extern void asm_add1024(int16_t *r, const int16_t* a, const int16_t* b);
+extern void asm_sub1024(int16_t *r, const int16_t* a, const int16_t* b);
+extern void asm_pointwise1024(int16_t *r, const int16_t* a, const int16_t* b);
 
 void poly_ntt(poly *r);
 void poly_invntt(poly *r);
