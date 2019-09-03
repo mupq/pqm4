@@ -36,7 +36,7 @@ The naming scheme for these implementations is as follows:
 
 ## Setup/Installation
 The testing and benchmarking framework of **pqm4** targets the 
-[STM32F4 Discovery board](http://www.st.com/en/evaluation-tools/stm32f4discovery.html)
+[STM32F4 Discovery board](https://www.st.com/en/evaluation-tools/stm32f4discovery.html)
 featuring an ARM Cortex-M4 CPU, 1MB of Flash, and 192KB of RAM.
 Connecting the development to the host computer requires a 
 mini-USB cable and a USB-TTL converter together with a 2-pin dupont / jumper cable.
@@ -53,7 +53,7 @@ Depending on your operating system, stlink may be available in your package mana
 refer to the stlink Github page for instructions on how to [compile it from source](https://github.com/texane/stlink/blob/master/doc/compiling.md) 
 (in that case, be careful to use libusb-1.0.0-dev, not libusb-0.1).
 
-### Python3 
+### Python3
 The benchmarking scripts used in **pqm4** require Python >= 3.6.
 
 ### Installing pyserial
@@ -108,12 +108,12 @@ int crypto_sign_open(unsigned char *m, size_t *mlen,
 
 ## Running tests and benchmarks
 Executing `python3 build_everything.py` compiles six binaries for each implemenation which can be used to test and benchmark the schemes. For example, for the reference implementation of  [NewHope-1024-CCA-KEM](https://newhopecrypto.org) the following binaries are assembled: 
- - `bin/crypto_kem_newhope1024cca_ref_test.bin` tests if the scheme works as expected. For KEMs this tests if Alice and Bob derive the same shared key and for signature schemes it tests if a generated signature can be verified correctly. Several failure cases are also checked, see [mupq/crypto_kem/test.c](mupq/crypto_kem/test.c) and [mupq/crypto_sign/test.c](mupq/crypto_sign/test.c) for details.  
- - `bin/crypto_kem_newhope1024cca_ref_speed.bin` measures the runtime of `crypto_kem_keypair`, `crypto_kem_enc`, and `crypto_kem_dec` for KEMs and `crypto_sign_keypair`, `crypto_sign`, and `crypto_sign_open` for signatures. See [mupq/crypto_kem/speed.c](mupq/crypto_kem/speed.c) and [mupq/crypto_sign/speed.c](mupq/crypto_sign/speed.c).   
- - `bin/crypto_kem_newhope1024cca_ref_hashing.bin` measures the cycles spent in SHA-2, SHA-3, and AES of `crypto_kem_keypair`, `crypto_kem_enc`, and `crypto_kem_dec` for KEMs and `crypto_sign_keypair`, `crypto_sign`, and `crypto_sign_open` for signatures. See [mupq/crypto_kem/hashing.c](mupq/crypto_kem/speed.c) and [mupq/crypto_sign/speed.c](mupq/crypto_sign/speed.c).   
- - `bin/crypto_kem_newhope1024cca_ref_stack.bin` measures the stack consumption of each of the procedures involved. The memory allocated outside of the procedures (e.g., public keys, private keys, ciphertexts, signatures) is not included. See [mupq/crypto_kem/stack.c](mupq/crypto_kem/stack.c) and [mupq/crypto_sign/stack.c](mupq/crypto_sign/stack.c).    
- - `bin/crypto_kem_newhope1024cca_ref_testvectors.bin` uses a deterministic random number generator to generate testvectors for the implementation. These can be used to cross-check different implemenatations of the same scheme. See [mupq/crypto_kem/testvectors.c](mupq/crypto_kem/testvectors.c) and [mupq/crypto_sign/testvectors.c](mupq/crypto_sign/testvectors.c).   
-- `bin-host/crypto_kem_newhope1024cca_ref_testvectors` uses the same deterministic random number generator to create the testvectors on your host. See [mupq/crypto_kem/testvectors-host.c](mupq/crypto_kem/testvectors-host.c) and [mupq/crypto_sign/testvectors-host.c](mupq/crypto_sign/testvectors-host.c). 
+ - `bin/crypto_kem_newhope1024cca_ref_test.bin` tests if the scheme works as expected. For KEMs this tests if Alice and Bob derive the same shared key and for signature schemes it tests if a generated signature can be verified correctly. Several failure cases are also checked, see [mupq/crypto_kem/test.c](https://github.com/mupq/mupq/blob/master/crypto_kem/test.c) and [mupq/crypto_sign/test.c](https://github.com/mupq/mupq/blob/master/crypto_sign/test.c) for details.
+ - `bin/crypto_kem_newhope1024cca_ref_speed.bin` measures the runtime of `crypto_kem_keypair`, `crypto_kem_enc`, and `crypto_kem_dec` for KEMs and `crypto_sign_keypair`, `crypto_sign`, and `crypto_sign_open` for signatures. See [mupq/crypto_kem/speed.c](https://github.com/mupq/mupq/blob/master/crypto_kem/speed.c) and [mupq/crypto_sign/speed.c](https://github.com/mupq/mupq/blob/master/crypto_sign/speed.c).
+ - `bin/crypto_kem_newhope1024cca_ref_hashing.bin` measures the cycles spent in SHA-2, SHA-3, and AES of `crypto_kem_keypair`, `crypto_kem_enc`, and `crypto_kem_dec` for KEMs and `crypto_sign_keypair`, `crypto_sign`, and `crypto_sign_open` for signatures. See [mupq/crypto_kem/hashing.c](https://github.com/mupq/mupq/blob/master/crypto_kem/speed.c) and [mupq/crypto_sign/speed.c](https://github.com/mupq/mupq/blob/master/crypto_sign/speed.c).
+ - `bin/crypto_kem_newhope1024cca_ref_stack.bin` measures the stack consumption of each of the procedures involved. The memory allocated outside of the procedures (e.g., public keys, private keys, ciphertexts, signatures) is not included. See [mupq/crypto_kem/stack.c](https://github.com/mupq/mupq/blob/master/crypto_kem/stack.c) and [mupq/crypto_sign/stack.c](https://github.com/mupq/mupq/blob/master/crypto_sign/stack.c).
+ - `bin/crypto_kem_newhope1024cca_ref_testvectors.bin` uses a deterministic random number generator to generate testvectors for the implementation. These can be used to cross-check different implemenatations of the same scheme. See [mupq/crypto_kem/testvectors.c](https://github.com/mupq/mupq/blob/master/crypto_kem/testvectors.c) and [mupq/crypto_sign/testvectors.c](https://github.com/mupq/mupq/blob/master/crypto_sign/testvectors.c).
+- `bin-host/crypto_kem_newhope1024cca_ref_testvectors` uses the same deterministic random number generator to create the testvectors on your host. See [mupq/crypto_kem/testvectors-host.c](https://github.com/mupq/mupq/blob/master/crypto_kem/testvectors-host.c) and [mupq/crypto_sign/testvectors-host.c](https://github.com/mupq/mupq/blob/master/crypto_sign/testvectors-host.c).
 
 The binaries can be flashed to your board using `st-flash`, e.g., `st-flash write bin/crypto_kem_newhope1024cca_ref_test.bin 0x8000000`. To receive the output, run `python3 hostside/host_unidirectional.py`. 
 
@@ -151,7 +151,7 @@ and implementations, if these implementations follow the NIST/SUPERCOP/PQClean A
 In case you want to contribute a reference implementation, please open a pull request to [PQClean](https://github.com/PQClean/PQClean).
 In case you want to contribute an optimized C implementation, please open a pull request to [mupq](https://github.com/mupq/mupq).
 In case you want to add an implementation optimized for the Cortex-M4, please open a pull request here.
- 
+
 In the following we consider the example of adding an M4-optimized implementation
 of [NewHope-512-CPA-KEM](https://newhopecrypto.org) to **pqm4**:
 
@@ -221,7 +221,7 @@ new subdirectory under `crypto_sign/`.
 
    Implementations that want to make use of these optimized routines simply include 
    `fips202.h` (or `sp800-185.h`). The API for `sha3_256` and `sha3_512` follows the 
-   [SUPERCOP hash API](http://bench.cr.yp.to/call-hash.html).
+   [SUPERCOP hash API](https://bench.cr.yp.to/call-hash.html).
    The API for `shake128` and `shake256` is very similar, except that it supports variable-length output.
    The SHAKE functions are also accessible via the absorb-squeezeblocks functions, which offer incremental
    output generation (but not incremental input handling).
@@ -232,7 +232,7 @@ new subdirectory under `crypto_sign/`.
   Some schemes submitted to NIST use SHA-224, SHA-256, SHA-384, or SHA-512 for hashing.
   We've experimented with assembly-optimized SHA-512, but found that the speed-up
   achievable with this compared to the C implementation from
-  [SUPERCOP](http://bench.cr.yp.to/) is negligible
+  [SUPERCOP](https://bench.cr.yp.to/) is negligible
   when compiled using `arm-none-eabi-gcc-8.3.0`.
   For older compiler versions (e.g. `5.4.1`) hand-optimized assembly implementations
   were significantly faster.
@@ -297,5 +297,5 @@ Each subdirectory containing implementations contains a LICENSE file stating
 under what license that specific implementation is released. 
 The files in common contain licensing information at the top of the file (and 
 are currently either public domain or MIT). 
-All other code in this repository is released under the conditions of [CC0](http://creativecommons.org/publicdomain/zero/1.0/).
+All other code in this repository is released under the conditions of [CC0](https://creativecommons.org/publicdomain/zero/1.0/).
 
