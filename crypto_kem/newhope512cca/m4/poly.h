@@ -16,9 +16,11 @@ void poly_uniform(poly *a, const unsigned char *seed);
 void poly_sample(poly *r, const unsigned char *seed, unsigned char nonce);
 void poly_add(poly *r, const poly *a, const poly *b);
 
-extern void asm_add1024(int16_t *r, const int16_t* a, const int16_t* b);
-extern void asm_sub1024(int16_t *r, const int16_t* a, const int16_t* b);
-extern void asm_pointwise1024(int16_t *r, const int16_t* a, const int16_t* b);
+
+extern void asm_add512(int16_t *r, const int16_t* a, const int16_t* b);
+extern void asm_sub512(int16_t *r, const int16_t* a, const int16_t* b);
+extern void asm_pointwise512(int16_t *r, const int16_t* a, const int16_t* b);
+
 
 void poly_ntt(poly *r);
 void poly_invntt(poly *r);

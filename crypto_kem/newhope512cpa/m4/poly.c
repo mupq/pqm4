@@ -171,8 +171,7 @@ void poly_frommsg(poly *r, const unsigned char *msg)
       mask = -((msg[i] >> j)&1);
       r->coeffs[8*i+j+  0] = (int16_t) mask & (NEWHOPE_Q/2);
       r->coeffs[8*i+j+256] = (int16_t) mask & (NEWHOPE_Q/2);
-      r->coeffs[8*i+j+512] = (int16_t) mask & (NEWHOPE_Q/2);
-      r->coeffs[8*i+j+768] = (int16_t) mask & (NEWHOPE_Q/2);
+
     }
   }
 }
@@ -197,10 +196,7 @@ void poly_tomsg(unsigned char *msg, const poly *x)
   {
     t  = flipabs(x->coeffs[i+  0]);
     t += flipabs(x->coeffs[i+256]);
-    t += flipabs(x->coeffs[i+512]);
-    t += flipabs(x->coeffs[i+768]);
-    t = ((t - NEWHOPE_Q));
-
+    t = ((t - NEWHOPE_Q/2));
 
     t >>= 15;
     msg[i>>3] |= t<<(i&7);
@@ -326,7 +322,7 @@ void poly_sample(poly *r, const unsigned char *seed, unsigned char nonce)
 **************************************************/
 void poly_mul_pointwise(poly *r, const poly *a, const poly *b)
 {
-  asm_pointwise1024(r->coeffs, a->coeffs, b->coeffs);
+  asm_pointwise512(r->coeffs, a->coeffs, b->coeffs);
 }
 
 /*************************************************
@@ -340,7 +336,7 @@ void poly_mul_pointwise(poly *r, const poly *a, const poly *b)
 **************************************************/
 void poly_add(poly *r, const poly *a, const poly *b)
 {
-  asm_add1024(r->coeffs, a->coeffs, b->coeffs);
+  asm_add512(r->coeffs, a->coeffs, b->coeffs);
 }
 
 /*************************************************
@@ -354,7 +350,7 @@ void poly_add(poly *r, const poly *a, const poly *b)
 **************************************************/
 void poly_sub(poly *r, const poly *a, const poly *b)
 {
-	asm_sub1024(r->coeffs, a->coeffs, b->coeffs);
+  asm_sub512(r->coeffs, a->coeffs, b->coeffs);
 }
 
 /*************************************************
