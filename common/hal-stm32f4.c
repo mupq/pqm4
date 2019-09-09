@@ -63,9 +63,8 @@ static void usart_setup(int baud)
 
 static void systick_setup(void)
 {
-  // assumes clock_setup was called with CLOCK_BENCHMARK
   systick_set_clocksource(STK_CSR_CLKSOURCE_AHB);
-  systick_set_reload(2399999);
+  systick_set_reload(16777215);
   systick_interrupt_enable();
   systick_counter_enable();
 }
@@ -91,12 +90,18 @@ void hal_send_str(const char* in)
   send_USART_str(in);
 }
 
-static unsigned long long overflowcnt = 0;
+static volatile unsigned long long overflowcnt = 0;
 void sys_tick_handler(void)
 {
   ++overflowcnt;
 }
 uint64_t hal_get_time()
 {
-  return (overflowcnt+1)*2400000llu - systick_get_value();
+  while (true) {
+    unsigned long long before = overflowcnt;
+    unsigned long long result = (before + 1) * 16777216llu - systick_get_value();
+    if (overflowcnt == before) {
+      return result;
+    }
+  }
 }
