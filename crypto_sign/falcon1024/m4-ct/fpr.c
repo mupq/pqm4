@@ -6,7 +6,7 @@
  *
  * ==========================(LICENSE BEGIN)============================
  *
- * Copyright (c) 2017  Falcon Project
+ * Copyright (c) 2017-2019  Falcon Project
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -34,7 +34,7 @@
 
 #include "inner.h"
 
-#if FALCON_FPEMU
+#if FALCON_FPEMU // yyyFPEMU+1
 
 /*
  * Normalize a provided unsigned integer to the 2^63..2^64-1 range by
@@ -44,41 +44,41 @@
  * Both m and e must be simple variables (no expressions allowed).
  */
 #define FPR_NORM64(m, e)   do { \
-		uint32_t t; \
+		uint32_t nt; \
  \
-		e -= 63; \
+		(e) -= 63; \
  \
-		t = (uint32_t)(m >> 32); \
-		t = (t | -t) >> 31; \
-		m ^= (m ^ (m << 32)) & ((uint64_t)t - 1); \
-		e += t << 5; \
+		nt = (uint32_t)((m) >> 32); \
+		nt = (nt | -nt) >> 31; \
+		(m) ^= ((m) ^ ((m) << 32)) & ((uint64_t)nt - 1); \
+		(e) += (int)(nt << 5); \
  \
-		t = (uint32_t)(m >> 48); \
-		t = (t | -t) >> 31; \
-		m ^= (m ^ (m << 16)) & ((uint64_t)t - 1); \
-		e += t << 4; \
+		nt = (uint32_t)((m) >> 48); \
+		nt = (nt | -nt) >> 31; \
+		(m) ^= ((m) ^ ((m) << 16)) & ((uint64_t)nt - 1); \
+		(e) += (int)(nt << 4); \
  \
-		t = (uint32_t)(m >> 56); \
-		t = (t | -t) >> 31; \
-		m ^= (m ^ (m <<  8)) & ((uint64_t)t - 1); \
-		e += t << 3; \
+		nt = (uint32_t)((m) >> 56); \
+		nt = (nt | -nt) >> 31; \
+		(m) ^= ((m) ^ ((m) <<  8)) & ((uint64_t)nt - 1); \
+		(e) += (int)(nt << 3); \
  \
-		t = (uint32_t)(m >> 60); \
-		t = (t | -t) >> 31; \
-		m ^= (m ^ (m <<  4)) & ((uint64_t)t - 1); \
-		e += t << 2; \
+		nt = (uint32_t)((m) >> 60); \
+		nt = (nt | -nt) >> 31; \
+		(m) ^= ((m) ^ ((m) <<  4)) & ((uint64_t)nt - 1); \
+		(e) += (int)(nt << 2); \
  \
-		t = (uint32_t)(m >> 62); \
-		t = (t | -t) >> 31; \
-		m ^= (m ^ (m <<  2)) & ((uint64_t)t - 1); \
-		e += t << 1; \
+		nt = (uint32_t)((m) >> 62); \
+		nt = (nt | -nt) >> 31; \
+		(m) ^= ((m) ^ ((m) <<  2)) & ((uint64_t)nt - 1); \
+		(e) += (int)(nt << 1); \
  \
-		t = (uint32_t)(m >> 63); \
-		m ^= (m ^ (m <<  1)) & ((uint64_t)t - 1); \
-		e += t; \
+		nt = (uint32_t)((m) >> 63); \
+		(m) ^= ((m) ^ ((m) <<  1)) & ((uint64_t)nt - 1); \
+		(e) += (int)(nt); \
 	} while (0)
 
-#if FALCON_ASM_CORTEXM4
+#if FALCON_ASM_CORTEXM4 // yyyASM_CORTEXM4+1
 
 __attribute__((naked))
 fpr
@@ -170,7 +170,7 @@ fpr_scaled(int64_t i __attribute__((unused)), int sc __attribute__((unused)))
 	);
 }
 
-#else
+#else // yyyASM_CORTEXM4+0
 
 fpr
 fpr_scaled(int64_t i, int sc)
@@ -191,7 +191,7 @@ fpr_scaled(int64_t i, int sc)
 	 * Extract sign bit.
 	 * We have: -i = 1 + ~i
 	 */
-	s = (uint64_t)i >> 63;
+	s = (int)((uint64_t)i >> 63);
 	i ^= -(int64_t)s;
 	i += s;
 
@@ -201,7 +201,7 @@ fpr_scaled(int64_t i, int sc)
 	 * to get a 1 in the top bit. We can do that in a logarithmic
 	 * number of conditional shifts.
 	 */
-	m = i;
+	m = (uint64_t)i;
 	e = 9 + sc;
 	FPR_NORM64(m, e);
 
@@ -228,10 +228,11 @@ fpr_scaled(int64_t i, int sc)
 	return FPR(s, e, m);
 }
 
-#endif
+#endif // yyyASM_CORTEXM4-
 
-#if FALCON_ASM_CORTEXM4
+#if FALCON_ASM_CORTEXM4 // yyyASM_CORTEXM4+1
 
+// yyyPQCLEAN+0
 #if 0
 /* Debug code -- To get a printout of registers from a specific point
    in ARM Cortex M4 assembly code, uncomment this code and add a
@@ -281,8 +282,8 @@ DEBUG(void)
 	"pop	{ r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, pc }\n\t"
 	);
 }
-
 #endif
+// yyyPQCLEAN-
 
 __attribute__((naked))
 fpr
@@ -467,7 +468,7 @@ fpr_add(fpr x __attribute__((unused)), fpr y __attribute__((unused)))
 	);
 }
 
-#else
+#else // yyyASM_CORTEXM4+0
 
 fpr
 fpr_add(fpr x, fpr y)
@@ -502,13 +503,13 @@ fpr_add(fpr x, fpr y)
 	 * an operand is zero, its mantissa is set to 0 at this step, and
 	 * its exponent will be -1078.
 	 */
-	ex = x >> 52;
+	ex = (int)(x >> 52);
 	sx = ex >> 11;
 	ex &= 0x7FF;
 	m = (uint64_t)(uint32_t)((ex + 0x7FF) >> 11) << 52;
 	xu = ((x & (((uint64_t)1 << 52) - 1)) | m) << 3;
 	ex -= 1078;
-	ey = y >> 52;
+	ey = (int)(y >> 52);
 	sy = ey >> 11;
 	ey &= 0x7FF;
 	m = (uint64_t)(uint32_t)((ey + 0x7FF) >> 11) << 52;
@@ -577,9 +578,9 @@ fpr_add(fpr x, fpr y)
 	return FPR(sx, ex, xu);
 }
 
-#endif
+#endif // yyyASM_CORTEXM4-
 
-#if FALCON_ASM_CORTEXM4
+#if FALCON_ASM_CORTEXM4 // yyyASM_CORTEXM4+1
 
 __attribute__((naked))
 fpr
@@ -699,7 +700,7 @@ fpr_mul(fpr x __attribute__((unused)), fpr y __attribute__((unused)))
 	);
 }
 
-#else
+#else // yyyASM_CORTEXM4+0
 
 fpr
 fpr_mul(fpr x, fpr y)
@@ -780,7 +781,7 @@ fpr_mul(fpr x, fpr y)
 	/*
 	 * Sign bit is the XOR of the operand sign bits.
 	 */
-	s = (x ^ y) >> 63;
+	s = (int)((x ^ y) >> 63);
 
 	/*
 	 * Corrective actions for zeros: if either of the operands is
@@ -797,9 +798,9 @@ fpr_mul(fpr x, fpr y)
 	return FPR(s, e, zu);
 }
 
-#endif
+#endif // yyyASM_CORTEXM4-
 
-#if FALCON_ASM_CORTEXM4
+#if FALCON_ASM_CORTEXM4 // yyyASM_CORTEXM4+1
 
 __attribute__((naked))
 fpr
@@ -934,7 +935,7 @@ fpr_div(fpr x __attribute__((unused)), fpr y __attribute__((unused)))
 	);
 }
 
-#else
+#else // yyyASM_CORTEXM4+0
 
 fpr
 fpr_div(fpr x, fpr y)
@@ -1004,7 +1005,7 @@ fpr_div(fpr x, fpr y)
 	/*
 	 * Sign is the XOR of the signs of the operands.
 	 */
-	s = (x ^ y) >> 63;
+	s = (int)((x ^ y) >> 63);
 
 	/*
 	 * Corrective actions for zeros: if x = 0, then the computation
@@ -1023,9 +1024,9 @@ fpr_div(fpr x, fpr y)
 	return FPR(s, e, q);
 }
 
-#endif
+#endif // yyyASM_CORTEXM4-
 
-#if FALCON_ASM_CORTEXM4
+#if FALCON_ASM_CORTEXM4 // yyyASM_CORTEXM4+1
 
 __attribute__((naked))
 fpr
@@ -1201,7 +1202,7 @@ fpr_sqrt(fpr x __attribute__((unused)))
 	);
 }
 
-#else
+#else // yyyASM_CORTEXM4+0
 
 fpr
 fpr_sqrt(fpr x)
@@ -1280,10 +1281,10 @@ fpr_sqrt(fpr x)
 	return FPR(0, e, q);
 }
 
-#endif
+#endif // yyyASM_CORTEXM4-
 
 uint64_t
-fpr_expm_p63(fpr xf)
+fpr_expm_p63(fpr x, fpr ccs)
 {
 	/*
 	 * Polynomial approximation of exp(-x) is taken from FACCT:
@@ -1314,14 +1315,16 @@ fpr_expm_p63(fpr xf)
 		0x8000000000000000u
 	};
 
-	uint64_t x, y;
+	uint64_t z, y;
 	unsigned u;
+	uint32_t z0, z1, y0, y1;
+	uint64_t a, b;
 
 	y = C[0];
-	x = (uint64_t)fpr_trunc(fpr_mul(xf, fpr_ptwo63)) << 1;
+	z = (uint64_t)fpr_trunc(fpr_mul(x, fpr_ptwo63)) << 1;
 	for (u = 1; u < (sizeof C) / sizeof(C[0]); u ++) {
 		/*
-		 * Compute product x * y over 128 bits, but keep only
+		 * Compute product z * y over 128 bits, but keep only
 		 * the top 64 bits.
 		 *
 		 * TODO: On some architectures/compilers we could use
@@ -1331,21 +1334,38 @@ fpr_expm_p63(fpr xf)
 		 * also have appropriate IEEE754 floating-point support,
 		 * which is better.
 		 */
-		uint32_t x0, x1, y0, y1;
-		uint64_t a, b, c;
+		uint64_t c;
 
-		x0 = (uint32_t)x;
-		x1 = (uint32_t)(x >> 32);
+		z0 = (uint32_t)z;
+		z1 = (uint32_t)(z >> 32);
 		y0 = (uint32_t)y;
 		y1 = (uint32_t)(y >> 32);
-		a = ((uint64_t)x0 * (uint64_t)y1)
-			+ (((uint64_t)x0 * (uint64_t)y0) >> 32);
-		b = ((uint64_t)x1 * (uint64_t)y0);
+		a = ((uint64_t)z0 * (uint64_t)y1)
+			+ (((uint64_t)z0 * (uint64_t)y0) >> 32);
+		b = ((uint64_t)z1 * (uint64_t)y0);
 		c = (a >> 32) + (b >> 32);
 		c += (((uint64_t)(uint32_t)a + (uint64_t)(uint32_t)b) >> 32);
-		c += (uint64_t)x1 * (uint64_t)y1;
+		c += (uint64_t)z1 * (uint64_t)y1;
 		y = C[u] - c;
 	}
+
+	/*
+	 * The scaling factor must be applied at the end. Since y is now
+	 * in fixed-point notation, we have to convert the factor to the
+	 * same format, and do an extra integer multiplication.
+	 */
+	z = (uint64_t)fpr_trunc(fpr_mul(ccs, fpr_ptwo63)) << 1;
+	z0 = (uint32_t)z;
+	z1 = (uint32_t)(z >> 32);
+	y0 = (uint32_t)y;
+	y1 = (uint32_t)(y >> 32);
+	a = ((uint64_t)z0 * (uint64_t)y1)
+		+ (((uint64_t)z0 * (uint64_t)y0) >> 32);
+	b = ((uint64_t)z1 * (uint64_t)y0);
+	y = (a >> 32) + (b >> 32);
+	y += (((uint64_t)(uint32_t)a + (uint64_t)(uint32_t)b) >> 32);
+	y += (uint64_t)z1 * (uint64_t)y1;
+
 	return y;
 }
 
@@ -2390,7 +2410,7 @@ const fpr fpr_p2_tab[] = {
 	4566650022153682944U
 };
 
-#elif FALCON_FPNATIVE
+#elif FALCON_FPNATIVE // yyyFPEMU+0 yyyFPNATIVE+1
 
 const fpr fpr_gm_tab[] = {
 	{0}, {0}, /* unused */
@@ -3433,8 +3453,8 @@ const fpr fpr_p2_tab[] = {
 	{ 0.00195312500 }
 };
 
-#else
+#else // yyyFPNATIVE+0 yyyFPEMU+0
 
 #error No FP implementation selected
 
-#endif
+#endif // yyyFPNATIVE- yyyFPEMU-

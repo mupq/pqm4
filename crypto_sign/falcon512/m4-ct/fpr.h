@@ -29,7 +29,7 @@
  * @author   Thomas Pornin <thomas.pornin@nccgroup.com>
  */
 
-#if FALCON_FPEMU
+#if FALCON_FPEMU  // yyyFPEMU+1 yyyFPNATIVE+0
 
 /* ====================================================================== */
 /*
@@ -125,7 +125,7 @@ typedef uint64_t fpr;
  * Shift count n MUST be in the 0..63 range.
  */
 static inline uint64_t
-fpr_ursh(uint64_t x, unsigned n)
+fpr_ursh(uint64_t x, int n)
 {
 	x ^= (x ^ (x >> 32)) & -(uint64_t)(n >> 5);
 	return x >> (n & 31);
@@ -138,7 +138,7 @@ fpr_ursh(uint64_t x, unsigned n)
  * Shift count n MUST be in the 0..63 range.
  */
 static inline int64_t
-fpr_irsh(int64_t x, unsigned n)
+fpr_irsh(int64_t x, int n)
 {
 	x ^= (x ^ (x >> 32)) & -(int64_t)(n >> 5);
 	return x >> (n & 31);
@@ -150,8 +150,8 @@ fpr_irsh(int64_t x, unsigned n)
  *
  * Shift count n MUST be in the 0..63 range.
  */
-static inline int64_t
-fpr_ulsh(uint64_t x, unsigned n)
+static inline uint64_t
+fpr_ulsh(uint64_t x, int n)
 {
 	x ^= (x ^ (x << 32)) & -(uint64_t)(n >> 5);
 	return x << (n & 31);
@@ -225,27 +225,6 @@ fpr_of(int64_t i)
 	return fpr_scaled(i, 0);
 }
 
-static inline fpr
-fpr_ldexp(fpr x, int e)
-{
-	uint32_t ex;
-
-	/*
-	 * Extract the exponent.
-	 */
-	ex = (x >> 52) & 0x7FF;
-
-	/*
-	 * Add 'e' to the exponent. However, if the result is negative,
-	 * or the original exponent was 0, then the result should be 0.
-	 */
-	ex = (ex + (uint32_t)e) & -((ex + 0x7FF) >> 11);
-	ex &= (ex >> 31) - 1;
-	x = (x & (((uint64_t)1 << 63) + ((uint64_t)1 << 52) - (uint64_t)1))
-		| ((uint64_t)ex << 52);
-	return x;
-}
-
 static const fpr fpr_q = 4667981563525332992;
 static const fpr fpr_inverse_of_q = 4545632735260551042;
 static const fpr fpr_inv_2sqrsigma0 = 4594603506513722306;
@@ -259,6 +238,8 @@ static const fpr fpr_zero = 0;
 static const fpr fpr_one = 4607182418800017408;
 static const fpr fpr_two = 4611686018427387904;
 static const fpr fpr_onehalf = 4602678819172646912;
+static const fpr fpr_invsqrt2 = 4604544271217802189;
+static const fpr fpr_invsqrt8 = 4600040671590431693;
 static const fpr fpr_ptwo31 = 4746794007248502784;
 static const fpr fpr_ptwo31m1 = 4746794007244308480;
 static const fpr fpr_mtwo31m1 = 13970166044099084288U;
@@ -271,8 +252,7 @@ fpr_rint(fpr x)
 {
 	uint64_t m, d;
 	int e;
-	uint32_t s, dd;
-	unsigned f;
+	uint32_t s, dd, f;
 
 	/*
 	 * We assume that the value fits in -(2^63-1)..+(2^63-1). We can
@@ -306,7 +286,7 @@ fpr_rint(fpr x)
 	 */
 	d = fpr_ulsh(m, 63 - e);
 	dd = (uint32_t)d | ((uint32_t)(d >> 32) & 0x1FFFFFFF);
-	f = (unsigned)(d >> 61) | (unsigned)((dd | -dd) >> 31);
+	f = (uint32_t)(d >> 61) | ((dd | -dd) >> 31);
 	m = fpr_ursh(m, e) + (uint64_t)((0xC8U >> f) & 1U);
 
 	/*
@@ -316,7 +296,7 @@ fpr_rint(fpr x)
 	return ((int64_t)m ^ -(int64_t)s) + (int64_t)s;
 }
 
-static inline long
+static inline int64_t
 fpr_floor(fpr x)
 {
 	uint64_t t;
@@ -332,7 +312,8 @@ fpr_floor(fpr x)
 	 */
 	e = (int)(x >> 52) & 0x7FF;
 	t = x >> 63;
-	xi = ((x << 10) | ((uint64_t)1 << 62)) & (((uint64_t)1 << 63) - 1);
+	xi = (int64_t)(((x << 10) | ((uint64_t)1 << 62))
+		& (((uint64_t)1 << 63) - 1));
 	xi = (xi ^ -(int64_t)t) + (int64_t)t;
 	cc = 1085 - e;
 
@@ -481,7 +462,7 @@ fpr_lt(fpr x, fpr y)
  * bits or so.
  */
 #define fpr_expm_p63   Zf(fpr_expm_p63)
-uint64_t fpr_expm_p63(fpr x);
+uint64_t fpr_expm_p63(fpr x, fpr ccs);
 
 #define fpr_gm_tab   Zf(fpr_gm_tab)
 extern const fpr fpr_gm_tab[];
@@ -491,7 +472,7 @@ extern const fpr fpr_p2_tab[];
 
 /* ====================================================================== */
 
-#elif FALCON_FPNATIVE
+#elif FALCON_FPNATIVE  // yyyFPEMU+0 yyyFPNATIVE+1
 
 /* ====================================================================== */
 
@@ -520,18 +501,6 @@ fpr_of(int64_t i)
 	return FPR((double)i);
 }
 
-static inline fpr
-fpr_ldexp(fpr x, int e)
-{
-	return FPR(ldexp(x.v, e));
-}
-
-static inline fpr
-fpr_scaled(int64_t i, int sc)
-{
-	return fpr_ldexp(fpr_of(i), sc);
-}
-
 static const fpr fpr_q = { 12289.0 };
 static const fpr fpr_inverse_of_q = { 1.0 / 12289.0 };
 static const fpr fpr_inv_2sqrsigma0 = { .150865048875372721532312163019 };
@@ -545,6 +514,8 @@ static const fpr fpr_zero = { 0.0 };
 static const fpr fpr_one = { 1.0 };
 static const fpr fpr_two = { 2.0 };
 static const fpr fpr_onehalf = { 0.5 };
+static const fpr fpr_invsqrt2 = { 0.707106781186547524400844362105 };
+static const fpr fpr_invsqrt8 = { 0.353553390593273762200422181052 };
 static const fpr fpr_ptwo31 = { 2147483648.0 };
 static const fpr fpr_ptwo31m1 = { 2147483647.0 };
 static const fpr fpr_mtwo31m1 = { -2147483647.0 };
@@ -612,10 +583,10 @@ fpr_rint(fpr x)
 	return tx | rn | rp;
 }
 
-static inline long
+static inline int64_t
 fpr_floor(fpr x)
 {
-	long r;
+	int64_t r;
 
 	/*
 	 * The cast performs a trunc() (rounding toward 0) and thus is
@@ -627,7 +598,7 @@ fpr_floor(fpr x)
 	 * if it is false on a given arch, then chances are that the FPU
 	 * itself is not constant-time, making the point moot).
 	 */
-	r = (long)x.v;
+	r = (int64_t)x.v;
 	return r - (x.v < (double)r);
 }
 
@@ -691,10 +662,112 @@ fpr_div(fpr x, fpr y)
 	return FPR(x.v / y.v);
 }
 
+#if FALCON_AVX2  // yyyAVX2+1
+TARGET_AVX2
+static inline void
+fpr_sqrt_avx2(double *t)
+{
+	__m128d x;
+
+	x = _mm_load1_pd(t);
+	x = _mm_sqrt_pd(x);
+	_mm_storel_pd(t, x);
+}
+#endif  // yyyAVX2-
+
 static inline fpr
 fpr_sqrt(fpr x)
 {
+	/*
+	 * We prefer not to have a dependency on libm when it can be
+	 * avoided. On x86, calling the sqrt() libm function inlines
+	 * the relevant opcode (fsqrt or sqrtsd, depending on whether
+	 * the 387 FPU or SSE2 is used for floating-point operations)
+	 * but then makes an optional call to the library function
+	 * for proper error handling, in case the operand is negative.
+	 *
+	 * To avoid this dependency, we use intrinsics or inline assembly
+	 * on recognized platforms:
+	 *
+	 *  - If AVX2 is explicitly enabled, then we use SSE2 intrinsics.
+	 *
+	 *  - On GCC/Clang with SSE maths, we use SSE2 intrinsics.
+	 *
+	 *  - On GCC/Clang on i386, or MSVC on i386, we use inline assembly
+	 *    to call the 387 FPU fsqrt opcode.
+	 *
+	 *  - On GCC/Clang/XLC on PowerPC, we use inline assembly to call
+	 *    the fsqrt opcode (Clang needs a special hack).
+	 *
+	 *  - On GCC/Clang on ARM with hardware floating-point, we use
+	 *    inline assembly to call the vqsrt.f64 opcode. Due to a
+	 *    complex ecosystem of compilers and assembly syntaxes, we
+	 *    have to call it "fsqrt" or "fsqrtd", depending on case.
+	 *
+	 * If the platform is not recognized, a call to the system
+	 * library function sqrt() is performed. On some compilers, this
+	 * may actually inline the relevant opcode, and call the library
+	 * function only when the input is invalid (e.g. negative);
+	 * Falcon never actually calls sqrt() on a negative value, but
+	 * the dependency to libm will still be there.
+	 */
+
+#if FALCON_AVX2  // yyyAVX2+1
+	fpr_sqrt_avx2(&x.v);
+	return x;
+#else  // yyyAVX2+0
+#if defined __GNUC__ && defined __SSE2_MATH__
+	return FPR(_mm_cvtsd_f64(_mm_sqrt_pd(_mm_set1_pd(x.v))));
+#elif defined __GNUC__ && defined __i386__
+	__asm__ __volatile__ (
+		"fldl   %0\n\t"
+		"fsqrt\n\t"
+		"fstpl  %0\n\t"
+		: "+m" (x.v) : : );
+	return x;
+#elif defined _M_IX86
+	__asm {
+		fld x.v
+		fsqrt
+		fstp x.v
+	}
+	return x;
+#elif defined __PPC__ && defined __GNUC__
+	fpr y;
+
+#if defined __clang__
+	/*
+	 * Normally we should use a 'd' constraint (register that contains
+	 * a 'double' value) but Clang 3.8.1 chokes on it. Instead we use
+	 * an 'f' constraint, counting on the fact that 'float' values
+	 * are managed in double-precision registers anyway, and the
+	 * compiler will not add extra rounding steps.
+	 */
+	__asm__ ( "fsqrt  %0, %1" : "=f" (y.v) : "f" (x.v) : );
+#else
+	__asm__ ( "fsqrt  %0, %1" : "=d" (y.v) : "d" (x.v) : );
+#endif
+	return y;
+#elif (defined __ARM_FP && ((__ARM_FP & 0x08) == 0x08)) \
+	|| (!defined __ARM_FP && defined __ARM_VFPV2__)
+	/*
+	 * On ARM, assembly syntaxes are a bit of a mess, depending on
+	 * whether GCC or Clang is used, and the binutils version, and
+	 * whether this is 32-bit or 64-bit mode. The code below appears
+	 * to work on:
+	 *    32-bit   GCC-4.9.2   Clang-3.5   Binutils-2.25
+	 *    64-bit   GCC-6.3.0   Clang-3.9   Binutils-2.28
+	 */
+#if defined __aarch64__ && __aarch64__
+	__asm__ ( "fsqrt   %d0, %d0" : "+w" (x.v) : : );
+#else
+	__asm__ ( "fsqrtd  %P0, %P0" : "+w" (x.v) : : );
+#endif
+	return x;
+#else
 	return FPR(sqrt(x.v));
+#endif
+#endif  // yyyAVX2-
 }
 
 static inline int
@@ -703,8 +776,9 @@ fpr_lt(fpr x, fpr y)
 	return x.v < y.v;
 }
 
+TARGET_AVX2
 static inline uint64_t
-fpr_expm_p63(fpr x)
+fpr_expm_p63(fpr x, fpr ccs)
 {
 	/*
 	 * Polynomial approximation of exp(-x) is taken from FACCT:
@@ -716,6 +790,72 @@ fpr_expm_p63(fpr x)
 	 * 0..log(2) range have never shown a deviation larger than
 	 * 2^(-50) from the true mathematical value.
 	 */
+
+#if FALCON_AVX2  // yyyAVX2+1
+
+	/*
+	 * AVX2 implementation uses more operations than Horner's method,
+	 * but with a lower expression tree depth. This helps because
+	 * additions and multiplications have a latency of 4 cycles on
+	 * a Skylake, but the CPU can issue two of them per cycle.
+	 */
+
+	static const union {
+		double d[12];
+		__m256d v[3];
+	} c = {
+		{
+			0.999999999999994892974086724280,
+			0.500000000000019206858326015208,
+			0.166666666666984014666397229121,
+			0.041666666666110491190622155955,
+			0.008333333327800835146903501993,
+			0.001388888894063186997887560103,
+			0.000198412739277311890541063977,
+			0.000024801566833585381209939524,
+			0.000002755586350219122514855659,
+			0.000000275607356160477811864927,
+			0.000000025299506379442070029551,
+			0.000000002073772366009083061987
+		}
+	};
+
+	double d1, d2, d4, d8, y;
+	__m256d d14, d58, d9c;
+
+	d1 = -x.v;
+	d2 = d1 * d1;
+	d4 = d2 * d2;
+	d8 = d4 * d4;
+	d14 = _mm256_set_pd(d4, d2 * d1, d2, d1);
+	d58 = _mm256_mul_pd(d14, _mm256_set1_pd(d4));
+	d9c = _mm256_mul_pd(d14, _mm256_set1_pd(d8));
+	d14 = _mm256_mul_pd(d14, _mm256_loadu_pd(&c.d[0]));
+	d58 = FMADD(d58, _mm256_loadu_pd(&c.d[4]), d14);
+	d9c = FMADD(d9c, _mm256_loadu_pd(&c.d[8]), d58);
+	d9c = _mm256_hadd_pd(d9c, d9c);
+	y = 1.0 + _mm_cvtsd_f64(_mm256_castpd256_pd128(d9c)) // _mm256_cvtsd_f64(d9c)
+		+ _mm_cvtsd_f64(_mm256_extractf128_pd(d9c, 1));
+	y *= ccs.v;
+
+	/*
+	 * Final conversion goes through int64_t first, because that's what
+	 * the underlying opcode (vcvttsd2si) will do, and we know that the
+	 * result will fit, since x >= 0 and ccs < 1. If we did the
+	 * conversion directly to uint64_t, then the compiler would add some
+	 * extra code to cover the case of a source value of 2^63 or more,
+	 * and though the alternate path would never be exercised, the
+	 * extra comparison would cost us some cycles.
+	 */
+	return (uint64_t)(int64_t)(y * fpr_ptwo63.v);
+
+#else  // yyyAVX2+0
+
+	/*
+	 * Normal implementation uses Horner's method, which minimizes
+	 * the number of operations.
+	 */
+
 	double d, y;
 
 	d = x.v;
@@ -732,7 +872,10 @@ fpr_expm_p63(fpr x)
 	y = 0.500000000000019206858326015208 - y * d;
 	y = 0.999999999999994892974086724280 - y * d;
 	y = 1.000000000000000000000000000000 - y * d;
+	y *= ccs.v;
 	return (uint64_t)(y * fpr_ptwo63.v);
+
+#endif  // yyyAVX2-
 }
 
 #define fpr_gm_tab   Zf(fpr_gm_tab)
@@ -743,8 +886,8 @@ extern const fpr fpr_p2_tab[];
 
 /* ====================================================================== */
 
-#else
+#else  // yyyFPEMU+0 yyyFPNATIVE+0
 
 #error No FP implementation selected
 
-#endif
+#endif  // yyyFPEMU- yyyFPNATIVE-

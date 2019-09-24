@@ -3,7 +3,7 @@
  *
  * ==========================(LICENSE BEGIN)============================
  *
- * Copyright (c) 2017  Falcon Project
+ * Copyright (c) 2017-2019  Falcon Project
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -33,7 +33,8 @@
 
 /* see inner.h */
 size_t
-Zf(modq_encode)(void *out, size_t max_out_len,
+Zf(modq_encode)(
+	void *out, size_t max_out_len,
 	const uint16_t *x, unsigned logn)
 {
 	size_t n, out_len, u;
@@ -73,8 +74,9 @@ Zf(modq_encode)(void *out, size_t max_out_len,
 
 /* see inner.h */
 size_t
-Zf(modq_decode)(uint16_t *x, unsigned logn,
-	const void *in, size_t in_max_len)
+Zf(modq_decode)(
+	uint16_t *x, unsigned logn,
+	const void *in, size_t max_in_len)
 {
 	size_t n, in_len, u;
 	const uint8_t *buf;
@@ -83,7 +85,7 @@ Zf(modq_decode)(uint16_t *x, unsigned logn,
 
 	n = (size_t)1 << logn;
 	in_len = ((n * 14) + 7) >> 3;
-	if (in_len > in_max_len) {
+	if (in_len > max_in_len) {
 		return 0;
 	}
 	buf = in;
@@ -101,7 +103,7 @@ Zf(modq_decode)(uint16_t *x, unsigned logn,
 			if (w >= 12289) {
 				return 0;
 			}
-			x[u ++] = w;
+			x[u ++] = (uint16_t)w;
 		}
 	}
 	if ((acc & (((uint32_t)1 << acc_len) - 1)) != 0) {
@@ -112,7 +114,8 @@ Zf(modq_decode)(uint16_t *x, unsigned logn,
 
 /* see inner.h */
 size_t
-Zf(trim_i16_encode)(void *out, size_t max_out_len,
+Zf(trim_i16_encode)(
+	void *out, size_t max_out_len,
 	const int16_t *x, unsigned logn, unsigned bits)
 {
 	size_t n, u, out_len;
@@ -132,7 +135,8 @@ Zf(trim_i16_encode)(void *out, size_t max_out_len,
 	out_len = ((n * bits) + 7) >> 3;
 	if (out == NULL) {
 		return out_len;
-	} else if (out_len > max_out_len) {
+	}
+	if (out_len > max_out_len) {
 		return 0;
 	}
 	buf = out;
@@ -155,8 +159,9 @@ Zf(trim_i16_encode)(void *out, size_t max_out_len,
 
 /* see inner.h */
 size_t
-Zf(trim_i16_decode)(int16_t *x, unsigned logn, unsigned bits,
-	const void *in, size_t in_max_len)
+Zf(trim_i16_decode)(
+	int16_t *x, unsigned logn, unsigned bits,
+	const void *in, size_t max_in_len)
 {
 	size_t n, in_len;
 	const uint8_t *buf;
@@ -166,7 +171,7 @@ Zf(trim_i16_decode)(int16_t *x, unsigned logn, unsigned bits,
 
 	n = (size_t)1 << logn;
 	in_len = ((n * bits) + 7) >> 3;
-	if (in_len > in_max_len) {
+	if (in_len > max_in_len) {
 		return 0;
 	}
 	buf = in;
@@ -191,7 +196,7 @@ Zf(trim_i16_decode)(int16_t *x, unsigned logn, unsigned bits,
 				return 0;
 			}
 			w |= -(w & mask2);
-			x[u ++] = *(int32_t *)&w;
+			x[u ++] = (int16_t)*(int32_t *)&w;
 		}
 	}
 	if ((acc & (((uint32_t)1 << acc_len) - 1)) != 0) {
@@ -205,7 +210,8 @@ Zf(trim_i16_decode)(int16_t *x, unsigned logn, unsigned bits,
 
 /* see inner.h */
 size_t
-Zf(trim_i8_encode)(void *out, size_t max_out_len,
+Zf(trim_i8_encode)(
+	void *out, size_t max_out_len,
 	const int8_t *x, unsigned logn, unsigned bits)
 {
 	size_t n, u, out_len;
@@ -225,7 +231,8 @@ Zf(trim_i8_encode)(void *out, size_t max_out_len,
 	out_len = ((n * bits) + 7) >> 3;
 	if (out == NULL) {
 		return out_len;
-	} else if (out_len > max_out_len) {
+	}
+	if (out_len > max_out_len) {
 		return 0;
 	}
 	buf = out;
@@ -248,8 +255,9 @@ Zf(trim_i8_encode)(void *out, size_t max_out_len,
 
 /* see inner.h */
 size_t
-Zf(trim_i8_decode)(int8_t *x, unsigned logn, unsigned bits,
-	const void *in, size_t in_max_len)
+Zf(trim_i8_decode)(
+	int8_t *x, unsigned logn, unsigned bits,
+	const void *in, size_t max_in_len)
 {
 	size_t n, in_len;
 	const uint8_t *buf;
@@ -259,7 +267,7 @@ Zf(trim_i8_decode)(int8_t *x, unsigned logn, unsigned bits,
 
 	n = (size_t)1 << logn;
 	in_len = ((n * bits) + 7) >> 3;
-	if (in_len > in_max_len) {
+	if (in_len > max_in_len) {
 		return 0;
 	}
 	buf = in;
@@ -283,7 +291,7 @@ Zf(trim_i8_decode)(int8_t *x, unsigned logn, unsigned bits,
 				 */
 				return 0;
 			}
-			x[u ++] = *(int32_t *)&w;
+			x[u ++] = (int8_t)*(int32_t *)&w;
 		}
 	}
 	if ((acc & (((uint32_t)1 << acc_len) - 1)) != 0) {
@@ -297,7 +305,8 @@ Zf(trim_i8_decode)(int8_t *x, unsigned logn, unsigned bits,
 
 /* see inner.h */
 size_t
-Zf(comp_encode)(void *out, size_t max_out_len,
+Zf(comp_encode)(
+	void *out, size_t max_out_len,
 	const int16_t *x, unsigned logn)
 {
 	uint8_t *buf;
@@ -393,8 +402,9 @@ Zf(comp_encode)(void *out, size_t max_out_len,
 
 /* see inner.h */
 size_t
-Zf(comp_decode)(int16_t *x, unsigned logn,
-	const void *in, size_t in_max_len)
+Zf(comp_decode)(
+	int16_t *x, unsigned logn,
+	const void *in, size_t max_in_len)
 {
 	const uint8_t *buf;
 	size_t n, u, v;
@@ -413,7 +423,7 @@ Zf(comp_decode)(int16_t *x, unsigned logn,
 		 * Get next eight bits: sign and low seven bits of the
 		 * absolute value.
 		 */
-		if (v >= in_max_len) {
+		if (v >= max_in_len) {
 			return 0;
 		}
 		acc = (acc << 8) | (uint32_t)buf[v ++];
@@ -426,7 +436,7 @@ Zf(comp_decode)(int16_t *x, unsigned logn,
 		 */
 		for (;;) {
 			if (acc_len == 0) {
-				if (v >= in_max_len) {
+				if (v >= max_in_len) {
 					return 0;
 				}
 				acc = (acc << 8) | (uint32_t)buf[v ++];
@@ -441,7 +451,7 @@ Zf(comp_decode)(int16_t *x, unsigned logn,
 				return 0;
 			}
 		}
-		x[u] = s ? -(int)m : (int)m;
+		x[u] = (int16_t)(s ? -(int)m : (int)m);
 	}
 	return v;
 }
@@ -478,7 +488,7 @@ Zf(comp_decode)(int16_t *x, unsigned logn,
  * of max_fg_bits[] and max_FG_bits[] shall be greater than 8.
  */
 
-const int8_t Zf(max_fg_bits)[] = {
+const uint8_t Zf(max_fg_bits)[] = {
 	0, /* unused */
 	8,
 	8,
@@ -492,7 +502,7 @@ const int8_t Zf(max_fg_bits)[] = {
 	5
 };
 
-const int8_t Zf(max_FG_bits)[] = {
+const uint8_t Zf(max_FG_bits)[] = {
 	0, /* unused */
 	8,
 	8,
@@ -534,7 +544,7 @@ const int8_t Zf(max_FG_bits)[] = {
  * in -2047..2047, i.e. 12 bits.
  */
 
-const int8_t Zf(max_sig_bits)[] = {
+const uint8_t Zf(max_sig_bits)[] = {
 	0, /* unused */
 	10,
 	11,
