@@ -112,12 +112,12 @@
 | falcon512-tree (100 executions) | m4-ct | AVG: 201,459,670 <br /> MIN: 130,210,248 <br /> MAX: 454,050,554 | AVG: 17,181,744 <br /> MIN: 17,062,306 <br /> MAX: 17,295,452 | AVG: 475,278 <br /> MIN: 465,806 <br /> MAX: 481,258 |
 | falcon512-tree (100 executions) | opt-ct | AVG: 267,136,946 <br /> MIN: 173,342,269 <br /> MAX: 527,937,744 | AVG: 27,257,531 <br /> MIN: 27,124,430 <br /> MAX: 27,416,575 | AVG: 474,934 <br /> MIN: 465,123 <br /> MAX: 481,855 |
 | falcon512-tree (100 executions) | opt-leaktime | AVG: 187,864,184 <br /> MIN: 114,425,808 <br /> MAX: 555,918,408 | AVG: 17,778,541 <br /> MIN: 17,608,010 <br /> MAX: 17,944,731 | AVG: 473,928 <br /> MIN: 465,072 <br /> MAX: 481,948 |
-| luov-48-43-222-chacha (100 executions) | ref | AVG: 41,347,565 <br /> MIN: 41,077,732 <br /> MAX: 41,585,440 | AVG: 123,878,410 <br /> MIN: 123,825,414 <br /> MAX: 123,912,572 | AVG: 95,330,045 <br /> MIN: 95,317,535 <br /> MAX: 95,343,473 |
-| luov-48-43-222-keccak (100 executions) | ref | AVG: 53,900,163 <br /> MIN: 53,649,451 <br /> MAX: 54,074,274 | AVG: 135,960,322 <br /> MIN: 135,913,707 <br /> MAX: 136,018,359 | AVG: 107,793,279 <br /> MIN: 107,783,143 <br /> MAX: 107,803,188 |
-| luov-64-61-302-chacha (100 executions) | ref | AVG: 109,063,798 <br /> MIN: 108,677,813 <br /> MAX: 109,472,193 | AVG: 405,205,796 <br /> MIN: 405,092,541 <br /> MAX: 405,292,253 | AVG: 269,012,028 <br /> MIN: 268,981,066 <br /> MAX: 269,034,087 |
-| luov-64-61-302-keccak (100 executions) | ref | AVG: 148,680,619 <br /> MIN: 148,155,686 <br /> MAX: 149,194,782 | AVG: 441,086,753 <br /> MIN: 441,025,976 <br /> MAX: 441,153,566 | AVG: 318,677,042 <br /> MIN: 318,656,650 <br /> MAX: 318,699,951 |
-| luov-8-58-237-chacha (100 executions) | ref | AVG: 66,072,054 <br /> MIN: 65,711,390 <br /> MAX: 66,460,756 | AVG: 101,874,776 <br /> MIN: 99,834,968 <br /> MAX: 199,249,932 | AVG: 77,433,705 <br /> MIN: 77,416,684 <br /> MAX: 77,440,674 |
-| luov-8-58-237-keccak (100 executions) | ref | AVG: 87,785,091 <br /> MIN: 87,463,523 <br /> MAX: 88,201,213 | AVG: 119,711,856 <br /> MIN: 119,664,894 <br /> MAX: 119,739,349 | AVG: 81,240,915 <br /> MIN: 81,226,737 <br /> MAX: 81,247,471 |
+| luov-47-42-182-chacha (100 executions) | ref | AVG: 28,433,080 <br /> MIN: 28,266,770 <br /> MAX: 28,666,408 | AVG: 60,235,732 <br /> MIN: 60,203,368 <br /> MAX: 60,287,111 | AVG: 42,150,229 <br /> MIN: 42,141,038 <br /> MAX: 42,164,346 |
+| luov-47-42-182-keccak (100 executions) | ref | AVG: 37,012,989 <br /> MIN: 36,806,141 <br /> MAX: 37,215,582 | AVG: 68,234,509 <br /> MIN: 68,178,429 <br /> MAX: 68,275,058 | AVG: 50,742,235 <br /> MIN: 50,724,963 <br /> MAX: 50,755,062 |
+| luov-61-60-261-chacha (100 executions) | ref | AVG: 81,045,939 <br /> MIN: 80,626,887 <br /> MAX: 81,412,109 | AVG: 251,945,670 <br /> MIN: 251,883,385 <br /> MAX: 252,007,252 | AVG: 137,405,740 <br /> MIN: 137,386,509 <br /> MAX: 137,424,782 |
+| luov-61-60-261-keccak (100 executions) | ref | AVG: 110,888,141 <br /> MIN: 110,507,849 <br /> MAX: 111,225,488 | AVG: 282,283,375 <br /> MIN: 282,217,076 <br /> MAX: 282,361,965 | AVG: 167,305,418 <br /> MIN: 167,283,419 <br /> MAX: 167,328,186 |
+| luov-7-57-197-chacha (100 executions) | ref | AVG: 48,115,203 <br /> MIN: 47,802,253 <br /> MAX: 48,446,889 | AVG: 75,576,631 <br /> MIN: 74,750,980 <br /> MAX: 149,130,735 | AVG: 46,865,501 <br /> MIN: 46,841,366 <br /> MAX: 46,879,871 |
+| luov-7-57-197-keccak (100 executions) | ref | AVG: 62,524,021 <br /> MIN: 62,272,782 <br /> MAX: 62,822,216 | AVG: 89,733,512 <br /> MIN: 88,779,799 <br /> MAX: 177,189,888 | AVG: 57,939,192 <br /> MIN: 57,905,948 <br /> MAX: 57,957,915 |
 | sphincs-haraka-128f-robust (1 executions) | clean | AVG: 125,493,736 <br /> MIN: 125,493,736 <br /> MAX: 125,493,736 | AVG: 4,720,156,509 <br /> MIN: 4,720,156,509 <br /> MAX: 4,720,156,509 | AVG: 196,103,540 <br /> MIN: 196,103,540 <br /> MAX: 196,103,540 |
 | sphincs-haraka-128f-simple (1 executions) | clean | AVG: 91,770,060 <br /> MIN: 91,770,060 <br /> MAX: 91,770,060 | AVG: 3,286,409,908 <br /> MIN: 3,286,409,908 <br /> MAX: 3,286,409,908 | AVG: 136,522,968 <br /> MIN: 136,522,968 <br /> MAX: 136,522,968 |
 | sphincs-haraka-128s-robust (1 executions) | clean | AVG: 3,994,078,037 <br /> MIN: 3,994,078,037 <br /> MAX: 3,994,078,037 | AVG: 76,355,806,675 <br /> MIN: 76,355,806,675 <br /> MAX: 76,355,806,675 | AVG: 90,503,982 <br /> MIN: 90,503,982 <br /> MAX: 90,503,982 |
@@ -268,12 +268,12 @@
 | falcon512-tree | m4-ct | 1,656 | 2,452 | 512 |
 | falcon512-tree | opt-ct | 1,664 | 2,492 | 512 |
 | falcon512-tree | opt-leaktime | 1,632 | 2,776 | 512 |
-| luov-48-43-222-chacha | ref | 2,968 | 4,720 | 2,732 |
-| luov-48-43-222-keccak | ref | 3,240 | 4,872 | 3,120 |
-| luov-64-61-302-chacha | ref | 3,736 | 6,896 | 4,504 |
-| luov-64-61-302-keccak | ref | 4,152 | 7,144 | 4,928 |
-| luov-8-58-237-chacha | ref | 3,216 | 3,224 | 1,440 |
-| luov-8-58-237-keccak | ref | 3,632 | 3,216 | 2,144 |
+| luov-47-42-182-chacha | ref | 2,540 | 4,472 | 2,996 |
+| luov-47-42-182-keccak | ref | 2,920 | 4,624 | 3,376 |
+| luov-61-60-261-chacha | ref | 3,300 | 6,128 | 4,044 |
+| luov-61-60-261-keccak | ref | 3,824 | 6,272 | 4,592 |
+| luov-7-57-197-chacha | ref | 2,904 | 2,756 | 1,308 |
+| luov-7-57-197-keccak | ref | 3,312 | 2,856 | 2,144 |
 | sphincs-haraka-128f-robust | clean | 2,424 | 2,400 | 2,772 |
 | sphincs-haraka-128f-simple | clean | 2,316 | 2,400 | 2,772 |
 | sphincs-haraka-128s-robust | clean | 2,608 | 2,568 | 2,092 |
@@ -424,12 +424,12 @@
 | falcon512-tree | m4-ct | 12.8% | 1.2% | 35.9% |
 | falcon512-tree | opt-ct | 12.0% | 0.8% | 35.8% |
 | falcon512-tree | opt-leaktime | 16.0% | 1.1% | 35.8% |
-| luov-48-43-222-chacha | ref | 0.3% | 0.1% | 0.0% |
-| luov-48-43-222-keccak | ref | 30.7% | 12.2% | 15.3% |
-| luov-64-61-302-chacha | ref | 0.2% | 0.1% | 0.0% |
-| luov-64-61-302-keccak | ref | 33.3% | 11.3% | 15.5% |
-| luov-8-58-237-chacha | ref | 0.3% | 0.2% | 0.0% |
-| luov-8-58-237-keccak | ref | 30.6% | 22.5% | 32.9% |
+| luov-47-42-182-chacha | ref | 0.4% | 0.3% | 0.1% |
+| luov-47-42-182-keccak | ref | 30.8% | 16.8% | 22.4% |
+| luov-61-60-261-chacha | ref | 0.3% | 0.1% | 0.0% |
+| luov-61-60-261-keccak | ref | 33.9% | 13.4% | 22.4% |
+| luov-7-57-197-chacha | ref | 0.3% | 0.2% | 0.0% |
+| luov-7-57-197-keccak | ref | 30.6% | 21.6% | 32.9% |
 | sphincs-haraka-128f-robust | clean | 0.0% | 0.0% | 0.0% |
 | sphincs-haraka-128f-simple | clean | 0.0% | 0.0% | 0.0% |
 | sphincs-haraka-128s-robust | clean | 0.0% | 0.0% | 0.0% |
@@ -580,12 +580,12 @@
 | falcon512-tree | m4-ct | 77,067 | 0 | 27,648 | 104,715 |
 | falcon512-tree | opt-ct | 75,935 | 0 | 27,648 | 103,583 |
 | falcon512-tree | opt-leaktime | 71,679 | 0 | 27,648 | 99,327 |
-| luov-48-43-222-chacha | ref | 405,722 | 36 | 0 | 405,758 |
-| luov-48-43-222-keccak | ref | 405,730 | 36 | 0 | 405,766 |
-| luov-64-61-302-chacha | ref | 405,412 | 36 | 0 | 405,448 |
-| luov-64-61-302-keccak | ref | 405,452 | 36 | 0 | 405,488 |
-| luov-8-58-237-chacha | ref | 404,920 | 36 | 0 | 404,956 |
-| luov-8-58-237-keccak | ref | 404,924 | 36 | 0 | 404,960 |
+| luov-47-42-182-chacha | ref | 10,356 | 0 | 0 | 10,356 |
+| luov-47-42-182-keccak | ref | 10,384 | 0 | 0 | 10,384 |
+| luov-61-60-261-chacha | ref | 10,452 | 0 | 0 | 10,452 |
+| luov-61-60-261-keccak | ref | 10,480 | 0 | 0 | 10,480 |
+| luov-7-57-197-chacha | ref | 10,268 | 0 | 0 | 10,268 |
+| luov-7-57-197-keccak | ref | 10,272 | 0 | 0 | 10,272 |
 | sphincs-haraka-128f-robust | clean | 17,192 | 0 | 1,280 | 18,472 |
 | sphincs-haraka-128f-simple | clean | 17,028 | 0 | 1,280 | 18,308 |
 | sphincs-haraka-128s-robust | clean | 17,500 | 0 | 1,280 | 18,780 |

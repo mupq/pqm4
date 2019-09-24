@@ -37,12 +37,12 @@ class M4Settings(mupq.PlatformSettings):
         {'scheme': 'ledakemlt12', 'implementation' : 'leaktime'},
         {'scheme': 'ledakemlt32', 'implementation' : 'leaktime'},
         {'scheme': 'ledakemlt52', 'implementation' : 'leaktime'},
-        {'scheme': 'luov-80-76-363-chacha', 'implementation': 'ref'},
-        {'scheme': 'luov-80-76-363-keccak', 'implementation': 'ref'},
-        {'scheme': 'luov-8-82-323-chacha', 'implementation': 'ref'},
-        {'scheme': 'luov-8-82-323-keccak', 'implementation': 'ref'},
-        {'scheme': 'luov-8-107-371-chacha', 'implementation': 'ref'},
-        {'scheme': 'luov-8-107-371-keccak', 'implementation': 'ref'},
+        {'scheme': 'luov-79-76-341-chacha', 'implementation': 'ref'},
+        {'scheme': 'luov-79-76-341-keccak', 'implementation': 'ref'},
+        {'scheme': 'luov-7-83-283-chacha', 'implementation': 'ref'},
+        {'scheme': 'luov-7-83-283-keccak', 'implementation': 'ref'},
+        {'scheme': 'luov-7-110-374-chacha', 'implementation': 'ref'},
+        {'scheme': 'luov-7-110-374-keccak', 'implementation': 'ref'},
     )
 
 
