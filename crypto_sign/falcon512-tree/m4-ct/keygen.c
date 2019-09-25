@@ -29,7 +29,6 @@
  * @author   Thomas Pornin <thomas.pornin@nccgroup.com>
  */
 
-#include <stddef.h>
 #include "inner.h"
 
 #define MKN(logn)   ((size_t)1 << (logn))
@@ -644,7 +643,7 @@ modp_set(int32_t x, uint32_t p)
 static inline int32_t
 modp_norm(uint32_t x, uint32_t p)
 {
-	return x - (p & (((x - ((p + 1) >> 1)) >> 31) - 1));
+	return (int32_t)(x - (p & (((x - ((p + 1) >> 1)) >> 31) - 1)));
 }
 
 /*
@@ -1815,14 +1814,14 @@ zint_bezout(uint32_t *restrict u, uint32_t *restrict v,
 			 * iteration, thus a division by 2 really is a
 			 * non-multiplication by 2.
 			 */
-			uint32_t r, oa, ob, cAB, cBA, cA;
+			uint32_t rt, oa, ob, cAB, cBA, cA;
 			uint64_t rz;
 
 			/*
-			 * r = 1 if a_hi > b_hi, 0 otherwise.
+			 * rt = 1 if a_hi > b_hi, 0 otherwise.
 			 */
 			rz = b_hi - a_hi;
-			r = (uint32_t)((rz ^ ((a_hi ^ b_hi)
+			rt = (uint32_t)((rz ^ ((a_hi ^ b_hi)
 				& (a_hi ^ rz))) >> 63);
 
 			/*
@@ -1837,8 +1836,8 @@ zint_bezout(uint32_t *restrict u, uint32_t *restrict v,
 			 */
 			oa = (a_lo >> i) & 1;
 			ob = (b_lo >> i) & 1;
-			cAB = oa & ob & r;
-			cBA = oa & ob & ~r;
+			cAB = oa & ob & rt;
+			cBA = oa & ob & ~rt;
 			cA = cAB | (oa ^ 1);
 
 			/*
@@ -1891,7 +1890,7 @@ zint_bezout(uint32_t *restrict u, uint32_t *restrict v,
 	for (j = 1; j < len; j ++) {
 		rc |= a[j];
 	}
-	return (1 - ((rc | -rc) >> 31)) & x[0] & y[0];
+	return (int)((1 - ((rc | -rc) >> 31)) & x[0] & y[0]);
 }
 
 /*
@@ -1937,7 +1936,7 @@ zint_add_scaled_mul_small(uint32_t *restrict x, size_t xlen,
 		/*
 		 * The expression below does not overflow.
 		 */
-		z = (int64_t)wys * (int64_t)k + (int64_t)x[u] + cc;
+		z = (uint64_t)((int64_t)wys * (int64_t)k + (int64_t)x[u] + cc);
 		x[u] = (uint32_t)z & 0x7FFFFFFF;
 
 		/*
@@ -1950,7 +1949,7 @@ zint_add_scaled_mul_small(uint32_t *restrict x, size_t xlen,
 		 * trap representation or padding bit, and with a layout
 		 * compatible with that of 'uint32_t'.
 		 */
-		ccu = (uint32_t)((uint64_t)z >> 31);
+		ccu = (uint32_t)(z >> 31);
 		cc = *(int32_t *)&ccu;
 	}
 }
@@ -2171,7 +2170,7 @@ poly_sub_scaled_ntt(uint32_t *restrict F, size_t Flen, size_t Fstride,
 		p = primes[u].p;
 		p0i = modp_ninv31(p);
 		R2 = modp_R2(p, p0i);
-		Rx = modp_Rx(flen, p, p0i, R2);
+		Rx = modp_Rx((unsigned)flen, p, p0i, R2);
 		modp_mkgm2(gm, igm, logn, primes[u].g, p, p0i);
 
 		for (v = 0; v < n; v ++) {
@@ -2206,6 +2205,15 @@ poly_sub_scaled_ntt(uint32_t *restrict F, size_t Flen, size_t Fstride,
 
 /* ==================================================================== */
 
+#if FALCON_KG_CHACHA20  // yyyKG_CHACHA20+1
+
+#define RNG_CONTEXT   prng
+#define get_rng_u64   prng_get_u64
+
+#else  // yyyKG_CHACHA20+0
+
+#define RNG_CONTEXT   inner_shake256_context
+
 /*
  * Get a random 8-byte integer from a SHAKE-based RNG. This function
  * ensures consistent interpretation of the SHAKE output so that
@@ -2213,25 +2221,27 @@ poly_sub_scaled_ntt(uint32_t *restrict F, size_t Flen, size_t Fstride,
  * a known seed is used.
  */
 static inline uint64_t
-get_rng_u64(shake256_context *rng)
+get_rng_u64(inner_shake256_context *rng)
 {
+	/*
+	 * We enforce little-endian representation.
+	 */
+
+#if FALCON_LE  // yyyLE+1
 	/*
 	 * On little-endian systems we just interpret the bytes "as is"
 	 * (this is correct because the exact-width types such as
 	 * 'uint64_t' are guaranteed to have no padding and no trap
 	 * representation).
-	 *
-	 * On other systems we enforce little-endian representation.
 	 */
-#if FALCON_LE
 	uint64_t r;
 
-	shake256_extract(rng, (uint8_t *)&r, sizeof r);
+	inner_shake256_extract(rng, (uint8_t *)&r, sizeof r);
 	return r;
-#else
-	unsigned char tmp[8];
+#else  // yyyLE+0
+	uint8_t tmp[8];
 
-	shake256_extract(rng, tmp, sizeof tmp);
+	inner_shake256_extract(rng, tmp, sizeof tmp);
 	return (uint64_t)tmp[0]
 		| ((uint64_t)tmp[1] << 8)
 		| ((uint64_t)tmp[2] << 16)
@@ -2240,8 +2250,10 @@ get_rng_u64(shake256_context *rng)
 		| ((uint64_t)tmp[5] << 40)
 		| ((uint64_t)tmp[6] << 48)
 		| ((uint64_t)tmp[7] << 56);
-#endif
+#endif  // yyyLE-
 }
+
+#endif  // yyyKG_CHACHA20-
 
 /*
  * Table below incarnates a discrete Gaussian distribution:
@@ -2274,7 +2286,7 @@ static const uint64_t gauss_1024_12289[] = {
  * together for lower dimensions.
  */
 static int
-mkgauss(shake256_context *rng, unsigned logn)
+mkgauss(RNG_CONTEXT *rng, unsigned logn)
 {
 	unsigned u, g;
 	int val;
@@ -2344,14 +2356,11 @@ mkgauss(shake256_context *rng, unsigned logn)
 }
 
 /*
- * The MAX_BL_SMALL*[] and MAX_BL_LARGE*[] contain the lengths, in 31-bit
+ * The MAX_BL_SMALL[] and MAX_BL_LARGE[] contain the lengths, in 31-bit
  * words, of intermediate values in the computation:
  *
- *   MAX_BL_SMALL*[depth]: length for the input f and g at that depth
- *   MAX_BL_LARGE*[depth]: length for the unreduced F and G at that depth
- *
- * MAX_BL_SMALL2[] and MAX_BL_LARGE2[] are for the binary case, for depth
- * up to 10. MAX_BL_SMALL3[] and MAX_BL_LARGE3[] are for the ternary case.
+ *   MAX_BL_SMALL[depth]: length for the input f and g at that depth
+ *   MAX_BL_LARGE[depth]: length for the unreduced F and G at that depth
  *
  * Rules:
  *
@@ -2402,11 +2411,11 @@ mkgauss(shake256_context *rng, unsigned logn)
  * accordingly.
  */
 
-static const size_t MAX_BL_SMALL2[] = {
+static const size_t MAX_BL_SMALL[] = {
 	1, 1, 2, 2, 4, 7, 14, 27, 53, 106, 209
 };
 
-static const size_t MAX_BL_LARGE2[] = {
+static const size_t MAX_BL_LARGE[] = {
 	2, 2, 5, 7, 12, 21, 40, 78, 157, 308
 };
 
@@ -2468,7 +2477,7 @@ poly_small_sqnorm(const int8_t *f, unsigned logn)
 static fpr *
 align_fpr(void *base, void *data)
 {
-	unsigned char *cb, *cd;
+	uint8_t *cb, *cd;
 	size_t k, km;
 
 	cb = base;
@@ -2488,7 +2497,7 @@ align_fpr(void *base, void *data)
 static uint32_t *
 align_u32(void *base, void *data)
 {
-	unsigned char *cb, *cd;
+	uint8_t *cb, *cd;
 	size_t k, km;
 
 	cb = base;
@@ -2534,8 +2543,8 @@ make_fg_step(uint32_t *data, unsigned logn, unsigned depth,
 
 	n = (size_t)1 << logn;
 	hn = n >> 1;
-	slen = MAX_BL_SMALL2[depth];
-	tlen = MAX_BL_SMALL2[depth + 1];
+	slen = MAX_BL_SMALL[depth];
+	tlen = MAX_BL_SMALL[depth + 1];
 	primes = PRIMES;
 
 	/*
@@ -2624,7 +2633,7 @@ make_fg_step(uint32_t *data, unsigned logn, unsigned depth,
 		p = primes[u].p;
 		p0i = modp_ninv31(p);
 		R2 = modp_R2(p, p0i);
-		Rx = modp_Rx(slen, p, p0i, R2);
+		Rx = modp_Rx((unsigned)slen, p, p0i, R2);
 		modp_mkgm2(gm, igm, logn, primes[u].g, p, p0i);
 		for (v = 0, x = fs; v < n; v ++, x += slen) {
 			t1[v] = zint_mod_small_signed(x, slen, p, p0i, R2, Rx);
@@ -2723,7 +2732,7 @@ solve_NTRU_deepest(unsigned logn_top,
 	uint32_t *Fp, *Gp, *fp, *gp, *t1, q;
 	const small_prime *primes;
 
-	len = MAX_BL_SMALL2[logn_top];
+	len = MAX_BL_SMALL[logn_top];
 	primes = PRIMES;
 
 	Fp = tmp;
@@ -2813,9 +2822,9 @@ solve_NTRU_intermediate(unsigned logn_top,
 	 * We build our non-reduced F and G as two independent halves each,
 	 * of degree N/2 (F = F0 + X*F1, G = G0 + X*G1).
 	 */
-	slen = MAX_BL_SMALL2[depth];
-	dlen = MAX_BL_SMALL2[depth + 1];
-	llen = MAX_BL_LARGE2[depth];
+	slen = MAX_BL_SMALL[depth];
+	dlen = MAX_BL_SMALL[depth + 1];
+	llen = MAX_BL_LARGE[depth];
 	primes = PRIMES;
 
 	/*
@@ -2862,7 +2871,7 @@ solve_NTRU_intermediate(unsigned logn_top,
 		p = primes[u].p;
 		p0i = modp_ninv31(p);
 		R2 = modp_R2(p, p0i);
-		Rx = modp_Rx(dlen, p, p0i, R2);
+		Rx = modp_Rx((unsigned)dlen, p, p0i, R2);
 		for (v = 0, xs = Fd, ys = Gd, xd = Ft + u, yd = Gt + u;
 			v < hn;
 			v ++, xs += dlen, ys += dlen, xd += llen, yd += llen)
@@ -2908,8 +2917,6 @@ solve_NTRU_intermediate(unsigned logn_top,
 		modp_mkgm2(gm, igm, logn, primes[u].g, p, p0i);
 
 		if (u < slen) {
-			size_t v;
-
 			for (v = 0, x = ft + u, y = gt + u;
 				v < n; v ++, x += slen, y += slen)
 			{
@@ -2920,9 +2927,8 @@ solve_NTRU_intermediate(unsigned logn_top,
 			modp_iNTT2_ext(gt + u, slen, igm, logn, p, p0i);
 		} else {
 			uint32_t Rx;
-			size_t v;
 
-			Rx = modp_Rx(slen, p, p0i, R2);
+			Rx = modp_Rx((unsigned)slen, p, p0i, R2);
 			for (v = 0, x = ft, y = gt;
 				v < n; v ++, x += slen, y += slen)
 			{
@@ -3222,9 +3228,10 @@ solve_NTRU_intermediate(unsigned logn_top,
 		}
 
 		for (u = 0; u < n; u ++) {
-			fpr x;
+			fpr xv;
 
-			x = fpr_mul(rt2[u], pdc);
+			xv = fpr_mul(rt2[u], pdc);
+
 			/*
 			 * Sometimes the values can be out-of-bounds if
 			 * the algorithm fails; we must not call
@@ -3234,12 +3241,12 @@ solve_NTRU_intermediate(unsigned logn_top,
 			 * failure here implies that we discard the current
 			 * secret key (f,g).
 			 */
-			if (!fpr_lt(fpr_mtwo31m1, x)
-				|| !fpr_lt(x, fpr_ptwo31m1))
+			if (!fpr_lt(fpr_mtwo31m1, xv)
+				|| !fpr_lt(xv, fpr_ptwo31m1))
 			{
 				return 0;
 			}
-			k[u] = fpr_rint(x);
+			k[u] = (int32_t)fpr_rint(xv);
 		}
 
 		/*
@@ -3249,8 +3256,8 @@ solve_NTRU_intermediate(unsigned logn_top,
 		 * If we are at low depth, then we use the NTT to
 		 * compute k*f and k*g.
 		 */
-		sch = scale_k / 31;
-		scl = scale_k % 31;
+		sch = (uint32_t)(scale_k / 31);
+		scl = (uint32_t)(scale_k % 31);
 		if (depth <= DEPTH_INT_FG) {
 			poly_sub_scaled_ntt(Ft, FGlen, llen, ft, slen, slen,
 				k, sch, scl, logn, t1);
@@ -3378,9 +3385,9 @@ solve_NTRU_binary_depth1(unsigned logn_top,
 	 * We build our non-reduced F and G as two independent halves each,
 	 * of degree N/2 (F = F0 + X*F1, G = G0 + X*G1).
 	 */
-	slen = MAX_BL_SMALL2[depth];
-	dlen = MAX_BL_SMALL2[depth + 1];
-	llen = MAX_BL_LARGE2[depth];
+	slen = MAX_BL_SMALL[depth];
+	dlen = MAX_BL_SMALL[depth + 1];
+	llen = MAX_BL_LARGE[depth];
 
 	/*
 	 * Fd and Gd are the F and G from the deeper level. Ft and Gt
@@ -3403,7 +3410,7 @@ solve_NTRU_binary_depth1(unsigned logn_top,
 		p = PRIMES[u].p;
 		p0i = modp_ninv31(p);
 		R2 = modp_R2(p, p0i);
-		Rx = modp_Rx(dlen, p, p0i, R2);
+		Rx = modp_Rx((unsigned)dlen, p, p0i, R2);
 		for (v = 0, xs = Fd, ys = Gd, xd = Ft + u, yd = Gt + u;
 			v < hn;
 			v ++, xs += dlen, ys += dlen, xd += llen, yd += llen)
@@ -4085,7 +4092,7 @@ solve_NTRU(unsigned logn, int8_t *F, int8_t *G,
  * also makes sure that the resultant of the polynomial with phi is odd.
  */
 static void
-poly_small_mkgauss(shake256_context *rng, int8_t *f, unsigned logn)
+poly_small_mkgauss(RNG_CONTEXT *rng, int8_t *f, unsigned logn)
 {
 	size_t n, u;
 	unsigned mod2;
@@ -4120,13 +4127,13 @@ poly_small_mkgauss(shake256_context *rng, int8_t *f, unsigned logn)
 		} else {
 			mod2 ^= (unsigned)(s & 1);
 		}
-		f[u] = s;
+		f[u] = (int8_t)s;
 	}
 }
 
 /* see falcon.h */
 void
-Zf(keygen)(shake256_context *rng,
+Zf(keygen)(inner_shake256_context *rng,
 	int8_t *f, int8_t *g, int8_t *F, int8_t *G, uint16_t *h,
 	unsigned logn, uint8_t *tmp)
 {
@@ -4150,9 +4157,19 @@ Zf(keygen)(shake256_context *rng,
 	 *    and Res(g,phi) are not prime to each other.
 	 */
 	size_t n, u;
-	uint16_t *tmp2;
+	uint16_t *h2, *tmp2;
+	RNG_CONTEXT *rc;
+#if FALCON_KG_CHACHA20  // yyyKG_CHACHA20+1
+	prng p;
+#endif  // yyyKG_CHACHA20-
 
 	n = MKN(logn);
+#if FALCON_KG_CHACHA20  // yyyKG_CHACHA20+1
+	Zf(prng_init)(&p, rng);
+	rc = &p;
+#else // yyyKG_CHACHA20+0
+	rc = rng;
+#endif  // yyyKG_CHACHA20-
 
 	/*
 	 * We need to generate f and g randomly, until we find values
@@ -4185,8 +4202,8 @@ Zf(keygen)(shake256_context *rng,
 		 * (i.e. the resultant of the polynomial with phi
 		 * will be odd).
 		 */
-		poly_small_mkgauss(rng, f, logn);
-		poly_small_mkgauss(rng, g, logn);
+		poly_small_mkgauss(rc, f, logn);
+		poly_small_mkgauss(rc, g, logn);
 
 		/*
 		 * Verify that all coefficients are within the bounds
@@ -4258,12 +4275,13 @@ Zf(keygen)(shake256_context *rng,
 		 * fails, we must restart.
 		 */
 		if (h == NULL) {
-			h = (uint16_t *)tmp;
-			tmp2 = (uint16_t *)(h + n);
+			h2 = (uint16_t *)tmp;
+			tmp2 = h2 + n;
 		} else {
+			h2 = h;
 			tmp2 = (uint16_t *)tmp;
 		}
-		if (!Zf(compute_public)(h, f, g, logn, (uint8_t *)tmp2)) {
+		if (!Zf(compute_public)(h2, f, g, logn, (uint8_t *)tmp2)) {
 			continue;
 		}
 

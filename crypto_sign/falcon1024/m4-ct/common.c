@@ -33,11 +33,45 @@
 
 /* see inner.h */
 void
-Zf(hash_to_point)(shake256_context *sc,
+Zf(hash_to_point_vartime)(
+	inner_shake256_context *sc,
+	uint16_t *x, unsigned logn)
+{
+	/*
+	 * This is the straightforward per-the-spec implementation. It
+	 * is not constant-time, thus it might reveal information on the
+	 * plaintext (at least, enough to check the plaintext against a
+	 * list of potential plaintexts) in a scenario where the
+	 * attacker does not have access to the signature value or to
+	 * the public key, but knows the nonce (without knowledge of the
+	 * nonce, the hashed output cannot be matched against potential
+	 * plaintexts).
+	 */
+	size_t n;
+
+	n = (size_t)1 << logn;
+	while (n > 0) {
+		uint8_t buf[2];
+		uint32_t w;
+
+		inner_shake256_extract(sc, (void *)buf, sizeof buf);
+		w = ((unsigned)buf[0] << 8) | (unsigned)buf[1];
+		if (w < 61445) {
+			while (w >= 12289) {
+				w -= 12289;
+			}
+			*x ++ = (uint16_t)w;
+			n --;
+		}
+	}
+}
+
+/* see inner.h */
+void
+Zf(hash_to_point_ct)(
+	inner_shake256_context *sc,
 	uint16_t *x, unsigned logn, uint8_t *tmp)
 {
-#if FALCON_CT_HASH
-
 	/*
 	 * Each 16-bit sample is a value in 0..65535. The value is
 	 * kept if it falls in 0..61444 (because 61445 = 5*12289)
@@ -98,8 +132,8 @@ Zf(hash_to_point)(shake256_context *sc,
 		uint8_t buf[2];
 		uint32_t w, wr;
 
-		shake256_extract(sc, buf, sizeof buf);
-		w = (buf[0] << 8) | buf[1];
+		inner_shake256_extract(sc, buf, sizeof buf);
+		w = ((uint32_t)buf[0] << 8) | (uint32_t)buf[1];
 		wr = w - ((uint32_t)24578 & (((w - 24578) >> 31) - 1));
 		wr = wr - ((uint32_t)24578 & (((wr - 24578) >> 31) - 1));
 		wr = wr - ((uint32_t)12289 & (((wr - 12289) >> 31) - 1));
@@ -141,7 +175,7 @@ Zf(hash_to_point)(shake256_context *sc,
 		v = 0;
 		for (u = 0; u < m; u ++) {
 			uint16_t *s, *d;
-			unsigned j, sv, dv, m;
+			unsigned j, sv, dv, mk;
 
 			if (u < n) {
 				s = &x[u];
@@ -161,11 +195,11 @@ Zf(hash_to_point)(shake256_context *sc,
 			/*
 			 * We increment v for the next iteration, but
 			 * only if the source value is valid. The mask
-			 * 'm' is -1 if the value is valid, 0 otherwise,
-			 * so we _subtract_ m.
+			 * 'mk' is -1 if the value is valid, 0 otherwise,
+			 * so we _subtract_ mk.
 			 */
-			m = (sv >> 15) - 1U;
-			v -= m;
+			mk = (sv >> 15) - 1U;
+			v -= mk;
 
 			/*
 			 * In this loop we consider jumps by p slots; if
@@ -191,50 +225,18 @@ Zf(hash_to_point)(shake256_context *sc,
 			 * The swap should be performed only if the source
 			 * is valid AND the jump j has its 'p' bit set.
 			 */
-			m &= -(((j & p) + 0x1FF) >> 9);
+			mk &= -(((j & p) + 0x1FF) >> 9);
 
-			*s = sv ^ (m & (sv ^ dv));
-			*d = dv ^ (m & (sv ^ dv));
+			*s = (uint16_t)(sv ^ (mk & (sv ^ dv)));
+			*d = (uint16_t)(dv ^ (mk & (sv ^ dv)));
 		}
 	}
-
-#else
-
-	/*
-	 * This is the straightforward per-the-spec implementation. It
-	 * is not constant-time, thus it might reveal information on the
-	 * plaintext (at least, enough to check the plaintext against a
-	 * list of potential plaintexts) in a scenario where the
-	 * attacker does not have access to the signature value or to
-	 * the public key, but knows the nonce (without knowledge of the
-	 * nonce, the hashed output cannot be matched against potential
-	 * plaintexts).
-	 */
-	size_t n;
-
-	(void)tmp;
-	n = (size_t)1 << logn;
-	while (n > 0) {
-		uint8_t buf[2];
-		uint32_t w;
-
-		shake256_extract(sc, (void *)buf, sizeof buf);
-		w = ((unsigned)buf[0] << 8) | (unsigned)buf[1];
-		if (w < 61445) {
-			while (w >= 12289) {
-				w -= 12289;
-			}
-			*x ++ = (uint16_t)w;
-			n --;
-		}
-	}
-
-#endif
 }
 
 /* see inner.h */
 int
-Zf(is_short)(const int16_t *s1, const int16_t *s2, unsigned logn)
+Zf(is_short)(
+	const int16_t *s1, const int16_t *s2, unsigned logn)
 {
 	/*
 	 * We use the l2-norm. Code below uses only 32-bit operations to
@@ -269,7 +271,8 @@ Zf(is_short)(const int16_t *s1, const int16_t *s2, unsigned logn)
 
 /* see inner.h */
 int
-Zf(is_short_half)(uint32_t sqn, const int16_t *a, unsigned logn)
+Zf(is_short_half)(
+	uint32_t sqn, const int16_t *s2, unsigned logn)
 {
 	size_t n, u;
 	uint32_t ng;
@@ -279,7 +282,7 @@ Zf(is_short_half)(uint32_t sqn, const int16_t *a, unsigned logn)
 	for (u = 0; u < n; u ++) {
 		int32_t z;
 
-		z = a[u];
+		z = s2[u];
 		sqn += (uint32_t)(z * z);
 		ng |= sqn;
 	}

@@ -35,7 +35,7 @@
 
 /*
  * Common buffer, to avoid bulky stack allocation. The buffer sizes are
- * all expressed in bytes, but hte buffer must be suitably aligned for
+ * all expressed in bytes, but the buffer must be suitably aligned for
  * 64-bit integers and floating-point values.
  *
  * Required size (in bytes):
@@ -67,13 +67,14 @@ crypto_sign_keypair(unsigned char *pk, unsigned char *sk)
 {
 	int8_t *f, *g, *F, *G;
 	uint16_t *h;
-	shake256_context rng;
+	inner_shake256_context rng;
 	unsigned char seed[SEEDLEN];
 #if KG_EXPAND
 	size_t v;
 #else
 	size_t u, v;
 #endif
+	unsigned sav_cw;
 
 #if KG_EXPAND
 	f = (int8_t *)&tmp.b[48 * N];
@@ -90,9 +91,10 @@ crypto_sign_keypair(unsigned char *pk, unsigned char *sk)
 #endif
 
 	randombytes(seed, SEEDLEN);
-	shake256_init(&rng);
-	shake256_inject(&rng, seed, SEEDLEN);
-	shake256_flip(&rng);
+	inner_shake256_init(&rng);
+	inner_shake256_inject(&rng, seed, SEEDLEN);
+	inner_shake256_flip(&rng);
+	sav_cw = set_fpu_cw(2);
 	Zf(keygen)(&rng, f, g, F, G, h, LOGN, tmp.b);
 
 #if KG_EXPAND
@@ -100,7 +102,10 @@ crypto_sign_keypair(unsigned char *pk, unsigned char *sk)
 	 * Expand private key.
 	 */
 	Zf(expand_privkey)((fpr *)sk, f, g, F, G, LOGN, tmp.b);
+	set_fpu_cw(sav_cw);
 #else
+	set_fpu_cw(sav_cw);
+
 	/*
 	 * Encode private key.
 	 */
@@ -156,8 +161,9 @@ crypto_sign(unsigned char *sm, size_t *smlen,
 	uint16_t *hm;
 	unsigned char seed[SEEDLEN], nonce[NONCELEN];
 	unsigned char *esig;
-	shake256_context sc;
+	inner_shake256_context sc;
 	size_t sig_len;
+	unsigned sav_cw;
 
 #if KG_EXPAND
 	sig = (int16_t *)&tmp.b[48 * N];
@@ -218,28 +224,30 @@ crypto_sign(unsigned char *sm, size_t *smlen,
 	/*
 	 * Hash message nonce + message into a vector.
 	 */
-	shake256_init(&sc);
-	shake256_inject(&sc, nonce, NONCELEN);
-	shake256_inject(&sc, m, mlen);
-	shake256_flip(&sc);
-	Zf(hash_to_point)(&sc, hm, LOGN, tmp.b);
+	inner_shake256_init(&sc);
+	inner_shake256_inject(&sc, nonce, NONCELEN);
+	inner_shake256_inject(&sc, m, mlen);
+	inner_shake256_flip(&sc);
+	Zf(hash_to_point_vartime)(&sc, hm, LOGN);
 
 	/*
 	 * Initialize a RNG.
 	 */
 	randombytes(seed, SEEDLEN);
-	shake256_init(&sc);
-	shake256_inject(&sc, seed, SEEDLEN);
-	shake256_flip(&sc);
+	inner_shake256_init(&sc);
+	inner_shake256_inject(&sc, seed, SEEDLEN);
+	inner_shake256_flip(&sc);
 
 	/*
 	 * Compute the signature.
 	 */
+	sav_cw = set_fpu_cw(2);
 #if KG_EXPAND
 	Zf(sign_tree)(sig, &sc, expanded_key, hm, LOGN, tmp.b);
 #else
 	Zf(sign_dyn)(sig, &sc, f, g, F, G, hm, LOGN, tmp.b);
 #endif
+	set_fpu_cw(sav_cw);
 
 	/*
 	 * Encode the signature and bundle it with the message. Format is:
@@ -271,7 +279,7 @@ crypto_sign_open(unsigned char *m, size_t *mlen,
 	uint16_t *h, *hm;
 	int16_t *sig;
 	const unsigned char *esig;
-	shake256_context sc;
+	inner_shake256_context sc;
 	size_t sig_len, msg_len;
 
 	h = (uint16_t *)&tmp.b[2 * N];
@@ -319,10 +327,10 @@ crypto_sign_open(unsigned char *m, size_t *mlen,
 	/*
 	 * Hash nonce + message into a vector.
 	 */
-	shake256_init(&sc);
-	shake256_inject(&sc, sm + 2, NONCELEN + msg_len);
-	shake256_flip(&sc);
-	Zf(hash_to_point)(&sc, hm, LOGN, tmp.b);
+	inner_shake256_init(&sc);
+	inner_shake256_inject(&sc, sm + 2, NONCELEN + msg_len);
+	inner_shake256_flip(&sc);
+	Zf(hash_to_point_vartime)(&sc, hm, LOGN);
 
 	/*
 	 * Verify signature.

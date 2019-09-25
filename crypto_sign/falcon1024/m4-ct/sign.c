@@ -232,48 +232,49 @@ skoff_tree(unsigned logn)
 	return 4 * MKN(logn);
 }
 
+/* see inner.h */
 void
-Zf(expand_privkey)(fpr *restrict sk,
-	const int8_t *f_src, const int8_t *g_src,
-	const int8_t *F_src, const int8_t *G_src,
+Zf(expand_privkey)(fpr *restrict expanded_key,
+	const int8_t *f, const int8_t *g,
+	const int8_t *F, const int8_t *G,
 	unsigned logn, uint8_t *restrict tmp)
 {
 	size_t n;
-	fpr *f, *g, *F, *G;
+	fpr *rf, *rg, *rF, *rG;
 	fpr *b00, *b01, *b10, *b11;
 	fpr *g00, *g01, *g11, *gxx;
 	fpr *tree;
 
 	n = MKN(logn);
-	b00 = sk + skoff_b00(logn);
-	b01 = sk + skoff_b01(logn);
-	b10 = sk + skoff_b10(logn);
-	b11 = sk + skoff_b11(logn);
-	tree = sk + skoff_tree(logn);
+	b00 = expanded_key + skoff_b00(logn);
+	b01 = expanded_key + skoff_b01(logn);
+	b10 = expanded_key + skoff_b10(logn);
+	b11 = expanded_key + skoff_b11(logn);
+	tree = expanded_key + skoff_tree(logn);
 
 	/*
 	 * We load the private key elements directly into the B0 matrix,
 	 * since B0 = [[g, -f], [G, -F]].
 	 */
-	f = b01;
-	g = b00;
-	F = b11;
-	G = b10;
+	rf = b01;
+	rg = b00;
+	rF = b11;
+	rG = b10;
 
-	smallints_to_fpr(f, f_src, logn);
-	smallints_to_fpr(g, g_src, logn);
-	smallints_to_fpr(F, F_src, logn);
-	smallints_to_fpr(G, G_src, logn);
+	smallints_to_fpr(rf, f, logn);
+	smallints_to_fpr(rg, g, logn);
+	smallints_to_fpr(rF, F, logn);
+	smallints_to_fpr(rG, G, logn);
 
 	/*
 	 * Compute the FFT for the key elements, and negate f and F.
 	 */
-	Zf(FFT)(f, logn);
-	Zf(FFT)(g, logn);
-	Zf(FFT)(F, logn);
-	Zf(FFT)(G, logn);
-	Zf(poly_neg)(f, logn);
-	Zf(poly_neg)(F, logn);
+	Zf(FFT)(rf, logn);
+	Zf(FFT)(rg, logn);
+	Zf(FFT)(rF, logn);
+	Zf(FFT)(rG, logn);
+	Zf(poly_neg)(rf, logn);
+	Zf(poly_neg)(rF, logn);
 
 	/*
 	 * The Gram matrix is G = B·B*. Formulas are:
@@ -327,6 +328,7 @@ typedef int (*samplerZ)(void *ctx, fpr mu, fpr sigma);
  * is written over (t0,t1). The Gram matrix is modified as well. The
  * tmp[] buffer must have room for four polynomials.
  */
+TARGET_AVX2
 static void
 ffSampling_fft_dyntree(samplerZ samp, void *samp_ctx,
 	fpr *restrict t0, fpr *restrict t1,
@@ -419,6 +421,7 @@ ffSampling_fft_dyntree(samplerZ samp, void *samp_ctx,
  * Perform Fast Fourier Sampling for target vector t and LDL tree T.
  * tmp[] must have size for at least two polynomials of size 2^logn.
  */
+TARGET_AVX2
 static void
 ffSampling_fft(samplerZ samp, void *samp_ctx,
 	fpr *restrict z0, fpr *restrict z1,
@@ -429,8 +432,288 @@ ffSampling_fft(samplerZ samp, void *samp_ctx,
 	size_t n, hn;
 	const fpr *tree0, *tree1;
 
-	n = (size_t)1 << logn;
-	if (n == 1) {
+	/*
+	 * When logn == 2, we inline the last two recursion levels.
+	 */
+	if (logn == 2) {
+#if FALCON_AVX2  // yyyAVX2+1
+		fpr w0, w1, w2, w3, sigma;
+		__m128d ww0, ww1, wa, wb, wc, wd;
+		__m128d wy0, wy1, wz0, wz1;
+		__m128d half, invsqrt8, invsqrt2, neghi, neglo;
+		int si0, si1, si2, si3;
+
+		tree0 = tree + 4;
+		tree1 = tree + 8;
+
+		half = _mm_set1_pd(0.5);
+		invsqrt8 = _mm_set1_pd(0.353553390593273762200422181052);
+		invsqrt2 = _mm_set1_pd(0.707106781186547524400844362105);
+		neghi = _mm_set_pd(-0.0, 0.0);
+		neglo = _mm_set_pd(0.0, -0.0);
+
+		/*
+		 * We split t1 into w*, then do the recursive invocation,
+		 * with output in w*. We finally merge back into z1.
+		 */
+		ww0 = _mm_loadu_pd(&t1[0].v);
+		ww1 = _mm_loadu_pd(&t1[2].v);
+		wa = _mm_unpacklo_pd(ww0, ww1);
+		wb = _mm_unpackhi_pd(ww0, ww1);
+		wc = _mm_add_pd(wa, wb);
+		ww0 = _mm_mul_pd(wc, half);
+		wc = _mm_sub_pd(wa, wb);
+		wd = _mm_xor_pd(_mm_permute_pd(wc, 1), neghi);
+		ww1 = _mm_mul_pd(_mm_add_pd(wc, wd), invsqrt8);
+
+		w2.v = _mm_cvtsd_f64(ww1);
+		w3.v = _mm_cvtsd_f64(_mm_permute_pd(ww1, 1));
+		wa = ww1;
+		sigma = tree1[3];
+		si2 = samp(samp_ctx, w2, sigma);
+		si3 = samp(samp_ctx, w3, sigma);
+		ww1 = _mm_set_pd((double)si3, (double)si2);
+		wa = _mm_sub_pd(wa, ww1);
+		wb = _mm_loadu_pd(&tree1[0].v);
+		wc = _mm_mul_pd(wa, wb);
+		wd = _mm_mul_pd(wa, _mm_permute_pd(wb, 1));
+		wa = _mm_unpacklo_pd(wc, wd);
+		wb = _mm_unpackhi_pd(wc, wd);
+		ww0 = _mm_add_pd(ww0, _mm_add_pd(wa, _mm_xor_pd(wb, neglo)));
+		w0.v = _mm_cvtsd_f64(ww0);
+		w1.v = _mm_cvtsd_f64(_mm_permute_pd(ww0, 1));
+		sigma = tree1[2];
+		si0 = samp(samp_ctx, w0, sigma);
+		si1 = samp(samp_ctx, w1, sigma);
+		ww0 = _mm_set_pd((double)si1, (double)si0);
+
+		wc = _mm_mul_pd(
+			_mm_set_pd((double)(si2 + si3), (double)(si2 - si3)),
+			invsqrt2);
+		wa = _mm_add_pd(ww0, wc);
+		wb = _mm_sub_pd(ww0, wc);
+		ww0 = _mm_unpacklo_pd(wa, wb);
+		ww1 = _mm_unpackhi_pd(wa, wb);
+		_mm_storeu_pd(&z1[0].v, ww0);
+		_mm_storeu_pd(&z1[2].v, ww1);
+
+		/*
+		 * Compute tb0 = t0 + (t1 - z1) * L. Value tb0 ends up in w*.
+		 */
+		wy0 = _mm_sub_pd(_mm_loadu_pd(&t1[0].v), ww0);
+		wy1 = _mm_sub_pd(_mm_loadu_pd(&t1[2].v), ww1);
+		wz0 = _mm_loadu_pd(&tree[0].v);
+		wz1 = _mm_loadu_pd(&tree[2].v);
+		ww0 = _mm_sub_pd(_mm_mul_pd(wy0, wz0), _mm_mul_pd(wy1, wz1));
+		ww1 = _mm_add_pd(_mm_mul_pd(wy0, wz1), _mm_mul_pd(wy1, wz0));
+		ww0 = _mm_add_pd(ww0, _mm_loadu_pd(&t0[0].v));
+		ww1 = _mm_add_pd(ww1, _mm_loadu_pd(&t0[2].v));
+
+		/*
+		 * Second recursive invocation.
+		 */
+		wa = _mm_unpacklo_pd(ww0, ww1);
+		wb = _mm_unpackhi_pd(ww0, ww1);
+		wc = _mm_add_pd(wa, wb);
+		ww0 = _mm_mul_pd(wc, half);
+		wc = _mm_sub_pd(wa, wb);
+		wd = _mm_xor_pd(_mm_permute_pd(wc, 1), neghi);
+		ww1 = _mm_mul_pd(_mm_add_pd(wc, wd), invsqrt8);
+
+		w2.v = _mm_cvtsd_f64(ww1);
+		w3.v = _mm_cvtsd_f64(_mm_permute_pd(ww1, 1));
+		wa = ww1;
+		sigma = tree0[3];
+		si2 = samp(samp_ctx, w2, sigma);
+		si3 = samp(samp_ctx, w3, sigma);
+		ww1 = _mm_set_pd((double)si3, (double)si2);
+		wa = _mm_sub_pd(wa, ww1);
+		wb = _mm_loadu_pd(&tree0[0].v);
+		wc = _mm_mul_pd(wa, wb);
+		wd = _mm_mul_pd(wa, _mm_permute_pd(wb, 1));
+		wa = _mm_unpacklo_pd(wc, wd);
+		wb = _mm_unpackhi_pd(wc, wd);
+		ww0 = _mm_add_pd(ww0, _mm_add_pd(wa, _mm_xor_pd(wb, neglo)));
+		w0.v = _mm_cvtsd_f64(ww0);
+		w1.v = _mm_cvtsd_f64(_mm_permute_pd(ww0, 1));
+		sigma = tree0[2];
+		si0 = samp(samp_ctx, w0, sigma);
+		si1 = samp(samp_ctx, w1, sigma);
+		ww0 = _mm_set_pd((double)si1, (double)si0);
+
+		wc = _mm_mul_pd(
+			_mm_set_pd((double)(si2 + si3), (double)(si2 - si3)),
+			invsqrt2);
+		wa = _mm_add_pd(ww0, wc);
+		wb = _mm_sub_pd(ww0, wc);
+		ww0 = _mm_unpacklo_pd(wa, wb);
+		ww1 = _mm_unpackhi_pd(wa, wb);
+		_mm_storeu_pd(&z0[0].v, ww0);
+		_mm_storeu_pd(&z0[2].v, ww1);
+
+		return;
+#else  // yyyAVX2+0
+		fpr x0, x1, y0, y1, w0, w1, w2, w3, sigma;
+		fpr a_re, a_im, b_re, b_im, c_re, c_im;
+
+		tree0 = tree + 4;
+		tree1 = tree + 8;
+
+		/*
+		 * We split t1 into w*, then do the recursive invocation,
+		 * with output in w*. We finally merge back into z1.
+		 */
+		a_re = t1[0];
+		a_im = t1[2];
+		b_re = t1[1];
+		b_im = t1[3];
+		c_re = fpr_add(a_re, b_re);
+		c_im = fpr_add(a_im, b_im);
+		w0 = fpr_half(c_re);
+		w1 = fpr_half(c_im);
+		c_re = fpr_sub(a_re, b_re);
+		c_im = fpr_sub(a_im, b_im);
+		w2 = fpr_mul(fpr_add(c_re, c_im), fpr_invsqrt8);
+		w3 = fpr_mul(fpr_sub(c_im, c_re), fpr_invsqrt8);
+
+		x0 = w2;
+		x1 = w3;
+		sigma = tree1[3];
+		w2 = fpr_of(samp(samp_ctx, x0, sigma));
+		w3 = fpr_of(samp(samp_ctx, x1, sigma));
+		a_re = fpr_sub(x0, w2);
+		a_im = fpr_sub(x1, w3);
+		b_re = tree1[0];
+		b_im = tree1[1];
+		c_re = fpr_sub(fpr_mul(a_re, b_re), fpr_mul(a_im, b_im));
+		c_im = fpr_add(fpr_mul(a_re, b_im), fpr_mul(a_im, b_re));
+		x0 = fpr_add(c_re, w0);
+		x1 = fpr_add(c_im, w1);
+		sigma = tree1[2];
+		w0 = fpr_of(samp(samp_ctx, x0, sigma));
+		w1 = fpr_of(samp(samp_ctx, x1, sigma));
+
+		a_re = w0;
+		a_im = w1;
+		b_re = w2;
+		b_im = w3;
+		c_re = fpr_mul(fpr_sub(b_re, b_im), fpr_invsqrt2);
+		c_im = fpr_mul(fpr_add(b_re, b_im), fpr_invsqrt2);
+		z1[0] = w0 = fpr_add(a_re, c_re);
+		z1[2] = w2 = fpr_add(a_im, c_im);
+		z1[1] = w1 = fpr_sub(a_re, c_re);
+		z1[3] = w3 = fpr_sub(a_im, c_im);
+
+		/*
+		 * Compute tb0 = t0 + (t1 - z1) * L. Value tb0 ends up in w*.
+		 */
+		w0 = fpr_sub(t1[0], w0);
+		w1 = fpr_sub(t1[1], w1);
+		w2 = fpr_sub(t1[2], w2);
+		w3 = fpr_sub(t1[3], w3);
+
+		a_re = w0;
+		a_im = w2;
+		b_re = tree[0];
+		b_im = tree[2];
+		w0 = fpr_sub(fpr_mul(a_re, b_re), fpr_mul(a_im, b_im));
+		w2 = fpr_add(fpr_mul(a_re, b_im), fpr_mul(a_im, b_re));
+		a_re = w1;
+		a_im = w3;
+		b_re = tree[1];
+		b_im = tree[3];
+		w1 = fpr_sub(fpr_mul(a_re, b_re), fpr_mul(a_im, b_im));
+		w3 = fpr_add(fpr_mul(a_re, b_im), fpr_mul(a_im, b_re));
+
+		w0 = fpr_add(w0, t0[0]);
+		w1 = fpr_add(w1, t0[1]);
+		w2 = fpr_add(w2, t0[2]);
+		w3 = fpr_add(w3, t0[3]);
+
+		/*
+		 * Second recursive invocation.
+		 */
+		a_re = w0;
+		a_im = w2;
+		b_re = w1;
+		b_im = w3;
+		c_re = fpr_add(a_re, b_re);
+		c_im = fpr_add(a_im, b_im);
+		w0 = fpr_half(c_re);
+		w1 = fpr_half(c_im);
+		c_re = fpr_sub(a_re, b_re);
+		c_im = fpr_sub(a_im, b_im);
+		w2 = fpr_mul(fpr_add(c_re, c_im), fpr_invsqrt8);
+		w3 = fpr_mul(fpr_sub(c_im, c_re), fpr_invsqrt8);
+
+		x0 = w2;
+		x1 = w3;
+		sigma = tree0[3];
+		w2 = y0 = fpr_of(samp(samp_ctx, x0, sigma));
+		w3 = y1 = fpr_of(samp(samp_ctx, x1, sigma));
+		a_re = fpr_sub(x0, y0);
+		a_im = fpr_sub(x1, y1);
+		b_re = tree0[0];
+		b_im = tree0[1];
+		c_re = fpr_sub(fpr_mul(a_re, b_re), fpr_mul(a_im, b_im));
+		c_im = fpr_add(fpr_mul(a_re, b_im), fpr_mul(a_im, b_re));
+		x0 = fpr_add(c_re, w0);
+		x1 = fpr_add(c_im, w1);
+		sigma = tree0[2];
+		w0 = fpr_of(samp(samp_ctx, x0, sigma));
+		w1 = fpr_of(samp(samp_ctx, x1, sigma));
+
+		a_re = w0;
+		a_im = w1;
+		b_re = w2;
+		b_im = w3;
+		c_re = fpr_mul(fpr_sub(b_re, b_im), fpr_invsqrt2);
+		c_im = fpr_mul(fpr_add(b_re, b_im), fpr_invsqrt2);
+		z0[0] = fpr_add(a_re, c_re);
+		z0[2] = fpr_add(a_im, c_im);
+		z0[1] = fpr_sub(a_re, c_re);
+		z0[3] = fpr_sub(a_im, c_im);
+
+		return;
+#endif  // yyyAVX2-
+	}
+
+	/*
+	 * Case logn == 1 is reachable only when using Falcon-2 (the
+	 * smallest size for which Falcon is mathematically defined, but
+	 * of course way too insecure to be of any use).
+	 */
+	if (logn == 1) {
+		fpr x0, x1, y0, y1, sigma;
+		fpr a_re, a_im, b_re, b_im, c_re, c_im;
+
+		x0 = t1[0];
+		x1 = t1[1];
+		sigma = tree[3];
+		z1[0] = y0 = fpr_of(samp(samp_ctx, x0, sigma));
+		z1[1] = y1 = fpr_of(samp(samp_ctx, x1, sigma));
+		a_re = fpr_sub(x0, y0);
+		a_im = fpr_sub(x1, y1);
+		b_re = tree[0];
+		b_im = tree[1];
+		c_re = fpr_sub(fpr_mul(a_re, b_re), fpr_mul(a_im, b_im));
+		c_im = fpr_add(fpr_mul(a_re, b_im), fpr_mul(a_im, b_re));
+		x0 = fpr_add(c_re, t0[0]);
+		x1 = fpr_add(c_im, t0[1]);
+		sigma = tree[2];
+		z0[0] = fpr_of(samp(samp_ctx, x0, sigma));
+		z0[1] = fpr_of(samp(samp_ctx, x1, sigma));
+
+		return;
+	}
+
+	/*
+	 * Normal end of recursion is for logn == 0. Since the last
+	 * steps of the recursions were inlined in the blocks above
+	 * (when logn == 1 or 2), this case is not reachable, and is
+	 * retained here only for documentation purposes.
+
+	if (logn == 0) {
 		fpr x0, x1, sigma;
 
 		x0 = t0[0];
@@ -441,6 +724,13 @@ ffSampling_fft(samplerZ samp, void *samp_ctx,
 		return;
 	}
 
+	 */
+
+	/*
+	 * General recursive case (logn >= 3).
+	 */
+
+	n = (size_t)1 << logn;
 	hn = n >> 1;
 	tree0 = tree + n;
 	tree1 = tree + n + ffLDL_treesize(logn - 1);
@@ -473,15 +763,16 @@ ffSampling_fft(samplerZ samp, void *samp_ctx,
 }
 
 /*
- * Compute a signature: the signature contains two vectors, s1 and s2;
- * the caller must still check that they comply with the signature
- * bound, and try again if that is not the case. The s1 vector is not
- * returned; instead, its squared norm (saturated) is returned. This
- * function uses an expanded key.
+ * Compute a signature: the signature contains two vectors, s1 and s2.
+ * The s1 vector is not returned. The squared norm of (s1,s2) is
+ * computed, and if it is short enough, then s2 is returned into the
+ * s2[] buffer, and 1 is returned; otherwise, s2[] is untouched and 0 is
+ * returned; the caller should then try again. This function uses an
+ * expanded key.
  *
  * tmp[] must have room for at least six polynomials.
  */
-static uint32_t
+static int
 do_sign_tree(samplerZ samp, void *samp_ctx, int16_t *s2,
 	const fpr *restrict expanded_key,
 	const uint16_t *hm,
@@ -492,6 +783,7 @@ do_sign_tree(samplerZ samp, void *samp_ctx, int16_t *s2,
 	const fpr *b00, *b01, *b10, *b11, *tree;
 	fpr ni;
 	uint32_t sqn, ng;
+	int16_t *s1tmp, *s2tmp;
 
 	n = MKN(logn);
 	t0 = tmp;
@@ -553,33 +845,50 @@ do_sign_tree(samplerZ samp, void *samp_ctx, int16_t *s2,
 	/*
 	 * Compute the signature.
 	 */
+	s1tmp = (int16_t *)tx;
 	sqn = 0;
 	ng = 0;
 	for (u = 0; u < n; u ++) {
 		int32_t z;
 
-		z = hm[u] - fpr_rint(t0[u]);
+		z = (int32_t)hm[u] - (int32_t)fpr_rint(t0[u]);
 		sqn += (uint32_t)(z * z);
 		ng |= sqn;
+		s1tmp[u] = (int16_t)z;
 	}
 	sqn |= -(ng >> 31);
+
+	/*
+	 * With "normal" degrees (e.g. 512 or 1024), it is very
+	 * improbable that the computed vector is not short enough;
+	 * however, it may happen in practice for the very reduced
+	 * versions (e.g. degree 16 or below). In that case, the caller
+	 * will loop, and we must not write anything into s2[] because
+	 * s2[] may overlap with the hashed message hm[] and we need
+	 * hm[] for the next iteration.
+	 */
+	s2tmp = (int16_t *)tmp;
 	for (u = 0; u < n; u ++) {
-		s2[u] = (int16_t)-fpr_rint(t1[u]);
+		s2tmp[u] = (int16_t)-fpr_rint(t1[u]);
 	}
-	return sqn;
+	if (Zf(is_short_half)(sqn, s2tmp, logn)) {
+		memcpy(s2, s2tmp, n * sizeof *s2);
+		memcpy(tmp, s1tmp, n * sizeof *s1tmp);
+		return 1;
+	}
+	return 0;
 }
 
 /*
- * Compute a signature: the signature contains two vectors, s1 and s2;
- * the caller must still check that they comply with the signature
- * bound, and try again if that is not the case. The s1 vector is not
- * returned; instead, its squared norm (saturated) is returned. This
- * function uses a raw key and recomputes the B0 matrix and LDL tree
- * dynamically.
+ * Compute a signature: the signature contains two vectors, s1 and s2.
+ * The s1 vector is not returned. The squared norm of (s1,s2) is
+ * computed, and if it is short enough, then s2 is returned into the
+ * s2[] buffer, and 1 is returned; otherwise, s2[] is untouched and 0 is
+ * returned; the caller should then try again.
  *
  * tmp[] must have room for at least nine polynomials.
  */
-static uint32_t
+static int
 do_sign_dyn(samplerZ samp, void *samp_ctx, int16_t *s2,
 	const int8_t *restrict f, const int8_t *restrict g,
 	const int8_t *restrict F, const int8_t *restrict G,
@@ -590,6 +899,7 @@ do_sign_dyn(samplerZ samp, void *samp_ctx, int16_t *s2,
 	fpr *b00, *b01, *b10, *b11, *g00, *g01, *g11;
 	fpr ni;
 	uint32_t sqn, ng;
+	int16_t *s1tmp, *s2tmp;
 
 	n = MKN(logn);
 
@@ -742,49 +1052,202 @@ do_sign_dyn(samplerZ samp, void *samp_ctx, int16_t *s2,
 	Zf(iFFT)(t0, logn);
 	Zf(iFFT)(t1, logn);
 
+	s1tmp = (int16_t *)tx;
 	sqn = 0;
 	ng = 0;
 	for (u = 0; u < n; u ++) {
 		int32_t z;
 
-		z = hm[u] - fpr_rint(t0[u]);
+		z = (int32_t)hm[u] - (int32_t)fpr_rint(t0[u]);
 		sqn += (uint32_t)(z * z);
 		ng |= sqn;
+		s1tmp[u] = (int16_t)z;
 	}
 	sqn |= -(ng >> 31);
+
+	/*
+	 * With "normal" degrees (e.g. 512 or 1024), it is very
+	 * improbable that the computed vector is not short enough;
+	 * however, it may happen in practice for the very reduced
+	 * versions (e.g. degree 16 or below). In that case, the caller
+	 * will loop, and we must not write anything into s2[] because
+	 * s2[] may overlap with the hashed message hm[] and we need
+	 * hm[] for the next iteration.
+	 */
+	s2tmp = (int16_t *)tmp;
 	for (u = 0; u < n; u ++) {
-		s2[u] = (int16_t)-fpr_rint(t1[u]);
+		s2tmp[u] = (int16_t)-fpr_rint(t1[u]);
 	}
-	return sqn;
+	if (Zf(is_short_half)(sqn, s2tmp, logn)) {
+		memcpy(s2, s2tmp, n * sizeof *s2);
+		memcpy(tmp, s1tmp, n * sizeof *s1tmp);
+		return 1;
+	}
+	return 0;
 }
 
 /*
  * Sample an integer value along a half-gaussian distribution centered
  * on zero and standard deviation 1.8205, with a precision of 72 bits.
  */
-static int
-gaussian0_sampler(prng *p)
+TARGET_AVX2
+int
+Zf(gaussian0_sampler)(prng *p)
 {
+#if FALCON_AVX2 // yyyAVX2+1
+
+	/*
+	 * High words.
+	 */
+	static const union {
+		uint16_t u16[16];
+		__m256i ymm[1];
+	} rhi15 = {
+		{
+			0x51FB, 0x2A69, 0x113E, 0x0568,
+			0x014A, 0x003B, 0x0008, 0x0000,
+			0x0000, 0x0000, 0x0000, 0x0000,
+			0x0000, 0x0000, 0x0000, 0x0000
+		}
+	};
+
+	static const union {
+		uint64_t u64[20];
+		__m256i ymm[5];
+	} rlo57 = {
+		{
+			0x1F42ED3AC391802, 0x12B181F3F7DDB82,
+			0x1CDD0934829C1FF, 0x1754377C7994AE4,
+			0x1846CAEF33F1F6F, 0x14AC754ED74BD5F,
+			0x024DD542B776AE4, 0x1A1FFDC65AD63DA,
+			0x01F80D88A7B6428, 0x001C3FDB2040C69,
+			0x00012CF24D031FB, 0x00000949F8B091F,
+			0x0000003665DA998, 0x00000000EBF6EBB,
+			0x0000000002F5D7E, 0x000000000007098,
+			0x0000000000000C6, 0x000000000000001,
+			0x000000000000000, 0x000000000000000
+		}
+	};
+
+	uint64_t lo;
+	unsigned hi;
+	__m256i xhi, rhi, gthi, eqhi, eqm;
+	__m256i xlo, gtlo0, gtlo1, gtlo2, gtlo3, gtlo4;
+	__m128i t, zt;
+	int r;
+
+	/*
+	 * Get a 72-bit random value and split it into a low part
+	 * (57 bits) and a high part (15 bits)
+	 */
+	lo = prng_get_u64(p);
+	hi = prng_get_u8(p);
+	hi = (hi << 7) | (unsigned)(lo >> 57);
+	lo &= 0x1FFFFFFFFFFFFFF;
+
+	/*
+	 * Broadcast the high part and compare it with the relevant
+	 * values. We need both a "greater than" and an "equal"
+	 * comparisons.
+	 */
+	xhi = _mm256_broadcastw_epi16(_mm_cvtsi32_si128(hi));
+	rhi = _mm256_loadu_si256(&rhi15.ymm[0]);
+	gthi = _mm256_cmpgt_epi16(rhi, xhi);
+	eqhi = _mm256_cmpeq_epi16(rhi, xhi);
+
+	/*
+	 * The result is the number of 72-bit values (among the list of 19)
+	 * which are greater than the 72-bit random value. We first count
+	 * all non-zero 16-bit elements in the first eight of gthi. Such
+	 * elements have value -1 or 0, so we first negate them.
+	 */
+	t = _mm_srli_epi16(_mm256_castsi256_si128(gthi), 15);
+	zt = _mm_setzero_si128();
+	t = _mm_hadd_epi16(t, zt);
+	t = _mm_hadd_epi16(t, zt);
+	t = _mm_hadd_epi16(t, zt);
+	r = _mm_cvtsi128_si32(t);
+
+	/*
+	 * We must look at the low bits for all values for which the
+	 * high bits are an "equal" match; values 8-18 all have the
+	 * same high bits (0).
+	 * On 32-bit systems, 'lo' really is two registers, requiring
+	 * some extra code.
+	 */
+#if defined(__x86_64__) || defined(_M_X64)
+	xlo = _mm256_broadcastq_epi64(_mm_cvtsi64_si128(*(int64_t *)&lo));
+#else
+	{
+		uint32_t e0, e1;
+		int32_t f0, f1;
+
+		e0 = (uint32_t)lo;
+		e1 = (uint32_t)(lo >> 32);
+		f0 = *(int32_t *)&e0;
+		f1 = *(int32_t *)&e1;
+		xlo = _mm256_set_epi32(f1, f0, f1, f0, f1, f0, f1, f0);
+	}
+#endif
+	gtlo0 = _mm256_cmpgt_epi64(_mm256_loadu_si256(&rlo57.ymm[0]), xlo); 
+	gtlo1 = _mm256_cmpgt_epi64(_mm256_loadu_si256(&rlo57.ymm[1]), xlo); 
+	gtlo2 = _mm256_cmpgt_epi64(_mm256_loadu_si256(&rlo57.ymm[2]), xlo); 
+	gtlo3 = _mm256_cmpgt_epi64(_mm256_loadu_si256(&rlo57.ymm[3]), xlo); 
+	gtlo4 = _mm256_cmpgt_epi64(_mm256_loadu_si256(&rlo57.ymm[4]), xlo); 
+
+	/*
+	 * Keep only comparison results that correspond to the non-zero
+	 * elements in eqhi.
+	 */
+	gtlo0 = _mm256_and_si256(gtlo0, _mm256_cvtepi16_epi64(
+		_mm256_castsi256_si128(eqhi)));
+	gtlo1 = _mm256_and_si256(gtlo1, _mm256_cvtepi16_epi64(
+		_mm256_castsi256_si128(_mm256_bsrli_epi128(eqhi, 8))));
+	eqm = _mm256_permute4x64_epi64(eqhi, 0xFF);
+	gtlo2 = _mm256_and_si256(gtlo2, eqm);
+	gtlo3 = _mm256_and_si256(gtlo3, eqm);
+	gtlo4 = _mm256_and_si256(gtlo4, eqm);
+
+	/*
+	 * Add all values to count the total number of "-1" elements.
+	 * Since the first eight "high" words are all different, only
+	 * one element (at most) in gtlo0:gtlo1 can be non-zero; however,
+	 * if the high word of the random value is zero, then many
+	 * elements of gtlo2:gtlo3:gtlo4 can be non-zero.
+	 */
+	gtlo0 = _mm256_or_si256(gtlo0, gtlo1);
+	gtlo0 = _mm256_add_epi64(
+		_mm256_add_epi64(gtlo0, gtlo2),
+		_mm256_add_epi64(gtlo3, gtlo4));
+	t = _mm_add_epi64(
+		_mm256_castsi256_si128(gtlo0),
+		_mm256_extracti128_si256(gtlo0, 1));
+	t = _mm_add_epi64(t, _mm_srli_si128(t, 8));
+	r -= _mm_cvtsi128_si32(t);
+
+	return r;
+
+#else // yyyAVX2+0
+
 	static const uint32_t dist[] = {
-		 6031371U, 13708371U, 13035518U,
-		 5186761U,  1487980U, 12270720U,
-		 3298653U,  4688887U,  5511555U,
-		 1551448U,  9247616U,  9467675U,
-		  539632U, 14076116U,  5909365U,
-		  138809U, 10836485U, 13263376U,
-		   26405U, 15335617U, 16601723U,
-		    3714U, 14514117U, 13240074U,
-		     386U,  8324059U,  3276722U,
-		      29U, 12376792U,  7821247U,
-		       1U, 11611789U,  3398254U,
-		       0U,  1194629U,  4532444U,
-		       0U,    37177U,  2973575U,
-		       0U,      855U, 10369757U,
-		       0U,       14U,  9441597U,
-		       0U,        0U,  3075302U,
-		       0U,        0U,    28626U,
-		       0U,        0U,      197U,
-		       0U,        0U,        1U
+		10745844u,  3068844u,  3741698u,
+		 5559083u,  1580863u,  8248194u,
+		 2260429u, 13669192u,  2736639u,
+		  708981u,  4421575u, 10046180u,
+		  169348u,  7122675u,  4136815u,
+		   30538u, 13063405u,  7650655u,
+		    4132u, 14505003u,  7826148u,
+		     417u, 16768101u, 11363290u,
+		      31u,  8444042u,  8086568u,
+		       1u, 12844466u,   265321u,
+		       0u,  1232676u, 13644283u,
+		       0u,    38047u,  9111839u,
+		       0u,      870u,  6138264u,
+		       0u,       14u, 12545723u,
+		       0u,        0u,  3104126u,
+		       0u,        0u,    28824u,
+		       0u,        0u,      198u,
+		       0u,        0u,        1u
 	};
 
 	uint32_t v0, v1, v2, hi;
@@ -815,16 +1278,19 @@ gaussian0_sampler(prng *p)
 		cc = (v0 - w0) >> 31;
 		cc = (v1 - w1 - cc) >> 31;
 		cc = (v2 - w2 - cc) >> 31;
-		z += cc;
+		z += (int)cc;
 	}
 	return z;
+
+#endif // yyyAVX2-
 }
 
 /*
  * Sample a bit with probability exp(-x) for some x >= 0.
  */
+TARGET_AVX2
 static int
-BerExp(prng *p, fpr x)
+BerExp(prng *p, fpr x, fpr ccs)
 {
 	int s, i;
 	fpr r;
@@ -835,7 +1301,7 @@ BerExp(prng *p, fpr x)
 	 * Reduce x modulo log(2): x = s*log(2) + r, with s an integer,
 	 * and 0 <= r < log(2). Since x >= 0, we can use fpr_trunc().
 	 */
-	s = fpr_trunc(fpr_mul(x, fpr_inv_log2));
+	s = (int)fpr_trunc(fpr_mul(x, fpr_inv_log2));
 	r = fpr_sub(x, fpr_mul(fpr_of(s), fpr_log2));
 
 	/*
@@ -847,7 +1313,7 @@ BerExp(prng *p, fpr x)
 	 * then BerExp will be non-zero with probability less than
 	 * 2^(-64), so we can simply saturate s at 63.
 	 */
-	sw = s;
+	sw = (uint32_t)s;
 	sw ^= (sw ^ 63) & -((63 - sw) >> 31);
 	s = (int)sw;
 
@@ -862,7 +1328,7 @@ BerExp(prng *p, fpr x)
 	 * case). The bias is negligible since fpr_expm_p63() only computes
 	 * with 51 bits of precision or so.
 	 */
-	z = ((fpr_expm_p63(r) << 1) - 1) >> s;
+	z = ((fpr_expm_p63(r, ccs) << 1) - 1) >> s;
 
 	/*
 	 * Sample a bit with probability exp(-x). Since x = s*log(2) + r,
@@ -878,11 +1344,6 @@ BerExp(prng *p, fpr x)
 	return (int)(w >> 31);
 }
 
-typedef struct {
-	prng p;
-	fpr sigma_min;
-} sampler_context;
-
 /*
  * The sampler produces a random integer that follows a discrete Gaussian
  * distribution, centered on mu, and with standard deviation sigma. The
@@ -891,8 +1352,9 @@ typedef struct {
  * The value of sigma MUST lie between 1 and 2 (i.e. isigma lies between
  * 0.5 and 1); in Falcon, sigma should always be between 1.2 and 1.9.
  */
-static int
-sampler(void *ctx, fpr mu, fpr isigma)
+TARGET_AVX2
+int
+Zf(sampler)(void *ctx, fpr mu, fpr isigma)
 {
 	sampler_context *spc;
 	int s;
@@ -904,7 +1366,7 @@ sampler(void *ctx, fpr mu, fpr isigma)
 	 * Center is mu. We compute mu = s + r where s is an integer
 	 * and 0 <= r < 1.
 	 */
-	s = fpr_floor(mu);
+	s = (int)fpr_floor(mu);
 	r = fpr_sub(mu, fpr_of(s));
 
 	/*
@@ -935,7 +1397,7 @@ sampler(void *ctx, fpr mu, fpr isigma)
 		 *  - b = 0: z <= 0 and sampled against a Gaussian
 		 *    centered on 0.
 		 */
-		z0 = gaussian0_sampler(&spc->p);
+		z0 = Zf(gaussian0_sampler)(&spc->p);
 		b = prng_get_u8(&spc->p) & 1;
 		z = b + ((b << 1) - 1) * z0;
 
@@ -966,8 +1428,7 @@ sampler(void *ctx, fpr mu, fpr isigma)
 		 */
 		x = fpr_mul(fpr_sqr(fpr_sub(fpr_of(z), r)), dss);
 		x = fpr_sub(x, fpr_mul(fpr_of(z0 * z0), fpr_inv_2sqrsigma0));
-		x = fpr_mul(x, ccs);
-		if (BerExp(&spc->p, x)) {
+		if (BerExp(&spc->p, x, ccs)) {
 			/*
 			 * Rejection sampling was centered on r, but the
 			 * actual center is mu = s + r.
@@ -979,7 +1440,7 @@ sampler(void *ctx, fpr mu, fpr isigma)
 
 /* see inner.h */
 void
-Zf(sign_tree)(int16_t *sig, shake256_context *rng,
+Zf(sign_tree)(int16_t *sig, inner_shake256_context *rng,
 	const fpr *restrict expanded_key,
 	const uint16_t *hm, unsigned logn, uint8_t *tmp)
 {
@@ -1000,7 +1461,6 @@ Zf(sign_tree)(int16_t *sig, shake256_context *rng,
 		sampler_context spc;
 		samplerZ samp;
 		void *samp_ctx;
-		uint32_t sqn;
 
 		/*
 		 * Normal sampling. We use a fast PRNG seeded from our
@@ -1010,23 +1470,15 @@ Zf(sign_tree)(int16_t *sig, shake256_context *rng,
 			? fpr_sigma_min_10
 			: fpr_sigma_min_9;
 		Zf(prng_init)(&spc.p, rng);
-		samp = sampler;
+		samp = Zf(sampler);
 		samp_ctx = &spc;
 
 		/*
 		 * Do the actual signature.
 		 */
-		sqn = do_sign_tree(samp, samp_ctx, sig,
-			expanded_key, hm, logn, ftmp);
-
-		/*
-		 * Check that the norm is correct. With our chosen
-		 * acceptance bound, this should almost always be true.
-		 * With a tighter bound, it may happen sometimes that we
-		 * end up with an invalidly large signature, in which
-		 * case we just loop.
-		 */
-		if (Zf(is_short_half)(sqn, sig, logn)) {
+		if (do_sign_tree(samp, samp_ctx, sig,
+			expanded_key, hm, logn, ftmp))
+		{
 			break;
 		}
 	}
@@ -1034,7 +1486,7 @@ Zf(sign_tree)(int16_t *sig, shake256_context *rng,
 
 /* see inner.h */
 void
-Zf(sign_dyn)(int16_t *sig, shake256_context *rng,
+Zf(sign_dyn)(int16_t *sig, inner_shake256_context *rng,
 	const int8_t *restrict f, const int8_t *restrict g,
 	const int8_t *restrict F, const int8_t *restrict G,
 	const uint16_t *hm, unsigned logn, uint8_t *tmp)
@@ -1056,7 +1508,6 @@ Zf(sign_dyn)(int16_t *sig, shake256_context *rng,
 		sampler_context spc;
 		samplerZ samp;
 		void *samp_ctx;
-		uint32_t sqn;
 
 		/*
 		 * Normal sampling. We use a fast PRNG seeded from our
@@ -1066,23 +1517,15 @@ Zf(sign_dyn)(int16_t *sig, shake256_context *rng,
 			? fpr_sigma_min_10
 			: fpr_sigma_min_9;
 		Zf(prng_init)(&spc.p, rng);
-		samp = sampler;
+		samp = Zf(sampler);
 		samp_ctx = &spc;
 
 		/*
 		 * Do the actual signature.
 		 */
-		sqn = do_sign_dyn(samp, samp_ctx, sig,
-			f, g, F, G, hm, logn, ftmp);
-
-		/*
-		 * Check that the norm is correct. With our chosen
-		 * acceptance bound, this should almost always be true.
-		 * With a tighter bound, it may happen sometimes that we
-		 * end up with an invalidly large signature, in which
-		 * case we just loop.
-		 */
-		if (Zf(is_short_half)(sqn, sig, logn)) {
+		if (do_sign_dyn(samp, samp_ctx, sig,
+			f, g, F, G, hm, logn, ftmp))
+		{
 			break;
 		}
 	}

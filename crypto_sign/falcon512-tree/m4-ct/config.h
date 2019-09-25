@@ -85,9 +85,8 @@
  * FALCON_ASM_CORTEXM4 is defined to 1, in which case the emulated code
  * will be used.
  *
- */
-
 #define FALCON_FPEMU   1
+ */
 
 /*
  * Enable use of assembly for ARM Cortex-M4 CPU. By default, such
@@ -116,11 +115,25 @@
 
 /*
  * Enable use of AVX2 intrinsics. If enabled, then the code will compile
- * only when targeting x86 with the proper flags (-mavx2), and run only
- * on systems that offer the AVX2 opcodes. Some operations leverage AVX2
- * for better performance.
+ * only when targeting x86 with a compiler that supports AVX2 intrinsics
+ * (tested with GCC 7.4.0, Clang 6.0.0, and MSVC 2015, both in 32-bit
+ * and 64-bit modes), and run only on systems that offer the AVX2
+ * opcodes. Some operations leverage AVX2 for better performance.
  *
 #define FALCON_AVX2   1
+ */
+
+/*
+ * Enable use of FMA intrinsics. This setting has any effect only if
+ * FALCON_AVX2 is also enabled. The FMA intrinsics are normally available
+ * on any x86 CPU that also has AVX2. Note that setting this option will
+ * slightly modify the values of expanded private keys, but will normally
+ * not change the values of non-expanded private keys, public keys or
+ * signatures, for a given keygen/sign seed (non-expanded private keys
+ * and signatures might theoretically change, but only with low probability,
+ * less than 2^(-40); produced signatures are still safe and interoperable).
+ *
+#define FALCON_FMA   1
  */
 
 /*
@@ -144,35 +157,49 @@
  */
 
 /*
- * Use a constant-time hash-to-point process. This is relevant only in
- * a contrived scenario where all of the following hold:
+ * Use a PRNG based on ChaCha20 and seeded with SHAKE256, instead of
+ * SHAKE256 directly, for key pair generation purposes. This speeds up
+ * key pair generation, especially on platforms where SHAKE256 is
+ * comparatively slow: on the ARM Cortex M4, average key generation time
+ * is reduced by 19% with this setting; on a recent x86 Skylake, the
+ * reduction is smaller (less than 8%).
  *
- *   - The attacker cannot observe input messages.
+ * However, this setting changes the private/public key pair obtained
+ * from a given seed, thus preventing reproducibility of the
+ * known-answer tests vectors. For compatibility with existing KAT
+ * vectors (e.g. in PQClean, pqm4 and NIST implementations), this
+ * setting is not enabled by default.
  *
- *   - The attacker cannot observe signature values.
+#define FALCON_KG_CHACHA20   1
+ */
+
+/*
+ * Use an explicit OS-provided source of randomness for seeding (for the
+ * Zf(get_seed)() function implementation). Three possible sources are
+ * defined:
  *
- *   - The attacker CAN observe/know nonce values (normally, nonce are
- *     generated randomly by the signer and encoded along with the
- *     signature, so if signature values are not observable, nonces
- *     should be hidden as well).
+ *  - getentropy() system call
+ *  - /dev/urandom special file
+ *  - CryptGenRandom() function call
  *
- *   - The attacker has a list of potential values for the input message
- *     and would like to know which is the right one.
+ * More than one source may be enabled, in which case they will be tried
+ * in the order above, until a success is reached.
  *
- *   - The attacker has access to a precise side-channel that can observe
- *     the timing/memory access pattern of a system that generates or
- *     verifies the signature.
+ * By default, sources are enabled at compile-time based on these
+ * conditions:
  *
- * Under this scenario, the attacker might infer from the behaviour of the
- * hash-to-point process enough information to "try" potential messages.
+ *  - getentropy(): target is one of: Linux with Glibc-2.25+, FreeBSD 12+,
+ *    or OpenBSD.
+ *  - /dev/urandom: target is a Unix-like system (including Linux,
+ *    FreeBSD, NetBSD, OpenBSD, DragonFly, macOS, Android, Solaris, AIX).
+ *  - CryptGenRandom(): target is Windows (Win32 or Win64).
  *
- * Since this situation is arguably improbable (because nonces are normally
- * as equally hidden as the signatures themselves), and the constant-time
- * hash-to-point implementation is significantly slower than the normal
- * one, this function is disabled by default. Set the variable below to 1
- * to enable the constant-time hash-to-point implementation.
+ * On most small embedded systems, none will be enabled and Zf(get_seed)()
+ * will always return 0. Applications will need to provide their own seeds.
  *
-#define FALCON_CT_HASH   1
+#define FALCON_RAND_GETENTROPY   1
+#define FALCON_RAND_URANDOM      1
+#define FALCON_RAND_WIN32        1
  */
 
 #endif

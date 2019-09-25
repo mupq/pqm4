@@ -33,131 +33,26 @@
 
 #include "inner.h"
 
+// yyyNIST+0 yyyPQCLEAN+0
 /*
- * PRNG
- * ----
- *
- * The Falcon implementation uses a PRNG based on ChaCha20 for the
- * sampling (the PRNG is seeded from a SHAKE-256 instance, itself seeded
- * with hardware/OS bytes and/or user-provided seeds).
- *
- * Seeding
- * -------
- *
- * Two sources of seeding are used:
- *
- *  - The /dev/urandom file, on Unix-like systems.
- *
- *  - CryptGenRandom(), on Windows systems (Win32).
- *
- * Configuration
- * -------------
- *
- * Normally everything is auto-detected. To override detection, define
- * macros explicitly, with a value of 1 (to enable) or 0 (to disable).
- * Available macros are:
- *
- *  FALCON_USE_URANDOM      /dev/urandom seeding
- *  FALCON_USE_WIN32_RAND   CryptGenRandom() seeding
- *
- * TODO: add support for getrandom()/getentropy() and RDRAND
+ * Include relevant system header files. For Win32, this will also need
+ * linking with advapi32.dll, which we trigger with an appropriate #pragma.
  */
-
-/*
- * /dev/urandom is accessible on a variety of Unix-like systems.
- */
-#ifndef FALCON_USE_URANDOM
-#if defined _AIX \
-	|| defined __ANDROID__ \
-	|| defined __FreeBSD__ \
-	|| defined __NetBSD__ \
-	|| defined __OpenBSD__ \
-	|| defined __DragonFly__ \
-	|| defined __linux__ \
-	|| (defined __sun && (defined __SVR4 || defined __svr4__)) \
-	|| (defined __APPLE__ && defined __MACH__)
-#define FALCON_USE_URANDOM   1
-#endif
-#endif
-
-/*
- * CryptGenRandom() exists on Windows.
- */
-#ifndef FALCON_USE_WIN32_RAND
-#if defined _WIN32 || defined _WIN64
-#define FALCON_USE_WIN32_RAND   1
-#endif
-#endif
-
-/*
- * Accessing /dev/urandom requires using some file descriptors.
- */
-#if FALCON_USE_URANDOM
-#include <sys/types.h>
+#if FALCON_RAND_GETENTROPY
 #include <unistd.h>
+#endif
+#if FALCON_RAND_URANDOM
+#include <sys/types.h>
+#if !FALCON_RAND_GETENTROPY
+#include <unistd.h>
+#endif
 #include <fcntl.h>
 #include <errno.h>
 #endif
-
-/*
- * CryptGenRandom() is defined in specific headers and requires linking
- * with advapi32.lib (to use advapi32.dll).
- */
-#if FALCON_USE_WIN32_RAND
+#if FALCON_RAND_WIN32
 #include <windows.h>
 #include <wincrypt.h>
 #pragma comment(lib, "advapi32")
-#endif
-
-#if FALCON_USE_URANDOM
-static int
-urandom_get_seed(void *seed, size_t len)
-{
-	int f;
-
-	if (len == 0) {
-		return 1;
-	}
-	f = open("/dev/urandom", O_RDONLY);
-	if (f >= 0) {
-		while (len > 0) {
-			ssize_t rlen;
-
-			rlen = read(f, seed, len);
-			if (rlen < 0) {
-				if (errno == EINTR) {
-					continue;
-				}
-				break;
-			}
-			seed = (unsigned char *)seed + rlen;
-			len -= (size_t)rlen;
-		}
-		close(f);
-		return len == 0;
-	} else {
-		return 0;
-	}
-}
-#endif
-
-#if FALCON_USE_WIN32_RAND
-static int
-win32_get_seed(void *seed, size_t len)
-{
-	HCRYPTPROV hp;
-
-	if (CryptAcquireContext(&hp, 0, 0, PROV_RSA_FULL,
-		CRYPT_VERIFYCONTEXT | CRYPT_SILENT))
-	{
-		BOOL r;
-
-		r = CryptGenRandom(hp, len, seed);
-		CryptReleaseContext(hp, 0);
-		return r != 0;
-	}
-	return 0;
-}
 #endif
 
 /* see inner.h */
@@ -165,37 +60,78 @@ int
 Zf(get_seed)(void *seed, size_t len)
 {
 	(void)seed;
-	(void)len;
-#if FALCON_USE_URANDOM
-	if (urandom_get_seed(seed, len)) {
+	if (len == 0) {
+		return 1;
+	}
+#if FALCON_RAND_GETENTROPY
+	if (getentropy(seed, len) == 0) {
 		return 1;
 	}
 #endif
-#if FALCON_USE_WIN32_RAND
-	if (win32_get_seed(seed, len)) {
-		return 1;
+#if FALCON_RAND_URANDOM
+	{
+		int f;
+
+		f = open("/dev/urandom", O_RDONLY);
+		if (f >= 0) {
+			while (len > 0) {
+				ssize_t rlen;
+
+				rlen = read(f, seed, len);
+				if (rlen < 0) {
+					if (errno == EINTR) {
+						continue;
+					}
+					break;
+				}
+				seed = (uint8_t *)seed + rlen;
+				len -= (size_t)rlen;
+			}
+			close(f);
+			if (len == 0) {
+				return 1;
+			}
+		}
+	}
+#endif
+#if FALCON_RAND_WIN32
+	{
+		HCRYPTPROV hp;
+
+		if (CryptAcquireContext(&hp, 0, 0, PROV_RSA_FULL,
+			CRYPT_VERIFYCONTEXT | CRYPT_SILENT))
+		{
+			BOOL r;
+
+			r = CryptGenRandom(hp, (DWORD)len, seed);
+			CryptReleaseContext(hp, 0);
+			if (r) {
+				return 1;
+			}
+		}
 	}
 #endif
 	return 0;
 }
+// yyyNIST- yyyPQCLEAN-
 
 /* see inner.h */
 void
-Zf(prng_init)(prng *p, shake256_context *src)
+Zf(prng_init)(prng *p, inner_shake256_context *src)
 {
-#if FALCON_LE
-	shake256_extract(src, p->state.d, 56);
-#else
+#if FALCON_LE  // yyyLE+1
+	inner_shake256_extract(src, p->state.d, 56);
+#else  // yyyLE+0
 	/*
 	 * To ensure reproducibility for a given seed, we
 	 * must enforce little-endian interpretation of
 	 * the state words.
 	 */
-	unsigned char tmp[56];
+	uint8_t tmp[56];
 	uint64_t th, tl;
 	int i;
 
-	shake256_extract(src, tmp, 56);
+	inner_shake256_extract(src, tmp, 56);
 	for (i = 0; i < 14; i ++) {
 		uint32_t w;
 
@@ -208,7 +144,7 @@ Zf(prng_init)(prng *p, shake256_context *src)
 	tl = *(uint32_t *)(p->state.d + 48);
 	th = *(uint32_t *)(p->state.d + 52);
 	*(uint64_t *)(p->state.d + 48) = tl + (th << 32);
-#endif
+#endif  // yyyLE-
 	Zf(prng_refill)(p);
 }
 
@@ -226,9 +162,109 @@ Zf(prng_init)(prng *p, shake256_context *src)
  *
  * The block counter is XORed into the first 8 bytes of the IV.
  */
+TARGET_AVX2
 void
 Zf(prng_refill)(prng *p)
 {
+#if FALCON_AVX2 // yyyAVX2+1
+
+	static const uint32_t CW[] = {
+		0x61707865, 0x3320646e, 0x79622d32, 0x6b206574
+	};
+
+	uint64_t cc;
+	size_t u;
+	int i;
+	uint32_t *sw;
+	union {
+		uint32_t w[16];
+		__m256i y[2];  /* for alignment */
+	} t;
+	__m256i state[16], init[16];
+
+	sw = (uint32_t *)p->state.d;
+
+	/*
+	 * XOR next counter values into state.
+	 */
+	cc = *(uint64_t *)(p->state.d + 48);
+	for (u = 0; u < 8; u ++) {
+		t.w[u] = (uint32_t)(cc + u);
+		t.w[u + 8] = (uint32_t)((cc + u) >> 32);
+	}
+	*(uint64_t *)(p->state.d + 48) = cc + 8;
+
+	/*
+	 * Load state.
+	 */
+	for (u = 0; u < 4; u ++) {
+		state[u] = init[u] =
+			_mm256_broadcastd_epi32(_mm_cvtsi32_si128(CW[u]));
+	}
+	for (u = 0; u < 10; u ++) {
+		state[u + 4] = init[u + 4] =
+			_mm256_broadcastd_epi32(_mm_cvtsi32_si128(sw[u]));
+	}
+	state[14] = init[14] = _mm256_xor_si256(
+		_mm256_broadcastd_epi32(_mm_cvtsi32_si128(sw[10])),
+		_mm256_loadu_si256((__m256i *)&t.w[0]));
+	state[15] = init[15] = _mm256_xor_si256(
+		_mm256_broadcastd_epi32(_mm_cvtsi32_si128(sw[11])),
+		_mm256_loadu_si256((__m256i *)&t.w[8]));
+
+	/*
+	 * Do all rounds.
+	 */
+	for (i = 0; i < 10; i ++) {
+
+#define QROUND(a, b, c, d)   do { \
+		state[a] = _mm256_add_epi32(state[a], state[b]); \
+		state[d] = _mm256_xor_si256(state[d], state[a]); \
+		state[d] = _mm256_or_si256( \
+			_mm256_slli_epi32(state[d], 16), \
+			_mm256_srli_epi32(state[d], 16)); \
+		state[c] = _mm256_add_epi32(state[c], state[d]); \
+		state[b] = _mm256_xor_si256(state[b], state[c]); \
+		state[b] = _mm256_or_si256( \
+			_mm256_slli_epi32(state[b], 12), \
+			_mm256_srli_epi32(state[b], 20)); \
+		state[a] = _mm256_add_epi32(state[a], state[b]); \
+		state[d] = _mm256_xor_si256(state[d], state[a]); \
+		state[d] = _mm256_or_si256( \
+			_mm256_slli_epi32(state[d],  8), \
+			_mm256_srli_epi32(state[d], 24)); \
+		state[c] = _mm256_add_epi32(state[c], state[d]); \
+		state[b] = _mm256_xor_si256(state[b], state[c]); \
+		state[b] = _mm256_or_si256( \
+			_mm256_slli_epi32(state[b], 7), \
+			_mm256_srli_epi32(state[b], 25)); \
+	} while (0)
+
+		QROUND( 0,  4,  8, 12);
+		QROUND( 1,  5,  9, 13);
+		QROUND( 2,  6, 10, 14);
+		QROUND( 3,  7, 11, 15);
+		QROUND( 0,  5, 10, 15);
+		QROUND( 1,  6, 11, 12);
+		QROUND( 2,  7,  8, 13);
+		QROUND( 3,  4,  9, 14);
+
+#undef QROUND
+
+	}
+
+	/*
+	 * Add initial state back and encode the result in the destination
+	 * buffer. We can dump the AVX2 values "as is" because the non-AVX2
+	 * code uses a compatible order of values.
+	 */
+	for (u = 0; u < 16; u ++) {
+		_mm256_storeu_si256((__m256i *)&p->buf.d[u << 5],
+			_mm256_add_epi32(state[u], init[u]));
+	}
+
+#else // yyyAVX2+0
+
 	static const uint32_t CW[] = {
 		0x61707865, 0x3320646e, 0x79622d32, 0x6b206574
 	};
@@ -297,17 +333,24 @@ Zf(prng_refill)(prng *p)
 		 * implementation.
 		 */
 		for (v = 0; v < 16; v ++) {
-#if FALCON_LE
+#if FALCON_LE  // yyyLE+1
 			((uint32_t *)p->buf.d)[u + (v << 3)] = state[v];
-#else
-			p->buf.d[(u << 2) + (v << 5) + 0] = state[v];
-			p->buf.d[(u << 2) + (v << 5) + 1] = (state[v] >> 8);
-			p->buf.d[(u << 2) + (v << 5) + 2] = (state[v] >> 16);
-			p->buf.d[(u << 2) + (v << 5) + 3] = (state[v] >> 24);
-#endif
+#else  // yyyLE+0
+			p->buf.d[(u << 2) + (v << 5) + 0] =
+				(uint8_t)state[v];
+			p->buf.d[(u << 2) + (v << 5) + 1] =
+				(uint8_t)(state[v] >> 8);
+			p->buf.d[(u << 2) + (v << 5) + 2] =
+				(uint8_t)(state[v] >> 16);
+			p->buf.d[(u << 2) + (v << 5) + 3] =
+				(uint8_t)(state[v] >> 24);
+#endif  // yyyLE-
 		}
 	}
 	*(uint64_t *)(p->state.d + 48) = cc;
+
+#endif // yyyAVX2-
+
 	p->ptr = 0;
 }
 
@@ -315,7 +358,7 @@ Zf(prng_refill)(prng *p)
 void
 Zf(prng_get_bytes)(prng *p, void *dst, size_t len)
 {
-	unsigned char *buf;
+	uint8_t *buf;
 
 	buf = dst;
 	while (len > 0) {
