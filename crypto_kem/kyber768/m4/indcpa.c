@@ -181,13 +181,13 @@ void indcpa_enc(unsigned char *c,
 *              - const unsigned char *pk:   pointer to input public key (of length KYBER_INDCPA_PUBLICKEYBYTES bytes)
 *              - const unsigned char *coin: pointer to input random coins used as seed (of length KYBER_SYMBYTES bytes)
 *                                           to deterministically generate all randomness
-* Returns:     - boolean integer indicating that re-encrypted ciphertext is equal to the original ciphertext
+* Returns:     - boolean byte indicating that re-encrypted ciphertext is NOT equal to the original ciphertext
 **************************************************/
-int indcpa_enc_cmp(const unsigned char *c,
-                   const unsigned char *m,
-                   const unsigned char *pk,
-                   const unsigned char *coins) {
-    unsigned char rc = 0;
+unsigned char indcpa_enc_cmp(const unsigned char *c,
+                             const unsigned char *m,
+                             const unsigned char *pk,
+                             const unsigned char *coins) {
+    uint64_t rc = 0;
     polyvec sp;
     poly bp;
     poly *pkp = &bp;
@@ -228,7 +228,9 @@ int indcpa_enc_cmp(const unsigned char *c,
 
     rc |= cmp_poly_compress(c + KYBER_POLYVECCOMPRESSEDBYTES, v);
 
-    return rc;
+    rc = ~rc + 1;
+    rc >>= 63;
+    return (unsigned char)rc;
 }
 
 /*************************************************
