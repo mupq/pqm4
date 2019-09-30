@@ -43,6 +43,15 @@ class M4Settings(mupq.PlatformSettings):
         {'scheme': 'luov-7-83-283-keccak', 'implementation': 'ref'},
         {'scheme': 'luov-7-110-374-chacha', 'implementation': 'ref'},
         {'scheme': 'luov-7-110-374-keccak', 'implementation': 'ref'},
+        {'scheme': 'rainbowIa-classic', 'implementation': 'clean'},
+        {'scheme': 'rainbowIa-cyclic', 'implementation': 'clean'},
+        {'scheme': 'rainbowIa-cyclic-compressed', 'implementation': 'clean'},
+        {'scheme': 'rainbowIIIc-classic', 'implementation': 'clean'},
+        {'scheme': 'rainbowIIIc-cyclic', 'implementation': 'clean'},
+        {'scheme': 'rainbowIIIc-cyclic-compressed', 'implementation': 'clean'},
+        {'scheme': 'rainbowVc-classic', 'implementation': 'clean'},
+        {'scheme': 'rainbowVc-cyclic', 'implementation': 'clean'},
+        {'scheme': 'rainbowVc-cyclic-compressed', 'implementation': 'clean'},
     )
 
 
