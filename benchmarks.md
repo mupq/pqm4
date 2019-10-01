@@ -6,22 +6,25 @@
 | babybear (100 executions) | ref | AVG: 3,968,931 <br /> MIN: 3,968,931 <br /> MAX: 3,968,931 | AVG: 5,802,693 <br /> MIN: 5,802,693 <br /> MAX: 5,802,693 | AVG: 11,704,641 <br /> MIN: 11,704,641 <br /> MAX: 11,704,641 |
 | babybear-ephem (100 executions) | opt | AVG: 596,664 <br /> MIN: 596,664 <br /> MAX: 596,664 | AVG: 767,860 <br /> MIN: 767,860 <br /> MAX: 767,860 | AVG: 231,728 <br /> MIN: 231,728 <br /> MAX: 231,728 |
 | babybear-ephem (100 executions) | ref | AVG: 3,968,935 <br /> MIN: 3,968,935 <br /> MAX: 3,968,935 | AVG: 5,817,861 <br /> MIN: 5,817,861 <br /> MAX: 5,817,861 | AVG: 1,948,755 <br /> MIN: 1,948,755 <br /> MAX: 1,948,755 |
+| firesaber (100 executions) | clean | AVG: 3,816,702 <br /> MIN: 3,816,702 <br /> MAX: 3,816,702 | AVG: 4,743,325 <br /> MIN: 4,743,325 <br /> MAX: 4,743,325 | AVG: 5,355,474 <br /> MIN: 5,355,474 <br /> MAX: 5,355,474 |
 | firesaber (100 executions) | m4 | AVG: 1,448,776 <br /> MIN: 1,448,776 <br /> MAX: 1,448,776 | AVG: 1,786,930 <br /> MIN: 1,786,930 <br /> MAX: 1,786,930 | AVG: 1,853,339 <br /> MIN: 1,853,339 <br /> MAX: 1,853,339 |
-| firesaber (100 executions) | ref | AVG: 3,815,672 <br /> MIN: 3,815,672 <br /> MAX: 3,815,672 | AVG: 4,745,405 <br /> MIN: 4,745,405 <br /> MAX: 4,745,405 | AVG: 5,402,295 <br /> MIN: 5,402,295 <br /> MAX: 5,402,295 |
 | frodokem640aes (100 executions) | m4 | AVG: 47,050,559 <br /> MIN: 47,050,559 <br /> MAX: 47,050,559 | AVG: 45,883,334 <br /> MIN: 45,883,334 <br /> MAX: 45,883,334 | AVG: 45,366,065 <br /> MIN: 45,366,065 <br /> MAX: 45,366,065 |
 | frodokem640shake (100 executions) | m4 | AVG: 79,331,373 <br /> MIN: 79,331,373 <br /> MAX: 79,331,373 | AVG: 79,745,404 <br /> MIN: 79,745,404 <br /> MAX: 79,745,404 | AVG: 79,231,474 <br /> MIN: 79,231,474 <br /> MAX: 79,231,474 |
 | frodokem640shake (100 executions) | opt | AVG: 91,087,806 <br /> MIN: 91,087,806 <br /> MAX: 91,087,806 | AVG: 105,377,455 <br /> MIN: 105,377,455 <br /> MAX: 105,377,455 | AVG: 105,133,550 <br /> MIN: 105,133,550 <br /> MAX: 105,133,550 |
 | kyber1024 (100 executions) | clean | AVG: 1,891,737 <br /> MIN: 1,890,901 <br /> MAX: 1,892,395 | AVG: 2,254,703 <br /> MIN: 2,253,866 <br /> MAX: 2,255,361 | AVG: 2,407,858 <br /> MIN: 2,407,023 <br /> MAX: 2,408,517 |
 | kyber1024 (100 executions) | m4 | AVG: 1,575,052 <br /> MIN: 1,574,351 <br /> MAX: 1,575,691 | AVG: 1,779,848 <br /> MIN: 1,779,192 <br /> MAX: 1,780,463 | AVG: 1,709,348 <br /> MIN: 1,708,692 <br /> MAX: 1,709,962 |
+| kyber1024-90s (100 executions) | clean | AVG: 4,344,649 <br /> MIN: 4,344,118 <br /> MAX: 4,345,342 | AVG: 4,651,749 <br /> MIN: 4,651,218 <br /> MAX: 4,652,442 | AVG: 4,910,495 <br /> MIN: 4,909,964 <br /> MAX: 4,911,188 |
 | kyber512 (100 executions) | clean | AVG: 649,678 <br /> MIN: 649,462 <br /> MAX: 649,984 | AVG: 884,848 <br /> MIN: 884,632 <br /> MAX: 885,154 | AVG: 985,258 <br /> MIN: 985,042 <br /> MAX: 985,564 |
 | kyber512 (100 executions) | m4 | AVG: 514,291 <br /> MIN: 513,992 <br /> MAX: 514,547 | AVG: 652,769 <br /> MIN: 652,470 <br /> MAX: 653,025 | AVG: 621,245 <br /> MIN: 620,946 <br /> MAX: 621,501 |
+| kyber512-90s (100 executions) | clean | AVG: 1,346,868 <br /> MIN: 1,346,646 <br /> MAX: 1,347,110 | AVG: 1,567,616 <br /> MIN: 1,567,394 <br /> MAX: 1,567,858 | AVG: 1,723,867 <br /> MIN: 1,723,645 <br /> MAX: 1,724,109 |
 | kyber768 (100 executions) | clean | AVG: 1,196,692 <br /> MIN: 1,196,142 <br /> MAX: 1,197,186 | AVG: 1,489,909 <br /> MIN: 1,489,359 <br /> MAX: 1,490,403 | AVG: 1,613,744 <br /> MIN: 1,613,194 <br /> MAX: 1,614,238 |
 | kyber768 (100 executions) | m4 | AVG: 976,757 <br /> MIN: 976,205 <br /> MAX: 977,165 | AVG: 1,146,556 <br /> MIN: 1,146,021 <br /> MAX: 1,146,937 | AVG: 1,094,849 <br /> MIN: 1,094,314 <br /> MAX: 1,095,229 |
+| kyber768-90s (100 executions) | clean | AVG: 2,638,469 <br /> MIN: 2,638,098 <br /> MAX: 2,638,866 | AVG: 2,896,782 <br /> MIN: 2,896,411 <br /> MAX: 2,897,179 | AVG: 3,099,705 <br /> MIN: 3,099,334 <br /> MAX: 3,100,102 |
 | lac128 (100 executions) | ref | AVG: 2,266,368 <br /> MIN: 2,254,917 <br /> MAX: 2,276,431 | AVG: 3,979,851 <br /> MIN: 3,968,056 <br /> MAX: 3,989,669 | AVG: 6,303,717 <br /> MIN: 6,291,865 <br /> MAX: 6,313,535 |
 | lac192 (100 executions) | ref | AVG: 7,532,180 <br /> MIN: 7,525,427 <br /> MAX: 7,539,476 | AVG: 9,986,506 <br /> MIN: 9,979,643 <br /> MAX: 9,993,693 | AVG: 17,452,435 <br /> MIN: 17,445,553 <br /> MAX: 17,459,616 |
 | lac256 (100 executions) | ref | AVG: 7,665,769 <br /> MIN: 7,652,402 <br /> MAX: 7,681,209 | AVG: 13,533,851 <br /> MIN: 13,517,064 <br /> MAX: 13,553,209 | AVG: 21,125,257 <br /> MIN: 21,108,384 <br /> MAX: 21,144,510 |
+| lightsaber (100 executions) | clean | AVG: 1,051,133 <br /> MIN: 1,051,133 <br /> MAX: 1,051,133 | AVG: 1,537,170 <br /> MIN: 1,537,170 <br /> MAX: 1,537,170 | AVG: 1,860,400 <br /> MIN: 1,860,400 <br /> MAX: 1,860,400 |
 | lightsaber (100 executions) | m4 | AVG: 459,965 <br /> MIN: 459,965 <br /> MAX: 459,965 | AVG: 651,273 <br /> MIN: 651,273 <br /> MAX: 651,273 | AVG: 678,810 <br /> MIN: 678,810 <br /> MAX: 678,810 |
-| lightsaber (100 executions) | ref | AVG: 1,051,530 <br /> MIN: 1,051,530 <br /> MAX: 1,051,530 | AVG: 1,538,646 <br /> MIN: 1,538,646 <br /> MAX: 1,538,646 | AVG: 1,861,934 <br /> MIN: 1,861,934 <br /> MAX: 1,861,934 |
 | mamabear (100 executions) | opt | AVG: 1,195,048 <br /> MIN: 1,195,048 <br /> MAX: 1,195,048 | AVG: 1,402,955 <br /> MIN: 1,402,955 <br /> MAX: 1,402,955 | AVG: 1,955,496 <br /> MIN: 1,955,496 <br /> MAX: 1,955,496 |
 | mamabear (100 executions) | ref | AVG: 8,774,109 <br /> MIN: 8,774,109 <br /> MAX: 8,774,109 | AVG: 11,501,206 <br /> MIN: 11,501,206 <br /> MAX: 11,501,206 | AVG: 23,131,816 <br /> MIN: 23,131,816 <br /> MAX: 23,131,816 |
 | mamabear-ephem (100 executions) | opt | AVG: 1,206,350 <br /> MIN: 1,206,350 <br /> MAX: 1,206,350 | AVG: 1,431,341 <br /> MIN: 1,431,341 <br /> MAX: 1,431,341 | AVG: 320,233 <br /> MIN: 320,233 <br /> MAX: 320,233 |
@@ -85,8 +88,8 @@
 | r5nd-5kemcca-5d (100 executions) | opt | AVG: 1,710,318 <br /> MIN: 1,697,009 <br /> MAX: 1,719,162 | AVG: 2,571,737 <br /> MIN: 2,557,935 <br /> MAX: 2,579,964 | AVG: 3,426,802 <br /> MIN: 3,402,743 <br /> MAX: 3,441,638 |
 | r5nd-5kemcca-5d-sneik (100 executions) | m4 | AVG: 1,002,690 <br /> MIN: 992,802 <br /> MAX: 1,012,147 | AVG: 1,581,058 <br /> MIN: 1,573,205 <br /> MAX: 1,591,395 | AVG: 2,007,861 <br /> MIN: 1,999,794 <br /> MAX: 2,017,819 |
 | r5nd-5kemcca-5d-sneik (100 executions) | opt | AVG: 1,526,381 <br /> MIN: 1,522,133 <br /> MAX: 1,531,972 | AVG: 2,468,323 <br /> MIN: 2,460,371 <br /> MAX: 2,475,035 | AVG: 3,215,298 <br /> MIN: 3,206,919 <br /> MAX: 3,224,380 |
+| saber (100 executions) | clean | AVG: 2,228,000 <br /> MIN: 2,228,000 <br /> MAX: 2,228,000 | AVG: 2,942,370 <br /> MIN: 2,942,370 <br /> MAX: 2,942,370 | AVG: 3,426,560 <br /> MIN: 3,426,560 <br /> MAX: 3,426,560 |
 | saber (100 executions) | m4 | AVG: 896,035 <br /> MIN: 896,035 <br /> MAX: 896,035 | AVG: 1,161,849 <br /> MIN: 1,161,849 <br /> MAX: 1,161,849 | AVG: 1,204,633 <br /> MIN: 1,204,633 <br /> MAX: 1,204,633 |
-| saber (100 executions) | ref | AVG: 2,226,935 <br /> MIN: 2,226,935 <br /> MAX: 2,226,935 | AVG: 2,936,240 <br /> MIN: 2,936,240 <br /> MAX: 2,936,240 | AVG: 3,424,601 <br /> MIN: 3,424,601 <br /> MAX: 3,424,601 |
 | sikep434 (1 executions) | opt | AVG: 650,735,516 <br /> MIN: 650,735,516 <br /> MAX: 650,735,516 | AVG: 1,065,631,547 <br /> MIN: 1,065,631,547 <br /> MAX: 1,065,631,547 | AVG: 1,136,703,605 <br /> MIN: 1,136,703,605 <br /> MAX: 1,136,703,605 |
 | sikep503 (1 executions) | opt | AVG: 985,032,805 <br /> MIN: 985,032,805 <br /> MAX: 985,032,805 | AVG: 1,623,893,046 <br /> MIN: 1,623,893,046 <br /> MAX: 1,623,893,046 | AVG: 1,726,538,272 <br /> MIN: 1,726,538,272 <br /> MAX: 1,726,538,272 |
 | sikep610 (1 executions) | opt | AVG: 1,819,652,559 <br /> MIN: 1,819,652,559 <br /> MAX: 1,819,652,559 | AVG: 3,348,669,891 <br /> MIN: 3,348,669,891 <br /> MAX: 3,348,669,891 | AVG: 3,368,114,366 <br /> MIN: 3,368,114,366 <br /> MAX: 3,368,114,366 |
@@ -103,15 +106,17 @@
 | dilithium3 (100 executions) | m4 | AVG: 2,161,469 <br /> MIN: 2,160,789 <br /> MAX: 2,162,172 | AVG: 6,466,018 <br /> MIN: 2,672,040 <br /> MAX: 26,348,899 | AVG: 2,103,914 <br /> MIN: 2,103,465 <br /> MAX: 2,104,240 |
 | dilithium4 (100 executions) | clean | AVG: 3,647,486 <br /> MIN: 3,647,083 <br /> MAX: 3,647,892 | AVG: 13,615,651 <br /> MIN: 6,313,249 <br /> MAX: 43,824,110 | AVG: 4,035,259 <br /> MIN: 4,034,802 <br /> MAX: 4,035,897 |
 | dilithium4 (100 executions) | m4 | AVG: 2,925,880 <br /> MIN: 2,925,380 <br /> MAX: 2,926,447 | AVG: 7,155,716 <br /> MIN: 3,697,113 <br /> MAX: 22,557,945 | AVG: 2,995,784 <br /> MIN: 2,995,334 <br /> MAX: 2,996,176 |
-| falcon1024 (100 executions) | m4-ct | AVG: 499,400,925 <br /> MIN: 318,742,317 <br /> MAX: 1,253,550,021 | AVG: 85,341,105 <br /> MIN: 85,092,221 <br /> MAX: 85,586,529 | AVG: 978,893 <br /> MIN: 968,448 <br /> MAX: 986,132 |
-| falcon1024 (100 executions) | opt-ct | AVG: 519,707,869 <br /> MIN: 318,742,317 <br /> MAX: 1,294,535,633 | AVG: 85,358,537 <br /> MIN: 84,963,381 <br /> MAX: 85,780,750 | AVG: 980,781 <br /> MIN: 968,297 <br /> MAX: 986,950 |
-| falcon1024 (100 executions) | opt-leaktime | AVG: 402,537,602 <br /> MIN: 290,149,516 <br /> MAX: 815,005,911 | AVG: 76,457,595 <br /> MIN: 75,998,472 <br /> MAX: 77,181,953 | AVG: 978,060 <br /> MIN: 966,969 <br /> MAX: 986,412 |
-| falcon512 (100 executions) | m4-ct | AVG: 189,279,143 <br /> MIN: 115,030,624 <br /> MAX: 665,351,559 | AVG: 39,110,245 <br /> MIN: 38,938,057 <br /> MAX: 39,270,562 | AVG: 474,411 <br /> MIN: 465,785 <br /> MAX: 482,591 |
-| falcon512 (100 executions) | opt-ct | AVG: 188,803,547 <br /> MIN: 115,030,624 <br /> MAX: 411,628,821 | AVG: 39,103,738 <br /> MIN: 38,934,500 <br /> MAX: 39,278,155 | AVG: 474,673 <br /> MIN: 465,603 <br /> MAX: 482,763 |
-| falcon512 (100 executions) | opt-leaktime | AVG: 170,769,754 <br /> MIN: 102,851,611 <br /> MAX: 596,309,536 | AVG: 35,567,071 <br /> MIN: 35,313,000 <br /> MAX: 35,925,279 | AVG: 473,772 <br /> MIN: 465,930 <br /> MAX: 483,269 |
-| falcon512-tree (100 executions) | m4-ct | AVG: 195,637,141 <br /> MIN: 130,194,263 <br /> MAX: 536,085,876 | AVG: 17,872,505 <br /> MIN: 17,732,796 <br /> MAX: 18,110,875 | AVG: 475,187 <br /> MIN: 466,270 <br /> MAX: 482,051 |
-| falcon512-tree (100 executions) | opt-ct | AVG: 201,149,045 <br /> MIN: 130,194,263 <br /> MAX: 538,559,826 | AVG: 17,860,801 <br /> MIN: 17,580,307 <br /> MAX: 18,040,442 | AVG: 475,908 <br /> MIN: 466,133 <br /> MAX: 482,037 |
-| falcon512-tree (100 executions) | opt-leaktime | AVG: 165,270,188 <br /> MIN: 114,439,936 <br /> MAX: 474,389,761 | AVG: 19,297,052 <br /> MIN: 18,964,200 <br /> MAX: 19,590,188 | AVG: 475,015 <br /> MIN: 465,894 <br /> MAX: 482,453 |
+| falcon-1024 (100 executions) | clean | AVG: 633,596,142 <br /> MIN: 393,348,067 <br /> MAX: 2,302,666,654 | AVG: 139,679,948 <br /> MIN: 139,359,526 <br /> MAX: 140,070,893 | AVG: 1,462,493 <br /> MIN: 1,461,799 <br /> MAX: 1,463,128 |
+| falcon-1024 (100 executions) | m4-ct | AVG: 499,400,925 <br /> MIN: 318,742,317 <br /> MAX: 1,253,550,021 | AVG: 85,341,105 <br /> MIN: 85,092,221 <br /> MAX: 85,586,529 | AVG: 978,893 <br /> MIN: 968,448 <br /> MAX: 986,132 |
+| falcon-1024 (100 executions) | opt-ct | AVG: 519,707,869 <br /> MIN: 318,742,317 <br /> MAX: 1,294,535,633 | AVG: 85,358,537 <br /> MIN: 84,963,381 <br /> MAX: 85,780,750 | AVG: 980,781 <br /> MIN: 968,297 <br /> MAX: 986,950 |
+| falcon-1024 (100 executions) | opt-leaktime | AVG: 402,537,602 <br /> MIN: 290,149,516 <br /> MAX: 815,005,911 | AVG: 76,457,595 <br /> MIN: 75,998,472 <br /> MAX: 77,181,953 | AVG: 978,060 <br /> MIN: 966,969 <br /> MAX: 986,412 |
+| falcon-512 (100 executions) | clean | AVG: 244,672,139 <br /> MIN: 147,651,734 <br /> MAX: 703,505,375 | AVG: 63,881,276 <br /> MIN: 63,639,820 <br /> MAX: 64,103,227 | AVG: 737,407 <br /> MIN: 737,035 <br /> MAX: 737,809 |
+| falcon-512 (100 executions) | m4-ct | AVG: 189,279,143 <br /> MIN: 115,030,624 <br /> MAX: 665,351,559 | AVG: 39,110,245 <br /> MIN: 38,938,057 <br /> MAX: 39,270,562 | AVG: 474,411 <br /> MIN: 465,785 <br /> MAX: 482,591 |
+| falcon-512 (100 executions) | opt-ct | AVG: 188,803,547 <br /> MIN: 115,030,624 <br /> MAX: 411,628,821 | AVG: 39,103,738 <br /> MIN: 38,934,500 <br /> MAX: 39,278,155 | AVG: 474,673 <br /> MIN: 465,603 <br /> MAX: 482,763 |
+| falcon-512 (100 executions) | opt-leaktime | AVG: 170,769,754 <br /> MIN: 102,851,611 <br /> MAX: 596,309,536 | AVG: 35,567,071 <br /> MIN: 35,313,000 <br /> MAX: 35,925,279 | AVG: 473,772 <br /> MIN: 465,930 <br /> MAX: 483,269 |
+| falcon-512-tree (100 executions) | m4-ct | AVG: 195,637,141 <br /> MIN: 130,194,263 <br /> MAX: 536,085,876 | AVG: 17,872,505 <br /> MIN: 17,732,796 <br /> MAX: 18,110,875 | AVG: 475,187 <br /> MIN: 466,270 <br /> MAX: 482,051 |
+| falcon-512-tree (100 executions) | opt-ct | AVG: 201,149,045 <br /> MIN: 130,194,263 <br /> MAX: 538,559,826 | AVG: 17,860,801 <br /> MIN: 17,580,307 <br /> MAX: 18,040,442 | AVG: 475,908 <br /> MIN: 466,133 <br /> MAX: 482,037 |
+| falcon-512-tree (100 executions) | opt-leaktime | AVG: 165,270,188 <br /> MIN: 114,439,936 <br /> MAX: 474,389,761 | AVG: 19,297,052 <br /> MIN: 18,964,200 <br /> MAX: 19,590,188 | AVG: 475,015 <br /> MIN: 465,894 <br /> MAX: 482,453 |
 | luov-47-42-182-chacha (100 executions) | ref | AVG: 28,433,080 <br /> MIN: 28,266,770 <br /> MAX: 28,666,408 | AVG: 60,235,732 <br /> MIN: 60,203,368 <br /> MAX: 60,287,111 | AVG: 42,150,229 <br /> MIN: 42,141,038 <br /> MAX: 42,164,346 |
 | luov-47-42-182-keccak (100 executions) | ref | AVG: 37,012,989 <br /> MIN: 36,806,141 <br /> MAX: 37,215,582 | AVG: 68,234,509 <br /> MIN: 68,178,429 <br /> MAX: 68,275,058 | AVG: 50,742,235 <br /> MIN: 50,724,963 <br /> MAX: 50,755,062 |
 | luov-61-60-261-chacha (100 executions) | ref | AVG: 81,045,939 <br /> MIN: 80,626,887 <br /> MAX: 81,412,109 | AVG: 251,945,670 <br /> MIN: 251,883,385 <br /> MAX: 252,007,252 | AVG: 137,405,740 <br /> MIN: 137,386,509 <br /> MAX: 137,424,782 |
@@ -162,22 +167,25 @@
 | babybear | ref | 6,168 | 6,088 | 10,192 |
 | babybear-ephem | opt | 3,104 | 3,008 | 2,440 |
 | babybear-ephem | ref | 6,168 | 6,088 | 4,864 |
+| firesaber | clean | 22,848 | 25,600 | 27,088 |
 | firesaber | m4 | 20,144 | 23,008 | 24,592 |
-| firesaber | ref | 20,144 | 23,008 | 24,488 |
 | frodokem640aes | m4 | 31,992 | 62,488 | 83,112 |
 | frodokem640shake | m4 | 26,528 | 51,904 | 72,600 |
 | frodokem640shake | opt | 36,672 | 58,312 | 78,944 |
 | kyber1024 | clean | 15,224 | 18,928 | 20,496 |
 | kyber1024 | m4 | 4,360 | 3,584 | 3,592 |
+| kyber1024-90s | clean | 16,464 | 20,136 | 21,720 |
 | kyber512 | clean | 6,480 | 9,168 | 9,904 |
 | kyber512 | m4 | 2,952 | 2,552 | 2,560 |
+| kyber512-90s | clean | 7,704 | 10,360 | 11,112 |
 | kyber768 | clean | 10,576 | 13,776 | 14,864 |
 | kyber768 | m4 | 3,848 | 3,128 | 3,072 |
+| kyber768-90s | clean | 11,800 | 14,968 | 16,072 |
 | lac128 | ref | 2,916 | 5,116 | 5,952 |
 | lac192 | ref | 4,344 | 7,464 | 8,664 |
 | lac256 | ref | 4,452 | 8,676 | 10,116 |
+| lightsaber | clean | 10,576 | 12,304 | 13,056 |
 | lightsaber | m4 | 9,656 | 11,392 | 12,136 |
-| lightsaber | ref | 10,024 | 11,672 | 12,504 |
 | mamabear | opt | 3,592 | 3,464 | 6,072 |
 | mamabear | ref | 6,792 | 6,712 | 11,600 |
 | mamabear-ephem | opt | 3,592 | 3,488 | 2,920 |
@@ -241,8 +249,8 @@
 | r5nd-5kemcca-5d | opt | 7,264 | 8,872 | 9,968 |
 | r5nd-5kemcca-5d-sneik | m4 | 6,776 | 8,520 | 9,616 |
 | r5nd-5kemcca-5d-sneik | opt | 6,928 | 8,672 | 9,768 |
+| saber | clean | 15,744 | 18,112 | 19,120 |
 | saber | m4 | 13,256 | 15,544 | 16,640 |
-| saber | ref | 13,624 | 15,912 | 17,008 |
 | sikep434 | opt | 6,776 | 7,088 | 7,424 |
 | sikep503 | opt | 6,848 | 7,232 | 7,600 |
 | sikep610 | opt | 10,080 | 10,512 | 10,968 |
@@ -259,15 +267,17 @@
 | dilithium3 | m4 | 50,752 | 81,792 | 55,000 |
 | dilithium4 | clean | 67,136 | 104,408 | 71,472 |
 | dilithium4 | m4 | 67,136 | 104,408 | 71,472 |
-| falcon1024 | m4-ct | 1,696 | 2,628 | 512 |
-| falcon1024 | opt-ct | 1,696 | 2,744 | 512 |
-| falcon1024 | opt-leaktime | 1,640 | 2,732 | 512 |
-| falcon512 | m4-ct | 1,592 | 2,540 | 512 |
-| falcon512 | opt-ct | 1,600 | 2,540 | 512 |
-| falcon512 | opt-leaktime | 1,656 | 2,636 | 512 |
-| falcon512-tree | m4-ct | 1,584 | 2,708 | 512 |
-| falcon512-tree | opt-ct | 1,696 | 2,708 | 512 |
-| falcon512-tree | opt-leaktime | 1,544 | 2,852 | 512 |
+| falcon-1024 | clean | 35,480 | 82,540 | 8,800 |
+| falcon-1024 | m4-ct | 1,696 | 2,628 | 512 |
+| falcon-1024 | opt-ct | 1,696 | 2,744 | 512 |
+| falcon-1024 | opt-leaktime | 1,640 | 2,732 | 512 |
+| falcon-512 | clean | 18,600 | 42,516 | 4,704 |
+| falcon-512 | m4-ct | 1,592 | 2,540 | 512 |
+| falcon-512 | opt-ct | 1,600 | 2,540 | 512 |
+| falcon-512 | opt-leaktime | 1,656 | 2,636 | 512 |
+| falcon-512-tree | m4-ct | 1,584 | 2,708 | 512 |
+| falcon-512-tree | opt-ct | 1,696 | 2,708 | 512 |
+| falcon-512-tree | opt-leaktime | 1,544 | 2,852 | 512 |
 | luov-47-42-182-chacha | ref | 2,540 | 4,472 | 2,996 |
 | luov-47-42-182-keccak | ref | 2,920 | 4,624 | 3,376 |
 | luov-61-60-261-chacha | ref | 3,300 | 6,128 | 4,044 |
@@ -318,17 +328,20 @@
 | babybear | ref | 8.4% | 6.2% | 6.5% |
 | babybear-ephem | opt | 55.2% | 48.4% | 35.8% |
 | babybear-ephem | ref | 8.4% | 6.5% | 4.3% |
+| firesaber | clean | 18.7% | 18.6% | 13.8% |
 | firesaber | m4 | 49.4% | 49.3% | 40.0% |
-| firesaber | ref | 18.8% | 18.6% | 13.7% |
 | frodokem640aes | m4 | 73.6% | 77.1% | 76.3% |
 | frodokem640shake | m4 | 85.5% | 83.4% | 86.1% |
 | frodokem640shake | opt | 74.9% | 65.4% | 64.9% |
 | kyber1024 | clean | 58.8% | 58.0% | 47.4% |
 | kyber1024 | m4 | 70.5% | 73.3% | 66.7% |
+| kyber1024-90s | clean | 1.9% | 3.5% | 1.8% |
 | kyber512 | clean | 54.6% | 53.5% | 38.9% |
 | kyber512 | m4 | 68.9% | 72.5% | 61.6% |
+| kyber512-90s | clean | 3.8% | 6.0% | 3.2% |
 | kyber768 | clean | 57.0% | 56.3% | 44.0% |
 | kyber768 | m4 | 69.7% | 73.0% | 64.8% |
+| kyber768-90s | clean | 2.6% | 4.4% | 2.3% |
 | lac128 | ref | 6.1% | 4.6% | 2.9% |
 | lac192 | ref | 1.9% | 2.1% | 1.2% |
 | lac256 | ref | 3.4% | 2.5% | 1.6% |
@@ -336,8 +349,8 @@
 | mamabear | ref | 7.4% | 5.9% | 6.1% |
 | mamabear-ephem | opt | 53.4% | 47.9% | 34.3% |
 | mamabear-ephem | ref | 7.4% | 6.0% | 3.9% |
+| lightsaber | clean | 24.7% | 23.6% | 15.3% |
 | lightsaber | m4 | 56.5% | 55.7% | 42.0% |
-| lightsaber | ref | 24.7% | 23.6% | 15.3% |
 | newhope1024cca | clean | 59.5% | 59.1% | 47.6% |
 | newhope1024cca | m4 | 74.2% | 74.6% | 64.5% |
 | newhope1024cpa | clean | 53.9% | 50.2% | 4.3% |
@@ -397,8 +410,8 @@
 | r5nd-5kemcca-5d | opt | 21.1% | 22.4% | 22.2% |
 | r5nd-5kemcca-5d-sneik | m4 | 0.0% | 0.0% | 0.0% |
 | r5nd-5kemcca-5d-sneik | opt | 0.0% | 0.0% | 0.0% |
+| saber | clean | 21.3% | 20.9% | 14.6% |
 | saber | m4 | 53.0% | 52.9% | 41.5% |
-| saber | ref | 21.3% | 20.9% | 14.6% |
 | sikep434 | opt | 0.0% | 0.0% | 0.0% |
 | sikep503 | opt | 0.0% | 0.0% | 0.0% |
 | sikep610 | opt | 0.0% | 0.0% | 0.0% |
@@ -415,15 +428,17 @@
 | dilithium3 | m4 | 77.6% | 53.4% | 72.5% |
 | dilithium4 | clean | 62.1% | 30.2% | 54.6% |
 | dilithium4 | m4 | 77.4% | 55.9% | 73.9% |
-| falcon1024 | m4-ct | 10.0% | 0.5% | 34.3% |
-| falcon1024 | opt-ct | 10.8% | 0.5% | 34.3% |
-| falcon1024 | opt-leaktime | 10.8% | 0.5% | 34.3% |
-| falcon512 | m4-ct | 17.5% | 0.5% | 36.0% |
-| falcon512 | opt-ct | 16.7% | 0.5% | 36.0% |
-| falcon512 | opt-leaktime | 17.0% | 0.6% | 36.1% |
-| falcon512-tree | m4-ct | 14.5% | 1.1% | 36.0% |
-| falcon512-tree | opt-ct | 15.0% | 1.2% | 36.0% |
-| falcon512-tree | opt-leaktime | 15.3% | 1.1% | 36.0% |
+| falcon-1024 | clean | 8.1% | 0.3% | 28.2% |
+| falcon-1024 | m4-ct | 10.0% | 0.5% | 34.3% |
+| falcon-1024 | opt-ct | 10.8% | 0.5% | 34.3% |
+| falcon-1024 | opt-leaktime | 10.8% | 0.5% | 34.3% |
+| falcon-512 | clean | 13.6% | 0.4% | 30.5% |
+| falcon-512 | m4-ct | 17.5% | 0.5% | 36.0% |
+| falcon-512 | opt-ct | 16.7% | 0.5% | 36.0% |
+| falcon-512 | opt-leaktime | 17.0% | 0.6% | 36.1% |
+| falcon-512-tree | m4-ct | 14.5% | 1.1% | 36.0% |
+| falcon-512-tree | opt-ct | 15.0% | 1.2% | 36.0% |
+| falcon-512-tree | opt-leaktime | 15.3% | 1.1% | 36.0% |
 | luov-47-42-182-chacha | ref | 0.4% | 0.3% | 0.1% |
 | luov-47-42-182-keccak | ref | 30.8% | 16.8% | 22.4% |
 | luov-61-60-261-chacha | ref | 0.3% | 0.1% | 0.0% |
@@ -474,22 +489,25 @@
 | babybear | ref | 4,922 | 0 | 0 | 4,922 |
 | babybear-ephem | opt | 4,985 | 0 | 0 | 4,985 |
 | babybear-ephem | ref | 4,892 | 0 | 0 | 4,892 |
+| firesaber | clean | 11,208 | 0 | 0 | 11,208 |
 | firesaber | m4 | 44,184 | 0 | 0 | 44,184 |
-| firesaber | ref | 12,244 | 0 | 0 | 12,244 |
 | frodokem640aes | m4 | 8,496 | 0 | 0 | 8,496 |
 | frodokem640shake | m4 | 8,584 | 0 | 0 | 8,584 |
 | frodokem640shake | opt | 6,464 | 0 | 0 | 6,464 |
 | kyber1024 | clean | 5,352 | 512 | 0 | 5,864 |
 | kyber1024 | m4 | 12,424 | 0 | 0 | 12,424 |
+| kyber1024-90s | clean | 12,882 | 0 | 0 | 12,882 |
 | kyber512 | clean | 4,444 | 512 | 0 | 4,956 |
 | kyber512 | m4 | 11,000 | 0 | 0 | 11,000 |
+| kyber512-90s | clean | 11,998 | 0 | 0 | 11,998 |
 | kyber768 | clean | 4,600 | 512 | 0 | 5,112 |
 | kyber768 | m4 | 11,400 | 0 | 0 | 11,400 |
+| kyber768-90s | clean | 12,154 | 0 | 0 | 12,154 |
 | lac128 | ref | 29,708 | 72 | 296 | 30,076 |
 | lac192 | ref | 21,196 | 72 | 152 | 21,420 |
 | lac256 | ref | 29,876 | 72 | 296 | 30,244 |
+| lightsaber | clean | 11,936 | 0 | 0 | 11,936 |
 | lightsaber | m4 | 44,916 | 0 | 0 | 44,916 |
-| lightsaber | ref | 12,976 | 0 | 0 | 12,976 |
 | mamabear | opt | 5,623 | 0 | 0 | 5,623 |
 | mamabear | ref | 5,414 | 0 | 0 | 5,414 |
 | mamabear-ephem | opt | 4,917 | 0 | 0 | 4,917 |
@@ -553,8 +571,8 @@
 | r5nd-5kemcca-5d | opt | 4,545 | 0 | 0 | 4,545 |
 | r5nd-5kemcca-5d-sneik | m4 | 6,002 | 0 | 0 | 6,002 |
 | r5nd-5kemcca-5d-sneik | opt | 7,065 | 0 | 0 | 7,065 |
+| saber | clean | 11,248 | 0 | 0 | 11,248 |
 | saber | m4 | 44,468 | 0 | 0 | 44,468 |
-| saber | ref | 12,524 | 0 | 0 | 12,524 |
 | sikep434 | opt | 30,368 | 0 | 0 | 30,368 |
 | sikep503 | opt | 31,376 | 0 | 0 | 31,376 |
 | sikep610 | opt | 20,064 | 0 | 0 | 20,064 |
@@ -571,15 +589,17 @@
 | dilithium3 | m4 | 17,972 | 0 | 0 | 17,972 |
 | dilithium4 | clean | 11,240 | 0 | 0 | 11,240 |
 | dilithium4 | m4 | 18,080 | 0 | 0 | 18,080 |
-| falcon1024 | m4-ct | 81,813 | 0 | 79,872 | 161,685 |
-| falcon1024 | opt-ct | 81,813 | 0 | 79,872 | 161,685 |
-| falcon1024 | opt-leaktime | 74,893 | 0 | 79,872 | 154,765 |
-| falcon512 | m4-ct | 81,813 | 0 | 39,936 | 121,749 |
-| falcon512 | opt-ct | 81,813 | 0 | 39,936 | 121,749 |
-| falcon512 | opt-leaktime | 74,893 | 0 | 39,936 | 114,829 |
-| falcon512-tree | m4-ct | 81,549 | 0 | 27,648 | 109,197 |
-| falcon512-tree | opt-ct | 81,549 | 0 | 27,648 | 109,197 |
-| falcon512-tree | opt-leaktime | 74,629 | 0 | 27,648 | 102,277 |
+| falcon-1024 | clean | 80,865 | 0 | 0 | 80,865 |
+| falcon-1024 | m4-ct | 81,813 | 0 | 79,872 | 161,685 |
+| falcon-1024 | opt-ct | 81,813 | 0 | 79,872 | 161,685 |
+| falcon-1024 | opt-leaktime | 74,893 | 0 | 79,872 | 154,765 |
+| falcon-512 | clean | 80,841 | 0 | 0 | 80,841 |
+| falcon-512 | m4-ct | 81,813 | 0 | 39,936 | 121,749 |
+| falcon-512 | opt-ct | 81,813 | 0 | 39,936 | 121,749 |
+| falcon-512 | opt-leaktime | 74,893 | 0 | 39,936 | 114,829 |
+| falcon-512-tree | m4-ct | 81,549 | 0 | 27,648 | 109,197 |
+| falcon-512-tree | opt-ct | 81,549 | 0 | 27,648 | 109,197 |
+| falcon-512-tree | opt-leaktime | 74,629 | 0 | 27,648 | 102,277 |
 | luov-47-42-182-chacha | ref | 10,356 | 0 | 0 | 10,356 |
 | luov-47-42-182-keccak | ref | 10,384 | 0 | 0 | 10,384 |
 | luov-61-60-261-chacha | ref | 10,452 | 0 | 0 | 10,452 |

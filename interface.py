@@ -19,8 +19,8 @@ class M4Settings(mupq.PlatformSettings):
     #: List of dicts, in each dict specify (Scheme class) attributes of the
     #: scheme with values, if all attributes match the scheme is skipped.
     skip_list = (
-        {'scheme': 'falcon1024-tree', 'implementation': 'opt-leaktime'},
-        {'scheme': 'falcon1024-tree', 'implementation': 'opt-ct'},
+        {'scheme': 'falcon-1024-tree', 'implementation': 'opt-leaktime'},
+        {'scheme': 'falcon-1024-tree', 'implementation': 'opt-ct'},
         {'scheme': 'frodokem640aes', 'implementation': 'clean'},
         {'scheme': 'frodokem640aes', 'implementation': 'opt'},
         {'scheme': 'frodokem976aes', 'implementation': 'clean'},
@@ -43,6 +43,15 @@ class M4Settings(mupq.PlatformSettings):
         {'scheme': 'luov-7-83-283-keccak', 'implementation': 'ref'},
         {'scheme': 'luov-7-110-374-chacha', 'implementation': 'ref'},
         {'scheme': 'luov-7-110-374-keccak', 'implementation': 'ref'},
+        {'scheme': 'rainbowIa-classic', 'implementation': 'clean'},
+        {'scheme': 'rainbowIa-cyclic', 'implementation': 'clean'},
+        {'scheme': 'rainbowIa-cyclic-compressed', 'implementation': 'clean'},
+        {'scheme': 'rainbowIIIc-classic', 'implementation': 'clean'},
+        {'scheme': 'rainbowIIIc-cyclic', 'implementation': 'clean'},
+        {'scheme': 'rainbowIIIc-cyclic-compressed', 'implementation': 'clean'},
+        {'scheme': 'rainbowVc-classic', 'implementation': 'clean'},
+        {'scheme': 'rainbowVc-cyclic', 'implementation': 'clean'},
+        {'scheme': 'rainbowVc-cyclic-compressed', 'implementation': 'clean'},
     )
 
 
