@@ -1,9 +1,11 @@
 #ifndef AES256CTR_H
 #define AES256CTR_H
 
+#include "aes.h"
+
 #include <stddef.h>
 #include <stdint.h>
-#include "aes.h"
+
 typedef struct {
     aes256ctx sk_exp;
     uint8_t iv[12];

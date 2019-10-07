@@ -4,7 +4,7 @@
 #include "params.h"
 
 
-#include "symmetric-aes.h"
+#include "aes256ctr.h"
 #include "sha2.h"
 
 #if (KYBER_SSBYTES != 32)

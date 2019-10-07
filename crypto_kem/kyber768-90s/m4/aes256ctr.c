@@ -1,7 +1,37 @@
-#include "symmetric-aes.h"
+#include "aes256ctr.h"
 #include "aes.h"
 #include <stddef.h>
 #include <stdint.h>
+#include <string.h>
+
+static inline void br_enc32be(unsigned char *dst, uint32_t x) {
+    dst[3] = (unsigned char)x;
+    dst[2] = (unsigned char)(x >> 8);
+    dst[1] = (unsigned char)(x >> 16);
+    dst[0] = (unsigned char)(x >> 24);
+}
+
+static void aes256_ctr_xof(unsigned char *out, size_t outlen, const unsigned char *iv, uint32_t ctr, const aes256ctx *ctx) {
+    uint8_t ivw[16];
+    uint8_t buf[AES_BLOCKBYTES];
+    size_t i;
+
+    memcpy(ivw, iv, AESCTR_NONCEBYTES);
+    br_enc32be(ivw + AESCTR_NONCEBYTES, ctr);
+
+    while (outlen > AES_BLOCKBYTES) {
+        aes256_ecb(out, ivw, 1, ctx);
+        br_enc32be(ivw + AESCTR_NONCEBYTES, ++ctr);
+        out += AES_BLOCKBYTES;
+        outlen -= AES_BLOCKBYTES;
+    }
+    if (outlen > 0) {
+        aes256_ecb(buf, ivw, 1, ctx);
+        for (i = 0; i < outlen; i++) {
+            out[i] = buf[i];
+        }
+    }
+}
 
 /*************************************************
 * Name:        aes256_prf
@@ -60,6 +90,6 @@ void aes256xof_absorb(aes256xof_ctx *s, const uint8_t *key, uint8_t x, uint8_t y
 *              - aes256xof_ctx *s:      AES "state", i.e. expanded key and IV
 **************************************************/
 void aes256xof_squeezeblocks(uint8_t *out, size_t nblocks, aes256xof_ctx *s) {
-    aes256_ctr_xof(out, nblocks*64, s->iv, s->ctr, &s->sk_exp);
-    s->ctr += 4*nblocks;
+    aes256_ctr_xof(out, nblocks * 64, s->iv, s->ctr, &s->sk_exp);
+    s->ctr += 4 * nblocks;
 }
