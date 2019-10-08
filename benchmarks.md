@@ -91,6 +91,15 @@
 | r5nd-5kemcca-5d (100 executions) | opt | AVG: 1,710,318 <br /> MIN: 1,697,009 <br /> MAX: 1,719,162 | AVG: 2,571,737 <br /> MIN: 2,557,935 <br /> MAX: 2,579,964 | AVG: 3,426,802 <br /> MIN: 3,402,743 <br /> MAX: 3,441,638 |
 | r5nd-5kemcca-5d-sneik (100 executions) | m4 | AVG: 1,002,690 <br /> MIN: 992,802 <br /> MAX: 1,012,147 | AVG: 1,581,058 <br /> MIN: 1,573,205 <br /> MAX: 1,591,395 | AVG: 2,007,861 <br /> MIN: 1,999,794 <br /> MAX: 2,017,819 |
 | r5nd-5kemcca-5d-sneik (100 executions) | opt | AVG: 1,526,381 <br /> MIN: 1,522,133 <br /> MAX: 1,531,972 | AVG: 2,468,323 <br /> MIN: 2,460,371 <br /> MAX: 2,475,035 | AVG: 3,215,298 <br /> MIN: 3,206,919 <br /> MAX: 3,224,380 |
+| rollo-I-128 (100 executions) | ref | AVG: 14,204,882 <br /> MIN: 13,951,268 <br /> MAX: 14,326,983 | AVG: 1,362,927 <br /> MIN: 1,359,011 <br /> MAX: 1,368,781 | AVG: 17,078,749 <br /> MIN: 16,943,412 <br /> MAX: 17,215,108 |
+| rollo-I-192 (100 executions) | ref | AVG: 18,015,802 <br /> MIN: 17,850,639 <br /> MAX: 18,191,823 | AVG: 1,561,907 <br /> MIN: 1,556,653 <br /> MAX: 1,566,421 | AVG: 38,169,707 <br /> MIN: 37,938,290 <br /> MAX: 38,466,672 |
+| rollo-I-256 (100 executions) | ref | AVG: 28,211,833 <br /> MIN: 28,086,462 <br /> MAX: 28,316,829 | AVG: 2,294,035 <br /> MIN: 2,290,722 <br /> MAX: 2,300,610 | AVG: 76,268,605 <br /> MIN: 73,210,489 <br /> MAX: 76,615,737 |
+| rollo-II-128 (100 executions) | ref | AVG: 110,973,444 <br /> MIN: 110,710,356 <br /> MAX: 111,218,877 | AVG: 8,959,177 <br /> MIN: 8,954,366 <br /> MAX: 8,965,825 | AVG: 56,666,802 <br /> MIN: 55,566,049 <br /> MAX: 57,118,092 |
+| rollo-II-192 (100 executions) | ref | AVG: 118,268,825 <br /> MIN: 117,907,116 <br /> MAX: 118,510,650 | AVG: 9,217,207 <br /> MIN: 9,212,264 <br /> MAX: 9,222,489 | AVG: 78,857,280 <br /> MIN: 77,921,669 <br /> MAX: 79,282,320 |
+| rollo-II-256 (100 executions) | ref | AVG: 158,353,913 <br /> MIN: 158,089,220 <br /> MAX: 158,615,286 | AVG: 12,067,870 <br /> MIN: 12,064,123 <br /> MAX: 12,072,323 | AVG: 93,156,495 <br /> MIN: 92,357,579 <br /> MAX: 94,208,177 |
+| rollo-III-128 (100 executions) | ref | AVG: 1,376,566 <br /> MIN: 1,374,751 <br /> MAX: 1,379,322 | AVG: 2,705,954 <br /> MIN: 2,702,348 <br /> MAX: 2,712,307 | AVG: 16,854,530 <br /> MIN: 16,441,465 <br /> MAX: 17,026,998 |
+| rollo-III-192 (100 executions) | ref | AVG: 1,730,053 <br /> MIN: 1,727,652 <br /> MAX: 1,733,190 | AVG: 3,402,446 <br /> MIN: 3,397,198 <br /> MAX: 3,411,496 | AVG: 42,648,986 <br /> MIN: 42,132,868 <br /> MAX: 42,810,996 |
+| rollo-III-256 (100 executions) | ref | AVG: 4,521,615 <br /> MIN: 4,513,947 <br /> MAX: 4,526,054 | AVG: 8,948,193 <br /> MIN: 8,930,747 <br /> MAX: 8,960,505 | AVG: 67,092,647 <br /> MIN: 66,719,258 <br /> MAX: 67,746,529 |
 | saber (100 executions) | clean | AVG: 2,228,000 <br /> MIN: 2,228,000 <br /> MAX: 2,228,000 | AVG: 2,942,370 <br /> MIN: 2,942,370 <br /> MAX: 2,942,370 | AVG: 3,426,560 <br /> MIN: 3,426,560 <br /> MAX: 3,426,560 |
 | saber (100 executions) | m4 | AVG: 896,035 <br /> MIN: 896,035 <br /> MAX: 896,035 | AVG: 1,161,849 <br /> MIN: 1,161,849 <br /> MAX: 1,161,849 | AVG: 1,204,633 <br /> MIN: 1,204,633 <br /> MAX: 1,204,633 |
 | sikep434 (1 executions) | opt | AVG: 650,735,516 <br /> MIN: 650,735,516 <br /> MAX: 650,735,516 | AVG: 1,065,631,547 <br /> MIN: 1,065,631,547 <br /> MAX: 1,065,631,547 | AVG: 1,136,703,605 <br /> MIN: 1,136,703,605 <br /> MAX: 1,136,703,605 |
@@ -255,6 +264,15 @@
 | r5nd-5kemcca-5d | opt | 7,264 | 8,872 | 9,968 |
 | r5nd-5kemcca-5d-sneik | m4 | 6,776 | 8,520 | 9,616 |
 | r5nd-5kemcca-5d-sneik | opt | 6,928 | 8,672 | 9,768 |
+| rollo-I-128 | ref | 1,452 | 1,460 | 1,476 |
+| rollo-I-192 | ref | 1,452 | 1,476 | 1,492 |
+| rollo-I-256 | ref | 1,580 | 1,636 | 1,652 |
+| rollo-II-128 | ref | 1,708 | 3,984 | 4,092 |
+| rollo-II-192 | ref | 1,708 | 4,372 | 4,588 |
+| rollo-II-256 | ref | 1,808 | 5,088 | 5,312 |
+| rollo-III-128 | ref | 1,860 | 1,932 | 1,508 |
+| rollo-III-192 | ref | 2,076 | 2,180 | 1,540 |
+| rollo-III-256 | ref | 2,388 | 2,516 | 2,144 |
 | saber | clean | 15,744 | 18,112 | 19,120 |
 | saber | m4 | 13,256 | 15,544 | 16,640 |
 | sikep434 | opt | 6,776 | 7,088 | 7,424 |
@@ -419,6 +437,15 @@
 | r5nd-5kemcca-5d | opt | 21.1% | 22.4% | 22.2% |
 | r5nd-5kemcca-5d-sneik | m4 | 0.0% | 0.0% | 0.0% |
 | r5nd-5kemcca-5d-sneik | opt | 0.0% | 0.0% | 0.0% |
+| rollo-I-128 | ref | 0.1% | 1.1% | 0.2% |
+| rollo-I-192 | ref | 0.1% | 1.0% | 0.1% |
+| rollo-I-256 | ref | 0.1% | 0.7% | 0.0% |
+| rollo-II-128 | ref | 0.0% | 2.8% | 0.5% |
+| rollo-II-192 | ref | 0.0% | 3.2% | 0.4% |
+| rollo-II-256 | ref | 0.0% | 3.1% | 0.5% |
+| rollo-III-128 | ref | 3.4% | 1.9% | 0.1% |
+| rollo-III-192 | ref | 3.6% | 1.9% | 0.1% |
+| rollo-III-256 | ref | 1.9% | 1.1% | 0.1% |
 | saber | clean | 21.3% | 20.9% | 14.6% |
 | saber | m4 | 53.0% | 52.9% | 41.5% |
 | sikep434 | opt | 0.0% | 0.0% | 0.0% |
@@ -583,6 +610,15 @@
 | r5nd-5kemcca-5d | opt | 4,545 | 0 | 0 | 4,545 |
 | r5nd-5kemcca-5d-sneik | m4 | 6,002 | 0 | 0 | 6,002 |
 | r5nd-5kemcca-5d-sneik | opt | 7,065 | 0 | 0 | 7,065 |
+| rollo-I-128 | ref | 18,788 | 0 | 2,072 | 20,860 |
+| rollo-I-192 | ref | 18,564 | 0 | 2,072 | 20,636 |
+| rollo-I-256 | ref | 18,572 | 0 | 2,072 | 20,644 |
+| rollo-II-128 | ref | 19,876 | 0 | 2,072 | 21,948 |
+| rollo-II-192 | ref | 19,940 | 0 | 2,072 | 22,012 |
+| rollo-II-256 | ref | 20,680 | 0 | 2,072 | 22,752 |
+| rollo-III-128 | ref | 19,284 | 0 | 2,072 | 21,356 |
+| rollo-III-192 | ref | 19,248 | 0 | 2,072 | 21,320 |
+| rollo-III-256 | ref | 22,060 | 0 | 2,072 | 24,132 |
 | saber | clean | 11,248 | 0 | 0 | 11,248 |
 | saber | m4 | 44,468 | 0 | 0 | 44,468 |
 | sikep434 | opt | 30,368 | 0 | 0 | 30,368 |
