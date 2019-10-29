@@ -52,6 +52,8 @@ class M4Settings(mupq.PlatformSettings):
         {'scheme': 'rainbowVc-classic', 'implementation': 'clean'},
         {'scheme': 'rainbowVc-cyclic', 'implementation': 'clean'},
         {'scheme': 'rainbowVc-cyclic-compressed', 'implementation': 'clean'},
+        {'scheme': 'qtesla-p-I', 'implementation': 'clean'},
+        {'scheme': 'qtesla-p-III', 'implementation': 'clean'},
     )
 
 
