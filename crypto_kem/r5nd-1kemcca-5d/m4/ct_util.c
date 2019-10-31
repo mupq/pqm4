@@ -21,7 +21,7 @@ uint8_t ct_memcmp(const void *a, const void *b, size_t len)
 
 // conditional move; overwrite d with a if flag is nonzero
 
-void ct_cmov(void *d, const void * a, uint8_t flag, size_t len)
+void ct_cmov(void *d, const void * a, size_t len, uint8_t flag)
 {
     uint8_t *d8 = (uint8_t *) d;
     const uint8_t *a8 = (const uint8_t *) a;
