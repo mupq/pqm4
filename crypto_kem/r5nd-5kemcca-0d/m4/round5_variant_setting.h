@@ -2,6 +2,4 @@
 //  Copyright (c) 2019, PQShield Ltd. and Koninklijke Philips N.V.
 
 //  This file can be used define the variant (e.g. just #define R5ND_1KEM_0d).
-#define R5ND_5KEM_0d
-#define ROUND5_CCA_PKE
-
+#define R5ND_5PKE_0d
