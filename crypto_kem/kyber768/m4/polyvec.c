@@ -14,8 +14,6 @@ void polyvec_compress(unsigned char *r, polyvec *a)
 {
   int i,j,k;
 
-  polyvec_csubq(a);
-
 #if (KYBER_POLYVECCOMPRESSEDBYTES == (KYBER_K * 352))
   uint16_t t[8];
   for(i=0;i<KYBER_K;i++)
@@ -112,7 +110,7 @@ void polyvec_decompress(polyvec *r, const unsigned char *a)
 * Description: Serialize vector of polynomials
 *
 * Arguments:   - unsigned char *r: pointer to output byte array (needs space for KYBER_POLYVECBYTES)
-*              - const polyvec *a: pointer to input vector of polynomials 
+*              - const polyvec *a: pointer to input vector of polynomials
 **************************************************/
 void polyvec_tobytes(unsigned char *r, polyvec *a)
 {
@@ -166,32 +164,9 @@ void polyvec_invntt(polyvec *r)
 }
 
 /*************************************************
-* Name:        polyvec_pointwise_acc
-*
-* Description: Pointwise multiply elements of a and b and accumulate into r
-*
-* Arguments: - poly *r:          pointer to output polynomial
-*            - const polyvec *a: pointer to first input vector of polynomials
-*            - const polyvec *b: pointer to second input vector of polynomials
-**************************************************/
-void polyvec_pointwise_acc(poly *r, const polyvec *a, const polyvec *b)
-{
-  int i;
-  poly t;
-
-  poly_basemul(r, &a->vec[0], &b->vec[0]);
-  for(i=1;i<KYBER_K;i++) {
-    poly_basemul(&t, &a->vec[i], &b->vec[i]);
-    poly_add(r, r, &t);
-  }
-
-  poly_reduce(r);
-}
-
-/*************************************************
 * Name:        polyvec_reduce
 *
-* Description: Applies Barrett reduction to each coefficient 
+* Description: Applies Barrett reduction to each coefficient
 *              of each element of a vector of polynomials
 *              for details of the Barrett reduction see comments in reduce.c
 *
@@ -202,22 +177,6 @@ void polyvec_reduce(polyvec *r)
   int i;
   for(i=0;i<KYBER_K;i++)
     poly_reduce(&r->vec[i]);
-}
-
-/*************************************************
-* Name:        polyvec_csubq
-*
-* Description: Applies conditional subtraction of q to each coefficient 
-*              of each element of a vector of polynomials
-*              for details of conditional subtraction of q see comments in reduce.c
-*
-* Arguments:   - poly *r:       pointer to input/output polynomial
-**************************************************/
-void polyvec_csubq(polyvec *r)
-{
-  int i;
-  for(i=0;i<KYBER_K;i++)
-    poly_csubq(&r->vec[i]);
 }
 
 /*************************************************
