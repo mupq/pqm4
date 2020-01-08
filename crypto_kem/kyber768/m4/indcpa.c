@@ -94,6 +94,7 @@ void indcpa_keypair(unsigned char *pk, unsigned char *sk) {
 
         poly_addnoise(&pkp, noiseseed, nonce++);
         poly_ntt(&pkp);
+        poly_reduce(&pkp); // this reduction is only added to have the same KAT values with other implementations.
 
         poly_tobytes(pk+i*KYBER_POLYBYTES, &pkp);
     }

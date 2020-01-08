@@ -19,19 +19,6 @@
   doublebutterfly \tb2, \a2, \a3, \twiddle, \tmp, \tmp2, \q, \qinv
 .endm
 
-.macro doublebutterfly_last_stage a0, a1, twiddle, tmp, tmp2, q, qinv
-  smultb \tmp, \a0, \twiddle
-  smultt \tmp2, \a1, \twiddle
-  montgomery \q, \qinv, \tmp, \twiddle  // twiddle is used as temp register
-  montgomery \q, \qinv, \tmp2, \tmp
-  pkhtb \tmp2, \tmp, \twiddle, asr#16  // twiddle is used as temp register
-  pkhbt \tmp, \a0, \a1, lsl#16
-  usub16 \a1, \tmp, \tmp2
-  uadd16 \tmp, \tmp, \tmp2
-  pkhbt \a0, \tmp, \a1, lsl#16
-  pkhtb \a1, \a1, \tmp, asr#16
-.endm
-
 .global ntt_fast
 .type ntt_fast, %function
 .align 2

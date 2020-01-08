@@ -159,8 +159,6 @@ basemul_asm:
 
     movw loop, #64
     1:
-      // ldrd poly0, poly2, [aptr], #8
-      // ldrd poly1, poly3, [bptr], #8 . It is slower than below by 64 cycles.
       ldr poly0, [aptr], #4
       ldr poly1, [bptr], #4
       ldr poly2, [aptr], #4

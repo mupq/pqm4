@@ -4,19 +4,6 @@
 .cpu cortex-m4
 .thumb
 
-.macro doubleinvbutterfly_first_stage a0, a1, twiddle, tmp ,tmp2, q, qinv
-  pkhbt \tmp, \a0, \a1, lsl#16
-  pkhtb \tmp2, \a1, \a0, asr#16
-  uadd16 \a1, \tmp, \tmp2
-  usub16 \tmp2, \tmp, \tmp2
-  smulbb \a0, \twiddle, \tmp2
-  smultt \tmp2, \twiddle, \tmp2
-  montgomery \q, \qinv, \tmp2, \tmp
-  montgomery \q, \qinv, \a0, \tmp2
-  pkhbt \a0, \a1, \tmp2
-  pkhtb \a1, \tmp, \a1, asr#16
-.endm
-
 .macro doubleinvbutterfly tb, a0, a1, twiddle, tmp, tmp2, q, qinv
   usub16 \tmp, \a0, \a1
   uadd16 \a0, \a0, \a1
