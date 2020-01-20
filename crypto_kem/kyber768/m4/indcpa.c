@@ -4,12 +4,11 @@
 #include "polyvec.h"
 #include "randombytes.h"
 #include "symmetric.h"
-#include "reduce.h"
 
 #include <string.h>
 #include <stdint.h>
 
-extern void doublebasemul_asm(int16_t *r, const int16_t *a, const int16_t *b, int16_t zeta);
+extern void doublebasemul_asm_acc(int16_t *r, const int16_t *a, const int16_t *b, int16_t zeta);
 /*************************************************
 * Name:        matacc
 *
@@ -27,7 +26,7 @@ static void matacc(poly* r, polyvec *b, unsigned char i, const unsigned char *se
   xof_state state;
   int ctr, pos, k;
   uint16_t val;
-  int16_t c[4], tmp[4];
+  int16_t c[4];
 
   poly_zeroize(r);
 
@@ -57,14 +56,9 @@ static void matacc(poly* r, polyvec *b, unsigned char i, const unsigned char *se
         }
       }
 
-      doublebasemul_asm(tmp, &b->vec[j].coeffs[4*ctr], c, zetas[64+ctr]);
-      r->coeffs[4*ctr]   += tmp[0];
-      r->coeffs[4*ctr+1] += tmp[1];
-      r->coeffs[4*ctr+2] += tmp[2];
-      r->coeffs[4*ctr+3] += tmp[3];
+      doublebasemul_asm_acc(&r->coeffs[4*ctr], &b->vec[j].coeffs[4*ctr], c, zetas[ctr]);
       ctr++;
     }
-    poly_reduce(r);
   }
 }
 
@@ -79,7 +73,7 @@ static void matacc(poly* r, polyvec *b, unsigned char i, const unsigned char *se
 **************************************************/
 void indcpa_keypair(unsigned char *pk, unsigned char *sk) {
     polyvec skpv;
-    poly e, pkp;
+    poly pkp;
     unsigned char buf[2 * KYBER_SYMBYTES];
     unsigned char *publicseed = buf;
     unsigned char *noiseseed = buf + KYBER_SYMBYTES;
@@ -95,13 +89,11 @@ void indcpa_keypair(unsigned char *pk, unsigned char *sk) {
     polyvec_ntt(&skpv);
 
     for (i = 0; i < KYBER_K; i++) {
-        matacc(&pkp, &skpv,i, publicseed, 0);
-        poly_frommont(&pkp);
+        matacc(&pkp, &skpv, i, publicseed, 0);
+        poly_invntt(&pkp);
 
-        poly_getnoise(&e, noiseseed, nonce++);
-        poly_ntt(&e);
-        poly_add(&pkp, &pkp, &e);
-        poly_reduce(&pkp);
+        poly_addnoise(&pkp, noiseseed, nonce++);
+        poly_ntt(&pkp);
 
         poly_tobytes(pk+i*KYBER_POLYBYTES, &pkp);
     }
@@ -246,18 +238,17 @@ unsigned char indcpa_enc_cmp(const unsigned char *c,
 void __attribute__ ((noinline)) indcpa_dec(unsigned char *m,
                                            const unsigned char *c,
                                            const unsigned char *sk) {
-    poly mp, skp, bp;
-    poly *v = &skp;
+    poly mp, bp;
+    poly *v = &bp;
 
-    poly_frombytes(&skp, sk);
-    poly_unpackdecompress(&bp, c, 0);
-    poly_ntt(&bp);
-    poly_basemul(&mp, &skp, &bp);
+    poly_unpackdecompress(&mp, c, 0);
+    poly_ntt(&mp);
+    poly_frombytes_mul(&mp, sk);
     for(int i = 1; i < KYBER_K; i++) {
-        poly_frombytes(&skp, sk + i*KYBER_POLYBYTES);
         poly_unpackdecompress(&bp, c, i);
         poly_ntt(&bp);
-        poly_basemul_acc(&mp, &skp, &bp);
+        poly_frombytes_mul(&bp, sk + i*KYBER_POLYBYTES);
+        poly_add(&mp, &mp, &bp);
     }
 
     poly_invntt(&mp);

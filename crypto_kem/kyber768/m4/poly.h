@@ -27,6 +27,7 @@ int cmp_poly_packcompress(const unsigned char *r, poly *a, int i);
 
 void poly_tobytes(unsigned char *r, poly *a);
 void poly_frombytes(poly *r, const unsigned char *a);
+void poly_frombytes_mul(poly *r, const unsigned char *a);
 
 void poly_frommsg(poly *r, const unsigned char msg[KYBER_SYMBYTES]);
 void poly_tomsg(unsigned char msg[KYBER_SYMBYTES], poly *a);
@@ -40,7 +41,6 @@ void poly_basemul_acc(poly *r, const poly *a, const poly *b);
 void poly_frommont(poly *r);
 
 void poly_reduce(poly *r);
-void poly_csubq(poly *r);
 
 void poly_add(poly *r, const poly *a, const poly *b);
 void poly_sub(poly *r, const poly *a, const poly *b);

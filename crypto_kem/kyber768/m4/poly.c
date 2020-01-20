@@ -3,7 +3,6 @@
 #include "cbd.h"
 #include "ntt.h"
 #include "params.h"
-#include "reduce.h"
 #include "symmetric.h"
 
 #include <stdint.h>
@@ -21,8 +20,6 @@ void poly_compress(unsigned char *r, poly *a)
 {
   uint8_t t[8];
   int i,j,k=0;
-
-  poly_csubq(a);
 
 #if (KYBER_POLYCOMPRESSEDBYTES == 96)
   for(i=0;i<KYBER_N;i+=8)
@@ -135,8 +132,6 @@ void poly_decompress(poly *r, const unsigned char *a)
 void poly_packcompress(unsigned char *r, poly *a, int i) {
     int j, k;
 
-    poly_csubq(a);
-
 #if (KYBER_POLYVECCOMPRESSEDBYTES == (KYBER_K * 352))
   uint16_t t[8];
 
@@ -226,8 +221,6 @@ int cmp_poly_compress(const unsigned char *r, poly *a) {
     uint8_t t[8];
     int i, j, k = 0;
 
-    poly_csubq(a);
-
 #if (KYBER_POLYCOMPRESSEDBYTES == 96)
     for(i=0;i<KYBER_N;i+=8)
     {
@@ -284,8 +277,6 @@ int cmp_poly_packcompress(const unsigned char *r, poly *a, int i) {
     unsigned char rc = 0;
     int j, k;
 
-    poly_csubq(a);
-
 #if (KYBER_POLYVECCOMPRESSEDBYTES == (KYBER_K * 352))
   uint16_t t[8];
     for(j=0;j<KYBER_N/8;j++)
@@ -335,7 +326,7 @@ void poly_tobytes(unsigned char *r, poly *a) {
     int i;
     uint16_t t0, t1;
 
-    poly_csubq(a);
+    poly_reduce(a);
 
     for (i = 0; i < KYBER_N / 2; i++) {
         t0 = a->coeffs[2 * i];
@@ -359,8 +350,32 @@ void poly_frombytes(poly *r, const unsigned char *a) {
     int i;
 
     for (i = 0; i < KYBER_N / 2; i++) {
-        r->coeffs[2 * i]   = a[3 * i]        | ((uint16_t)a[3 * i + 1] & 0x0f) << 8;
+        r->coeffs[2 * i]     = a[3 * i]          | ((uint16_t)a[3 * i + 1] & 0x0f) << 8;
         r->coeffs[2 * i + 1] = a[3 * i + 1] >> 4 | ((uint16_t)a[3 * i + 2] & 0xff) << 4;
+    }
+}
+
+
+extern void doublebasemul_asm(int16_t *r, const int16_t *a, const int16_t *b, int16_t zeta);
+/*************************************************
+* Name:        poly_frombytes_mul
+*
+* Description: Multiplication of a polynomial with a de-serialization of another polynomial
+*
+* Arguments:   - poly *r:                pointer to output polynomial
+*              - const unsigned char *a: pointer to input byte array (of KYBER_POLYBYTES bytes)
+**************************************************/
+void poly_frombytes_mul(poly *r, const unsigned char *a) {
+    int16_t tmp[4];
+    int i;
+
+    for (i = 0; i < KYBER_N / 4; i++) {
+        tmp[0] = a[6 * i]          | ((uint16_t)a[6 * i + 1] & 0x0f) << 8;
+        tmp[1] = a[6 * i + 1] >> 4 | ((uint16_t)a[6 * i + 2] & 0xff) << 4;
+        tmp[2] = a[6 * i + 3]      | ((uint16_t)a[6 * i + 4] & 0x0f) << 8;
+        tmp[3] = a[6 * i + 4] >> 4 | ((uint16_t)a[6 * i + 5] & 0xff) << 4;
+
+        doublebasemul_asm(&r->coeffs[4*i], &r->coeffs[4*i], tmp, zetas[i]);
     }
 }
 
@@ -420,7 +435,7 @@ extern void basemul_asm(int16_t *, const int16_t *, const int16_t *, const int16
 *              - const poly *b: pointer to second input polynomial
 **************************************************/
 void poly_basemul(poly *r, const poly *a, const poly *b) {
-    basemul_asm(r->coeffs, a->coeffs, b->coeffs, zetas+64);
+    basemul_asm(r->coeffs, a->coeffs, b->coeffs, zetas);
 }
 
 extern void basemul_asm_acc(int16_t *, const int16_t *, const int16_t *, const int16_t *);
@@ -434,9 +449,10 @@ extern void basemul_asm_acc(int16_t *, const int16_t *, const int16_t *, const i
 *              - const poly *b: pointer to second input polynomial
 **************************************************/
 void poly_basemul_acc(poly *r, const poly *a, const poly *b) {
-    basemul_asm_acc(r->coeffs, a->coeffs, b->coeffs, zetas+64);
+    basemul_asm_acc(r->coeffs, a->coeffs, b->coeffs, zetas);
 }
 
+extern void asm_frommont(int16_t *r);
 /*************************************************
 * Name:        poly_frommont
 *
@@ -446,14 +462,10 @@ void poly_basemul_acc(poly *r, const poly *a, const poly *b) {
 * Arguments:   - poly *r:       pointer to input/output polynomial
 **************************************************/
 void poly_frommont(poly *r) {
-    int i;
-    const int16_t f = (1ULL << 32) % KYBER_Q;
-
-    for (i = 0; i < KYBER_N; i++) {
-        r->coeffs[i] = montgomery_reduce((int32_t)r->coeffs[i] * f);
-    }
+  asm_frommont(r->coeffs);
 }
 
+extern void asm_barrett_reduce(int16_t *r);
 /*************************************************
 * Name:        poly_reduce
 *
@@ -463,27 +475,7 @@ void poly_frommont(poly *r) {
 * Arguments:   - poly *r:       pointer to input/output polynomial
 **************************************************/
 void poly_reduce(poly *r) {
-    int i;
-
-    for (i = 0; i < KYBER_N; i++) {
-        r->coeffs[i] = barrett_reduce(r->coeffs[i]);
-    }
-}
-
-/*************************************************
-* Name:        poly_csubq
-*
-* Description: Applies conditional subtraction of q to each coefficient of a polynomial
-*              for details of conditional subtraction of q see comments in reduce.c
-*
-* Arguments:   - poly *r:       pointer to input/output polynomial
-**************************************************/
-void poly_csubq(poly *r) {
-    int i;
-
-    for (i = 0; i < KYBER_N; i++) {
-        r->coeffs[i] = csubq(r->coeffs[i]);
-    }
+  asm_barrett_reduce(r->coeffs);
 }
 
 extern void pointwise_add(int16_t *, const int16_t *, const int16_t *);
@@ -546,8 +538,6 @@ void poly_frommsg(poly *r, const unsigned char msg[KYBER_SYMBYTES]) {
 void poly_tomsg(unsigned char msg[KYBER_SYMBYTES], poly *a) {
     uint16_t t;
     int i, j;
-
-    poly_csubq(a);
 
     for (i = 0; i < KYBER_SYMBYTES; i++) {
         msg[i] = 0;
