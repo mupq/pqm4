@@ -2,6 +2,7 @@
 #define PARAMS_H
 
 #define NEWHOPE_N 512
+
 #define NEWHOPE_Q 12289
 #define NEWHOPE_K 8           /* used in noise sampling */
 
