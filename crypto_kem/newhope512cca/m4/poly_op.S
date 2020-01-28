@@ -43,7 +43,7 @@ asm_mul_coeff:
                                
   movw q, #12289                
   movt qinv, #12287                                
-	movw rcons, #10952
+  movw rcons, #10952
                                 
   .equ loopcount, 51          
                                 
@@ -57,57 +57,57 @@ asm_mul_coeff:
                          
     ldm poly, {r2-r6}                                                
     ldm factors!, {r7-r9}         
-                                                      
+                                                  
     smulbb tmp, p_0, f_0
     smultt p_0, p_0, f_0
     montgomery q, qinv, tmp, f_0
     montgomery q, qinv, p_0, tmp
- 		smultb tmp0, f_0, rcons
-		smultb p_0, tmp, rcons
-		montgomery q, qinv, tmp0, f_0
-		montgomery q, qinv, p_0, tmp   
-		pkhtb p_0, tmp, f_0, asr #16
+    smultb tmp0, f_0, rcons
+    smultb p_0, tmp, rcons
+    montgomery q, qinv, tmp0, f_0
+    montgomery q, qinv, p_0, tmp   
+    pkhtb p_0, tmp, f_0, asr #16
 
     smulbb tmp, p_1, f_1
     smultt p_1, p_1, f_1
     montgomery q, qinv, tmp, f_1
     montgomery q, qinv, p_1, tmp
- 		smultb tmp0, f_1, rcons
-		smultb p_1, tmp, rcons
-		montgomery q, qinv, tmp0, f_1
-		montgomery q, qinv, p_1, tmp   
-		pkhtb p_1, tmp, f_1, asr #16
+    smultb tmp0, f_1, rcons
+    smultb p_1, tmp, rcons
+    montgomery q, qinv, tmp0, f_1
+    montgomery q, qinv, p_1, tmp   
+    pkhtb p_1, tmp, f_1, asr #16
             
     smulbb tmp, p_2, f_2
     smultt p_2, p_2, f_2
     montgomery q, qinv, tmp, f_2
     montgomery q, qinv, p_2, tmp
- 		smultb tmp0, f_2, rcons
-		smultb p_2, tmp, rcons
-		montgomery q, qinv, tmp0, f_2
-		montgomery q, qinv, p_2, tmp   
-		pkhtb p_2, tmp, f_2, asr #16
+    smultb tmp0, f_2, rcons
+    smultb p_2, tmp, rcons
+    montgomery q, qinv, tmp0, f_2
+    montgomery q, qinv, p_2, tmp   
+    pkhtb p_2, tmp, f_2, asr #16
     
-		ldm factors!, {r7,r8}                     
+    ldm factors!, {r7,r8}                     
     smulbb tmp, p_3, f_3
     smultt p_3, p_3, f_3
     montgomery q, qinv, tmp, f_3
     montgomery q, qinv, p_3, tmp
- 		smultb tmp0, f_3, rcons
-		smultb p_3, tmp, rcons
-		montgomery q, qinv, tmp0, f_3
-		montgomery q, qinv, p_3, tmp   
-		pkhtb p_3, tmp, f_3, asr #16
-   
+    smultb tmp0, f_3, rcons
+    smultb p_3, tmp, rcons
+    montgomery q, qinv, tmp0, f_3
+    montgomery q, qinv, p_3, tmp   
+    pkhtb p_3, tmp, f_3, asr #16
+
     smulbb tmp, p_4, f_4
     smultt p_4, p_4, f_4
     montgomery q, qinv, tmp, f_4
     montgomery q, qinv, p_4, tmp
- 		smultb tmp0, f_4, rcons
-		smultb p_4, tmp, rcons
-		montgomery q, qinv, tmp0, f_4
-		montgomery q, qinv, p_4, tmp   
-		pkhtb p_4, tmp, f_4, asr #16
+    smultb tmp0, f_4, rcons
+    smultb p_4, tmp, rcons
+    montgomery q, qinv, tmp0, f_4
+    montgomery q, qinv, p_4, tmp   
+    pkhtb p_4, tmp, f_4, asr #16
 
     stm poly!, {r2-r6}
 
@@ -116,7 +116,7 @@ asm_mul_coeff:
 #else
     pop {tmp}
     subs.w tmp, #1
-  bne.w 1b
+    bne.w 1b
 #endif
 
   ldr p_0, [poly]
@@ -125,11 +125,11 @@ asm_mul_coeff:
   smultt p_0, p_0, f_0
   montgomery q, qinv, tmp, f_0
   montgomery q, qinv, p_0, tmp
- 	smultb tmp0, f_0, rcons
-	smultb p_0, tmp, rcons
-	montgomery q, qinv, tmp0, f_0
-	montgomery q, qinv, p_0, tmp   
-	pkhtb p_0, tmp, f_0, asr #16
+  smultb tmp0, f_0, rcons
+  smultb p_0, tmp, rcons
+  montgomery q, qinv, tmp0, f_0
+  montgomery q, qinv, p_0, tmp   
+  pkhtb p_0, tmp, f_0, asr #16
 
   str p_0, [poly]
 
@@ -151,15 +151,15 @@ asm_eight_mul:
   b2b3      .req r7
   b4b5      .req r8
   b6b7      .req r9
-	tmp       .req r10
-	tmp0      .req r11
+  tmp       .req r10
+  tmp0      .req r11
   rcons     .req r12
   q         .req r14
   qinv      .req r14
 
   movw q, #12289
   movt qinv, #12287
-	movw rcons, #10952
+  movw rcons, #10952
 
   ldm a_ptr, {a0a1-a6a7}
   ldm b_ptr, {b0b1-b6b7}
@@ -168,41 +168,41 @@ asm_eight_mul:
   smultt a0a1, a0a1, b0b1
   montgomery q, qinv, tmp, b0b1
   montgomery q, qinv, a0a1, tmp
-	smultb tmp0, b0b1, rcons
-	smultb a0a1, tmp, rcons
-	montgomery q, qinv, tmp0, b0b1
-	montgomery q, qinv, a0a1, tmp
+  smultb tmp0, b0b1, rcons
+  smultb a0a1, tmp, rcons
+  montgomery q, qinv, tmp0, b0b1
+  montgomery q, qinv, a0a1, tmp
   pkhtb a0a1, tmp, b0b1, asr #16
 
   smulbb tmp, a2a3, b2b3
   smultt a2a3, a2a3, b2b3
   montgomery q, qinv, tmp, b2b3
   montgomery q, qinv, a2a3, tmp
- 	smultb tmp0, b2b3, rcons
-	smultb a2a3, tmp, rcons
-	montgomery q, qinv, tmp0, b2b3
-	montgomery q, qinv, a2a3, tmp 
-	pkhtb a2a3, tmp, b2b3, asr #16
+  smultb tmp0, b2b3, rcons
+  smultb a2a3, tmp, rcons
+  montgomery q, qinv, tmp0, b2b3
+  montgomery q, qinv, a2a3, tmp 
+  pkhtb a2a3, tmp, b2b3, asr #16
 
   smulbb tmp, a4a5, b4b5
   smultt a4a5, a4a5, b4b5
   montgomery q, qinv, tmp, b4b5
   montgomery q, qinv, a4a5, tmp
- 	smultb tmp0, b4b5, rcons
-	smultb a4a5, tmp, rcons
-	montgomery q, qinv, tmp0, b4b5
-	montgomery q, qinv, a4a5, tmp 
-	pkhtb a4a5, tmp, b4b5, asr #16
+  smultb tmp0, b4b5, rcons
+  smultb a4a5, tmp, rcons
+  montgomery q, qinv, tmp0, b4b5
+  montgomery q, qinv, a4a5, tmp 
+  pkhtb a4a5, tmp, b4b5, asr #16
 
   smulbb tmp, a6a7, b6b7
   smultt a6a7, a6a7, b6b7
   montgomery q, qinv, tmp, b6b7
   montgomery q, qinv, a6a7, tmp
- 	smultb tmp0, b6b7, rcons
-	smultb a6a7, tmp, rcons
-	montgomery q, qinv, tmp0, b6b7
-	montgomery q, qinv, a6a7, tmp 
-	pkhtb a6a7, tmp, b6b7, asr #16
+  smultb tmp0, b6b7, rcons
+  smultb a6a7, tmp, rcons
+  montgomery q, qinv, tmp0, b6b7
+  montgomery q, qinv, a6a7, tmp 
+  pkhtb a6a7, tmp, b6b7, asr #16
 
   stm a_ptr, {a0a1-a6a7}
 
@@ -230,28 +230,28 @@ asm_add:
   1:
 #endif
 
-  ldm r0, {r2-r6}
-  ldm r1!, {r7-r11}
+    ldm r0, {r2-r6}
+    ldm r1!, {r7-r11}
 
-  uadd16 r2, r2, r7
-  uadd16 r3, r3, r8
-  uadd16 r4, r4, r9
-  uadd16 r5, r5, r10
-  uadd16 r6, r6, r11
+    uadd16 r2, r2, r7
+    uadd16 r3, r3, r8
+    uadd16 r4, r4, r9
+    uadd16 r5, r5, r10
+    uadd16 r6, r6, r11
 
-  doublebarrett_newhope r2, r8, r9, q, barrettconst
-  doublebarrett_newhope r3, r8, r9, q, barrettconst
-  doublebarrett_newhope r4, r8, r9, q, barrettconst
-  doublebarrett_newhope r5, r8, r9, q, barrettconst
-  doublebarrett_newhope r6, r8, r9, q, barrettconst
+    doublebarrett_newhope r2, r8, r9, q, barrettconst
+    doublebarrett_newhope r3, r8, r9, q, barrettconst
+    doublebarrett_newhope r4, r8, r9, q, barrettconst
+    doublebarrett_newhope r5, r8, r9, q, barrettconst
+    doublebarrett_newhope r6, r8, r9, q, barrettconst
 
-  stm r0!, {r2-r6}
+    stm r0!, {r2-r6}
 
 #ifdef USE_REPT
   .endr
 #else
     subs.w loop, #1
-  bne.w 1b
+    bne.w 1b
 #endif
 
   ldr r2, [r0]
@@ -283,7 +283,7 @@ asm_barrett_reduce:
   tmp2         .req r11
   loop         .req r12
   q            .req r14
-	barrettconst .req r14
+  barrettconst .req r14
 
   .equ loopcount, 32
 
@@ -291,7 +291,6 @@ asm_barrett_reduce:
   movt barrettconst, #21844
   movw loop, #loopcount
   redloop:
-
     ldm poly, {poly0-poly7}
 
     doublebarrett_newhope poly0, tmp, tmp2, q, barrettconst
@@ -306,6 +305,6 @@ asm_barrett_reduce:
     stm poly!, {poly0-poly7}
 
     subs.w loop, #1
-  bne.w redloop
+    bne.w redloop
 
   pop     {r4-r11, pc}

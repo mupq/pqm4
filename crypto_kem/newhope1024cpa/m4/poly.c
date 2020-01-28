@@ -14,8 +14,8 @@
 static uint16_t flipabs(int16_t x)
 {
   int16_t r,m;
-	x -= (x>>14)*NEWHOPE_Q;
-	r = (x + ((x>>15)&NEWHOPE_Q));
+  x -= (x>>14)*NEWHOPE_Q;
+  r = (x + ((x>>15)&NEWHOPE_Q));
   r = r - NEWHOPE_Q/2;
   m = r >> 15;
   return (r + m) ^ m;
@@ -377,7 +377,7 @@ void poly_ntt(poly *r)
 
 void poly_bitrev(poly *r)
 {
-	bitrev(r->coeffs);
+  bitrev(r->coeffs);
 }
 extern int16_t gammas_inv_montgomery[];
 extern void asm_invntt(int16_t*, const int16_t*);

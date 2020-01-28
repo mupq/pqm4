@@ -7,7 +7,6 @@
 #define CRYPTO_PUBLICKEYBYTES  NEWHOPE_CCAKEM_PUBLICKEYBYTES
 #define CRYPTO_CIPHERTEXTBYTES NEWHOPE_CCAKEM_CIPHERTEXTBYTES
 #define CRYPTO_BYTES           NEWHOPE_SYMBYTES
-
 #define CRYPTO_ALGNAME "NewHope1024-CCAKEM"
 
 int crypto_kem_keypair(unsigned char *pk, unsigned char *sk);

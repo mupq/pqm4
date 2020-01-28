@@ -79,7 +79,7 @@ asm_ntt:
 
   .equ distance, 16
 
-  /* stages 1 & 2 & 3 */
+  /* stages 1 & 2 & 3 & 4 */
   .equ loopcount, 64
 
 #ifdef USE_REPT
@@ -114,7 +114,7 @@ asm_ntt:
     two_doublebutterfly b, t, poly1, poly3, poly5, poly7, twiddle, tmp, tmp2, q, qinv
     fullmontgomery poly0, poly1, poly2, poly3, poly4, poly5, poly6, poly7, tmp, tmp2, q, qinv, montconst
 
-		// Stage 4
+    // Stage 4
     ldr.w twiddle, [twiddle_ptr, #14]
     doublebutterfly b, t, poly0, poly4, twiddle, tmp, tmp2, q, qinv
     ldr.w twiddle, [twiddle_ptr, #18]
@@ -131,7 +131,7 @@ asm_ntt:
 #else
     pop {tmp}
     subs.w tmp, #1
-  bne.w 1b
+    bne.w 1b
 #endif
 
   sub poly, #2048
@@ -139,7 +139,7 @@ asm_ntt:
 
   .equ distance, distance*8
 
-  /* stage 4 & 5 & 6 */
+  /* stage 5 & 6 & 7 */
   .equ loopcount2, 8
 
 #ifdef USE_REPT
@@ -147,7 +147,7 @@ asm_ntt:
 #else
   movw tmp, #loopcount2
   2:
-		push {tmp}
+    push {tmp}
 #endif
 
 #ifdef USE_REPT
@@ -165,53 +165,52 @@ asm_ntt:
       ldr.w twiddle, [twiddle_ptr]
       two_doublebutterfly b, t, poly0, poly1, poly2, poly3, twiddle, tmp, tmp2, q, qinv
       two_doublebutterfly b, t, poly4, poly5, poly6, poly7, twiddle, tmp, tmp2, q, qinv
-			fullmontgomery poly0, poly1, poly2, poly3, poly4, poly5, poly6, poly7, tmp, tmp2, q, qinv, montconst
+      fullmontgomery poly0, poly1, poly2, poly3, poly4, poly5, poly6, poly7, tmp, tmp2, q, qinv, montconst
 
       // Stage 6
       ldr.w twiddle, [twiddle_ptr, #4]
       two_doublebutterfly b, t, poly0, poly2, poly4, poly6, twiddle, tmp, tmp2, q, qinv
-			ldr.w twiddle, [twiddle_ptr, #8]
+      ldr.w twiddle, [twiddle_ptr, #8]
       two_doublebutterfly b, t, poly1, poly3, poly5, poly7, twiddle, tmp, tmp2, q, qinv
       halfmontgomery poly0, poly1, poly4, poly5, tmp, tmp2, q, qinv, montconst
 
       // Stage 7
-			ldr.w twiddle, [twiddle_ptr, #12]
-			doublebutterfly b, t, poly0, poly4, twiddle, tmp, tmp2, q, qinv
-			ldr.w twiddle, [twiddle_ptr, #16]
-			doublebutterfly b, t, poly1, poly5, twiddle, tmp, tmp2, q, qinv
-			ldr.w twiddle, [twiddle_ptr, #20]
-			doublebutterfly b, t, poly2, poly6, twiddle, tmp, tmp2, q, qinv
-			ldr.w twiddle, [twiddle_ptr, #24]
-			doublebutterfly b, t, poly3, poly7, twiddle, tmp, tmp2, q, qinv
+      ldr.w twiddle, [twiddle_ptr, #12]
+      doublebutterfly b, t, poly0, poly4, twiddle, tmp, tmp2, q, qinv
+      ldr.w twiddle, [twiddle_ptr, #16]
+      doublebutterfly b, t, poly1, poly5, twiddle, tmp, tmp2, q, qinv
+      ldr.w twiddle, [twiddle_ptr, #20]
+      doublebutterfly b, t, poly2, poly6, twiddle, tmp, tmp2, q, qinv
+      ldr.w twiddle, [twiddle_ptr, #24]
+      doublebutterfly b, t, poly3, poly7, twiddle, tmp, tmp2, q, qinv
       fullmontgomery poly0, poly1, poly2, poly3, poly4, poly5, poly6, poly7, tmp, tmp2, q, qinv, montconst
 
-			store poly, poly4, poly5, poly6, poly7, #distance, #5*distance/4, #6*distance/4, #7*distance/4
+      store poly, poly4, poly5, poly6, poly7, #distance, #5*distance/4, #6*distance/4, #7*distance/4
       str.w poly1, [poly, #distance/4]
       str.w poly2, [poly, #2*distance/4]
       str.w poly3, [poly, #3*distance/4]
       str.w poly0, [poly], #4
 
-			add twiddle_ptr, #28
+      add twiddle_ptr, #28
 #ifdef USE_REPT
     .endr
 #else
       pop {tmp}
       subs.w tmp, #1
-    bne.w 3b
+      bne.w 3b
 #endif
 
     add poly, #7*distance/4
-		sub twiddle_ptr, #224
+    sub twiddle_ptr, #224
 #ifdef USE_REPT
   .endr
 #else
-
     pop {tmp}
     subs.w tmp, #1
-  bne.w 2b
+    bne.w 2b
 #endif
   sub poly, #2048
-	add twiddle_ptr, #224
+  add twiddle_ptr, #224
 
   .equ distance, 1024
 
@@ -233,15 +232,15 @@ asm_ntt:
     two_doublebutterfly b, t, poly4, poly5, poly6, poly7, twiddle, tmp, tmp2, q, qinv
     fullmontgomery poly0, poly1, poly2, poly3, poly4, poly5, poly6, poly7, tmp, tmp2, q, qinv, montconst
     
-		// Stage 8 for NEWHOPE_N=512 and Stage 9 for NEWHOPE_N=1024
+    // Stage 9
     ldr.w twiddle, [twiddle_ptr], #4
     two_doublebutterfly b, t, poly0, poly2, poly4, poly6, twiddle, tmp, tmp2, q, qinv
-		ldr.w twiddle, [twiddle_ptr], #4
+    ldr.w twiddle, [twiddle_ptr], #4
     two_doublebutterfly b, t, poly1, poly3, poly5, poly7, twiddle, tmp, tmp2, q, qinv
     halfmontgomery poly0, poly1, poly4, poly5, tmp, tmp2, q, qinv, montconst
 
 
-		// Stage 9 for NEWHOPE_N=512 and Stage 10 for NEWHOPE_N=1024
+    // Stage 10
     ldr.w twiddle, [twiddle_ptr], #4
     doublebutterfly b, t, poly0, poly4, twiddle, tmp, tmp2, q, qinv
     ldr.w twiddle, [twiddle_ptr], #4
@@ -253,7 +252,7 @@ asm_ntt:
     halfmontgomery poly4, poly5, poly6, poly7, tmp, tmp2, q, qinv, montconst
     fullbarrett poly0, poly1, poly2, poly3, poly4, poly5, poly6, poly7, tmp, tmp2, q, montconst
 
-		store poly, poly4, poly5, poly6, poly7, #distance, #5*distance/4, #6*distance/4, #7*distance/4
+    store poly, poly4, poly5, poly6, poly7, #distance, #5*distance/4, #6*distance/4, #7*distance/4
     str.w poly1, [poly, #distance/4]
     str.w poly2, [poly, #2*distance/4]
     str.w poly3, [poly, #3*distance/4]
@@ -264,7 +263,7 @@ asm_ntt:
 #else
     pop {tmp}
     subs.w tmp, #1
-  bne.w 4b
+    bne.w 4b
 #endif
 
   pop     {r4-r11, pc}
