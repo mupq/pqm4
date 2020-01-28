@@ -5,7 +5,6 @@
 #include "randombytes.h"
 #include <stdio.h>
 #include <string.h>
-#define OPTIMIZE_STACK
 
 
 /*************************************************

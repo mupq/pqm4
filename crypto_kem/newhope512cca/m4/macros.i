@@ -1,5 +1,6 @@
 #ifndef MACROS_I
 #define MACROS_I
+#include "params.h"
 
 .macro load a, a0, a1, a2, a3, mem0, mem1, mem2, mem3
   ldr.w \a0, [\a, \mem0]
