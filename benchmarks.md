@@ -33,13 +33,13 @@
 | mamabear-ephem (100 executions) | opt | AVG: 1,206,350 <br /> MIN: 1,206,350 <br /> MAX: 1,206,350 | AVG: 1,431,341 <br /> MIN: 1,431,341 <br /> MAX: 1,431,341 | AVG: 320,233 <br /> MIN: 320,233 <br /> MAX: 320,233 |
 | mamabear-ephem (100 executions) | ref | AVG: 8,783,565 <br /> MIN: 8,783,565 <br /> MAX: 8,783,565 | AVG: 11,525,870 <br /> MIN: 11,525,870 <br /> MAX: 11,525,870 | AVG: 2,876,105 <br /> MIN: 2,876,105 <br /> MAX: 2,876,105 |
 | newhope1024cca (100 executions) | clean | AVG: 1,460,167 <br /> MIN: 1,459,836 <br /> MAX: 1,460,406 | AVG: 2,264,773 <br /> MIN: 2,264,441 <br /> MAX: 2,265,011 | AVG: 2,410,906 <br /> MIN: 2,410,574 <br /> MAX: 2,411,144 |
-| newhope1024cca (100 executions) | m4 | AVG: 1,161,112 <br /> MIN: 1,160,786 <br /> MAX: 1,161,650 | AVG: 1,777,918 <br /> MIN: 1,777,592 <br /> MAX: 1,778,456 | AVG: 1,760,470 <br /> MIN: 1,760,144 <br /> MAX: 1,761,008 |
+| newhope1024cca (100 executions) | m4 | AVG: 1,157,677 <br /> MIN: 1,157,321 <br /> MAX: 1,158,018 | AVG: 1,688,875 <br /> MIN: 1,688,519 <br /> MAX: 1,689,216 | AVG: 1,614,268 <br /> MIN: 1,613,912 <br /> MAX: 1,614,609 |
 | newhope1024cpa (100 executions) | clean | AVG: 1,274,813 <br /> MIN: 1,274,572 <br /> MAX: 1,275,142 | AVG: 1,857,055 <br /> MIN: 1,856,813 <br /> MAX: 1,857,383 | AVG: 327,778 <br /> MIN: 327,778 <br /> MAX: 327,778 |
-| newhope1024cpa (100 executions) | m4 | AVG: 975,736 <br /> MIN: 975,452 <br /> MAX: 976,190 | AVG: 1,371,633 <br /> MIN: 1,371,349 <br /> MAX: 1,372,087 | AVG: 162,660 <br /> MIN: 162,660 <br /> MAX: 162,660 |
+| newhope1024cpa (100 executions) | m4 | AVG: 978,035 <br /> MIN: 977,682 <br /> MAX: 978,362 | AVG: 1,281,876 <br /> MIN: 1,281,523 <br /> MAX: 1,282,203 | AVG: 129,916 <br /> MIN: 129,916 <br /> MAX: 129,916 |
 | newhope512cca (100 executions) | clean | AVG: 719,785 <br /> MIN: 719,577 <br /> MAX: 720,072 | AVG: 1,134,083 <br /> MIN: 1,133,875 <br /> MAX: 1,134,370 | AVG: 1,192,460 <br /> MIN: 1,192,253 <br /> MAX: 1,192,748 |
-| newhope512cca (100 executions) | m4 | AVG: 588,683 <br /> MIN: 588,327 <br /> MAX: 588,975 | AVG: 918,558 <br /> MIN: 918,202 <br /> MAX: 918,850 | AVG: 904,800 <br /> MIN: 904,443 <br /> MAX: 905,091 |
+| newhope512cca (100 executions) | m4 | AVG: 578,950 <br /> MIN: 578,722 <br /> MAX: 579,232 | AVG: 865,876 <br /> MIN: 865,648 <br /> MAX: 866,158 | AVG: 819,973 <br /> MIN: 819,745 <br /> MAX: 820,255 |
 | newhope512cpa (100 executions) | clean | AVG: 628,310 <br /> MIN: 628,073 <br /> MAX: 628,508 | AVG: 915,293 <br /> MIN: 915,056 <br /> MAX: 915,491 | AVG: 163,222 <br /> MIN: 163,222 <br /> MAX: 163,222 |
-| newhope512cpa (100 executions) | m4 | AVG: 497,229 <br /> MIN: 496,977 <br /> MAX: 497,499 | AVG: 700,489 <br /> MIN: 700,237 <br /> MAX: 700,759 | AVG: 90,403 <br /> MIN: 90,403 <br /> MAX: 90,403 |
+| newhope512cpa (100 executions) | m4 | AVG: 488,136 <br /> MIN: 487,900 <br /> MAX: 488,444 | AVG: 647,790 <br /> MIN: 647,554 <br /> MAX: 648,098 | AVG: 71,125 <br /> MIN: 71,125 <br /> MAX: 71,125 |
 | ntruhps2048509 (100 executions) | clean | AVG: 107,331,110 <br /> MIN: 107,331,110 <br /> MAX: 107,331,110 | AVG: 2,876,597 <br /> MIN: 2,876,597 <br /> MAX: 2,876,597 | AVG: 7,495,670 <br /> MIN: 7,495,670 <br /> MAX: 7,495,670 |
 | ntruhps2048509 (100 executions) | m4 | AVG: 77,698,713 <br /> MIN: 77,698,713 <br /> MAX: 77,698,713 | AVG: 645,329 <br /> MIN: 645,329 <br /> MAX: 645,329 | AVG: 542,439 <br /> MIN: 542,439 <br /> MAX: 542,439 |
 | ntruhps2048677 (100 executions) | clean | AVG: 196,228,850 <br /> MIN: 196,228,850 <br /> MAX: 196,228,850 | AVG: 4,909,724 <br /> MIN: 4,909,724 <br /> MAX: 4,909,724 | AVG: 13,157,491 <br /> MIN: 13,157,491 <br /> MAX: 13,157,491 |
@@ -209,13 +209,13 @@
 | mamabear-ephem | opt | 3,592 | 3,488 | 2,920 |
 | mamabear-ephem | ref | 6,792 | 6,712 | 4,864 |
 | newhope1024cca | clean | 11,120 | 17,400 | 19,608 |
-| newhope1024cca | m4 | 11,080 | 17,360 | 19,576 |
+| newhope1024cca | m4 | 2,852 | 5,036 | 5,044 |
 | newhope1024cpa | clean | 11,096 | 17,288 | 8,308 |
-| newhope1024cpa | m4 | 11,096 | 17,264 | 8,344 |
+| newhope1024cpa | m4 | 2,844 | 4,940 | 2,168 |
 | newhope512cca | clean | 5,992 | 9,208 | 10,328 |
-| newhope512cca | m4 | 5,960 | 9,168 | 10,296 |
+| newhope512cca | m4 | 1,828 | 2,988 | 2,996 |
 | newhope512cpa | clean | 5,968 | 9,128 | 4,248 |
-| newhope512cpa | m4 | 5,944 | 9,072 | 4,212 |
+| newhope512cpa | m4 | 1,820 | 2,892 | 1,144 |
 | ntruhps2048509 | clean | 11,784 | 6,896 | 5,192 |
 | ntruhps2048509 | m4 | 21,412 | 15,452 | 14,828 |
 | ntruhps2048677 | clean | 15,608 | 9,104 | 6,840 |
@@ -385,13 +385,13 @@
 | lightsaber | clean | 24.7% | 23.6% | 15.3% |
 | lightsaber | m4 | 56.5% | 55.7% | 42.0% |
 | newhope1024cca | clean | 59.5% | 59.1% | 47.6% |
-| newhope1024cca | m4 | 74.2% | 74.6% | 64.5% |
+| newhope1024cca | m4 | 74.4% | 78.5% | 70.3% |
 | newhope1024cpa | clean | 53.9% | 50.2% | 4.3% |
-| newhope1024cpa | m4 | 69.6% | 67.0% | 8.5% |
+| newhope1024cpa | m4 | 69.9% | 71.7% | 10.7% |
 | newhope512cca | clean | 61.4% | 61.5% | 49.9% |
-| newhope512cca | m4 | 74.4% | 75.2% | 65.0% |
+| newhope512cca | m4 | 75.6% | 79.8% | 71.7% |
 | newhope512cpa | clean | 56.1% | 52.4% | 8.6% |
-| newhope512cpa | m4 | 70.1% | 67.6% | 15.3% |
+| newhope512cpa | m4 | 71.4% | 73.1% | 19.5% |
 | ntruhps2048509 | clean | 0.0% | 0.9% | 1.4% |
 | ntruhps2048509 | m4 | 0.0% | 4.1% | 19.0% |
 | ntruhps2048677 | clean | 0.0% | 0.8% | 1.1% |
@@ -561,13 +561,13 @@
 | mamabear-ephem | opt | 4,917 | 0 | 0 | 4,917 |
 | mamabear-ephem | ref | 4,900 | 0 | 0 | 4,900 |
 | newhope1024cca | clean | 10,780 | 0 | 0 | 10,780 |
-| newhope1024cca | m4 | 96,976 | 5,120 | 0 | 102,096 |
+| newhope1024cca | m4 | 12,092 | 4,096 | 0 | 16,188 |
 | newhope1024cpa | clean | 10,384 | 0 | 0 | 10,384 |
-| newhope1024cpa | m4 | 96,664 | 5,120 | 0 | 101,784 |
+| newhope1024cpa | m4 | 11,180 | 4,096 | 0 | 15,276 |
 | newhope512cca | clean | 7,016 | 0 | 0 | 7,016 |
-| newhope512cca | m4 | 51,396 | 2,560 | 0 | 53,956 |
+| newhope512cca | m4 | 11,056 | 2,048 | 0 | 13,104 |
 | newhope512cpa | clean | 6,620 | 0 | 0 | 6,620 |
-| newhope512cpa | m4 | 51,084 | 2,560 | 0 | 53,644 |
+| newhope512cpa | m4 | 10,148 | 2,048 | 0 | 12,196 |
 | ntruhps2048509 | clean | 6,916 | 0 | 0 | 6,916 |
 | ntruhps2048509 | m4 | 89,140 | 0 | 0 | 89,140 |
 | ntruhps2048677 | clean | 6,960 | 0 | 0 | 6,960 |
