@@ -3,8 +3,8 @@ Key Encapsulation Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [cycles] (mean),Key Generation [cycles] (min),Key Generation [cycles] (max),Encapsulation [cycles] (mean),Encapsulation [cycles] (min),Encapsulation [cycles] (max),Decapsulation [cycles] (mean),Decapsulation [cycles] (min),Decapsulation [cycles] (max)
 babybear (100 executions),clean,4031805,4031805,4031805,5878092,5878092,5878092,11997012,11997012,11997012
 babybear (100 executions),opt,596665,596665,596665,752117,752117,752117,1142773,1142773,1142773
+babybear-ephem (100 executions),clean,4031806,4031806,4031806,5905062,5905062,5905062,1998296,1998296,1998296
 babybear-ephem (100 executions),opt,596664,596664,596664,767860,767860,767860,231728,231728,231728
-babybear-ephem (100 executions),ref,3968935,3968935,3968935,5817861,5817861,5817861,1948755,1948755,1948755
 firesaber (100 executions),clean,3816702,3816702,3816702,4743325,4743325,4743325,5355474,5355474,5355474
 firesaber (100 executions),m4,1448776,1448776,1448776,1786930,1786930,1786930,1853339,1853339,1853339
 frodokem640aes (100 executions),m4,47050559,47050559,47050559,45883334,45883334,45883334,45366065,45366065,45366065
@@ -29,8 +29,8 @@ lightsaber (100 executions),clean,1051133,1051133,1051133,1537170,1537170,153717
 lightsaber (100 executions),m4,459965,459965,459965,651273,651273,651273,678810,678810,678810
 mamabear (100 executions),clean,8861427,8861427,8861427,11598380,11598380,11598380,23520327,23520327,23520327
 mamabear (100 executions),opt,1195048,1195048,1195048,1402955,1402955,1402955,1955496,1955496,1955496
+mamabear-ephem (100 executions),clean,8870888,8870888,8870888,11637666,11637666,11637666,2938885,2938885,2938885
 mamabear-ephem (100 executions),opt,1206350,1206350,1206350,1431341,1431341,1431341,320233,320233,320233
-mamabear-ephem (100 executions),ref,8783565,8783565,8783565,11525870,11525870,11525870,2876105,2876105,2876105
 newhope1024cca (100 executions),clean,1460167,1459836,1460406,2264773,2264441,2265011,2410906,2410574,2411144
 newhope1024cca (100 executions),m4,1157677,1157321,1158018,1688875,1688519,1689216,1614268,1613912,1614609
 newhope1024cpa (100 executions),clean,1274813,1274572,1275142,1857055,1856813,1857383,327778,327778,327778
@@ -52,8 +52,8 @@ ntrulpr761 (100 executions),ref,74265583,74265583,74265583,147846761,147846761,1
 ntrulpr857 (100 executions),ref,94016969,94016969,94016969,187235730,187235730,187235730,280075965,280075965,280075965
 papabear (100 executions),clean,15587475,15587475,15587475,19220187,19220187,19220187,38837350,38837350,38837350
 papabear (100 executions),opt,2014216,2014216,2014216,2276138,2276138,2276138,3000239,3000239,3000239
+papabear-ephem (100 executions),clean,15601295,15601295,15601295,19261570,19261570,19261570,3879464,3879464,3879464
 papabear-ephem (100 executions),opt,2029284,2029284,2029284,2308148,2308148,2308148,411623,411623,411623
-papabear-ephem (100 executions),ref,15490269,15490269,15490269,19126020,19126020,19126020,3803444,3803444,3803444
 r5n1-1kemcca-0d (100 executions),m4,3468700,3452036,3487229,3311885,3287627,3335808,3791981,3762550,3826612
 r5n1-1kemcca-0d (100 executions),opt,3275672,3256461,3296380,4033020,4011722,4050676,4513573,4490911,4537936
 r5n1-1kemcca-0d-sneik (100 executions),m4,2835817,2832191,2839968,2352559,2337285,2376231,2612191,2596911,2635388
@@ -177,8 +177,8 @@ Key Encapsulation Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [bytes],Encapsulation [bytes],Decapsulation [bytes],,,,,,
 babybear,clean,6140,6092,10140,,,,,,
 babybear,opt,3104,2976,5112,,,,,,
+babybear-ephem,clean,6140,5988,4772,,,,,,
 babybear-ephem,opt,3104,3008,2440,,,,,,
-babybear-ephem,ref,6168,6088,4864,,,,,,
 firesaber,clean,22848,25600,27088,,,,,,
 firesaber,m4,20144,23008,24592,,,,,,
 frodokem640aes,m4,31992,62488,83112,,,,,,
@@ -203,8 +203,8 @@ lightsaber,clean,10576,12304,13056,,,,,,
 lightsaber,m4,9656,11392,12136,,,,,,
 mamabear,clean,6772,6716,11652,,,,,,
 mamabear,opt,3592,3464,6072,,,,,,
+mamabear-ephem,clean,6788,6612,4772,,,,,,
 mamabear-ephem,opt,3592,3488,2920,,,,,,
-mamabear-ephem,ref,6792,6712,4864,,,,,,
 newhope1024cca,clean,11120,17400,19608,,,,,,
 newhope1024cca,m4,2852,5036,5044,,,,,,
 newhope1024cpa,clean,11096,17288,8308,,,,,,
@@ -226,8 +226,8 @@ ntrulpr761,ref,14044,22492,26524,,,,,,
 ntrulpr857,ref,15692,25068,29628,,,,,,
 papabear,clean,7492,7244,13060,,,,,,
 papabear,opt,4072,3944,7032,,,,,,
+papabear-ephem,clean,7412,7340,4772,,,,,,
 papabear-ephem,opt,4072,3968,3400,,,,,,
-papabear-ephem,ref,7416,7336,4864,,,,,,
 r5n1-1kemcca-0d,m4,19676,25492,31284,,,,,,
 r5n1-1kemcca-0d,opt,19676,25492,31284,,,,,,
 r5n1-1kemcca-0d-sneik,m4,19212,25172,30964,,,,,,
@@ -351,8 +351,8 @@ Key Encapsulation Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [%],Encapsulation [%],Decapsulation [%],,,,,,
 babybear,clean,9.7,7.3,8.6,,,,,,
 babybear,opt,55.2,47.5,41.9,,,,,,
+babybear-ephem,clean,9.7,7.7,6.5,,,,,,
 babybear-ephem,opt,55.2,48.4,35.8,,,,,,
-babybear-ephem,ref,8.4,6.5,4.3,,,,,,
 firesaber,clean,18.7,18.6,13.8,,,,,,
 firesaber,m4,49.4,49.3,40.0,,,,,,
 frodokem640aes,m4,73.6,77.1,76.3,,,,,,
@@ -377,8 +377,8 @@ lightsaber,clean,24.7,23.6,15.3,,,,,,
 lightsaber,m4,56.5,55.7,42.0,,,,,,
 mamabear,clean,8.2,6.6,7.6,,,,,,
 mamabear,opt,53.9,47.9,43.3,,,,,,
+mamabear-ephem,clean,8.2,6.8,5.7,,,,,,
 mamabear-ephem,opt,53.4,47.9,34.3,,,,,,
-mamabear-ephem,ref,7.4,6.0,3.9,,,,,,
 newhope1024cca,clean,59.5,59.1,47.6,,,,,,
 newhope1024cca,m4,74.4,78.5,70.3,,,,,,
 newhope1024cpa,clean,53.9,50.2,4.3,,,,,,
@@ -400,8 +400,8 @@ ntrulpr761,ref,0.4,0.4,0.2,,,,,,
 ntrulpr857,ref,0.3,0.4,0.2,,,,,,
 papabear,clean,7.5,6.3,7.1,,,,,,
 papabear,opt,52.7,47.9,44.0,,,,,,
+papabear-ephem,clean,7.5,6.4,5.3,,,,,,
 papabear-ephem,opt,52.3,47.9,33.2,,,,,,
-papabear-ephem,ref,6.9,5.8,3.6,,,,,,
 r5n1-1kemcca-0d,m4,24.1,51.1,51.3,,,,,,
 r5n1-1kemcca-0d,opt,25.1,42.2,43.4,,,,,,
 r5n1-1kemcca-0d-sneik,m4,0.0,0.0,0.0,,,,,,
@@ -525,8 +525,8 @@ Key Encapsulation Schemes,,,,,,,,,,
 Scheme,Implementation,.text [bytes],.data [bytes],.bss [bytes],Total [bytes],,,,,
 babybear,clean,5079,0,0,5079,,,,,
 babybear,opt,5627,0,0,5627,,,,,
+babybear-ephem,clean,4875,0,0,4875,,,,,
 babybear-ephem,opt,4985,0,0,4985,,,,,
-babybear-ephem,ref,4892,0,0,4892,,,,,
 firesaber,clean,11208,0,0,11208,,,,,
 firesaber,m4,44184,0,0,44184,,,,,
 frodokem640aes,m4,8496,0,0,8496,,,,,
@@ -551,8 +551,8 @@ lightsaber,clean,11936,0,0,11936,,,,,
 lightsaber,m4,44916,0,0,44916,,,,,
 mamabear,clean,5571,0,0,5571,,,,,
 mamabear,opt,5623,0,0,5623,,,,,
+mamabear-ephem,clean,4887,0,0,4887,,,,,
 mamabear-ephem,opt,4917,0,0,4917,,,,,
-mamabear-ephem,ref,4900,0,0,4900,,,,,
 newhope1024cca,clean,10780,0,0,10780,,,,,
 newhope1024cca,m4,12092,4096,0,16188,,,,,
 newhope1024cpa,clean,10384,0,0,10384,,,,,
@@ -574,8 +574,8 @@ ntrulpr761,ref,4632,0,0,4632,,,,,
 ntrulpr857,ref,4696,0,0,4696,,,,,
 papabear,clean,5559,0,0,5559,,,,,
 papabear,opt,5559,0,0,5559,,,,,
+papabear-ephem,clean,4915,0,0,4915,,,,,
 papabear-ephem,opt,4877,0,0,4877,,,,,
-papabear-ephem,ref,4908,0,0,4908,,,,,
 r5n1-1kemcca-0d,m4,3089,0,0,3089,,,,,
 r5n1-1kemcca-0d,opt,4195,0,0,4195,,,,,
 r5n1-1kemcca-0d-sneik,m4,4584,0,0,4584,,,,,
