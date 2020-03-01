@@ -1,5 +1,6 @@
-//  r5_ringmul.h
-//  Copyright (c) 2019, PQShield Ltd. and Koninklijke Philips N.V.
+//	r5_ringmul.h
+//	2019-09-21	Markku-Juhani O. Saarinen <mjos@pqshield.com>
+//	Copyright (c) 2019, PQShield Ltd. All rights reserved.
 
 #ifndef _R5_RINGMUL_H_
 #define _R5_RINGMUL_H_
@@ -8,16 +9,17 @@
 
 #if (PARAMS_N == PARAMS_D)
 
+#include "r5_ternvec.h"
+
 // multiplication mod q, result length n
-void r5_ringmul_q(modq_t d[PARAMS_D],
-    modq_t a[2 * (PARAMS_D + 1)],
-    uint16_t idx[PARAMS_H / 2][2]);
+PQS_OLOCAL void r5_ringmul_q(modq_t d[PARAMS_D],
+	const uint8_t sigma[PARAMS_KAPPA_BYTES], const r5_ternv_t sv);
 
 // multiplication mod p, result length mu
-void r5_ringmul_p(modp_t d[PARAMS_D],
-    modp_t a[PARAMS_D + PARAMS_MU + 2],
-    uint16_t idx[PARAMS_H / 2][2]);
+PQS_OLOCAL void r5_ringmul_p(modp_t d[PARAMS_MU],
+	const uint8_t *pv, const r5_ternv_t sv);
 
 #endif
 
 #endif /* _R5_RINGMUL_H_ */
+

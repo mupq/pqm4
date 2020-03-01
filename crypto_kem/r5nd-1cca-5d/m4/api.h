@@ -1,8 +1,6 @@
-//  api.h
-//  Stub api.h interface for testing. Overwritten for distribution.
-
-//  Copyright (c) 2019, PQSHield Ltd.
-
+//	api.h
+//	Stub api.h interface for testing. Overwritten for distribution.
+//	Copyright (c) 2019, PQSHield Ltd.
 
 #ifndef _API_H_
 #define _API_H_

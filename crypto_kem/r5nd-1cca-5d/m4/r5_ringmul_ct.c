@@ -1,20 +1,17 @@
-//	r5_ringmul.c
-//	2019-07-16	Markku-Juhani O. Saarinen <mjos@pqshield.com>
+//	r5_ringmul_ct.c
+//	2019-09-21	Markku-Juhani O. Saarinen <mjos@pqshield.com>
 //	Copyright (c) 2019, PQShield Ltd. All rights reserved.
 
-//	Fast ring arithmetic (without cache attack countermeasures)
+//	Constant-time ring arithmetic (slow!)
 
 #include "r5_parameter_sets.h"
 
-#if (PARAMS_N == PARAMS_D) && !defined(ROUND5_CT) && !defined(PQSOC)
+#if (PARAMS_N == PARAMS_D) && defined(ROUND5_CT)
 
 #include <string.h>
-
 #include "r5_ringmul.h"
 #include "r5_xof.h"
-#include "r5_addsub.h"
 #include "r5_pack.h"
-#include "little_endian.h"
 
 // multiplication mod q, result length n
 
@@ -22,15 +19,17 @@ void r5_ringmul_q(modq_t d[PARAMS_D],
 	const uint8_t sigma[PARAMS_KAPPA_BYTES],
 	const r5_ternv_t sv)
 {
-	modq_t a[2 * (PARAMS_D + 1)];
-	size_t i;
+	modq_t aa[2 * (PARAMS_D + 1)];
+	size_t i, j, k;
+	modq_t addf, subf, w, *b;
+	uint64_t t, u;
+	modq_t *a = aa;
 
 	//	expand a
 	r5_xof(a, PARAMS_D * sizeof (modq_t), sigma, PARAMS_KAPPA_BYTES);
 #if __BYTE_ORDER__ != __ORDER_LITTLE_ENDIAN__
 	for (i = 0; i < PARAMS_D; i++) {
 		a[i] = LITTLE_ENDIAN16(a[i]);
-	}
 #endif
 
 	//	note: order of coefficients a[1..n] is *NOT* reversed!
@@ -42,24 +41,30 @@ void r5_ringmul_q(modq_t d[PARAMS_D],
 	a[0] = -a[0];
 
 	//	duplicate at the end
-	memcpy(&a[PARAMS_D + 1], a, (PARAMS_D + 1) * sizeof(modq_t));
+	b = &a[PARAMS_D + 1];
+	memcpy(b, a, (PARAMS_D + 1) * sizeof(modq_t));
 
 	//	initialize result
-	memset(d, 0, PARAMS_D * sizeof (modq_t));
+	memset(d, 0, PARAMS_D * sizeof(modq_t));
 
-	for (i = 0; i < (PARAMS_H / 2) - 2; i += 3) {
-		r5_modq_addsub3_d(d, &a[(PARAMS_D + 1) - sv[i][0]],
-						  &a[(PARAMS_D + 1) - sv[i][1]],
-						  &a[(PARAMS_D + 1) - sv[i + 1][0]],
-						  &a[(PARAMS_D + 1) - sv[i + 1][1]],
-						  &a[(PARAMS_D + 1) - sv[i + 2][0]],
-						  &a[(PARAMS_D + 1) - sv[i + 2][1]]);
-	}
-
-	while (i < PARAMS_H / 2) {
-		r5_modq_addsub_d(d, &a[(PARAMS_D + 1) - sv[i][0]],
-						 &a[(PARAMS_D + 1) - sv[i][1]]);
-		i++;
+	a++;								//	adjust for comparison
+	for (k = 0; k < TVEC_WORDS; k++) {
+		t = sv[k][0] & ~sv[k][1];		//	addition mask
+		u = sv[k][0] & sv[k][1];		//	subtraction mask
+		for (i = 0; i < 64; i++) {
+			addf = -(t & 1);			//	expand lsb
+			subf = -(u & 1);
+			for (j = 0; j < PARAMS_D; j++) {
+				w = b[j];				// no multiplication here!
+				w = (addf & w) - (subf & w);
+				d[j] += w;
+			}
+			b--;
+			if (b == a)
+				break;
+			t >>= 1;
+			u >>= 1;
+		}
 	}
 
 	//	"unlift"
@@ -74,8 +79,10 @@ void r5_ringmul_q(modq_t d[PARAMS_D],
 void r5_ringmul_p(modp_t d[PARAMS_MU],
 	const uint8_t *pv, const r5_ternv_t sv)
 {
-	size_t i;
 	modp_t aa[PARAMS_D + PARAMS_MU + 2];
+	modp_t addf, subf, w, *b;
+	size_t i, j, k;
+	uint64_t t, u;
 	modp_t *a = aa;
 
 	r5_unpack_p(a, pv);					//	unpack a
@@ -93,15 +100,30 @@ void r5_ringmul_p(modp_t d[PARAMS_MU],
 	a[PARAMS_D + 1] = a[0];
 	a++;								//	don't lift, shift!
 #endif
-
-	memcpy(&a[PARAMS_D + 1], a, PARAMS_MU * sizeof (modp_t));
+	b = &a[PARAMS_D + 1];
+	memcpy(b, a, PARAMS_MU * sizeof(modp_t));
 
 	//	initialize result
 	memset(d, 0, (PARAMS_MU) * sizeof(modp_t));
 
-	for (i = 0; i < PARAMS_H / 2; i++) {
-		r5_modp_addsub_mu(d,
-			&a[PARAMS_D + 1 - sv[i][0]], &a[PARAMS_D + 1 - sv[i][1]]);
+	a++;								//	adjust for comparison
+	for (k = 0; k < TVEC_WORDS; k++) {
+		t = sv[k][0] & ~sv[k][1];		//	addition mask
+		u = sv[k][0] & sv[k][1];		//	subtraction mask
+		for (i = 0; i < 64; i++) {
+			addf = -(t & 1);			//	expand lsb
+			subf = -(u & 1);
+			for (j = 0; j < PARAMS_MU; j++) {
+				w = b[j];				// no multiplication here!
+				w = (addf & w) - (subf & w);
+				d[j] += w;
+			}
+			b--;
+			if (b == a)
+				break;
+			t >>= 1;
+			u >>= 1;
+		}
 	}
 
 #if (PARAMS_XE == 0)
@@ -113,5 +135,4 @@ void r5_ringmul_p(modp_t d[PARAMS_MU],
 #endif
 }
 
-#endif
-
+#endif	/* (PARAMS_N == PARAMS_D) && defined(ROUND5_CT) */
