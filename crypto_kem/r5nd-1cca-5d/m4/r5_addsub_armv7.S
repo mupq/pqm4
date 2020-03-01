@@ -2,8 +2,6 @@
 //	2019-03-07	Markku-Juhani O. Saarinen <mjos@pqshield.com>
 //	Copyright (c) 2019, PQShield Ltd. All rights reserved.
 
-#ifdef ARMV7_ASM
-
 .text
 .syntax unified
 .thumb
@@ -265,6 +263,3 @@ loop4:	ldrh	r5, [r3], #2
 		pop		{r4, r5, r6, r7, r8, r9, r10, pc}
 
 .size	r5_armv7_addsub16_perm_3, .-r5_armv7_addsub16_perm_3
-
-#endif /* ARMV7_ASM */
-

@@ -19,6 +19,10 @@
 #define PQS_INLINE
 #endif
 
+#ifndef ARMV7_ASM
+#define ARMV7_ASM
+#endif
+
 //	Our NIST proposal parameter sets
 
 #if defined(R5ND_1CPA_0d)
