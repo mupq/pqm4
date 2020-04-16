@@ -489,7 +489,7 @@ void copy_words(const digit_t* a, digit_t* c, const unsigned int nwords)
 	STR P_RST1, [R_OUT, CV(4*R_OFF + 44)]	  EOL\
 	STR P_RST0, [R_OUT, CV(4*R_OFF + 48)]   EOL\
 
-void fpmul_mont(const felm_t ma, const felm_t mb, felm_t mc)
+void __attribute__ ((naked)) fpmul_mont(const felm_t ma, const felm_t mb, felm_t mc)
 { // Multiprecision multiplication, c = a*b mod p.
 asm volatile(\
 STRFY(P_MUL_PROLOG)
@@ -1273,7 +1273,7 @@ STRFY(P_MUL_EPILOG)
     STR PS_TMP, [R_OUT, CV(4*R_OFF + 12)]    EOL\
 
 
-void fpsqr_mont(const felm_t ma, felm_t mc)
+void __attribute__ ((naked)) fpsqr_mont(const felm_t ma, felm_t mc)
 { // Multiprecision squaring, c = a^2 mod p.
 asm volatile(\
 STRFY(SQR_PROLOG)
