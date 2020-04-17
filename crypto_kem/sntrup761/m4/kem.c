@@ -351,7 +351,7 @@ static int Rq_recip3(Fq *out,const small *in)
 static void Round(Fq *out,const Fq *a)
 {
   int i;
-#if 0
+#if 1
   for (i = 0; i < p;++i) out[i] = a[i]-F3_freeze_short(a[i]);
 #else
   int *o1 = (int *)(void *)out;
@@ -429,7 +429,7 @@ static void Short_random(small *out)
   uint32 L[p];
   int i;
 
-#if 0
+#if 1
   for (i = 0;i < p;++i) L[i] = urandom32();
 #else
   randombytes(L, 4*p);
@@ -443,7 +443,7 @@ static void Small_random(small *out)
 {
   int i;
 
-#if 0
+#if 1
   for (i = 0;i < p;++i) out[i] = (((urandom32()&0x3fffffff)*3)>>30)-1;
 #else
   int *o1 = (int *)(void *)out;

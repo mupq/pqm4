@@ -2,8 +2,6 @@
 #include "uint16.h"
 #include "uint32.h"
 #include "Encode.h"
-extern void Encode_Rq_asm(unsigned char *out,int16 *R);
-extern void Encode_Rounded_asm(unsigned char *out,int16 *R);
 
 void Encode_Rq(unsigned char *out,int16 *R)
 {
@@ -13,8 +11,8 @@ void Encode_Rq(unsigned char *out,int16 *R)
   long i;
   uint16 r0,r1;
   uint32 r2;
-
-  /* for (i = 0;i < 380;++i) {
+  
+  for (i = 0;i < 380;++i) {
     r0 = R[2*i]+2295;
     r1 = R[2*i+1]+2295;
     r2 = r0+r1*(uint32)4591;
@@ -31,11 +29,8 @@ void Encode_Rq(unsigned char *out,int16 *R)
     *out++ = r2; r2 >>= 8;
     R[i] = r2;
   }
-  R[190] = R[380]; */
+  R[190] = R[380];
   
-  Encode_Rq_asm(out, R);
-  out = out + 760 + 190;
-
   for (i = 0;i < 95;++i) {
     r0 = R[2*i];
     r1 = R[2*i+1];
@@ -137,7 +132,7 @@ void Encode_Rounded(unsigned char *out,int16 *R)
   uint16 r0,r1;
   uint32 r2;
   
-  /* for (i = 0;i < 380;++i) {
+  for (i = 0;i < 380;++i) {
     r0 = ((R[2*i]+2295)*10923)>>15;
     r1 = ((R[2*i+1]+2295)*10923)>>15;
     r2 = r0+r1*(uint32)1531;
@@ -154,11 +149,8 @@ void Encode_Rounded(unsigned char *out,int16 *R)
     *out++ = r2; r2 >>= 8;
     R[i] = r2;
   }
-  R[190] = R[380]; */
+  R[190] = R[380];
   
-  Encode_Rounded_asm(out, R);
-  out = out + 380 + 380;
-
   for (i = 0;i < 95;++i) {
     r0 = R[2*i];
     r1 = R[2*i+1];
