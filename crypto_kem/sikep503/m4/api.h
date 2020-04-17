@@ -13,7 +13,7 @@
 
 #define CRYPTO_SECRETKEYBYTES     434    // MSG_BYTES + SECRETKEY_B_BYTES + CRYPTO_PUBLICKEYBYTES bytes
 #define CRYPTO_PUBLICKEYBYTES     378
-#define CRYPTO_BYTES               16
+#define CRYPTO_BYTES               24
 #define CRYPTO_CIPHERTEXTBYTES    402    // CRYPTO_PUBLICKEYBYTES + MSG_BYTES bytes
 
 // Algorithm name
@@ -27,14 +27,14 @@ int crypto_kem_keypair(unsigned char *pk, unsigned char *sk);
 
 // SIKE's encapsulation
 // Input:   public key pk         (CRYPTO_PUBLICKEYBYTES = 378 bytes)
-// Outputs: shared secret ss      (CRYPTO_BYTES = 16 bytes)
+// Outputs: shared secret ss      (CRYPTO_BYTES = 24 bytes)
 //          ciphertext message ct (CRYPTO_CIPHERTEXTBYTES = 402 bytes)
 int crypto_kem_enc(unsigned char *ct, unsigned char *ss, const unsigned char *pk);
 
 // SIKE's decapsulation
 // Input:   secret key sk         (CRYPTO_SECRETKEYBYTES = 434 bytes)
 //          ciphertext message ct (CRYPTO_CIPHERTEXTBYTES = 402 bytes)
-// Outputs: shared secret ss      (CRYPTO_BYTES = 16 bytes)
+// Outputs: shared secret ss      (CRYPTO_BYTES = 24 bytes)
 int crypto_kem_dec(unsigned char *ss, const unsigned char *ct, const unsigned char *sk);
 
 
@@ -47,7 +47,7 @@ int crypto_kem_dec(unsigned char *ss, const unsigned char *ct, const unsigned ch
 // private keys are encoded in 434 octets in little endian format.
 // Public keys pk consist of 3 elements in GF(p503^2). In the SIKE API, pk is encoded in 378 octets.
 // Ciphertexts ct consist of the concatenation of a public key value and a 24-byte value. In the SIKE API, ct is encoded in 378 + 24 = 402 octets.
-// Shared keys ss consist of a value of 16 octets.
+// Shared keys ss consist of a value of 24 octets.
 
 
 /*********************** Ephemeral key exchange API ***********************/
