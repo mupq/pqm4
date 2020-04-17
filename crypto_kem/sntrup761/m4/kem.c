@@ -1,6 +1,7 @@
 #include "params.h"
 #include "randombytes.h"
-#include "sha2.h"
+//#include "sha2.h"
+#include "sha512_hash.h"
 #ifdef LPR
 #include "aes.h"
 #endif
@@ -398,7 +399,7 @@ static void Hash(unsigned char *out,int b,const unsigned char *in,int inlen)
   x[0] = b;
   for (i = 0;i < inlen;++i) x[i+1] = in[i];
   //memcpy(x+1, in, inlen);
-  sha512(h,x,inlen+1);
+  sha512_hash(h,x,inlen+1);
   for (i = 0;i < 32;++i) out[i] = h[i];
   //sha512_hash(out,x,inlen+1);
 }
