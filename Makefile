@@ -27,7 +27,7 @@ LDFLAGS_HOST = -lm
 # override as desired
 TYPE=kem
 
-COMMONSOURCES=mupq/common/fips202.c mupq/common/sp800-185.c
+COMMONSOURCES=mupq/common/fips202.c mupq/common/sp800-185.c mupq/common/nistseedexpander.c
 COMMONSOURCES_HOST=$(COMMONSOURCES) mupq/common/keccakf1600.c mupq/pqclean/common/aes.c mupq/pqclean/common/sha2.c
 COMMONSOURCES_M4=$(COMMONSOURCES) common/keccakf1600.S mupq/common/aes.c common/aes.S mupq/common/sha2.c common/crypto_hashblocks_sha512.c common/crypto_hashblocks_sha512_inner32.s
 
