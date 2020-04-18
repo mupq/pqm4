@@ -1,6 +1,5 @@
 #include "params.h"
 #include "randombytes.h"
-//#include "sha2.h"
 #include "sha512_hash.h"
 #ifdef LPR
 #include "aes.h"
@@ -13,10 +12,8 @@
 #include "uint32.h"
 #include "Encode.h"
 #include "Decode.h"
-#include "cmsis.h"
-
 #include <string.h>
-
+#include "cmsis.h"
 
 extern void gf_polymul_768x768_1s(int16 *h, int16 *c, int16 *f);
 extern void gf_polymul_768x768_mod3(int8 *h, int8 *c, int8 *f);
@@ -351,7 +348,7 @@ static int Rq_recip3(Fq *out,const small *in)
 static void Round(Fq *out,const Fq *a)
 {
   int i;
-#if 1
+#if 0
   for (i = 0; i < p;++i) out[i] = a[i]-F3_freeze_short(a[i]);
 #else
   int *o1 = (int *)(void *)out;
@@ -371,7 +368,7 @@ static void Round(Fq *out,const Fq *a)
 
 static void Short_fromlist(small *out,const uint32 *in)
 {
-#if 0
+#if 1
   Short_fromlist_asm(out, in);
 #else
   uint32 L[p];
