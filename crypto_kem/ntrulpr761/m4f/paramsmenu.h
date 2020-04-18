@@ -4,5 +4,5 @@
 #undef SIZE857
 
 /* pick one of these two: */
-#define SNTRUP /* Streamlined NTRU Prime */
+#undef SNTRUP /* Streamlined NTRU Prime */
 #define LPR /* NTRU LPRime */

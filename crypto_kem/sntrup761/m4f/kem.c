@@ -429,7 +429,7 @@ static void Short_random(small *out)
   uint32 L[p];
   int i;
 
-#if 1
+#if 0
   for (i = 0;i < p;++i) L[i] = urandom32();
 #else
   randombytes(L, 4*p);
@@ -443,7 +443,7 @@ static void Small_random(small *out)
 {
   int i;
 
-#if 1
+#if 0
   for (i = 0;i < p;++i) out[i] = (((urandom32()&0x3fffffff)*3)>>30)-1;
 #else
   int *o1 = (int *)(void *)out;
