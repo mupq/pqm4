@@ -72,7 +72,7 @@ __attribute__(( always_inline )) static inline int bround_16x2(int C, int Q, int
 		     "smultb	%1, %1, %3 \n\t"			\
 		     "smlawb	%0, %2, %0, %4\n\t"			\
 		     "smultb	%0, %0, %3 \n\t"			\
-		     "pkhbt	%0, %0, %1"				\
+		     "pkhbt	%0, %0, %1, LSL #16"				\
 		     : "+r"((C)), "=&r" (scratch1)			\
 		     : "r"((QII)), "r"((Q)), "r"(32768)			\
 		     );
@@ -89,7 +89,7 @@ __attribute__(( always_inline )) static inline int bred_16x2_rev(int C, int Q, i
 		     "add	%2, %1, %0, ASR #16\n\t"	\
 		     "smlawb	%1, %3, %0, %5\n\t"		\
 		     "smlatb	%1, %1, %4, %0\n\t"		\
-		     "pkhbt	%0, %2, %1. LSL #16"		\
+		     "pkhbt	%0, %2, %1, LSL #16"		\
 		     : "+r"((C)), "=&r" (scr0), "=&r" (scr1)	\
 		     : "r"((QI)), "r"((Q)), "r"(32768)		\
 		     );

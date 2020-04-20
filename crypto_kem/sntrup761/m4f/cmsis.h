@@ -546,6 +546,75 @@ __attribute__( ( always_inline ) ) __STATIC_INLINE uint32_t __SXTAB16(uint32_t o
   return(result);
 }
 
+
+__attribute__( ( always_inline ) ) __STATIC_INLINE uint32_t __UXTB(uint32_t op1, int op2)
+{
+  uint32_t result;
+
+  __ASM volatile ("uxtb %0, %1, ror %2" : "=r" (result) : "r"(op1), "I"(op2));
+  return(result);
+}
+
+__attribute__( ( always_inline ) ) __STATIC_INLINE uint32_t __UXTAB(uint32_t op1, uint32_t op2, int op3)
+{
+  uint32_t result;
+
+  __ASM volatile ("uxtab16 %0, %1, %2, ror %3" : "=r" (result) : "r" (op1), "r" (op2), "I" (op3) );
+  return(result);
+}
+
+__attribute__( ( always_inline ) ) __STATIC_INLINE uint32_t __SXTB(uint32_t op1, int op2)
+{
+  uint32_t result;
+
+  __ASM volatile ("sxtb %0, %1, ror %2" : "=r" (result) : "r"(op1), "I"(op2));
+  return(result);
+}
+
+__attribute__( ( always_inline ) ) __STATIC_INLINE uint32_t __SXTAB(uint32_t op1, uint32_t op2, int op3)
+{
+  uint32_t result;
+
+
+  
+  __ASM volatile ("sxtab %0, %1, %2, ror %3" : "=r" (result) : "r" (op1), "r" (op2), "I"(op3) );
+  return(result);
+}
+
+__attribute__( ( always_inline ) ) __STATIC_INLINE uint32_t __UXTH(uint32_t op1, int op2)
+{
+  uint32_t result;
+
+  __ASM volatile ("uxth %0, %1, ror %2" : "=r" (result) : "r"(op1), "I"(op2));
+  return(result);
+}
+
+__attribute__( ( always_inline ) ) __STATIC_INLINE uint32_t __UXTAH(uint32_t op1, uint32_t op2, int op3)
+{
+  uint32_t result;
+
+  __ASM volatile ("uxtah %0, %1, %2, ror %3" : "=r" (result) : "r" (op1), "r" (op2), "I" (op3) );
+  return(result);
+}
+
+__attribute__( ( always_inline ) ) __STATIC_INLINE uint32_t __SXTH(uint32_t op1, int op2)
+{
+  uint32_t result;
+
+  __ASM volatile ("sxth %0, %1, ror %2" : "=r" (result) : "r"(op1), "I"(op2));
+  return(result);
+}
+
+__attribute__( ( always_inline ) ) __STATIC_INLINE uint32_t __SXTAH(uint32_t op1, uint32_t op2, int op3)
+{
+  uint32_t result;
+
+  __ASM volatile ("sxtah %0, %1, %2, ror %3" : "=r" (result) : "r" (op1), "r" (op2), "I"(op3) );
+  return(result);
+}
+
+
+
 __attribute__( ( always_inline ) ) __STATIC_INLINE uint32_t __SMUAD  (uint32_t op1, uint32_t op2)
 {
   uint32_t result;

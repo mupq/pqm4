@@ -35,8 +35,7 @@ inline int F3_freeze_x2(int x) {
 }
 
 inline int F3_round_x2(int x) {
-  bround_16x2(x, 3, inv3);
-  return (x);
+  return (bround_16x2(x, 3, inv3));
 }
 
 

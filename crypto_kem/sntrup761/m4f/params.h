@@ -21,6 +21,7 @@
 #define tau1 114
 #define tau2 2007
 #define tau3 287
+#define minusinv65536modq 1748
 #endif
 
 #elif defined(SIZE653)
@@ -37,6 +38,7 @@
 #define tau1 113
 #define tau2 2031
 #define tau3 290
+#define minusinv65536modq 1040
 #endif
 
 #elif defined(SIZE857)
@@ -53,6 +55,7 @@
 #define tau1 101
 #define tau2 2265
 #define tau3 324
+#define minusinv65536modq 779
 #endif
 
 #else
