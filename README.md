@@ -267,13 +267,18 @@ new subdirectory under `crypto_sign/`.
   We included assembly-optimized implementations of AES-128/-192/-256 in ECB mode and in CTR mode.
   The functions that can be used are stated in `mupq/common/aes.h` as follows:
   ```c
-  void aes128_keyexp(aes128ctx *r, const unsigned char *key);
+  void aes128_ecb_keyexp(aes128ctx *r, const unsigned char *key);
+  void aes128_ctr_keyexp(aes128ctx *r, const unsigned char *key);
   void aes128_ecb(unsigned char *out, const unsigned char *in, size_t nblocks, const aes128ctx *ctx);
   void aes128_ctr(unsigned char *out, size_t outlen, const unsigned char *iv, const aes128ctx *ctx);
-  void aes192_keyexp(aes192ctx *r, const unsigned char *key);
+
+  void aes192_ecb_keyexp(aes192ctx *r, const unsigned char *key);
+  void aes192_ctr_keyexp(aes192ctx *r, const unsigned char *key);
   void aes192_ecb(unsigned char *out, const unsigned char *in, size_t nblocks, const aes192ctx *ctx);
   void aes192_ctr(unsigned char *out, size_t outlen, const unsigned char *iv, const aes192ctx *ctx);
-  void aes256_keyexp(aes256ctx *r, const unsigned char *key);
+
+  void aes256_ecb_keyexp(aes256ctx *r, const unsigned char *key);
+  void aes256_ctr_keyexp(aes256ctx *r, const unsigned char *key);
   void aes256_ecb(unsigned char *out, const unsigned char *in, size_t nblocks, const aes256ctx *ctx);
   void aes256_ctr(unsigned char *out, size_t outlen, const unsigned char *iv, const aes256ctx *ctx);
   ```

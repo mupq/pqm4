@@ -24,7 +24,7 @@ int mul_add_as_plus_e(uint16_t *out, const uint16_t *s, const uint8_t *seed_A) {
     int16_t a_row_temp[4 * PARAMS_N] = {0};                     // Take four lines of A at once
     aes128ctx ctx128;
 
-    aes128_keyexp(&ctx128, seed_A);
+    aes128_ecb_keyexp(&ctx128, seed_A);
 
     for (j = 0; j < PARAMS_N; j += PARAMS_STRIPE_STEP) {
         a_row_temp[j + 1 + 0 * PARAMS_N] = UINT16_TO_LE(j);     // Loading values in the little-endian order
@@ -67,7 +67,7 @@ int mul_add_sa_plus_e(uint16_t *out, const uint16_t *s, const uint8_t *seed_A)
     uint16_t a_cols_temp[PARAMS_N*PARAMS_STRIPE_STEP] = {0};       
 
     aes128ctx roundkeys;
-    aes128_keyexp(&roundkeys, seed_A);
+    aes128_ecb_keyexp(&roundkeys, seed_A);
 
     for (i = 0, j = 0; i < PARAMS_N; i++, j += PARAMS_STRIPE_STEP) {
         a_cols_temp[j] = i; // Loading values in the little-endian order
