@@ -63,6 +63,7 @@
 | ntruhrss701 (100 executions) | m4 | AVG: 154,676,705 <br /> MIN: 154,676,705 <br /> MAX: 154,676,705 | AVG: 402,784 <br /> MIN: 402,784 <br /> MAX: 402,784 | AVG: 890,231 <br /> MIN: 890,231 <br /> MAX: 890,231 |
 | ntrulpr653 (100 executions) | ref | AVG: 54,797,195 <br /> MIN: 54,797,195 <br /> MAX: 54,797,195 | AVG: 109,005,540 <br /> MIN: 109,005,540 <br /> MAX: 109,005,540 | AVG: 163,014,096 <br /> MIN: 163,014,096 <br /> MAX: 163,014,096 |
 | ntrulpr761 (100 executions) | ref | AVG: 74,234,225 <br /> MIN: 74,234,225 <br /> MAX: 74,234,225 | AVG: 147,753,053 <br /> MIN: 147,753,053 <br /> MAX: 147,753,053 | AVG: 221,040,725 <br /> MIN: 221,040,725 <br /> MAX: 221,040,725 |
+| ntrulpr761 (100 executions) | m4f | AVG: 826,318 <br /> MIN: 826,318 <br /> MAX: 826,318 | AVG: 1,310,953 <br /> MIN: 1,310,953 <br /> MAX: 1,310,953 | AVG: 1,494,115 <br /> MIN: 1,494,115 <br /> MAX: 1,494,115 |
 | ntrulpr857 (100 executions) | ref | AVG: 93,983,537 <br /> MIN: 93,983,537 <br /> MAX: 93,983,537 | AVG: 187,127,281 <br /> MIN: 187,127,281 <br /> MAX: 187,127,281 | AVG: 280,018,986 <br /> MIN: 280,018,986 <br /> MAX: 280,018,986 |
 | papabear (100 executions) | clean | AVG: 15,587,475 <br /> MIN: 15,587,475 <br /> MAX: 15,587,475 | AVG: 19,220,187 <br /> MIN: 19,220,187 <br /> MAX: 19,220,187 | AVG: 38,837,350 <br /> MIN: 38,837,350 <br /> MAX: 38,837,350 |
 | papabear (100 executions) | opt | AVG: 2,014,216 <br /> MIN: 2,014,216 <br /> MAX: 2,014,216 | AVG: 2,276,138 <br /> MIN: 2,276,138 <br /> MAX: 2,276,138 | AVG: 3,000,239 <br /> MIN: 3,000,239 <br /> MAX: 3,000,239 |
@@ -128,6 +129,7 @@
 | sikep751 (1 executions) | opt | AVG: 3,296,225,272 <br /> MIN: 3,296,225,272 <br /> MAX: 3,296,225,272 | AVG: 5,347,056,677 <br /> MIN: 5,347,056,677 <br /> MAX: 5,347,056,677 | AVG: 5,742,522,048 <br /> MIN: 5,742,522,048 <br /> MAX: 5,742,522,048 |
 | sntrup653 (100 executions) | ref | AVG: 576,791,938 <br /> MIN: 554,532,048 <br /> MAX: 801,864,167 | AVG: 54,839,210 <br /> MIN: 54,839,207 <br /> MAX: 54,839,246 | AVG: 166,410,966 <br /> MIN: 166,410,944 <br /> MAX: 166,410,969 |
 | sntrup761 (100 executions) | ref | AVG: 761,707,967 <br /> MIN: 761,707,967 <br /> MAX: 761,707,967 | AVG: 74,280,986 <br /> MIN: 74,280,986 <br /> MAX: 74,280,986 | AVG: 225,478,375 <br /> MIN: 225,478,375 <br /> MAX: 225,478,375 |
+| sntrup761 (100 executions) | m4f | AVG: 11,349,574 <br /> MIN: 11,349,574 <br /> MAX: 11,349,574 | AVG: 789,129 <br /> MIN: 789,129 <br /> MAX: 789,129 | AVG: 742,186 <br /> MIN: 742,186 <br /> MAX: 742,186 |
 | sntrup857 (100 executions) | ref | AVG: 962,280,652 <br /> MIN: 962,280,652 <br /> MAX: 962,280,652 | AVG: 94,027,662 <br /> MIN: 94,027,662 <br /> MAX: 94,027,662 | AVG: 286,120,943 <br /> MIN: 286,120,943 <br /> MAX: 286,120,943 |
 ## Signature Schemes
 | scheme | implementation | key generation [cycles] | sign [cycles] | verify [cycles] |
@@ -256,6 +258,7 @@
 | ntruhrss701 | m4 | 27,580 | 19,372 | 20,580 |
 | ntrulpr653 | ref | 12,192 | 19,640 | 23,056 |
 | ntrulpr761 | ref | 14,000 | 22,416 | 26,448 |
+| ntrulpr761 | m4f | 28,444 | 34,732 | 39,692 |
 | ntrulpr857 | ref | 15,648 | 24,992 | 29,552 |
 | papabear | clean | 7,492 | 7,244 | 13,060 |
 | papabear | opt | 4,072 | 3,944 | 7,032 |
@@ -321,6 +324,7 @@
 | sikep751 | opt | 11,624 | 11,768 | 12,328 |
 | sntrup653 | ref | 13,972 | 13,992 | 16,688 |
 | sntrup761 | ref | 16,244 | 16,016 | 19,144 |
+| sntrup761 | m4f | 98,388 | 28,604 | 31,444 |
 | sntrup857 | ref | 18,260 | 17,896 | 21,432 |
 ## Signature Schemes
 | Scheme | Implementation | Key Generation [bytes] | Sign [bytes] | Verify [bytes] |
@@ -449,6 +453,7 @@
 | ntruhrss701 | m4 | 0.0% | 9.7% | 17.3% |
 | ntrulpr653 | ref | 0.4% | 0.4% | 0.2% |
 | ntrulpr761 | ref | 0.3% | 0.4% | 0.2% |
+| ntrulpr761 | m4f | 20.9% | 26.3% | 23.1% |
 | ntrulpr857 | ref | 0.3% | 0.3% | 0.2% |
 | papabear | clean | 7.5% | 6.3% | 7.1% |
 | papabear | opt | 52.7% | 47.9% | 44.0% |
@@ -514,6 +519,7 @@
 | sikep751 | opt | 0.0% | 0.0% | 0.0% |
 | sntrup653 | ref | 0.0% | 0.3% | 0.1% |
 | sntrup761 | ref | 0.0% | 0.3% | 0.1% |
+| sntrup761 | m4f | 0.0% | 0.0% | 0.0% |
 | sntrup857 | ref | 0.0% | 0.2% | 0.0% |
 ## Signature Schemes
 | Scheme | Implementation | Key Generation [%] | Sign [%] | Verify [%] |
@@ -642,6 +648,7 @@
 | ntruhrss701 | m4 | 132,224 | 0 | 0 | 132,224 |
 | ntrulpr653 | ref | 4,516 | 0 | 0 | 4,516 |
 | ntrulpr761 | ref | 4,520 | 0 | 0 | 4,520 |
+| ntrulpr761 | m4f | 114,457 | 0 | 0 | 114,457 |
 | ntrulpr857 | ref | 4,624 | 0 | 0 | 4,624 |
 | papabear | clean | 5,559 | 0 | 0 | 5,559 |
 | papabear | opt | 5,559 | 0 | 0 | 5,559 |
@@ -707,11 +714,11 @@
 | sikep751 | opt | 21,692 | 0 | 0 | 21,692 |
 | sntrup653 | ref | 6,016 | 0 | 0 | 6,016 |
 | sntrup761 | ref | 6,160 | 0 | 0 | 6,160 |
+| sntrup761 | m4f | 146,973 | 40 | 6,952 | 153,965 |
 | sntrup857 | ref | 6,148 | 0 | 0 | 6,148 |
 ## Signature Schemes
 | Scheme | Implementation | .text [bytes] | .data [bytes] | .bss [bytes] | Total [bytes] |
 | ------ | -------------- | ------------- | ------------- | ------------ | ------------- |
-
 | dilithium2 | clean | 11,336 | 0 | 0 | 11,336 |
 | dilithium2 | m4 | 18,124 | 0 | 0 | 18,124 |
 | dilithium3 | clean | 11,144 | 0 | 0 | 11,144 |
