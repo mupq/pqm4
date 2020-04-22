@@ -5,6 +5,7 @@
 #include "aes.h"
 #endif
 
+
 #include "int8.h"
 #include "int16.h"
 #include "int32.h"
@@ -350,7 +351,7 @@ static int Rq_recip3(Fq *out,const small *in)
 static void Round(Fq *out,const Fq *a)
 {
   int i;
-#if 1
+#if 0
   for (i = 0; i < p;++i) out[i] = a[i]-F3_freeze_short(a[i]);
 #else
   int *o1 = (int *)(void *)out;
@@ -623,14 +624,29 @@ static void Generator(Fq *G,const unsigned char *k)
   Expand(L,k);
 #if 0
   for (i = 0;i < p;++i) G[i] = uint32_mod_uint14(L[i],q)-q12;
-#else
+#elif 0
   int x0, x1;
   int c = 65536 % q;  if (c > q/2) c -= q;
   for (i = 0;i < p;++i) {
     x1 = (int) (L[i] >> 16) + minusinv65536modq;
+    // minusinv65536modq = 1/131072 mod q 
     x0 = __UXTH(L[i], 0);
     x0 = __MLA(x1, c, x0);
     G[i] = Fq_freeze(x0);
+  }
+#else
+  union llreg_u{
+    uint32_t w32[2];
+    uint64_t w64;
+  } llr;
+  for (i = 0;i < p;++i) {
+    llr.w64 = __UMULL(q32inv, L[i]);
+#ifndef __ARMEB__
+    int qq = llr.w32[1];
+#else
+    int qq = llr.w32[0];
+#endif
+    G[i] = Fq_freeze_short(__MLS(qq, q, L[i])-q12);
   }
 #endif
 }
@@ -1043,7 +1059,7 @@ static int Ciphertexts_diff_mask(const unsigned char *c,const unsigned char *c2)
   uint16 differentbits = 0;
   int len = Ciphertexts_bytes+Confirm_bytes;
 
-#if 1
+#if 0
   while (len-- > 0) differentbits |= (*c++)^(*c2++);
   return (1&((differentbits-1)>>8))-1;
 #else
@@ -1051,21 +1067,13 @@ static int Ciphertexts_diff_mask(const unsigned char *c,const unsigned char *c2)
   int *cc2 = (int *)(void *)c2;
   int differentbits2 = 0;
   for (len-=4 ;len>=0; len-=4) {
-    differentbits2 |= (*cc++)^(*cc2++);
-    //int scr0, scr1;
-    //__asm__ volatile ("ldr %3, [%1], #4\n\t"				\
-    //		      "ldr %4, [%2], #4\n\t"				\
-    //		      "eor %3, %3, %4 \n\t"				\
-    //		      "orr %0, %0, %3 \n\t"				\
-    //		      :"+&r"(differentbits2), "+r"(cc), "+r"(cc2),	\
-    //		       "=r" (scr0), "=r"(scr1)				\
-    //		      ::);
+    differentbits2 = __USADA8((*cc++),(*cc2++),differentbits2);
   }
   c = (unsigned char *)(void *) cc;
   c2 = (unsigned char *)(void *) cc2;
-  differentbits = (unsigned char) __USAD8(differentbits2, 0);
-  for (len &= 3; len > 0; len--) differentbits |= (*c++)^(*c2++);
-  return (1&((differentbits-1)>>16))-1;
+  for (len &= 3; len > 0; len--)
+    differentbits2 =__USADA8((*c++),(*c2++),differentbits2);
+  return ((-1)-((differentbits-1)>>31));
 #endif
 
 

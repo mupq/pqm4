@@ -78,6 +78,8 @@ static Fq Fq_freeze(int32 x)
 {
   return int32_mod_uint14(x+q12,q)-q12;
 }
+#define F3_freeze_short F3_freeze
+#define Fq_freeze_short Fq_freeze
 #endif
 
 #ifndef LPR
@@ -134,14 +136,15 @@ static void R3_fromRq(small *out,const Fq *r)
   int i;
   for (i = 0;i < p;++i) out[i] = F3_freeze_short(r[i]);
 #else
-
+ XXX todo
 #endif
 }
 
 /* h = f*g in the ring R3 */
 static void R3_mult(small *h,const small *f,const small *g)
 {
-  /* small fg[p+p-1];
+#if 0
+  small fg[p+p-1];
   small result;
   int i,j;
 
@@ -154,13 +157,18 @@ static void R3_mult(small *h,const small *f,const small *g)
     result = 0;
     for (j = i-p+1;j < p;++j) result = F3_freeze(result+f[j]*g[i-j]);
     fg[i] = result;
-  } */
+  } 
 
+  for (i = p+p-2;i >= p;--i) {
+    fg[i-p] = F3_freeze_short(fg[i-p]+fg[i]);
+    fg[i-p+1] = F3_freeze_short(fg[i-p+1]+fg[i]);
+  }
+  for (i = 0;i < p;++i) h[i] = fg[i];
+#else
   small fg[1536];
   small f_mod3[768];
   small g_mod3[768];
   int i;
-
   /*
   for (i = 0; i < p; ++i) {
     f_mod3[i] = F3_freeze_short(f[i] - 1) + 1;
@@ -174,13 +182,7 @@ static void R3_mult(small *h,const small *f,const small *g)
   copy_p_F3_mod3(f, f_mod3, g, g_mod3);
   gf_polymul_768x768_mod3(fg, f_mod3, g_mod3);
   reduce_2p_minus1_mod3_F3(h, fg);
-  /*
-  for (i = p+p-2;i >= p;--i) {
-    fg[i-p] = F3_freeze_short(fg[i-p]+fg[i]);
-    fg[i-p+1] = F3_freeze_short(fg[i-p+1]+fg[i]);
-  }
-  for (i = 0;i < p;++i) h[i] = fg[i];
-  */
+#endif
 }
 
 /* returns 0 if recip succeeded; else -1 */
@@ -234,27 +236,9 @@ static int R3_recip(small *out,const small *in)
 /* h = f*g in the ring Rq */
 static void Rq_mult_small(Fq *h,const Fq *f,const small *g)
 {
-  Fq f_modq[768];
-  Fq g_modq[768];
-  Fq fg[1536];
-  int i;
+#if 0
 
-  /*
-  for (i = 0; i < p; ++i) {
-    f_modq[i] = f[i];
-    g_modq[i] = (Fq)g[i];
-  }
-  for (; i < 768; ++i) {
-    f_modq[i] = 0;
-    g_modq[i] = 0;
-  }
-  */
-
-  Rq_mov(f_modq, f);
-  Rq_fromR3(g_modq, g);
-  gf_polymul_768x768_1s(fg, f_modq, g_modq);
-
-  /* Fq fg[p+p-1];
+  Fq fg[p+p-1];
   Fq result;
   int i,j;
 
@@ -267,17 +251,35 @@ static void Rq_mult_small(Fq *h,const Fq *f,const small *g)
     result = 0;
     for (j = i-p+1;j < p;++j) result = Fq_freeze(result+f[j]*(int32)g[i-j]);
     fg[i] = result;
-  } */
-
-  Rq_redp(h, fg);
-  /*
+  } 
+  
   for (i = p+p-2;i >= p;--i) {
     fg[i-p] = Fq_freeze_short(fg[i-p]+fg[i]);
     fg[i-p+1] = Fq_freeze_short(fg[i-p+1]+fg[i]);
   }
 
   for (i = 0;i < p;++i) h[i] = fg[i];
+#else
+  Fq f_modq[768];
+  Fq g_modq[768];
+  Fq fg[1536];
+  int i;
+  /*
+  for (i = 0; i < p; ++i) {
+    f_modq[i] = f[i];
+    g_modq[i] = (Fq)g[i];
+  }
+  for (; i < 768; ++i) {
+    f_modq[i] = 0;
+    g_modq[i] = 0;
+  }
   */
+  Rq_mov(f_modq, f);
+  Rq_fromR3(g_modq, g);
+  gf_polymul_768x768_1s(fg, f_modq, g_modq);
+
+  Rq_redp(h, fg);
+#endif
 }
 
 #ifndef LPR
@@ -374,9 +376,13 @@ static void Short_fromlist(small *out,const uint32 *in)
   uint32 L[p];
   int i;
 
-  int32 mask_01 = 1;
   for (i = 0;i < w;++i) L[i] = in[i]&(uint32)-2;
+#if 1
+  int32 mask_01 = 1;
   for (i = w;i < p;++i) L[i] = __BFI(in[i], mask_01, 0, 2);
+#else
+  for (i = w;i < p;++i) L[i] = (in[i]&(uint32)-3)|1;
+#endif
   uint32_sort(L,p);
   for (i = 0;i < p;++i) out[i] = (L[i]&3)-1;
 #endif
@@ -615,7 +621,18 @@ static void Generator(Fq *G,const unsigned char *k)
   int i;
 
   Expand(L,k);
-  for (i = 0;i < p;++i) G[i] = Fq_freeze(L[i]);
+#if 0
+  for (i = 0;i < p;++i) G[i] = uint32_mod_uint14(L[i],q)-q12;
+#else
+  int x0, x1;
+  int c = 65536 % q;  if (c > q/2) c -= q;
+  for (i = 0;i < p;++i) {
+    x1 = (int) (L[i] >> 16) + minusinv65536modq;
+    x0 = __UXTH(L[i], 0);
+    x0 = __MLA(x1, c, x0);
+    G[i] = Fq_freeze(x0);
+  }
+#endif
 }
 
 /* out = HashShort(r) */
@@ -1026,15 +1043,15 @@ static int Ciphertexts_diff_mask(const unsigned char *c,const unsigned char *c2)
   uint16 differentbits = 0;
   int len = Ciphertexts_bytes+Confirm_bytes;
 
-#if 1
+#if 0
   while (len-- > 0) differentbits |= (*c++)^(*c2++);
   return (1&((differentbits-1)>>8))-1;
 #else
   int *cc = (int *)(void *)c;
   int *cc2 = (int *)(void *)c2;
   int differentbits2 = 0;
-  for (;len-=4>=0;) {
-    differentbits2 |= (*cc++)^(*cc2++);
+  for (len-=4 ;len>=0; len-=4) {
+    differentbits2 = __USADA8((*cc++),(*cc2++),differentbits2);
     //int scr0, scr1;
     //__asm__ volatile ("ldr %3, [%1], #4\n\t"				\
     //		      "ldr %4, [%2], #4\n\t"				\
@@ -1046,9 +1063,9 @@ static int Ciphertexts_diff_mask(const unsigned char *c,const unsigned char *c2)
   }
   c = (unsigned char *)(void *) cc;
   c2 = (unsigned char *)(void *) cc2;
-  differentbits = (unsigned char) __USAD8(differentbits2, 0);
-  for (len &= 3; len > 0; len--) differentbits |= (*c++)^(*c2++);
-  return (1&((differentbits-1)>>8))-1;
+  for (len &= 3; len > 0; len--)
+    differentbits2 =__USADA8((*c++),(*c2++),differentbits2);
+  return ((-1)-((differentbits-1)>>31));
 #endif
 
 
