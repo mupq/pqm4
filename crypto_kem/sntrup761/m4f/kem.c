@@ -157,7 +157,7 @@ static void R3_mult(small *h,const small *f,const small *g)
     result = 0;
     for (j = i-p+1;j < p;++j) result = F3_freeze(result+f[j]*g[i-j]);
     fg[i] = result;
-  } 
+  }
 
   for (i = p+p-2;i >= p;--i) {
     fg[i-p] = F3_freeze_short(fg[i-p]+fg[i]);
@@ -251,8 +251,8 @@ static void Rq_mult_small(Fq *h,const Fq *f,const small *g)
     result = 0;
     for (j = i-p+1;j < p;++j) result = Fq_freeze(result+f[j]*(int32)g[i-j]);
     fg[i] = result;
-  } 
-  
+  }
+
   for (i = p+p-2;i >= p;--i) {
     fg[i-p] = Fq_freeze_short(fg[i-p]+fg[i]);
     fg[i-p+1] = Fq_freeze_short(fg[i-p+1]+fg[i]);
@@ -591,7 +591,7 @@ static const unsigned char aes_nonce[16] = {0};
 static void Expand(uint32 *L,const unsigned char *k)
 {
   aes256ctx ctx;
-  aes256_keyexp(&ctx, k);
+  aes256_ctr_keyexp(&ctx, k);
   aes256_ctr((unsigned char *) L, 4*p, aes_nonce, &ctx);
 }
 

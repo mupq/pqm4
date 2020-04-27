@@ -158,7 +158,7 @@ static void R3_mult(small *h,const small *f,const small *g)
     result = 0;
     for (j = i-p+1;j < p;++j) result = F3_freeze(result+f[j]*g[i-j]);
     fg[i] = result;
-  } 
+  }
 
   for (i = p+p-2;i >= p;--i) {
     fg[i-p] = F3_freeze_short(fg[i-p]+fg[i]);
@@ -252,8 +252,8 @@ static void Rq_mult_small(Fq *h,const Fq *f,const small *g)
     result = 0;
     for (j = i-p+1;j < p;++j) result = Fq_freeze(result+f[j]*(int32)g[i-j]);
     fg[i] = result;
-  } 
-  
+  }
+
   for (i = p+p-2;i >= p;--i) {
     fg[i-p] = Fq_freeze_short(fg[i-p]+fg[i]);
     fg[i-p+1] = Fq_freeze_short(fg[i-p+1]+fg[i]);
@@ -592,7 +592,7 @@ static const unsigned char aes_nonce[16] = {0};
 static void Expand(uint32 *L,const unsigned char *k)
 {
   aes256ctx ctx;
-  aes256_keyexp(&ctx, k);
+  aes256_ctr_keyexp(&ctx, k);
   aes256_ctr((unsigned char *) L, 4*p, aes_nonce, &ctx);
 }
 
@@ -629,7 +629,7 @@ static void Generator(Fq *G,const unsigned char *k)
   int c = 65536 % q;  if (c > q/2) c -= q;
   for (i = 0;i < p;++i) {
     x1 = (int) (L[i] >> 16) + minusinv65536modq;
-    // minusinv65536modq = 1/131072 mod q 
+    // minusinv65536modq = 1/131072 mod q
     x0 = __UXTH(L[i], 0);
     x0 = __MLA(x1, c, x0);
     G[i] = Fq_freeze(x0);
