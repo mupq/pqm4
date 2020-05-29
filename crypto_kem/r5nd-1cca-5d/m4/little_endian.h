@@ -1,6 +1,6 @@
-//	little_endian.h
-//	2019-10-29	Markku-Juhani O. Saarinen <mjos@pqshield.com>
-//	Copyright (c) 2019, PQShield Ltd. All rights reserved.
+//  little_endian.h
+//  2019-10-29  Markku-Juhani O. Saarinen <mjos@pqshield.com>
+//  Copyright (c) 2019, PQShield Ltd. All rights reserved.
 
 #ifndef _LITTLE_ENDIAN_H_
 #define _LITTLE_ENDIAN_H_
@@ -42,4 +42,4 @@
 )
 #endif
 
-#endif /* _LITTLE_ENDIAN_H_ */
+#endif										/* _LITTLE_ENDIAN_H_ */
