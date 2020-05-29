@@ -136,8 +136,7 @@ For most schemes we report minimum, maximum, and average cycle counts of 100 exe
 For some particularly slow schemes we reduce the number of executions; the number of
 executions is reported in parentheses.
 
-The numbers were obtained with `arm-none-eabi-gcc 9.1.0` or `9.2.0`. 
-The performance differences between those versions are negligible.
+The numbers were obtained with `arm-none-eabi-gcc 10.1.0`. 
 
 The code-size measurements only include the code that is provided by the scheme implementation, i.e., exclude common code like hashing or C standard library functions.
 The measurements are performed with `arm-none-eabi-size`.
