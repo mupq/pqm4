@@ -40,15 +40,16 @@ void cpapke_keypair(unsigned char *pk,
   unsigned char *publicseed = z;
   unsigned char *noiseseed = z+NEWHOPE_SYMBYTES;
 
-  randombytes(z, NEWHOPE_SYMBYTES);
-  shake256(z, 2*NEWHOPE_SYMBYTES, z, NEWHOPE_SYMBYTES);
+  z[0] = 0x01;
+  randombytes(z+1, NEWHOPE_SYMBYTES);
+  shake256(z, 2*NEWHOPE_SYMBYTES, z, NEWHOPE_SYMBYTES+1);
 
   poly_getnoise(&shat, noiseseed, 0);
   poly_ntt(&shat);
   poly_tobytes(sk, &shat);
 
   poly_uniform_mul_s(&shat, publicseed);
-#ifdef OPTIMIZE_STACK 
+#ifdef OPTIMIZE_STACK
   poly_invntt(&shat);
 
   poly_addnoise(&shat, noiseseed, 1);
