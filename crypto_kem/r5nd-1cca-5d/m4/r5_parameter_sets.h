@@ -1,6 +1,6 @@
-//	r5_parameter_sets.h
-//	Copyright (c) 2019, PQShield Ltd. and Koninklijke Philips N.V.
-//	Markku-Juhani O. Saarinen, Koninklijke Philips N.V.
+//  r5_parameter_sets.h
+//  Copyright (c) 2019, PQShield Ltd. and Koninklijke Philips N.V.
+//  Markku-Juhani O. Saarinen, Koninklijke Philips N.V.
 
 #ifndef _R5_PARAMETER_SETS_H_
 #define _R5_PARAMETER_SETS_H_
@@ -8,7 +8,7 @@
 #include <stdint.h>
 #include <stddef.h>
 
-//	May or may not include the variant definiton
+//  May or may not include the variant definiton
 #include "round5_variant_setting.h"
 
 #ifndef PQS_OLOCAL
@@ -23,7 +23,7 @@
 #define ARMV7_ASM
 #endif
 
-//	Our NIST proposal parameter sets
+//  Our NIST proposal parameter sets
 
 #if defined(R5ND_1CPA_0d)
 #define PARAMS_KAPPA_BYTES 16
@@ -432,7 +432,7 @@ typedef uint8_t modt_t;
 
 #ifdef ROUND5_CCA
 
-//	CCA KEM Variant
+//  CCA KEM Variant
 #define CRYPTO_SECRETKEYBYTES  (PARAMS_KAPPA_BYTES + PARAMS_KAPPA_BYTES + PARAMS_PK_SIZE)
 #define CRYPTO_PUBLICKEYBYTES  PARAMS_PK_SIZE
 #define CRYPTO_BYTES		   PARAMS_KAPPA_BYTES
@@ -453,7 +453,6 @@ typedef uint8_t modt_t;
 #define CRYPTO_BYTES			PARAMS_KAPPA_BYTES
 #define CRYPTO_CIPHERTEXTBYTES PARAMS_CT_SIZE
 
-#endif /* ROUND5_CCA */
+#endif										/* ROUND5_CCA */
 
-#endif /* _R5_PARAMETER_SETS_H_ */
-
+#endif										/* _R5_PARAMETER_SETS_H_ */

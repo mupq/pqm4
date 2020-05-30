@@ -1,13 +1,13 @@
-//	r5_matmul.c
-//	Copyright (c) 2019, PQShield Ltd. and Koninklijke Philips N.V.
+//  r5_matmul.c
+//  Copyright (c) 2019, PQShield Ltd. and Koninklijke Philips N.V.
 
-//	Fast matrix arithmetic (no cache attack countermeasures)
+//  Fast matrix arithmetic (no cache attack countermeasures)
 
 #include "r5_parameter_sets.h"
 
 #if (PARAMS_N == 1)
 // && !defined(ROUND5_CT)
-//	no constant time stuff here
+//  no constant time stuff here
 
 #include <string.h>
 
@@ -19,25 +19,29 @@
 // U = A_T * R
 
 void r5_matmul_ra_q(modq_t d[PARAMS_M_BAR][PARAMS_D],
-	modq_t a[PARAM_TAU2_A_RANDOM + PARAMS_D],
-	const uint16_t a_perm[PARAMS_D],
-	const r5_ternv_t r_t[PARAMS_M_BAR])
+					modq_t a[PARAM_TAU2_A_RANDOM + PARAMS_D],
+					const uint16_t a_perm[PARAMS_D],
+					const r5_ternv_t r_t[PARAMS_M_BAR])
 {
 	size_t i, l;
 
 	// Initialize result
-	memset(d, 0, PARAMS_M_BAR * PARAMS_D * sizeof (modq_t));
+	memset(d, 0, PARAMS_M_BAR * PARAMS_D * sizeof(modq_t));
 
 	for (l = 0; l < PARAMS_M_BAR; l++) {
 		for (i = 0; i < (PARAMS_H / 2) - 2; i += 3) {
 			r5_modq_addsub3_d(d[l],
-				&a[a_perm[r_t[l][i][0]]], &a[a_perm[r_t[l][i][1]]],
-				&a[a_perm[r_t[l][i + 1][0]]], &a[a_perm[r_t[l][i + 1][1]]],
-				&a[a_perm[r_t[l][i + 2][0]]], &a[a_perm[r_t[l][i + 2][1]]]);
+							  &a[a_perm[r_t[l][i][0]]],
+							  &a[a_perm[r_t[l][i][1]]],
+							  &a[a_perm[r_t[l][i + 1][0]]],
+							  &a[a_perm[r_t[l][i + 1][1]]],
+							  &a[a_perm[r_t[l][i + 2][0]]],
+							  &a[a_perm[r_t[l][i + 2][1]]]);
 		}
 		while (i < PARAMS_H / 2) {
 			r5_modq_addsub_d(d[l],
-				&a[a_perm[r_t[l][i][0]]], &a[a_perm[r_t[l][i][1]]]);
+							 &a[a_perm[r_t[l][i][0]]],
+							 &a[a_perm[r_t[l][i][1]]]);
 			i++;
 		}
 	}
@@ -46,24 +50,26 @@ void r5_matmul_ra_q(modq_t d[PARAMS_M_BAR][PARAMS_D],
 // B = A * S
 
 void r5_matmul_as_q(modq_t d[PARAMS_D][PARAMS_N_BAR],
-	modq_t a[PARAM_TAU2_A_RANDOM + PARAMS_D],
-	const uint16_t a_perm[PARAMS_D],
-	const r5_ternv_t s_t[PARAMS_N_BAR])
+					modq_t a[PARAM_TAU2_A_RANDOM + PARAMS_D],
+					const uint16_t a_perm[PARAMS_D],
+					const r5_ternv_t s_t[PARAMS_N_BAR])
 {
 	size_t i, l;
 
-	memset(d, 0, PARAMS_N_BAR * PARAMS_D * sizeof (modq_t));
+	memset(d, 0, PARAMS_N_BAR * PARAMS_D * sizeof(modq_t));
 
 	for (l = 0; l < PARAMS_N_BAR; l++) {
 		for (i = 0; i < PARAMS_H / 2 - 2; i += 3) {
 			r5_modq_addsub3_perm_nbar_d(&d[0][l], a_perm,
-				&a[s_t[l][i][0]], &a[s_t[l][i][1]],
-				&a[s_t[l][i + 1][0]], &a[s_t[l][i + 1][1]],
-				&a[s_t[l][i + 2][0]], &a[s_t[l][i + 2][1]]);
+										&a[s_t[l][i][0]], &a[s_t[l][i][1]],
+										&a[s_t[l][i + 1][0]],
+										&a[s_t[l][i + 1][1]],
+										&a[s_t[l][i + 2][0]],
+										&a[s_t[l][i + 2][1]]);
 		}
 		while (i < PARAMS_H / 2) {
 			r5_modq_addsub_perm_nbar_d(&d[0][l], a_perm,
-				&a[s_t[l][i][0]], &a[s_t[l][i][1]]);
+									   &a[s_t[l][i][0]], &a[s_t[l][i][1]]);
 			i++;
 		}
 	}
@@ -72,8 +78,8 @@ void r5_matmul_as_q(modq_t d[PARAMS_D][PARAMS_N_BAR],
 // X' = S_T * U
 
 void r5_matmul_us_p(modp_t d[PARAMS_MU],
-	const modp_t u_t[PARAMS_M_BAR][PARAMS_D],
-	const r5_ternv_t s_t[PARAMS_N_BAR])
+					const modp_t u_t[PARAMS_M_BAR][PARAMS_D],
+					const r5_ternv_t s_t[PARAMS_N_BAR])
 {
 	size_t i, j, k, idx;
 	modp_t t;
@@ -93,8 +99,8 @@ void r5_matmul_us_p(modp_t d[PARAMS_MU],
 // X = B_T * R
 
 void r5_matmul_rb_p(modp_t d[PARAMS_MU],
-	const modp_t b[PARAMS_D][PARAMS_N_BAR],
-	const r5_ternv_t r_t[PARAMS_M_BAR])
+					const modp_t b[PARAMS_D][PARAMS_N_BAR],
+					const r5_ternv_t r_t[PARAMS_M_BAR])
 {
 	size_t i, j, l, idx;
 	modp_t t;
@@ -112,4 +118,3 @@ void r5_matmul_rb_p(modp_t d[PARAMS_MU],
 }
 
 #endif
-
