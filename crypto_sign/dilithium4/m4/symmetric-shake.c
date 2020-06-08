@@ -1,0 +1,1 @@
+../../dilithium2/m4/symmetric-shake.c

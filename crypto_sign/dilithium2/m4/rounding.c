@@ -1,5 +1,7 @@
+#include <stdint.h>
 #include "params.h"
 #include "rounding.h"
+
 /*************************************************
 * Name:        power2round
 *
@@ -13,16 +15,16 @@
 * Returns a1.
 **************************************************/
 uint32_t power2round(uint32_t a, uint32_t *a0)  {
-    uint32_t t;
+  int32_t t;
 
-    /* Centralized remainder mod 2^D */
-    t = a & ((1U << D) - 1);
-    t -= ((1U << (D - 1)) + 1);
-    t += ((uint32_t)((int32_t)t >> 31) & (1U << D));
-    t -= ((1U << (D - 1)) - 1);
-    *a0 = (Q + t);
-    a = (a - t) >> D;
-    return a;
+  /* Centralized remainder mod 2^D */
+  t = a & ((1U << D) - 1);
+  t -= (1U << (D-1)) + 1;
+  t += (t >> 31) & (1U << D);
+  t -= (1U << (D-1)) - 1;
+  *a0 = Q + t;
+  a = (a - t) >> D;
+  return a;
 }
 
 /*************************************************
@@ -40,25 +42,29 @@ uint32_t power2round(uint32_t a, uint32_t *a0)  {
 * Returns a1.
 **************************************************/
 uint32_t decompose(uint32_t a, uint32_t *a0) {
-    int32_t t, u;
-    /* Centralized remainder mod ALPHA */
-    t = a & 0x7FFFF;
-    t += (int32_t) ((a >> 19) << 9);
-    t -= ALPHA / 2 + 1;
-    t += (t >> 31) & ALPHA;
-    t -= ALPHA / 2 - 1;
-    a -= (uint32_t) t;
+#if ALPHA != (Q-1)/16
+#error "decompose assumes ALPHA == (Q-1)/16"
+#endif
+  int32_t t, u;
 
-    /* Divide by ALPHA (possible to avoid) */
-    u = (int32_t) a - 1;
-    u >>= 31;
-    a = (a >> 19) + 1;
-    a -= u & 1;
+  /* Centralized remainder mod ALPHA */
+  t = a & 0x7FFFF;
+  t += (a >> 19) << 9;
+  t -= ALPHA/2 + 1;
+  t += (t >> 31) & ALPHA;
+  t -= ALPHA/2 - 1;
+  a -= t;
 
-    /* Border case */
-    *a0 = Q + (uint32_t)t - (a >> 4);
-    a &= 0xF;
-    return a;
+  /* Divide by ALPHA (possible to avoid) */
+  u = a - 1;
+  u >>= 31;
+  a = (a >> 19) + 1;
+  a -= u & 1;
+
+  /* Border case */
+  *a0 = Q + t - (a >> 4);
+  a &= 0xF;
+  return a;
 }
 
 /*************************************************
@@ -73,12 +79,11 @@ uint32_t decompose(uint32_t a, uint32_t *a0) {
 *
 * Returns 1 if high bits of a and b differ and 0 otherwise.
 **************************************************/
-unsigned int make_hint(uint32_t a0, uint32_t a1) {
-    if (a0 <= GAMMA2 || a0 > Q - GAMMA2 || (a0 == Q - GAMMA2 && a1 == 0)) {
-        return 0;
-    }
+unsigned int make_hint(const uint32_t a0, const uint32_t a1) {
+  if(a0 <= GAMMA2 || a0 > Q - GAMMA2 || (a0 == Q - GAMMA2 && a1 == 0))
+    return 0;
 
-    return 1;
+  return 1;
 }
 
 /*************************************************
@@ -91,15 +96,23 @@ unsigned int make_hint(uint32_t a0, uint32_t a1) {
 *
 * Returns corrected high bits.
 **************************************************/
-uint32_t use_hint(uint32_t a, unsigned int hint) {
-    uint32_t a0, a1;
+uint32_t use_hint(const uint32_t a, const unsigned int hint) {
+  uint32_t a0, a1;
 
-    a1 = decompose(a, &a0);
-    if (hint == 0) {
-        return a1;
-    }
-    if (a0 > Q) {
-        return (a1 + 1) & 0xF;
-    }
+  a1 = decompose(a, &a0);
+  if(hint == 0)
+    return a1;
+  else if(a0 > Q)
+    return (a1 + 1) & 0xF;
+  else
     return (a1 - 1) & 0xF;
+
+  /* If decompose does not divide out ALPHA:
+  if(hint == 0)
+    return a1;
+  else if(a0 > Q)
+    return (a1 + ALPHA) % (Q - 1);
+  else
+    return (a1 - ALPHA) % (Q - 1);
+  */
 }
