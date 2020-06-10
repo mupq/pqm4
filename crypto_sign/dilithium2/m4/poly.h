@@ -76,4 +76,11 @@ void polyz_unpack(poly *r, const uint8_t *a);
 #define polyw1_pack DILITHIUM_NAMESPACE(_polyw1_pack)
 void polyw1_pack(uint8_t *r, const poly *a);
 
+#define poly_add_freeze_chk_norm DILITHIUM_NAMESPACE(poly_add_freeze_chk_norm)
+int poly_add_freeze_chk_norm(poly *c, const poly *a, const poly *b, uint32_t B);
+#define poly_sub_freeze_chk_norm DILITHIUM_NAMESPACE(poly_sub_freeze_chk_norm)
+int poly_sub_freeze_chk_norm(poly *c, const poly *a, const poly *b, uint32_t B);
+#define poly_csubq_chknorm DILITHIUM_NAMESPACE(poly_csubq_chknorm)
+int poly_csubq_chknorm(poly *c, uint32_t B);
+
 #endif
