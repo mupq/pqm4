@@ -265,7 +265,7 @@ void poly_ntt(poly *a) {
 *
 * Arguments:   - poly *a: pointer to input/output polynomial
 **************************************************/
-void poly_invntt_montgomery(poly *a) {
+void poly_invntt_tomont(poly *a) {
     inv_ntt_asm(a->coeffs);
 }
 
@@ -281,7 +281,7 @@ void poly_invntt_montgomery(poly *a) {
 *              - const poly *a: pointer to first input polynomial
 *              - const poly *b: pointer to second input polynomial
 **************************************************/
-void poly_pointwise_invmontgomery(poly *c, const poly *a, const poly *b)
+void poly_pointwise_montgomery(poly *c, const poly *a, const poly *b)
 {
   unsigned int i;
   uint64_t t;
@@ -1479,7 +1479,7 @@ void poly_uniform(poly *a,
     unsigned int i, ctr, off;
     unsigned int buflen = POLY_UNIFORM_BUFLEN;
     unsigned char buf[POLY_UNIFORM_BUFLEN + 2];
-    shake128ctx state;
+    shake128incctx state;
 
     stream128_init(&state, seed, nonce);
     stream128_squeezeblocks(buf, POLY_UNIFORM_NBLOCKS, &state);
@@ -1521,8 +1521,13 @@ static unsigned int rej_eta(uint32_t *a,
 
     ctr = pos = 0;
     while (ctr < len && pos < buflen) {
+        #if ETA <= 3
+        t0 = buf[pos] & 0x07;
+        t1 = buf[pos++] >> 5;
+        #else
         t0 = buf[pos] & 0x0F;
         t1 = buf[pos++] >> 4;
+        #endif
 
         if (t0 <= 2 * ETA) {
             a[ctr++] = Q + ETA - t0;
@@ -1547,15 +1552,15 @@ static unsigned int rej_eta(uint32_t *a,
 *                                            SEEDBYTES
 *              - uint16_t nonce: 2-byte nonce
 **************************************************/
-#define POLY_UNIFORM_ETA_NBLOCKS (((N/2 * (1U << SETABITS)) / (2*ETA + 1)\
-                                   + STREAM128_BLOCKBYTES) / STREAM128_BLOCKBYTES)
+#define POLY_UNIFORM_ETA_NBLOCKS ((192 + STREAM128_BLOCKBYTES - 1) \
+                                  /STREAM128_BLOCKBYTES)
 #define POLY_UNIFORM_ETA_BUFLEN (POLY_UNIFORM_ETA_NBLOCKS*STREAM128_BLOCKBYTES)
 void poly_uniform_eta(poly *a,
         const unsigned char seed[SEEDBYTES],
         uint16_t nonce) {
     unsigned int ctr;
     unsigned char buf[POLY_UNIFORM_ETA_BUFLEN];
-    shake128ctx state;
+    shake128incctx state;
 
     stream128_init(&state, seed, nonce);
     stream128_squeezeblocks(buf, POLY_UNIFORM_ETA_NBLOCKS, &state);
@@ -1634,7 +1639,7 @@ void poly_uniform_gamma1m1(poly *a,
     unsigned int i, ctr, off;
     unsigned int buflen = POLY_UNIFORM_GAMMA1M1_BUFLEN;
     unsigned char buf[POLY_UNIFORM_GAMMA1M1_BUFLEN + 4];
-    shake256ctx state;
+    shake256incctx state;
 
     stream256_init(&state, seed, nonce);
     stream256_squeezeblocks(buf, POLY_UNIFORM_GAMMA1M1_NBLOCKS, &state);
@@ -1667,11 +1672,28 @@ void polyeta_pack(unsigned char *r, const poly *a) {
     unsigned int i;
     unsigned char t[8];
 
-    for (i = 0; i < N / 2; ++i) {
-        t[0] = (uint8_t) (Q + ETA - a->coeffs[2 * i + 0]);
-        t[1] = (uint8_t) (Q + ETA - a->coeffs[2 * i + 1]);
-        r[i] = (uint8_t) (t[0] | (t[1] << 4));
+    #if 2*ETA <= 7
+    for(i = 0; i < N/8; ++i) {
+        t[0] = Q + ETA - a->coeffs[8*i+0];
+        t[1] = Q + ETA - a->coeffs[8*i+1];
+        t[2] = Q + ETA - a->coeffs[8*i+2];
+        t[3] = Q + ETA - a->coeffs[8*i+3];
+        t[4] = Q + ETA - a->coeffs[8*i+4];
+        t[5] = Q + ETA - a->coeffs[8*i+5];
+        t[6] = Q + ETA - a->coeffs[8*i+6];
+        t[7] = Q + ETA - a->coeffs[8*i+7];
+
+        r[3*i+0]  = (t[0] >> 0) | (t[1] << 3) | (t[2] << 6);
+        r[3*i+1]  = (t[2] >> 2) | (t[3] << 1) | (t[4] << 4) | (t[5] << 7);
+        r[3*i+2]  = (t[5] >> 1) | (t[6] << 2) | (t[7] << 5);
     }
+    #else
+    for(i = 0; i < N/2; ++i) {
+        t[0] = Q + ETA - a->coeffs[2*i+0];
+        t[1] = Q + ETA - a->coeffs[2*i+1];
+        r[i] = t[0] | (t[1] << 4);
+    }
+    #endif
 }
 
 /*************************************************
@@ -1685,12 +1707,34 @@ void polyeta_pack(unsigned char *r, const poly *a) {
 **************************************************/
 void polyeta_unpack(poly *r, const unsigned char *a) {
     unsigned int i;
-    for (i = 0; i < N / 2; ++i) {
-        r->coeffs[2 * i + 0] = a[i] & 0x0F;
-        r->coeffs[2 * i + 1] = a[i] >> 4;
-        r->coeffs[2 * i + 0] = Q + ETA - r->coeffs[2 * i + 0];
-        r->coeffs[2 * i + 1] = Q + ETA - r->coeffs[2 * i + 1];
+    #if ETA <= 3
+    for(i = 0; i < N/8; ++i) {
+        r->coeffs[8*i+0] = a[3*i+0] & 0x07;
+        r->coeffs[8*i+1] = (a[3*i+0] >> 3) & 0x07;
+        r->coeffs[8*i+2] = ((a[3*i+0] >> 6) | (a[3*i+1] << 2)) & 0x07;
+        r->coeffs[8*i+3] = (a[3*i+1] >> 1) & 0x07;
+        r->coeffs[8*i+4] = (a[3*i+1] >> 4) & 0x07;
+        r->coeffs[8*i+5] = ((a[3*i+1] >> 7) | (a[3*i+2] << 1)) & 0x07;
+        r->coeffs[8*i+6] = (a[3*i+2] >> 2) & 0x07;
+        r->coeffs[8*i+7] = (a[3*i+2] >> 5) & 0x07;
+
+        r->coeffs[8*i+0] = Q + ETA - r->coeffs[8*i+0];
+        r->coeffs[8*i+1] = Q + ETA - r->coeffs[8*i+1];
+        r->coeffs[8*i+2] = Q + ETA - r->coeffs[8*i+2];
+        r->coeffs[8*i+3] = Q + ETA - r->coeffs[8*i+3];
+        r->coeffs[8*i+4] = Q + ETA - r->coeffs[8*i+4];
+        r->coeffs[8*i+5] = Q + ETA - r->coeffs[8*i+5];
+        r->coeffs[8*i+6] = Q + ETA - r->coeffs[8*i+6];
+        r->coeffs[8*i+7] = Q + ETA - r->coeffs[8*i+7];
     }
+    #else
+    for(i = 0; i < N/2; ++i) {
+        r->coeffs[2*i+0] = a[i] & 0x0F;
+        r->coeffs[2*i+1] = a[i] >> 4;
+        r->coeffs[2*i+0] = Q + ETA - r->coeffs[2*i+0];
+        r->coeffs[2*i+1] = Q + ETA - r->coeffs[2*i+1];
+    }
+    #endif
 }
 
 /*************************************************
