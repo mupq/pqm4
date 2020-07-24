@@ -26,8 +26,8 @@ EMLIB    = build/efm32-base/emlib/emlib.a
 
 LDSCRIPT = efm32-base/device/EFM32GG11B/Source/GCC/efm32gg11b.ld
 LDFLAGS  =  $(ARCH_FLAGS) -fno-builtin -ffunction-sections -fdata-sections \
-           -fomit-frame-pointer -T$(LDSCRIPT) -lgcc -lc -lnosys\
-		   $(LIBEFM32GG11B) $(EMLIB)
+           -fomit-frame-pointer -T$(LDSCRIPT) -lgcc -lc -lnosys -lm \
+           $(LIBEFM32GG11B) $(EMLIB)
 
 CC_HOST    = gcc
 LD_HOST    = gcc
