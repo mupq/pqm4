@@ -2,10 +2,6 @@
 ## Key Encapsulation Schemes
 | scheme | implementation | key generation [cycles] | encapsulation [cycles] | decapsulation [cycles] |
 | ------ | -------------- | ----------------------- | ---------------------- | ---------------------- |
-| babybear (100 executions) | clean | AVG: 4,040,567 <br /> MIN: 4,040,567 <br /> MAX: 4,040,567 | AVG: 5,890,050 <br /> MIN: 5,890,050 <br /> MAX: 5,890,050 | AVG: 12,012,511 <br /> MIN: 12,012,511 <br /> MAX: 12,012,511 |
-| babybear (100 executions) | opt | AVG: 678,841 <br /> MIN: 678,841 <br /> MAX: 678,841 | AVG: 858,588 <br /> MIN: 858,588 <br /> MAX: 858,588 | AVG: 1,331,463 <br /> MIN: 1,331,463 <br /> MAX: 1,331,463 |
-| babybear-ephem (100 executions) | clean | AVG: 4,040,567 <br /> MIN: 4,040,567 <br /> MAX: 4,040,567 | AVG: 5,916,913 <br /> MIN: 5,916,913 <br /> MAX: 5,916,913 | AVG: 1,992,862 <br /> MIN: 1,992,862 <br /> MAX: 1,992,862 |
-| babybear-ephem (100 executions) | opt | AVG: 678,840 <br /> MIN: 678,840 <br /> MAX: 678,840 | AVG: 885,163 <br /> MIN: 885,163 <br /> MAX: 885,163 | AVG: 290,198 <br /> MIN: 290,198 <br /> MAX: 290,198 |
 | firesaber (100 executions) | clean | AVG: 3,742,077 <br /> MIN: 3,742,077 <br /> MAX: 3,742,077 | AVG: 4,652,854 <br /> MIN: 4,652,854 <br /> MAX: 4,652,854 | AVG: 5,099,065 <br /> MIN: 5,099,065 <br /> MAX: 5,099,065 |
 | firesaber (100 executions) | m4 | AVG: 1,445,891 <br /> MIN: 1,445,891 <br /> MAX: 1,445,891 | AVG: 1,782,978 <br /> MIN: 1,782,978 <br /> MAX: 1,782,978 | AVG: 1,843,481 <br /> MIN: 1,843,481 <br /> MAX: 1,843,481 |
 | frodokem640aes (100 executions) | m4 | AVG: 48,348,105 <br /> MIN: 48,348,105 <br /> MAX: 48,348,105 | AVG: 47,130,922 <br /> MIN: 47,130,922 <br /> MAX: 47,130,922 | AVG: 46,594,383 <br /> MIN: 46,594,383 <br /> MAX: 46,594,383 |
@@ -23,36 +19,8 @@
 | kyber768 (100 executions) | m4 | AVG: 887,618 <br /> MIN: 887,173 <br /> MAX: 887,953 | AVG: 1,047,720 <br /> MIN: 1,047,308 <br /> MAX: 1,048,019 | AVG: 985,976 <br /> MIN: 985,564 <br /> MAX: 986,275 |
 | kyber768-90s (100 executions) | clean | AVG: 936,990 <br /> MIN: 936,598 <br /> MAX: 937,329 | AVG: 1,135,877 <br /> MIN: 1,135,485 <br /> MAX: 1,136,216 | AVG: 1,337,409 <br /> MIN: 1,337,017 <br /> MAX: 1,337,748 |
 | kyber768-90s (100 executions) | m4 | AVG: 624,485 <br /> MIN: 624,067 <br /> MAX: 625,074 | AVG: 695,432 <br /> MIN: 695,004 <br /> MAX: 696,031 | AVG: 708,683 <br /> MIN: 708,255 <br /> MAX: 709,282 |
-| lac-128-v3a (100 executions) | opt | AVG: 850,580 <br /> MIN: 845,974 <br /> MAX: 854,167 | AVG: 1,429,623 <br /> MIN: 1,424,453 <br /> MAX: 1,436,738 | AVG: 1,959,971 <br /> MIN: 1,954,123 <br /> MAX: 1,966,296 |
-| lac-128-v3a (100 executions) | ref | AVG: 1,405,100 <br /> MIN: 1,404,853 <br /> MAX: 1,408,213 | AVG: 2,399,325 <br /> MIN: 2,399,079 <br /> MAX: 2,402,439 | AVG: 3,345,990 <br /> MIN: 3,345,675 <br /> MAX: 3,349,082 |
-| lac-128-v3b (100 executions) | opt | AVG: 838,222 <br /> MIN: 834,260 <br /> MAX: 840,916 | AVG: 1,414,379 <br /> MIN: 1,408,040 <br /> MAX: 1,420,136 | AVG: 1,938,640 <br /> MIN: 1,932,946 <br /> MAX: 1,945,054 |
-| lac-128-v3b (100 executions) | ref | AVG: 1,262,836 <br /> MIN: 1,262,836 <br /> MAX: 1,262,836 | AVG: 2,156,580 <br /> MIN: 2,156,580 <br /> MAX: 2,156,580 | AVG: 2,999,306 <br /> MIN: 2,999,236 <br /> MAX: 2,999,368 |
-| lac-192-v3a (100 executions) | opt | AVG: 1,506,725 <br /> MIN: 1,498,109 <br /> MAX: 1,517,899 | AVG: 2,427,256 <br /> MIN: 2,413,903 <br /> MAX: 2,442,483 | AVG: 3,329,635 <br /> MIN: 3,315,962 <br /> MAX: 3,342,119 |
-| lac-192-v3a (100 executions) | ref | AVG: 2,355,311 <br /> MIN: 2,355,140 <br /> MAX: 2,358,606 | AVG: 3,816,155 <br /> MIN: 3,815,984 <br /> MAX: 3,819,450 | AVG: 5,261,134 <br /> MIN: 5,260,867 <br /> MAX: 5,264,447 |
-| lac-192-v3b (100 executions) | opt | AVG: 1,483,518 <br /> MIN: 1,475,270 <br /> MAX: 1,495,238 | AVG: 2,396,247 <br /> MIN: 2,383,051 <br /> MAX: 2,410,771 | AVG: 3,290,104 <br /> MIN: 3,274,439 <br /> MAX: 3,306,195 |
-| lac-192-v3b (100 executions) | ref | AVG: 2,593,395 <br /> MIN: 2,593,395 <br /> MAX: 2,593,395 | AVG: 4,216,804 <br /> MIN: 4,216,804 <br /> MAX: 4,216,804 | AVG: 5,820,552 <br /> MIN: 5,820,471 <br /> MAX: 5,820,639 |
-| lac-256-v3a (100 executions) | opt | AVG: 2,019,305 <br /> MIN: 2,009,946 <br /> MAX: 2,029,532 | AVG: 3,632,140 <br /> MIN: 3,612,893 <br /> MAX: 3,654,861 | AVG: 5,326,284 <br /> MIN: 5,306,105 <br /> MAX: 5,347,008 |
-| lac-256-v3a (100 executions) | ref | AVG: 3,490,042 <br /> MIN: 3,489,931 <br /> MAX: 3,490,131 | AVG: 6,365,490 <br /> MIN: 6,365,379 <br /> MAX: 6,365,579 | AVG: 9,323,913 <br /> MIN: 9,323,648 <br /> MAX: 9,324,105 |
-| lac-256-v3b (100 executions) | opt | AVG: 1,995,898 <br /> MIN: 1,987,640 <br /> MAX: 2,005,560 | AVG: 3,602,176 <br /> MIN: 3,585,802 <br /> MAX: 3,616,266 | AVG: 5,284,720 <br /> MIN: 5,269,246 <br /> MAX: 5,303,034 |
-| lac-256-v3b (100 executions) | ref | AVG: 3,466,405 <br /> MIN: 3,466,405 <br /> MAX: 3,466,405 | AVG: 6,335,071 <br /> MIN: 6,335,071 <br /> MAX: 6,335,071 | AVG: 9,281,674 <br /> MIN: 9,281,575 <br /> MAX: 9,281,764 |
-| lac-light-v3a (100 executions) | opt | AVG: 446,806 <br /> MIN: 443,375 <br /> MAX: 451,200 | AVG: 672,562 <br /> MIN: 667,154 <br /> MAX: 681,065 | AVG: 862,517 <br /> MIN: 857,788 <br /> MAX: 870,249 |
-| lac-light-v3a (100 executions) | ref | AVG: 722,879 <br /> MIN: 722,623 <br /> MAX: 726,005 | AVG: 1,093,993 <br /> MIN: 1,093,737 <br /> MAX: 1,097,119 | AVG: 1,430,436 <br /> MIN: 1,430,101 <br /> MAX: 1,433,606 |
-| lac-light-v3b (100 executions) | opt | AVG: 434,424 <br /> MIN: 431,816 <br /> MAX: 436,936 | AVG: 657,519 <br /> MIN: 652,188 <br /> MAX: 663,164 | AVG: 843,914 <br /> MIN: 839,144 <br /> MAX: 850,368 |
-| lac-light-v3b (100 executions) | ref | AVG: 645,992 <br /> MIN: 645,992 <br /> MAX: 645,992 | AVG: 980,704 <br /> MIN: 980,704 <br /> MAX: 980,704 | AVG: 1,278,903 <br /> MIN: 1,278,850 <br /> MAX: 1,278,962 |
 | lightsaber (100 executions) | clean | AVG: 1,033,020 <br /> MIN: 1,033,020 <br /> MAX: 1,033,020 | AVG: 1,509,916 <br /> MIN: 1,509,916 <br /> MAX: 1,509,916 | AVG: 1,820,857 <br /> MIN: 1,820,857 <br /> MAX: 1,820,857 |
 | lightsaber (100 executions) | m4 | AVG: 458,660 <br /> MIN: 458,660 <br /> MAX: 458,660 | AVG: 649,332 <br /> MIN: 649,332 <br /> MAX: 649,332 | AVG: 673,339 <br /> MIN: 673,339 <br /> MAX: 673,339 |
-| mamabear (100 executions) | clean | AVG: 8,872,478 <br /> MIN: 8,872,478 <br /> MAX: 8,872,478 | AVG: 11,613,444 <br /> MIN: 11,613,444 <br /> MAX: 11,613,444 | AVG: 23,541,053 <br /> MIN: 23,541,053 <br /> MAX: 23,541,053 |
-| mamabear (100 executions) | opt | AVG: 1,329,473 <br /> MIN: 1,329,473 <br /> MAX: 1,329,473 | AVG: 1,566,826 <br /> MIN: 1,566,826 <br /> MAX: 1,566,826 | AVG: 2,238,894 <br /> MIN: 2,238,894 <br /> MAX: 2,238,894 |
-| mamabear-ephem (100 executions) | clean | AVG: 8,885,649 <br /> MIN: 8,885,649 <br /> MAX: 8,885,649 | AVG: 11,656,053 <br /> MIN: 11,656,053 <br /> MAX: 11,656,053 | AVG: 2,934,701 <br /> MIN: 2,934,701 <br /> MAX: 2,934,701 |
-| mamabear-ephem (100 executions) | opt | AVG: 1,341,937 <br /> MIN: 1,341,937 <br /> MAX: 1,341,937 | AVG: 1,608,220 <br /> MIN: 1,608,220 <br /> MAX: 1,608,220 | AVG: 399,162 <br /> MIN: 399,162 <br /> MAX: 399,162 |
-| newhope1024cca (100 executions) | clean | AVG: 1,448,528 <br /> MIN: 1,448,269 <br /> MAX: 1,448,824 | AVG: 2,242,513 <br /> MIN: 2,242,254 <br /> MAX: 2,242,809 | AVG: 2,380,205 <br /> MIN: 2,379,946 <br /> MAX: 2,380,501 |
-| newhope1024cca (100 executions) | m4 | AVG: 1,157,918 <br /> MIN: 1,157,530 <br /> MAX: 1,158,363 | AVG: 1,689,232 <br /> MIN: 1,688,844 <br /> MAX: 1,689,677 | AVG: 1,613,720 <br /> MIN: 1,613,332 <br /> MAX: 1,614,165 |
-| newhope1024cpa (100 executions) | clean | AVG: 1,263,030 <br /> MIN: 1,262,718 <br /> MAX: 1,263,348 | AVG: 1,835,465 <br /> MIN: 1,835,153 <br /> MAX: 1,835,783 | AVG: 327,590 <br /> MIN: 327,590 <br /> MAX: 327,590 |
-| newhope1024cpa (100 executions) | m4 | AVG: 978,185 <br /> MIN: 977,857 <br /> MAX: 978,537 | AVG: 1,282,189 <br /> MIN: 1,281,861 <br /> MAX: 1,282,541 | AVG: 129,651 <br /> MIN: 129,651 <br /> MAX: 129,651 |
-| newhope512cca (100 executions) | clean | AVG: 713,178 <br /> MIN: 712,990 <br /> MAX: 713,395 | AVG: 1,121,615 <br /> MIN: 1,121,427 <br /> MAX: 1,121,832 | AVG: 1,175,626 <br /> MIN: 1,175,438 <br /> MAX: 1,175,843 |
-| newhope512cca (100 executions) | m4 | AVG: 579,163 <br /> MIN: 578,883 <br /> MAX: 579,444 | AVG: 866,129 <br /> MIN: 865,849 <br /> MAX: 866,410 | AVG: 820,160 <br /> MIN: 819,880 <br /> MAX: 820,441 |
-| newhope512cpa (100 executions) | clean | AVG: 621,643 <br /> MIN: 621,413 <br /> MAX: 621,848 | AVG: 903,501 <br /> MIN: 903,271 <br /> MAX: 903,706 | AVG: 162,819 <br /> MIN: 162,819 <br /> MAX: 162,819 |
-| newhope512cpa (100 executions) | m4 | AVG: 488,269 <br /> MIN: 488,022 <br /> MAX: 488,532 | AVG: 648,005 <br /> MIN: 647,758 <br /> MAX: 648,268 | AVG: 71,434 <br /> MIN: 71,434 <br /> MAX: 71,434 |
 | ntruhps2048509 (100 executions) | clean | AVG: 111,492,425 <br /> MIN: 111,492,425 <br /> MAX: 111,492,425 | AVG: 3,066,947 <br /> MIN: 3,066,947 <br /> MAX: 3,066,947 | AVG: 7,884,197 <br /> MIN: 7,884,197 <br /> MAX: 7,884,197 |
 | ntruhps2048509 (100 executions) | m4 | AVG: 79,686,034 <br /> MIN: 79,686,034 <br /> MAX: 79,686,034 | AVG: 577,135 <br /> MIN: 577,135 <br /> MAX: 577,135 | AVG: 545,283 <br /> MIN: 545,283 <br /> MAX: 545,283 |
 | ntruhps2048677 (100 executions) | clean | AVG: 200,216,118 <br /> MIN: 200,216,118 <br /> MAX: 200,216,118 | AVG: 5,265,948 <br /> MIN: 5,265,948 <br /> MAX: 5,265,948 | AVG: 13,846,001 <br /> MIN: 13,846,001 <br /> MAX: 13,846,001 |
@@ -65,54 +33,6 @@
 | ntrulpr761 (100 executions) | m4f | AVG: 830,885 <br /> MIN: 830,885 <br /> MAX: 830,885 | AVG: 1,317,654 <br /> MIN: 1,317,654 <br /> MAX: 1,317,654 | AVG: 1,499,988 <br /> MIN: 1,499,988 <br /> MAX: 1,499,988 |
 | ntrulpr761 (100 executions) | ref | AVG: 71,314,438 <br /> MIN: 71,314,438 <br /> MAX: 71,314,438 | AVG: 141,912,418 <br /> MIN: 141,912,418 <br /> MAX: 141,912,418 | AVG: 212,280,542 <br /> MIN: 212,280,542 <br /> MAX: 212,280,542 |
 | ntrulpr857 (100 executions) | ref | AVG: 90,283,987 <br /> MIN: 90,283,987 <br /> MAX: 90,283,987 | AVG: 179,731,561 <br /> MIN: 179,731,561 <br /> MAX: 179,731,561 | AVG: 268,923,453 <br /> MIN: 268,923,453 <br /> MAX: 268,923,453 |
-| papabear (100 executions) | clean | AVG: 15,605,680 <br /> MIN: 15,605,680 <br /> MAX: 15,605,680 | AVG: 19,240,990 <br /> MIN: 19,240,990 <br /> MAX: 19,240,990 | AVG: 38,867,571 <br /> MIN: 38,867,571 <br /> MAX: 38,867,571 |
-| papabear (100 executions) | opt | AVG: 2,213,821 <br /> MIN: 2,213,821 <br /> MAX: 2,213,821 | AVG: 2,511,356 <br /> MIN: 2,511,356 <br /> MAX: 2,511,356 | AVG: 3,389,776 <br /> MIN: 3,389,776 <br /> MAX: 3,389,776 |
-| papabear-ephem (100 executions) | clean | AVG: 15,623,227 <br /> MIN: 15,623,227 <br /> MAX: 15,623,227 | AVG: 19,287,653 <br /> MIN: 19,287,653 <br /> MAX: 19,287,653 | AVG: 3,876,525 <br /> MIN: 3,876,525 <br /> MAX: 3,876,525 |
-| papabear-ephem (100 executions) | opt | AVG: 2,230,426 <br /> MIN: 2,230,426 <br /> MAX: 2,230,426 | AVG: 2,557,020 <br /> MIN: 2,557,020 <br /> MAX: 2,557,020 | AVG: 504,229 <br /> MIN: 504,229 <br /> MAX: 504,229 |
-| r5n1-1cca-0d (100 executions) | m4 | AVG: 3,491,604 <br /> MIN: 3,481,684 <br /> MAX: 3,498,710 | AVG: 3,323,001 <br /> MIN: 3,303,330 <br /> MAX: 3,344,234 | AVG: 3,812,491 <br /> MIN: 3,793,060 <br /> MAX: 3,834,247 |
-| r5n1-1cca-0d (100 executions) | opt | AVG: 3,588,010 <br /> MIN: 3,576,136 <br /> MAX: 3,594,696 | AVG: 4,043,950 <br /> MIN: 4,032,441 <br /> MAX: 4,051,145 | AVG: 4,533,532 <br /> MIN: 4,520,738 <br /> MAX: 4,541,081 |
-| r5n1-1cpa-0d (100 executions) | m4 | AVG: 5,462,321 <br /> MIN: 5,455,743 <br /> MAX: 5,478,356 | AVG: 3,921,353 <br /> MIN: 3,897,365 <br /> MAX: 3,951,982 | AVG: 1,092,829 <br /> MIN: 1,087,924 <br /> MAX: 1,108,789 |
-| r5n1-1cpa-0d (100 executions) | opt | AVG: 5,768,547 <br /> MIN: 5,764,034 <br /> MAX: 5,783,676 | AVG: 5,177,299 <br /> MIN: 5,171,671 <br /> MAX: 5,193,047 | AVG: 1,093,040 <br /> MIN: 1,088,736 <br /> MAX: 1,108,682 |
-| r5n1-3cca-0d (100 executions) | m4 | AVG: 15,509,880 <br /> MIN: 15,469,770 <br /> MAX: 15,543,886 | AVG: 11,202,487 <br /> MIN: 11,127,937 <br /> MAX: 11,260,989 | AVG: 13,082,191 <br /> MIN: 12,979,075 <br /> MAX: 13,154,041 |
-| r5n1-3cca-0d (100 executions) | opt | AVG: 16,009,170 <br /> MIN: 15,971,396 <br /> MAX: 16,041,794 | AVG: 15,105,667 <br /> MIN: 15,060,337 <br /> MAX: 15,143,170 | AVG: 16,986,271 <br /> MIN: 16,923,242 <br /> MAX: 17,034,025 |
-| r5n1-3cpa-0d (100 executions) | m4 | AVG: 8,711,453 <br /> MIN: 8,672,149 <br /> MAX: 8,744,381 | AVG: 6,402,834 <br /> MIN: 6,352,399 <br /> MAX: 6,450,551 | AVG: 1,733,213 <br /> MIN: 1,697,763 <br /> MAX: 1,755,373 |
-| r5n1-3cpa-0d (100 executions) | opt | AVG: 9,231,234 <br /> MIN: 9,190,947 <br /> MAX: 9,263,978 | AVG: 8,351,956 <br /> MIN: 8,310,879 <br /> MAX: 8,383,256 | AVG: 1,730,938 <br /> MIN: 1,686,348 <br /> MAX: 1,755,565 |
-| r5n1-5cca-0d (100 executions) | m4 | AVG: 21,358,304 <br /> MIN: 21,333,253 <br /> MAX: 21,402,114 | AVG: 15,619,548 <br /> MIN: 15,521,343 <br /> MAX: 15,684,186 | AVG: 17,531,421 <br /> MIN: 17,429,393 <br /> MAX: 17,609,529 |
-| r5n1-5cca-0d (100 executions) | opt | AVG: 22,852,707 <br /> MIN: 22,824,301 <br /> MAX: 22,886,778 | AVG: 20,769,321 <br /> MIN: 20,746,494 <br /> MAX: 20,821,094 | AVG: 22,679,431 <br /> MIN: 22,651,011 <br /> MAX: 22,741,132 |
-| r5n1-5cpa-0d (100 executions) | m4 | AVG: 31,953,027 <br /> MIN: 31,900,072 <br /> MAX: 32,014,372 | AVG: 19,712,097 <br /> MIN: 19,579,637 <br /> MAX: 19,782,676 | AVG: 4,283,344 <br /> MIN: 4,225,692 <br /> MAX: 4,335,442 |
-| r5n1-5cpa-0d (100 executions) | opt | AVG: 34,147,654 <br /> MIN: 34,096,451 <br /> MAX: 34,210,925 | AVG: 28,197,596 <br /> MIN: 28,137,702 <br /> MAX: 28,251,651 | AVG: 4,280,320 <br /> MIN: 4,226,540 <br /> MAX: 4,340,420 |
-| r5nd-1cca-0d (100 executions) | m4 | AVG: 444,133 <br /> MIN: 438,578 <br /> MAX: 447,496 | AVG: 649,840 <br /> MIN: 644,796 <br /> MAX: 654,744 | AVG: 802,968 <br /> MIN: 798,098 <br /> MAX: 808,456 |
-| r5nd-1cca-0d (100 executions) | opt | AVG: 577,831 <br /> MIN: 576,638 <br /> MAX: 578,948 | AVG: 845,994 <br /> MIN: 842,980 <br /> MAX: 847,850 | AVG: 1,063,284 <br /> MIN: 1,060,237 <br /> MAX: 1,066,043 |
-| r5nd-1cca-5d (100 executions) | m4 | AVG: 346,082 <br /> MIN: 342,877 <br /> MAX: 360,673 | AVG: 521,194 <br /> MIN: 518,529 <br /> MAX: 534,839 | AVG: 664,071 <br /> MIN: 659,293 <br /> MAX: 689,981 |
-| r5nd-1cca-5d (100 executions) | opt | AVG: 434,111 <br /> MIN: 431,147 <br /> MAX: 447,863 | AVG: 683,138 <br /> MIN: 680,228 <br /> MAX: 696,685 | AVG: 899,568 <br /> MIN: 895,118 <br /> MAX: 913,875 |
-| r5nd-1cpa-0d (100 executions) | m4 | AVG: 324,317 <br /> MIN: 320,610 <br /> MAX: 327,000 | AVG: 413,202 <br /> MIN: 409,591 <br /> MAX: 417,037 | AVG: 140,418 <br /> MIN: 139,396 <br /> MAX: 141,082 |
-| r5nd-1cpa-0d (100 executions) | opt | AVG: 406,312 <br /> MIN: 405,783 <br /> MAX: 407,187 | AVG: 512,475 <br /> MIN: 511,592 <br /> MAX: 513,374 | AVG: 157,583 <br /> MIN: 156,743 <br /> MAX: 158,489 |
-| r5nd-1cpa-5d (100 executions) | m4 | AVG: 380,370 <br /> MIN: 377,147 <br /> MAX: 384,115 | AVG: 529,523 <br /> MIN: 527,774 <br /> MAX: 531,910 | AVG: 221,436 <br /> MIN: 219,182 <br /> MAX: 223,500 |
-| r5nd-1cpa-5d (100 executions) | opt | AVG: 478,624 <br /> MIN: 477,006 <br /> MAX: 479,666 | AVG: 715,973 <br /> MIN: 713,626 <br /> MAX: 718,139 | AVG: 309,475 <br /> MIN: 307,226 <br /> MAX: 311,582 |
-| r5nd-3cca-0d (100 executions) | m4 | AVG: 722,107 <br /> MIN: 715,707 <br /> MAX: 731,395 | AVG: 1,072,349 <br /> MIN: 1,062,434 <br /> MAX: 1,080,452 | AVG: 1,300,649 <br /> MIN: 1,290,271 <br /> MAX: 1,309,425 |
-| r5nd-3cca-0d (100 executions) | opt | AVG: 948,380 <br /> MIN: 945,514 <br /> MAX: 949,834 | AVG: 1,406,602 <br /> MIN: 1,402,068 <br /> MAX: 1,410,272 | AVG: 1,743,291 <br /> MIN: 1,735,048 <br /> MAX: 1,747,077 |
-| r5nd-3cca-5d (100 executions) | m4 | AVG: 727,845 <br /> MIN: 722,153 <br /> MAX: 734,325 | AVG: 1,081,953 <br /> MIN: 1,076,739 <br /> MAX: 1,085,755 | AVG: 1,356,555 <br /> MIN: 1,349,798 <br /> MAX: 1,360,206 |
-| r5nd-3cca-5d (100 executions) | opt | AVG: 956,327 <br /> MIN: 953,044 <br /> MAX: 958,126 | AVG: 1,485,139 <br /> MIN: 1,472,376 <br /> MAX: 1,488,322 | AVG: 1,934,224 <br /> MIN: 1,920,328 <br /> MAX: 1,938,918 |
-| r5nd-3cpa-0d (100 executions) | m4 | AVG: 1,045,655 <br /> MIN: 1,036,305 <br /> MAX: 1,065,525 | AVG: 1,374,613 <br /> MIN: 1,363,795 <br /> MAX: 1,393,193 | AVG: 490,189 <br /> MIN: 484,769 <br /> MAX: 504,751 |
-| r5nd-3cpa-0d (100 executions) | opt | AVG: 1,421,007 <br /> MIN: 1,415,958 <br /> MAX: 1,434,438 | AVG: 1,952,568 <br /> MIN: 1,947,886 <br /> MAX: 1,965,730 | AVG: 686,236 <br /> MIN: 679,448 <br /> MAX: 700,220 |
-| r5nd-3cpa-5d (100 executions) | m4 | AVG: 726,818 <br /> MIN: 718,784 <br /> MAX: 733,368 | AVG: 975,706 <br /> MIN: 970,934 <br /> MAX: 979,682 | AVG: 355,447 <br /> MIN: 352,475 <br /> MAX: 358,227 |
-| r5nd-3cpa-5d (100 executions) | opt | AVG: 955,269 <br /> MIN: 952,572 <br /> MAX: 956,962 | AVG: 1,379,141 <br /> MIN: 1,374,493 <br /> MAX: 1,382,275 | AVG: 529,855 <br /> MIN: 526,811 <br /> MAX: 532,725 |
-| r5nd-5cca-0d (100 executions) | m4 | AVG: 999,988 <br /> MIN: 993,093 <br /> MAX: 1,010,844 | AVG: 1,479,858 <br /> MIN: 1,466,343 <br /> MAX: 1,492,759 | AVG: 1,766,884 <br /> MIN: 1,752,899 <br /> MAX: 1,780,148 |
-| r5nd-5cca-0d (100 executions) | opt | AVG: 1,322,692 <br /> MIN: 1,321,519 <br /> MAX: 1,323,675 | AVG: 1,959,924 <br /> MIN: 1,958,958 <br /> MAX: 1,961,037 | AVG: 2,398,022 <br /> MIN: 2,391,093 <br /> MAX: 2,402,412 |
-| r5nd-5cca-5d (100 executions) | m4 | AVG: 1,173,766 <br /> MIN: 1,158,445 <br /> MAX: 1,183,061 | AVG: 1,715,574 <br /> MIN: 1,698,872 <br /> MAX: 1,725,442 | AVG: 2,197,341 <br /> MIN: 2,181,180 <br /> MAX: 2,207,100 |
-| r5nd-5cca-5d (100 executions) | opt | AVG: 1,638,548 <br /> MIN: 1,624,091 <br /> MAX: 1,641,219 | AVG: 2,512,585 <br /> MIN: 2,496,490 <br /> MAX: 2,517,060 | AVG: 3,327,895 <br /> MIN: 3,311,939 <br /> MAX: 3,335,143 |
-| r5nd-5cpa-0d (100 executions) | m4 | AVG: 1,348,617 <br /> MIN: 1,328,392 <br /> MAX: 1,360,962 | AVG: 1,809,166 <br /> MIN: 1,790,027 <br /> MAX: 1,821,060 | AVG: 634,647 <br /> MIN: 620,595 <br /> MAX: 640,177 |
-| r5nd-5cpa-0d (100 executions) | opt | AVG: 1,892,895 <br /> MIN: 1,879,949 <br /> MAX: 1,897,403 | AVG: 2,656,069 <br /> MIN: 2,643,849 <br /> MAX: 2,661,973 | AVG: 926,061 <br /> MIN: 907,712 <br /> MAX: 934,732 |
-| r5nd-5cpa-5d (100 executions) | m4 | AVG: 1,230,457 <br /> MIN: 1,210,807 <br /> MAX: 1,241,895 | AVG: 1,672,550 <br /> MIN: 1,659,442 <br /> MAX: 1,683,696 | AVG: 616,237 <br /> MIN: 603,785 <br /> MAX: 624,269 |
-| r5nd-5cpa-5d (100 executions) | opt | AVG: 1,714,076 <br /> MIN: 1,702,564 <br /> MAX: 1,720,960 | AVG: 2,513,883 <br /> MIN: 2,501,271 <br /> MAX: 2,521,567 | AVG: 972,891 <br /> MIN: 959,863 <br /> MAX: 981,313 |
-| rollo-I-128 (100 executions) | ref | AVG: 33,861,072 <br /> MIN: 33,690,382 <br /> MAX: 34,007,816 | AVG: 3,113,500 <br /> MIN: 3,105,408 <br /> MAX: 3,121,156 | AVG: 14,694,648 <br /> MIN: 14,008,517 <br /> MAX: 15,435,245 |
-| rollo-I-192 (100 executions) | ref | AVG: 45,943,058 <br /> MIN: 45,756,043 <br /> MAX: 46,200,855 | AVG: 3,672,034 <br /> MIN: 3,665,932 <br /> MAX: 3,678,573 | AVG: 18,974,153 <br /> MIN: 18,805,659 <br /> MAX: 20,084,667 |
-| rollo-I-256 (100 executions) | ref | AVG: 69,323,491 <br /> MIN: 68,937,122 <br /> MAX: 69,611,454 | AVG: 4,725,068 <br /> MIN: 4,719,234 <br /> MAX: 4,731,521 | AVG: 32,339,031 <br /> MIN: 32,198,423 <br /> MAX: 32,538,312 |
-| rollo-II-128 (100 executions) | ref | AVG: 155,305,161 <br /> MIN: 155,013,877 <br /> MAX: 155,532,642 | AVG: 10,621,613 <br /> MIN: 10,615,018 <br /> MAX: 10,628,043 | AVG: 30,798,365 <br /> MIN: 30,698,203 <br /> MAX: 31,715,736 |
-| rollo-II-192 (100 executions) | ref | AVG: 183,343,584 <br /> MIN: 182,578,200 <br /> MAX: 183,811,328 | AVG: 12,112,733 <br /> MIN: 12,107,861 <br /> MAX: 12,118,513 | AVG: 36,385,113 <br /> MIN: 36,272,752 <br /> MAX: 36,517,787 |
-| rollo-II-256 (100 executions) | ref | AVG: 215,860,701 <br /> MIN: 215,517,994 <br /> MAX: 216,304,902 | AVG: 13,587,317 <br /> MIN: 13,581,140 <br /> MAX: 13,594,998 | AVG: 45,235,641 <br /> MIN: 45,101,076 <br /> MAX: 45,356,459 |
-| rqc128 (100 executions) | ref | AVG: 8,105,798 <br /> MIN: 8,087,806 <br /> MAX: 8,124,616 | AVG: 15,117,875 <br /> MIN: 15,098,845 <br /> MAX: 15,136,544 | AVG: 105,939,613 <br /> MIN: 105,675,892 <br /> MAX: 106,183,245 |
-| rqc192 (100 executions) | ref | AVG: 23,711,306 <br /> MIN: 22,133,193 <br /> MAX: 36,240,705 | AVG: 39,412,619 <br /> MIN: 37,859,202 <br /> MAX: 51,719,937 | AVG: 254,622,745 <br /> MIN: 251,119,052 <br /> MAX: 279,316,313 |
 | saber (100 executions) | clean | AVG: 2,179,303 <br /> MIN: 2,179,303 <br /> MAX: 2,179,303 | AVG: 2,885,871 <br /> MIN: 2,885,871 <br /> MAX: 2,885,871 | AVG: 3,351,158 <br /> MIN: 3,351,158 <br /> MAX: 3,351,158 |
 | saber (100 executions) | m4 | AVG: 893,994 <br /> MIN: 893,994 <br /> MAX: 893,994 | AVG: 1,162,082 <br /> MIN: 1,162,082 <br /> MAX: 1,162,082 | AVG: 1,198,307 <br /> MIN: 1,198,307 <br /> MAX: 1,198,307 |
 | sikep434 (100 executions) | m4 | AVG: 48,264,129 <br /> MIN: 48,264,129 <br /> MAX: 48,264,129 | AVG: 78,911,465 <br /> MIN: 78,911,465 <br /> MAX: 78,911,465 | AVG: 84,276,911 <br /> MIN: 84,276,911 <br /> MAX: 84,276,911 |
@@ -147,12 +67,6 @@
 | falcon-512-tree (100 executions) | m4-ct | AVG: 171,727,053 <br /> MIN: 117,531,546 <br /> MAX: 490,748,018 | AVG: 17,669,755 <br /> MIN: 17,432,665 <br /> MAX: 17,857,219 | AVG: 473,783 <br /> MIN: 465,581 <br /> MAX: 481,627 |
 | falcon-512-tree (100 executions) | opt-ct | AVG: 182,000,803 <br /> MIN: 117,531,546 <br /> MAX: 537,014,335 | AVG: 17,671,861 <br /> MIN: 17,503,582 <br /> MAX: 17,907,492 | AVG: 474,096 <br /> MIN: 465,021 <br /> MAX: 482,523 |
 | falcon-512-tree (100 executions) | opt-leaktime | AVG: 168,338,680 <br /> MIN: 101,826,596 <br /> MAX: 516,678,670 | AVG: 19,213,176 <br /> MIN: 18,918,057 <br /> MAX: 19,567,974 | AVG: 474,214 <br /> MIN: 465,252 <br /> MAX: 481,696 |
-| luov-47-42-182-chacha (100 executions) | ref | AVG: 21,000,012 <br /> MIN: 20,862,841 <br /> MAX: 21,114,732 | AVG: 57,884,512 <br /> MIN: 57,838,973 <br /> MAX: 57,939,274 | AVG: 32,884,586 <br /> MIN: 32,872,366 <br /> MAX: 32,898,789 |
-| luov-47-42-182-keccak (100 executions) | ref | AVG: 29,638,929 <br /> MIN: 29,503,412 <br /> MAX: 29,794,335 | AVG: 66,356,015 <br /> MIN: 66,318,361 <br /> MAX: 66,400,831 | AVG: 43,068,640 <br /> MIN: 43,056,451 <br /> MAX: 43,084,443 |
-| luov-61-60-261-chacha (100 executions) | ref | AVG: 61,819,106 <br /> MIN: 61,561,060 <br /> MAX: 62,087,952 | AVG: 250,029,339 <br /> MIN: 249,938,705 <br /> MAX: 250,092,063 | AVG: 107,905,857 <br /> MIN: 107,879,984 <br /> MAX: 107,927,089 |
-| luov-61-60-261-keccak (100 executions) | ref | AVG: 92,133,826 <br /> MIN: 91,830,833 <br /> MAX: 92,425,404 | AVG: 279,672,854 <br /> MIN: 279,609,342 <br /> MAX: 279,728,867 | AVG: 138,353,754 <br /> MIN: 138,331,818 <br /> MAX: 138,373,656 |
-| luov-7-57-197-chacha (100 executions) | ref | AVG: 35,318,079 <br /> MIN: 35,078,613 <br /> MAX: 35,553,406 | AVG: 65,405,967 <br /> MIN: 65,337,206 <br /> MAX: 65,476,034 | AVG: 40,331,209 <br /> MIN: 40,309,316 <br /> MAX: 40,344,859 |
-| luov-7-57-197-keccak (100 executions) | ref | AVG: 50,001,029 <br /> MIN: 49,808,905 <br /> MAX: 50,194,528 | AVG: 79,666,086 <br /> MIN: 79,581,864 <br /> MAX: 79,744,285 | AVG: 55,008,767 <br /> MIN: 54,971,175 <br /> MAX: 55,020,892 |
 | sphincs-haraka-128f-robust (1 executions) | clean | AVG: 104,787,309 <br /> MIN: 104,787,309 <br /> MAX: 104,787,309 | AVG: 3,878,075,744 <br /> MIN: 3,878,075,744 <br /> MAX: 3,878,075,744 | AVG: 160,747,512 <br /> MIN: 160,747,512 <br /> MAX: 160,747,512 |
 | sphincs-haraka-128f-simple (1 executions) | clean | AVG: 72,822,905 <br /> MIN: 72,822,905 <br /> MAX: 72,822,905 | AVG: 2,618,613,346 <br /> MIN: 2,618,613,346 <br /> MAX: 2,618,613,346 | AVG: 110,346,142 <br /> MIN: 110,346,142 <br /> MAX: 110,346,142 |
 | sphincs-haraka-128s-robust (1 executions) | clean | AVG: 3,336,087,734 <br /> MIN: 3,336,087,734 <br /> MAX: 3,336,087,734 | AVG: 62,522,334,287 <br /> MIN: 62,522,334,287 <br /> MAX: 62,522,334,287 | AVG: 69,736,124 <br /> MIN: 69,736,124 <br /> MAX: 69,736,124 |
@@ -193,10 +107,6 @@
 ## Key Encapsulation Schemes
 | Scheme | Implementation | Key Generation [bytes] | Encapsulation [bytes] | Decapsulation [bytes] |
 | ------ | -------------- | ---------------------- | --------------------- | --------------------- |
-| babybear | clean | 6,132 | 5,988 | 10,116 |
-| babybear | opt | 3,076 | 2,964 | 5,092 |
-| babybear-ephem | clean | 6,132 | 5,980 | 4,864 |
-| babybear-ephem | opt | 3,076 | 2,980 | 2,420 |
 | firesaber | clean | 22,700 | 25,556 | 27,036 |
 | firesaber | m4 | 20,124 | 22,972 | 24,452 |
 | frodokem640aes | m4 | 31,992 | 62,488 | 83,104 |
@@ -214,36 +124,8 @@
 | kyber768 | m4 | 3,276 | 2,972 | 2,996 |
 | kyber768-90s | clean | 11,080 | 14,248 | 15,344 |
 | kyber768-90s | m4 | 3,976 | 3,488 | 3,512 |
-| lac-128-v3a | opt | 7,436 | 8,964 | 10,396 |
-| lac-128-v3a | ref | 6,396 | 7,924 | 9,448 |
-| lac-128-v3b | opt | 7,436 | 8,964 | 10,396 |
-| lac-128-v3b | ref | 6,396 | 7,924 | 9,356 |
-| lac-192-v3a | opt | 14,604 | 17,476 | 20,304 |
-| lac-192-v3a | ref | 12,540 | 15,412 | 18,148 |
-| lac-192-v3b | opt | 14,604 | 17,476 | 20,304 |
-| lac-192-v3b | ref | 12,540 | 15,412 | 18,240 |
-| lac-256-v3a | opt | 14,604 | 17,700 | 20,660 |
-| lac-256-v3a | ref | 12,632 | 15,636 | 18,688 |
-| lac-256-v3b | opt | 14,604 | 17,700 | 20,660 |
-| lac-256-v3b | ref | 12,632 | 15,636 | 18,688 |
-| lac-light-v3a | opt | 7,436 | 8,852 | 10,172 |
-| lac-light-v3a | ref | 6,396 | 7,812 | 9,132 |
-| lac-light-v3b | opt | 7,436 | 8,852 | 10,172 |
-| lac-light-v3b | ref | 6,396 | 7,812 | 9,132 |
 | lightsaber | clean | 10,540 | 12,276 | 13,020 |
 | lightsaber | m4 | 9,652 | 11,388 | 12,132 |
-| mamabear | clean | 6,772 | 6,712 | 11,640 |
-| mamabear | opt | 3,572 | 3,436 | 6,052 |
-| mamabear-ephem | clean | 6,776 | 6,604 | 4,772 |
-| mamabear-ephem | opt | 3,572 | 3,460 | 2,908 |
-| newhope1024cca | clean | 11,028 | 17,300 | 19,516 |
-| newhope1024cca | m4 | 2,852 | 5,044 | 5,044 |
-| newhope1024cpa | clean | 11,020 | 17,196 | 8,284 |
-| newhope1024cpa | m4 | 2,844 | 4,940 | 2,176 |
-| newhope512cca | clean | 5,900 | 9,108 | 10,236 |
-| newhope512cca | m4 | 1,828 | 2,996 | 2,996 |
-| newhope512cpa | clean | 5,892 | 9,004 | 4,184 |
-| newhope512cpa | m4 | 1,820 | 2,892 | 1,152 |
 | ntruhps2048509 | clean | 11,848 | 6,864 | 5,144 |
 | ntruhps2048509 | m4 | 21,392 | 15,424 | 14,800 |
 | ntruhps2048677 | clean | 15,680 | 9,036 | 6,792 |
@@ -256,54 +138,6 @@
 | ntrulpr761 | m4f | 28,444 | 33,460 | 39,684 |
 | ntrulpr761 | ref | 14,012 | 21,100 | 26,396 |
 | ntrulpr857 | ref | 15,668 | 23,532 | 29,500 |
-| papabear | clean | 7,404 | 7,344 | 13,056 |
-| papabear | opt | 4,052 | 3,916 | 7,012 |
-| papabear-ephem | clean | 7,408 | 7,328 | 4,772 |
-| papabear-ephem | opt | 4,052 | 3,940 | 3,380 |
-| r5n1-1cca-0d | m4 | 19,860 | 20,092 | 25,884 |
-| r5n1-1cca-0d | opt | 19,860 | 20,092 | 25,884 |
-| r5n1-1cpa-0d | m4 | 19,268 | 19,476 | 13,016 |
-| r5n1-1cpa-0d | opt | 19,268 | 19,476 | 12,980 |
-| r5n1-3cca-0d | m4 | 30,188 | 30,460 | 40,188 |
-| r5n1-3cca-0d | opt | 30,188 | 30,460 | 40,224 |
-| r5n1-3cpa-0d | m4 | 26,932 | 27,196 | 19,540 |
-| r5n1-3cpa-0d | opt | 26,932 | 27,196 | 19,540 |
-| r5n1-5cca-0d | m4 | 37,620 | 37,916 | 52,636 |
-| r5n1-5cca-0d | opt | 37,620 | 37,916 | 52,636 |
-| r5n1-5cpa-0d | m4 | 40,916 | 41,188 | 32,308 |
-| r5n1-5cpa-0d | opt | 40,916 | 41,188 | 32,308 |
-| r5nd-1cca-0d | m4 | 4,500 | 4,860 | 5,604 |
-| r5nd-1cca-0d | opt | 4,500 | 4,860 | 5,604 |
-| r5nd-1cca-5d | m4 | 3,940 | 4,388 | 5,012 |
-| r5nd-1cca-5d | opt | 3,940 | 4,388 | 5,012 |
-| r5nd-1cpa-0d | m4 | 4,508 | 4,740 | 1,700 |
-| r5nd-1cpa-0d | opt | 4,508 | 4,740 | 1,700 |
-| r5nd-1cpa-5d | m4 | 3,844 | 4,292 | 2,100 |
-| r5nd-1cpa-5d | opt | 3,844 | 4,292 | 2,100 |
-| r5nd-3cca-0d | m4 | 6,132 | 6,652 | 7,756 |
-| r5nd-3cca-0d | opt | 6,132 | 6,652 | 7,756 |
-| r5nd-3cca-5d | m4 | 5,620 | 6,204 | 7,140 |
-| r5nd-3cca-5d | opt | 5,620 | 6,204 | 7,140 |
-| r5nd-3cpa-0d | m4 | 6,036 | 6,540 | 3,660 |
-| r5nd-3cpa-0d | opt | 6,036 | 6,540 | 3,676 |
-| r5nd-3cpa-5d | m4 | 5,580 | 6,148 | 2,692 |
-| r5nd-3cpa-5d | opt | 5,580 | 6,148 | 2,692 |
-| r5nd-5cca-0d | m4 | 8,060 | 8,740 | 10,260 |
-| r5nd-5cca-0d | opt | 8,060 | 8,740 | 10,260 |
-| r5nd-5cca-5d | m4 | 7,060 | 7,756 | 9,052 |
-| r5nd-5cca-5d | opt | 7,060 | 7,756 | 9,052 |
-| r5nd-5cpa-0d | m4 | 7,524 | 8,180 | 4,612 |
-| r5nd-5cpa-0d | opt | 7,524 | 8,180 | 4,628 |
-| r5nd-5cpa-5d | m4 | 7,020 | 7,692 | 3,452 |
-| r5nd-5cpa-5d | opt | 7,028 | 7,700 | 3,460 |
-| rollo-I-128 | ref | 1,552 | 1,468 | 1,536 |
-| rollo-I-192 | ref | 1,528 | 1,492 | 1,584 |
-| rollo-I-256 | ref | 1,592 | 1,540 | 1,680 |
-| rollo-II-128 | ref | 1,712 | 4,136 | 4,488 |
-| rollo-II-192 | ref | 1,720 | 4,632 | 4,896 |
-| rollo-II-256 | ref | 1,816 | 4,848 | 5,208 |
-| rqc128 | ref | 3,232 | 10,104 | 11,940 |
-| rqc192 | ref | 4,256 | 24,704 | 27,556 |
 | saber | clean | 15,792 | 17,964 | 19,060 |
 | saber | m4 | 13,252 | 15,516 | 16,612 |
 | sikep434 | m4 | 6,272 | 6,504 | 6,840 |
@@ -338,12 +172,6 @@
 | falcon-512-tree | m4-ct | 1,440 | 2,776 | 492 |
 | falcon-512-tree | opt-ct | 1,496 | 2,776 | 492 |
 | falcon-512-tree | opt-leaktime | 1,400 | 2,792 | 492 |
-| luov-47-42-182-chacha | ref | 2,488 | 4,472 | 2,944 |
-| luov-47-42-182-keccak | ref | 2,884 | 4,548 | 3,340 |
-| luov-61-60-261-chacha | ref | 3,360 | 6,096 | 4,104 |
-| luov-61-60-261-keccak | ref | 3,788 | 6,208 | 4,568 |
-| luov-7-57-197-chacha | ref | 2,736 | 2,704 | 1,256 |
-| luov-7-57-197-keccak | ref | 3,276 | 2,812 | 2,092 |
 | sphincs-haraka-128f-robust | clean | 3,612 | 3,704 | 4,068 |
 | sphincs-haraka-128f-simple | clean | 3,604 | 3,696 | 4,060 |
 | sphincs-haraka-128s-robust | clean | 3,824 | 3,872 | 3,408 |
@@ -384,10 +212,6 @@
 ## Key Encapsulation Schemes
 | Scheme | Implementation | Key Generation [%] | Encapsulation [%] | Decapsulation [%] |
 | ------ | -------------- | ------------------ | ----------------- | ----------------- |
-| babybear | clean | 9.6% | 7.3% | 8.6% |
-| babybear | opt | 56.8% | 49.5% | 45.4% |
-| babybear-ephem | clean | 9.6% | 7.7% | 6.5% |
-| babybear-ephem | opt | 56.8% | 50.9% | 44.4% |
 | firesaber | clean | 19.1% | 18.9% | 14.5% |
 | firesaber | m4 | 49.4% | 49.4% | 40.1% |
 | frodokem640aes | m4 | 74.3% | 77.8% | 77.1% |
@@ -405,36 +229,8 @@
 | kyber768 | m4 | 76.5% | 79.7% | 71.7% |
 | kyber768-90s | clean | 42.7% | 40.9% | 31.1% |
 | kyber768-90s | m4 | 62.9% | 65.6% | 57.3% |
-| lac-128-v3a | opt | 20.3% | 17.3% | 12.6% |
-| lac-128-v3a | ref | 12.3% | 10.3% | 7.4% |
-| lac-128-v3b | opt | 20.2% | 17.2% | 12.6% |
-| lac-128-v3b | ref | 13.4% | 11.3% | 8.1% |
-| lac-192-v3a | opt | 12.0% | 10.1% | 7.4% |
-| lac-192-v3a | ref | 7.7% | 6.4% | 4.7% |
-| lac-192-v3b | opt | 11.9% | 10.1% | 7.4% |
-| lac-192-v3b | ref | 6.8% | 5.8% | 4.2% |
-| lac-256-v3a | opt | 12.5% | 9.7% | 6.6% |
-| lac-256-v3a | ref | 7.2% | 5.6% | 3.8% |
-| lac-256-v3b | opt | 12.5% | 9.7% | 6.6% |
-| lac-256-v3b | ref | 7.2% | 5.5% | 3.8% |
-| lac-light-v3a | opt | 21.4% | 19.4% | 15.1% |
-| lac-light-v3a | ref | 13.2% | 11.9% | 9.1% |
-| lac-light-v3b | opt | 21.2% | 19.3% | 15.1% |
-| lac-light-v3b | ref | 14.3% | 13.0% | 9.9% |
 | lightsaber | clean | 25.1% | 24.0% | 15.6% |
 | lightsaber | m4 | 56.5% | 55.8% | 42.2% |
-| mamabear | clean | 8.2% | 6.6% | 7.6% |
-| mamabear | opt | 54.3% | 48.5% | 45.4% |
-| mamabear-ephem | clean | 8.2% | 6.8% | 5.7% |
-| mamabear-ephem | opt | 53.8% | 48.9% | 41.9% |
-| newhope1024cca | clean | 59.5% | 59.2% | 47.8% |
-| newhope1024cca | m4 | 74.3% | 78.5% | 70.3% |
-| newhope1024cpa | clean | 53.8% | 50.2% | 4.2% |
-| newhope1024cpa | m4 | 69.9% | 71.7% | 10.7% |
-| newhope512cca | clean | 61.5% | 61.7% | 50.1% |
-| newhope512cca | m4 | 75.6% | 79.8% | 71.7% |
-| newhope512cpa | clean | 56.1% | 52.5% | 8.5% |
-| newhope512cpa | m4 | 71.4% | 73.1% | 19.4% |
 | ntruhps2048509 | clean | 0.0% | 0.9% | 1.3% |
 | ntruhps2048509 | m4 | 0.0% | 4.6% | 18.9% |
 | ntruhps2048677 | clean | 0.0% | 0.7% | 1.0% |
@@ -447,54 +243,6 @@
 | ntrulpr761 | m4f | 20.8% | 26.2% | 23.0% |
 | ntrulpr761 | ref | 0.4% | 0.4% | 0.2% |
 | ntrulpr857 | ref | 0.3% | 0.3% | 0.2% |
-| papabear | clean | 7.5% | 6.3% | 7.0% |
-| papabear | opt | 52.4% | 47.8% | 45.2% |
-| papabear-ephem | clean | 7.5% | 6.4% | 5.3% |
-| papabear-ephem | opt | 52.1% | 48.0% | 40.7% |
-| r5n1-1cca-0d | m4 | 0.0% | 0.0% | 0.0% |
-| r5n1-1cca-0d | opt | 0.0% | 0.0% | 0.0% |
-| r5n1-1cpa-0d | m4 | 0.0% | 0.0% | 0.0% |
-| r5n1-1cpa-0d | opt | 0.0% | 0.0% | 0.0% |
-| r5n1-3cca-0d | m4 | 0.0% | 0.0% | 0.0% |
-| r5n1-3cca-0d | opt | 0.0% | 0.0% | 0.0% |
-| r5n1-3cpa-0d | m4 | 0.0% | 0.0% | 0.0% |
-| r5n1-3cpa-0d | opt | 0.0% | 0.0% | 0.0% |
-| r5n1-5cca-0d | m4 | 0.0% | 0.0% | 0.0% |
-| r5n1-5cca-0d | opt | 0.0% | 0.0% | 0.0% |
-| r5n1-5cpa-0d | m4 | 0.0% | 0.0% | 0.0% |
-| r5n1-5cpa-0d | opt | 0.0% | 0.0% | 0.0% |
-| r5nd-1cca-0d | m4 | 0.0% | 0.0% | 0.0% |
-| r5nd-1cca-0d | opt | 0.0% | 0.0% | 0.0% |
-| r5nd-1cca-5d | m4 | 0.0% | 0.0% | 0.0% |
-| r5nd-1cca-5d | opt | 0.0% | 0.0% | 0.0% |
-| r5nd-1cpa-0d | m4 | 0.0% | 0.0% | 0.0% |
-| r5nd-1cpa-0d | opt | 0.0% | 0.0% | 0.0% |
-| r5nd-1cpa-5d | m4 | 0.0% | 0.0% | 0.0% |
-| r5nd-1cpa-5d | opt | 0.0% | 0.0% | 0.0% |
-| r5nd-3cca-0d | m4 | 0.0% | 0.0% | 0.0% |
-| r5nd-3cca-0d | opt | 0.0% | 0.0% | 0.0% |
-| r5nd-3cca-5d | m4 | 0.0% | 0.0% | 0.0% |
-| r5nd-3cca-5d | opt | 0.0% | 0.0% | 0.0% |
-| r5nd-3cpa-0d | m4 | 0.0% | 0.0% | 0.0% |
-| r5nd-3cpa-0d | opt | 0.0% | 0.0% | 0.0% |
-| r5nd-3cpa-5d | m4 | 0.0% | 0.0% | 0.0% |
-| r5nd-3cpa-5d | opt | 0.0% | 0.0% | 0.0% |
-| r5nd-5cca-0d | m4 | 0.0% | 0.0% | 0.0% |
-| r5nd-5cca-0d | opt | 0.0% | 0.0% | 0.0% |
-| r5nd-5cca-5d | m4 | 0.0% | 0.0% | 0.0% |
-| r5nd-5cca-5d | opt | 0.0% | 0.0% | 0.0% |
-| r5nd-5cpa-0d | m4 | 0.0% | 0.0% | 0.0% |
-| r5nd-5cpa-0d | opt | 0.0% | 0.0% | 0.0% |
-| r5nd-5cpa-5d | m4 | 0.0% | 0.0% | 0.0% |
-| r5nd-5cpa-5d | opt | 0.0% | 0.0% | 0.0% |
-| rollo-I-128 | ref | 0.1% | 0.3% | 0.2% |
-| rollo-I-192 | ref | 0.1% | 0.3% | 0.2% |
-| rollo-I-256 | ref | 0.0% | 0.2% | 0.1% |
-| rollo-II-128 | ref | 0.0% | 2.1% | 0.9% |
-| rollo-II-192 | ref | 0.0% | 2.1% | 0.8% |
-| rollo-II-256 | ref | 0.0% | 2.0% | 0.7% |
-| rqc128 | ref | 4.1% | 4.2% | 0.9% |
-| rqc192 | ref | 2.6% | 2.7% | 0.6% |
 | saber | clean | 21.8% | 21.3% | 14.9% |
 | saber | m4 | 53.0% | 52.8% | 41.7% |
 | sikep434 | m4 | 0.0% | 0.1% | 0.1% |
@@ -529,12 +277,6 @@
 | falcon-512-tree | m4-ct | 15.9% | 1.2% | 36.0% |
 | falcon-512-tree | opt-ct | 17.0% | 1.2% | 35.9% |
 | falcon-512-tree | opt-leaktime | 19.3% | 1.1% | 35.9% |
-| luov-47-42-182-chacha | ref | 0.6% | 0.3% | 0.1% |
-| luov-47-42-182-keccak | ref | 38.5% | 17.3% | 26.3% |
-| luov-61-60-261-chacha | ref | 0.4% | 0.1% | 0.0% |
-| luov-61-60-261-keccak | ref | 40.7% | 13.5% | 27.0% |
-| luov-7-57-197-chacha | ref | 0.4% | 0.2% | 0.0% |
-| luov-7-57-197-keccak | ref | 38.3% | 24.1% | 34.6% |
 | sphincs-haraka-128f-robust | clean | 0.0% | 0.0% | 0.0% |
 | sphincs-haraka-128f-simple | clean | 0.0% | 0.0% | 0.0% |
 | sphincs-haraka-128s-robust | clean | 0.0% | 0.0% | 0.0% |
@@ -575,10 +317,6 @@
 ## Key Encapsulation Schemes
 | Scheme | Implementation | .text [bytes] | .data [bytes] | .bss [bytes] | Total [bytes] |
 | ------ | -------------- | ------------- | ------------- | ------------ | ------------- |
-| babybear | clean | 5,002 | 0 | 0 | 5,002 |
-| babybear | opt | 5,517 | 0 | 0 | 5,517 |
-| babybear-ephem | clean | 4,810 | 0 | 0 | 4,810 |
-| babybear-ephem | opt | 4,859 | 0 | 0 | 4,859 |
 | firesaber | clean | 11,832 | 0 | 0 | 11,832 |
 | firesaber | m4 | 44,424 | 0 | 0 | 44,424 |
 | frodokem640aes | m4 | 8,568 | 0 | 0 | 8,568 |
@@ -596,36 +334,8 @@
 | kyber768 | m4 | 10,760 | 0 | 0 | 10,760 |
 | kyber768-90s | clean | 5,332 | 0 | 0 | 5,332 |
 | kyber768-90s | m4 | 10,924 | 0 | 0 | 10,924 |
-| lac-128-v3a | opt | 5,576 | 1,188 | 0 | 6,764 |
-| lac-128-v3a | ref | 5,468 | 1,188 | 0 | 6,656 |
-| lac-128-v3b | opt | 4,964 | 1,188 | 0 | 6,152 |
-| lac-128-v3b | ref | 4,912 | 1,188 | 0 | 6,100 |
-| lac-192-v3a | opt | 5,396 | 2,276 | 0 | 7,672 |
-| lac-192-v3a | ref | 5,276 | 2,276 | 0 | 7,552 |
-| lac-192-v3b | opt | 5,156 | 2,276 | 0 | 7,432 |
-| lac-192-v3b | ref | 5,092 | 2,276 | 0 | 7,368 |
-| lac-256-v3a | opt | 4,908 | 2,480 | 0 | 7,388 |
-| lac-256-v3a | ref | 4,788 | 2,480 | 0 | 7,268 |
-| lac-256-v3b | opt | 4,664 | 2,480 | 0 | 7,144 |
-| lac-256-v3b | ref | 4,600 | 2,480 | 0 | 7,080 |
-| lac-light-v3a | opt | 4,872 | 1,116 | 0 | 5,988 |
-| lac-light-v3a | ref | 4,764 | 1,116 | 0 | 5,880 |
-| lac-light-v3b | opt | 4,260 | 1,116 | 0 | 5,376 |
-| lac-light-v3b | ref | 4,208 | 1,116 | 0 | 5,324 |
 | lightsaber | clean | 11,952 | 0 | 0 | 11,952 |
 | lightsaber | m4 | 44,576 | 0 | 0 | 44,576 |
-| mamabear | clean | 5,534 | 0 | 0 | 5,534 |
-| mamabear | opt | 5,421 | 0 | 0 | 5,421 |
-| mamabear-ephem | clean | 4,806 | 0 | 0 | 4,806 |
-| mamabear-ephem | opt | 4,771 | 0 | 0 | 4,771 |
-| newhope1024cca | clean | 10,760 | 0 | 0 | 10,760 |
-| newhope1024cca | m4 | 12,140 | 4,096 | 0 | 16,236 |
-| newhope1024cpa | clean | 10,396 | 0 | 0 | 10,396 |
-| newhope1024cpa | m4 | 11,172 | 4,096 | 0 | 15,268 |
-| newhope512cca | clean | 7,012 | 0 | 0 | 7,012 |
-| newhope512cca | m4 | 11,120 | 2,048 | 0 | 13,168 |
-| newhope512cpa | clean | 6,648 | 0 | 0 | 6,648 |
-| newhope512cpa | m4 | 10,156 | 2,048 | 0 | 12,204 |
 | ntruhps2048509 | clean | 5,896 | 0 | 0 | 5,896 |
 | ntruhps2048509 | m4 | 89,020 | 0 | 0 | 89,020 |
 | ntruhps2048677 | clean | 5,908 | 0 | 0 | 5,908 |
@@ -638,54 +348,6 @@
 | ntrulpr761 | m4f | 114,293 | 0 | 0 | 114,293 |
 | ntrulpr761 | ref | 4,456 | 0 | 0 | 4,456 |
 | ntrulpr857 | ref | 4,564 | 0 | 0 | 4,564 |
-| papabear | clean | 5,610 | 0 | 0 | 5,610 |
-| papabear | opt | 5,373 | 0 | 0 | 5,373 |
-| papabear-ephem | clean | 4,806 | 0 | 0 | 4,806 |
-| papabear-ephem | opt | 4,723 | 0 | 0 | 4,723 |
-| r5n1-1cca-0d | m4 | 3,870 | 0 | 208 | 4,078 |
-| r5n1-1cca-0d | opt | 3,748 | 0 | 208 | 3,956 |
-| r5n1-1cpa-0d | m4 | 3,750 | 0 | 208 | 3,958 |
-| r5n1-1cpa-0d | opt | 3,668 | 0 | 208 | 3,876 |
-| r5n1-3cca-0d | m4 | 4,210 | 0 | 208 | 4,418 |
-| r5n1-3cca-0d | opt | 4,072 | 0 | 208 | 4,280 |
-| r5n1-3cpa-0d | m4 | 3,798 | 0 | 208 | 4,006 |
-| r5n1-3cpa-0d | opt | 3,688 | 0 | 208 | 3,896 |
-| r5n1-5cca-0d | m4 | 4,114 | 0 | 208 | 4,322 |
-| r5n1-5cca-0d | opt | 4,028 | 0 | 208 | 4,236 |
-| r5n1-5cpa-0d | m4 | 3,838 | 0 | 208 | 4,046 |
-| r5n1-5cpa-0d | opt | 3,756 | 0 | 208 | 3,964 |
-| r5nd-1cca-0d | m4 | 3,406 | 0 | 208 | 3,614 |
-| r5nd-1cca-0d | opt | 3,388 | 0 | 208 | 3,596 |
-| r5nd-1cca-5d | m4 | 5,982 | 0 | 208 | 6,190 |
-| r5nd-1cca-5d | opt | 5,908 | 0 | 208 | 6,116 |
-| r5nd-1cpa-0d | m4 | 2,982 | 0 | 208 | 3,190 |
-| r5nd-1cpa-0d | opt | 2,916 | 0 | 208 | 3,124 |
-| r5nd-1cpa-5d | m4 | 5,626 | 0 | 208 | 5,834 |
-| r5nd-1cpa-5d | opt | 5,616 | 0 | 208 | 5,824 |
-| r5nd-3cca-0d | m4 | 3,514 | 0 | 208 | 3,722 |
-| r5nd-3cca-0d | opt | 3,440 | 0 | 208 | 3,648 |
-| r5nd-3cca-5d | m4 | 7,330 | 0 | 208 | 7,538 |
-| r5nd-3cca-5d | opt | 7,260 | 0 | 208 | 7,468 |
-| r5nd-3cpa-0d | m4 | 3,054 | 0 | 208 | 3,262 |
-| r5nd-3cpa-0d | opt | 3,044 | 0 | 208 | 3,252 |
-| r5nd-3cpa-5d | m4 | 6,842 | 0 | 208 | 7,050 |
-| r5nd-3cpa-5d | opt | 6,772 | 0 | 208 | 6,980 |
-| r5nd-5cca-0d | m4 | 3,538 | 0 | 208 | 3,746 |
-| r5nd-5cca-0d | opt | 3,524 | 0 | 208 | 3,732 |
-| r5nd-5cca-5d | m4 | 5,202 | 0 | 208 | 5,410 |
-| r5nd-5cca-5d | opt | 5,180 | 0 | 208 | 5,388 |
-| r5nd-5cpa-0d | m4 | 3,102 | 0 | 208 | 3,310 |
-| r5nd-5cpa-0d | opt | 3,080 | 0 | 208 | 3,288 |
-| r5nd-5cpa-5d | m4 | 4,594 | 0 | 208 | 4,802 |
-| r5nd-5cpa-5d | opt | 4,532 | 0 | 208 | 4,740 |
-| rollo-I-128 | ref | 16,044 | 0 | 2,072 | 18,116 |
-| rollo-I-192 | ref | 15,972 | 0 | 2,072 | 18,044 |
-| rollo-I-256 | ref | 15,868 | 0 | 2,072 | 17,940 |
-| rollo-II-128 | ref | 17,104 | 0 | 2,072 | 19,176 |
-| rollo-II-192 | ref | 16,932 | 0 | 2,072 | 19,004 |
-| rollo-II-256 | ref | 16,932 | 0 | 2,072 | 19,004 |
-| rqc128 | ref | 21,588 | 0 | 2,072 | 23,660 |
-| rqc192 | ref | 23,756 | 0 | 2,072 | 25,828 |
 | saber | clean | 11,868 | 0 | 0 | 11,868 |
 | saber | m4 | 44,444 | 0 | 0 | 44,444 |
 | sikep434 | m4 | 29,600 | 0 | 0 | 29,600 |
@@ -720,12 +382,6 @@
 | falcon-512-tree | m4-ct | 81,029 | 0 | 27,648 | 108,677 |
 | falcon-512-tree | opt-ct | 81,029 | 0 | 27,648 | 108,677 |
 | falcon-512-tree | opt-leaktime | 74,193 | 0 | 27,648 | 101,841 |
-| luov-47-42-182-chacha | ref | 10,060 | 0 | 0 | 10,060 |
-| luov-47-42-182-keccak | ref | 10,080 | 0 | 0 | 10,080 |
-| luov-61-60-261-chacha | ref | 10,160 | 0 | 0 | 10,160 |
-| luov-61-60-261-keccak | ref | 10,180 | 0 | 0 | 10,180 |
-| luov-7-57-197-chacha | ref | 9,948 | 0 | 0 | 9,948 |
-| luov-7-57-197-keccak | ref | 9,920 | 0 | 0 | 9,920 |
 | sphincs-haraka-128f-robust | clean | 16,784 | 0 | 0 | 16,784 |
 | sphincs-haraka-128f-simple | clean | 16,632 | 0 | 0 | 16,632 |
 | sphincs-haraka-128s-robust | clean | 17,096 | 0 | 0 | 17,096 |
