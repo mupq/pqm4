@@ -4,3 +4,6 @@
 [submodule "mupq"]
 	path = mupq
 	url = https://github.com/mupq/mupq.git
+[submodule "efm32-base"]
+	path = efm32-base
+	url = https://github.com/ryankurte/efm32-base

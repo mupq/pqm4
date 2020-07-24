@@ -1,0 +1,8 @@
+device EFM32GG11B820F2048GL192
+h
+r
+loadbin BINARY, 0x00000000
+verifybin BINARY, 0x00000000
+r
+g
+qc
