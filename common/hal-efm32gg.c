@@ -101,6 +101,14 @@ void hal_setup(const enum clock_mode clock)
     usart_setup();
     trng_setup();
     cyccnt_setup();
+
+
+    // The board seems to boot up faster than the host can start receiving.
+    // This often leads to our scripts missing the markers for the start of the output.
+    // By adding an artificial delay here we work around that issue.
+    // It's waiting for at most 16777216 cycles (1 sec @ 16 MHz; 0.2 sec @ 72 MHz)
+    unsigned long long wait = overflowcnt + 1;
+    while(overflowcnt < wait);
 }
 
 void hal_send_str(const char *in)
