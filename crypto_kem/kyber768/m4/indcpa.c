@@ -22,10 +22,11 @@ extern void doublebasemul_asm_acc(int16_t *r, const int16_t *a, const int16_t *b
 *              - int transposed:             boolean indicatin whether A or A^T is generated
 **************************************************/
 static void matacc(poly* r, polyvec *b, unsigned char i, const unsigned char *seed, int transposed) {
-  unsigned char buf[XOF_BLOCKBYTES+1];
+  unsigned char buf[XOF_BLOCKBYTES+2];
+  unsigned int buflen, off;
   xof_state state;
-  int ctr, pos, k;
-  uint16_t val;
+  unsigned int ctr, pos, k, l;
+  uint16_t val0, val1;
   int16_t c[4];
 
   poly_zeroize(r);
@@ -38,26 +39,41 @@ static void matacc(poly* r, polyvec *b, unsigned char i, const unsigned char *se
       xof_absorb(&state, seed, j, i);
 
     xof_squeezeblocks(buf, 1, &state);
+    buflen = XOF_BLOCKBYTES;
 
+    k = 0;
     while (ctr < KYBER_N/4)
     {
-      k = 0;
-      while(k < 4) {
-        val = buf[pos] | ((uint16_t)buf[pos + 1] << 8);
-        if (val < 19 * KYBER_Q) {
-          val -= (val >> 12) * KYBER_Q; // Barrett reduction
-          c[k++] = (int16_t) val;
-        }
+      val0 = ((buf[pos+0] >> 0) | ((uint16_t)buf[pos+1] << 8)) & 0xFFF;
+      val1 = ((buf[pos+1] >> 4) | ((uint16_t)buf[pos+2] << 4)) & 0xFFF;
+      pos += 3;
 
-        pos += 2;
-        if (pos + 2 > XOF_BLOCKBYTES) {
-          xof_squeezeblocks(buf, 1, &state);
-          pos = 0;
+      if (val0 < KYBER_Q) {
+        c[k++] = (int16_t) val0;
+        if (k == 4) {
+          doublebasemul_asm_acc(&r->coeffs[4*ctr], &b->vec[j].coeffs[4*ctr], c, zetas[ctr]);
+          ctr++;
+          k = 0;
         }
       }
 
-      doublebasemul_asm_acc(&r->coeffs[4*ctr], &b->vec[j].coeffs[4*ctr], c, zetas[ctr]);
-      ctr++;
+      if (val1 < KYBER_Q && ctr < KYBER_Q/4) {
+        c[k++] = (int16_t) val1;
+        if (k == 4) {
+          doublebasemul_asm_acc(&r->coeffs[4*ctr], &b->vec[j].coeffs[4*ctr], c, zetas[ctr]);
+          ctr++;
+          k = 0;
+        }
+      }
+
+      if (pos + 3 > buflen && ctr < KYBER_Q/4) {
+        off = buflen % 3;
+        for(l = 0; l < off; l++)
+          buf[l] = buf[buflen - off + l];
+        xof_squeezeblocks(buf + off, 1, &state);
+        buflen = off + XOF_BLOCKBYTES;
+        pos = 0;
+      }
     }
   }
 }
