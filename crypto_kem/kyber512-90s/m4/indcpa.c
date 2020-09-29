@@ -1,1 +1,1 @@
-../../kyber768-90s/m4/indcpa.c
+../../kyber512/m4/indcpa.c
