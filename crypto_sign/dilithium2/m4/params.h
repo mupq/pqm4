@@ -22,27 +22,34 @@
 #define ETA 7
 #define BETA 375
 #define OMEGA 64
+#define CRYPTO_ALGNAME "Dilithium1"
 
 #elif DILITHIUM_MODE == 2
 #define K 4
 #define L 3
 #define ETA 6
+#define SETABITS 4
 #define BETA 325
 #define OMEGA 80
+#define CRYPTO_ALGNAME "Dilithium2"
 
 #elif DILITHIUM_MODE == 3
 #define K 5
 #define L 4
 #define ETA 5
+#define SETABITS 4
 #define BETA 275
 #define OMEGA 96
+#define CRYPTO_ALGNAME "Dilithium3"
 
 #elif DILITHIUM_MODE == 4
 #define K 6
 #define L 5
 #define ETA 3
+#define SETABITS 3
 #define BETA 175
 #define OMEGA 120
+#define CRYPTO_ALGNAME "Dilithium4"
 
 #else
 #error "DILITHIUM_MODE must be 1, 2, 3, or 4"

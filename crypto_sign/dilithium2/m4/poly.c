@@ -10,95 +10,25 @@
 * Name:        poly_reduce
 *
 * Description: Reduce all coefficients of input polynomial to representative
-*              in [0,2*Q[.
+*              in ]-Q,Q[.
 *
 * Arguments:   - poly *a: pointer to input/output polynomial
 **************************************************/
 void poly_reduce(poly *a) {
-  unsigned int i;
-  uint32_t t,b;
-
-  for(i = 0; i < N; i=i+8)
-  {
-      b = a->coeffs[i];
-      t = b & 0x7FFFFF;
-      b >>= 23;
-      a->coeffs[i] = t + (b << 13) - b;
-
-      b = a->coeffs[i+1];
-      t = b & 0x7FFFFF;
-      b >>= 23;
-      a->coeffs[i+1] = t + (b << 13) - b;
-
-      b = a->coeffs[i+2];
-      t = b & 0x7FFFFF;
-      b >>= 23;
-      a->coeffs[i+2] = t + (b << 13) - b;
-
-      b = a->coeffs[i+3];
-      t = b & 0x7FFFFF;
-      b >>= 23;
-      a->coeffs[i+3] = t + (b << 13) - b;
-
-      b = a->coeffs[i+4];
-      t = b & 0x7FFFFF;
-      b >>= 23;
-      a->coeffs[i+4] = t + (b << 13) - b;
-
-      b = a->coeffs[i+5];
-      t = b & 0x7FFFFF;
-      b >>= 23;
-      a->coeffs[i+5] = t + (b << 13) - b;
-
-      b = a->coeffs[i+6];
-      t = b & 0x7FFFFF;
-      b >>= 23;
-      a->coeffs[i+6] = t + (b << 13) - b;
-
-      b = a->coeffs[i+7];
-      t = b & 0x7FFFFF;
-      b >>= 23;
-      a->coeffs[i+7] = t + (b << 13) - b;
-  }
+    poly_reduce_asm(a->coeffs);
 }
+
 
 /*************************************************
 * Name:        poly_csubq
 *
 * Description: For all coefficients of input polynomial subtract Q if
-*              coefficient is bigger than Q.
+*              coefficient is bigger than Q; add Q if coefficient is negative.
 *
 * Arguments:   - poly *a: pointer to input/output polynomial
 **************************************************/
 void poly_csubq(poly *a) {
-  unsigned int i;
-
-  for(i = 0; i < N; i=i+8)
-  {
-    a->coeffs[i] -= Q;
-    a->coeffs[i] += ((int32_t)a->coeffs[i] >> 31) & Q;
-
-    a->coeffs[i+1] -= Q;
-    a->coeffs[i+1] += ((int32_t)a->coeffs[i+1] >> 31) & Q;
-
-    a->coeffs[i+2] -= Q;
-    a->coeffs[i+2] += ((int32_t)a->coeffs[i+2] >> 31) & Q;
-
-    a->coeffs[i+3] -= Q;
-    a->coeffs[i+3] += ((int32_t)a->coeffs[i+3] >> 31) & Q;
-
-    a->coeffs[i+4] -= Q;
-    a->coeffs[i+4] += ((int32_t)a->coeffs[i+4] >> 31) & Q;
-
-    a->coeffs[i+5] -= Q;
-    a->coeffs[i+5] += ((int32_t)a->coeffs[i+5] >> 31) & Q;
-
-    a->coeffs[i+6] -= Q;
-    a->coeffs[i+6] += ((int32_t)a->coeffs[i+6] >> 31) & Q;
-
-    a->coeffs[i+7] -= Q;
-    a->coeffs[i+7] += ((int32_t)a->coeffs[i+7] >> 31) & Q;
-  }
+    poly_csubq_asm(a->coeffs);
 }
 
 /*************************************************
@@ -110,59 +40,7 @@ void poly_csubq(poly *a) {
 * Arguments:   - poly *a: pointer to input/output polynomial
 **************************************************/
 void poly_freeze(poly *a) {
-  unsigned int i;
-  uint32_t t;
-
-  for(i = 0; i < N; i = i+8)
-  {
-    t = a->coeffs[i] & 0x7FFFFF;
-    a->coeffs[i] >>= 23;
-    a->coeffs[i] = t + (a->coeffs[i] << 13) - a->coeffs[i];
-    a->coeffs[i] -= Q;
-    a->coeffs[i] += ((int32_t)a->coeffs[i] >> 31) & Q;
-
-    t = a->coeffs[i+1] & 0x7FFFFF;
-    a->coeffs[i+1] >>= 23;
-    a->coeffs[i+1] = t + (a->coeffs[i+1] << 13) - a->coeffs[i+1];
-    a->coeffs[i+1] -= Q;
-    a->coeffs[i+1] += ((int32_t)a->coeffs[i+1] >> 31) & Q;
-
-    t = a->coeffs[i+2] & 0x7FFFFF;
-    a->coeffs[i+2] >>= 23;
-    a->coeffs[i+2] = t + (a->coeffs[i+2] << 13) - a->coeffs[i+2];
-    a->coeffs[i+2] -= Q;
-    a->coeffs[i+2] += ((int32_t)a->coeffs[i+2] >> 31) & Q;
-
-    t = a->coeffs[i+3] & 0x7FFFFF;
-    a->coeffs[i+3] >>= 23;
-    a->coeffs[i+3] = t + (a->coeffs[i+3] << 13) - a->coeffs[i+3];
-    a->coeffs[i+3] -= Q;
-    a->coeffs[i+3] += ((int32_t)a->coeffs[i+3] >> 31) & Q;
-
-    t = a->coeffs[i+4] & 0x7FFFFF;
-    a->coeffs[i+4] >>= 23;
-    a->coeffs[i+4] = t + (a->coeffs[i+4] << 13) - a->coeffs[i+4];
-    a->coeffs[i+4] -= Q;
-    a->coeffs[i+4] += ((int32_t)a->coeffs[i+4] >> 31) & Q;
-
-    t = a->coeffs[i+5] & 0x7FFFFF;
-    a->coeffs[i+5] >>= 23;
-    a->coeffs[i+5] = t + (a->coeffs[i+5] << 13) - a->coeffs[i+5];
-    a->coeffs[i+5] -= Q;
-    a->coeffs[i+5] += ((int32_t)a->coeffs[i+5] >> 31) & Q;
-
-    t = a->coeffs[i+6] & 0x7FFFFF;
-    a->coeffs[i+6] >>= 23;
-    a->coeffs[i+6] = t + (a->coeffs[i+6] << 13) - a->coeffs[i+6];
-    a->coeffs[i+6] -= Q;
-    a->coeffs[i+6] += ((int32_t)a->coeffs[i+6] >> 31) & Q;
-
-    t = a->coeffs[i+7] & 0x7FFFFF;
-    a->coeffs[i+7] >>= 23;
-    a->coeffs[i+7] = t + (a->coeffs[i+7] << 13) - a->coeffs[i+7];
-    a->coeffs[i+7] -= Q;
-    a->coeffs[i+7] += ((int32_t)a->coeffs[i+7] >> 31) & Q;
-  }
+    poly_freeze_asm(a->coeffs);
 }
 
 /*************************************************
@@ -208,17 +86,18 @@ void poly_sub(poly *c, const poly *a, const poly *b) {
 
   for(i = 0; i < N; i=i+8)
   {
-    c->coeffs[i] = a->coeffs[i] + 2*Q - b->coeffs[i];
-    c->coeffs[i+1] = a->coeffs[i+1] + 2*Q - b->coeffs[i+1];
-    c->coeffs[i+2] = a->coeffs[i+2] + 2*Q - b->coeffs[i+2];
-    c->coeffs[i+3] = a->coeffs[i+3] + 2*Q - b->coeffs[i+3];
-    c->coeffs[i+4] = a->coeffs[i+4] + 2*Q - b->coeffs[i+4];
-    c->coeffs[i+5] = a->coeffs[i+5] + 2*Q - b->coeffs[i+5];
-    c->coeffs[i+6] = a->coeffs[i+6] + 2*Q - b->coeffs[i+6];
-    c->coeffs[i+7] = a->coeffs[i+7] + 2*Q - b->coeffs[i+7];
+    c->coeffs[i] = a->coeffs[i]     - b->coeffs[i];
+    c->coeffs[i+1] = a->coeffs[i+1] - b->coeffs[i+1];
+    c->coeffs[i+2] = a->coeffs[i+2] - b->coeffs[i+2];
+    c->coeffs[i+3] = a->coeffs[i+3] - b->coeffs[i+3];
+    c->coeffs[i+4] = a->coeffs[i+4] - b->coeffs[i+4];
+    c->coeffs[i+5] = a->coeffs[i+5] - b->coeffs[i+5];
+    c->coeffs[i+6] = a->coeffs[i+6] - b->coeffs[i+6];
+    c->coeffs[i+7] = a->coeffs[i+7] - b->coeffs[i+7];
   }
 
 }
+
 
 /*************************************************
 * Name:        poly_shiftl
@@ -254,11 +133,29 @@ void poly_shiftl(poly *a) {
 * Arguments:   - poly *a: pointer to input/output polynomial
 **************************************************/
 void poly_ntt(poly *a) {
-    ntt_asm(a->coeffs);
+    #if PLATFORM == CORTEX_M4
+    ntt_asm_smull(a->coeffs, zetas_interleaved_asm);
+    #else
+    ntt_asm_schoolbook(a->coeffs, zetas_asm);
+    #endif
+}
+
+
+/*************************************************
+* Name:        poly_ntt_leaktime
+*
+* Description: Forward NTT. Output coefficients can be up to 16*Q larger than
+*              input coefficients.
+*              Inputs need to be public, so that the implementation can use non-constant time instructions.
+*
+* Arguments:   - poly *a: pointer to input/output polynomial
+**************************************************/
+void poly_ntt_leaktime(poly *a) {
+    ntt_asm_smull(a->coeffs, zetas_interleaved_asm);
 }
 
 /*************************************************
-* Name:        poly_invntt_montgomery
+* Name:        poly_invntt_tomont
 *
 * Description: Inverse NTT and multiplication with 2^{32}. Input coefficients
 *              need to be less than 2*Q. Output coefficients are less than 2*Q.
@@ -266,11 +163,29 @@ void poly_ntt(poly *a) {
 * Arguments:   - poly *a: pointer to input/output polynomial
 **************************************************/
 void poly_invntt_tomont(poly *a) {
-    inv_ntt_asm(a->coeffs);
+    #if PLATFORM == CORTEX_M4
+    inv_ntt_asm_smull(a->coeffs, zetas_interleaved_inv_asm);
+    #else
+    inv_ntt_asm_schoolbook(a->coeffs, zetas_inv_asm);
+    #endif
 }
 
 /*************************************************
-* Name:        poly_pointwise_invmontgomery
+* Name:        poly_invntt_tomont_leaktime
+*
+* Description: Inverse NTT and multiplication with 2^{32}. Input coefficients
+*              need to be less than 2*Q. Output coefficients are less than 2*Q.
+*              Inputs need to be public, so that the implementation can use non-constant time instructions.
+*
+* Arguments:   - poly *a: pointer to input/output polynomial
+**************************************************/
+void poly_invntt_tomont_leaktime(poly *a) {
+    inv_ntt_asm_smull(a->coeffs, zetas_interleaved_inv_asm);
+}
+
+
+/*************************************************
+* Name:        poly_pointwise_montgomery
 *
 * Description: Pointwise multiplication of polynomials in NTT domain
 *              representation and multiplication of resulting polynomial
@@ -283,69 +198,51 @@ void poly_invntt_tomont(poly *a) {
 **************************************************/
 void poly_pointwise_montgomery(poly *c, const poly *a, const poly *b)
 {
-  unsigned int i;
-  uint64_t t;
-  uint64_t temp;
+  #if PLATFORM == CORTEX_M4
+  poly_pointwise_invmontgomery_asm_smull(c->coeffs, a->coeffs, b->coeffs);
+  #else
+  poly_pointwise_invmontgomery_asm_mul(c->coeffs, a->coeffs, b->coeffs);
+  #endif
+}
 
-  for(i = 0; i < N; i=i+8)
-  {
-    // c->coeffs[i] = montgomery_reduce((uint64_t)a->coeffs[i] * b->coeffs[i]);
-    temp = (uint64_t)a->coeffs[i] * b->coeffs[i];
-    t = temp * QINV;
-    t &= (1ULL << 32) - 1;
-    t *= Q;
-    t = temp + t;
-    c->coeffs[i] = t >> 32;
+void poly_pointwise_acc_montgomery(poly *c, const poly *a, const poly *b)
+{
+  #if PLATFORM == CORTEX_M4
+  poly_pointwise_acc_invmontgomery_asm_smull(c->coeffs, a->coeffs, b->coeffs);
+  #else
+  poly_pointwise_acc_invmontgomery_asm_mul(c->coeffs, a->coeffs, b->coeffs);
+  #endif
+}
 
-    temp = (uint64_t)a->coeffs[i+1] * b->coeffs[i+1];
-    t = temp * QINV;
-    t &= (1ULL << 32) - 1;
-    t *= Q;
-    t = temp + t;
-    c->coeffs[i+1] = t >> 32;
 
-    temp = (uint64_t)a->coeffs[i+2] * b->coeffs[i+2];
-    t = temp * QINV;
-    t &= (1ULL << 32) - 1;
-    t *= Q;
-    t = temp + t;
-    c->coeffs[i+2] = t >> 32;
-
-    temp = (uint64_t)a->coeffs[i+3] * b->coeffs[i+3];
-    t = temp * QINV;
-    t &= (1ULL << 32) - 1;
-    t *= Q;
-    t = temp + t;
-    c->coeffs[i+3] = t >> 32;
-
-    temp = (uint64_t)a->coeffs[i+4] * b->coeffs[i+4];
-    t = temp * QINV;
-    t &= (1ULL << 32) - 1;
-    t *= Q;
-    t = temp + t;
-    c->coeffs[i+4] = t >> 32;
-
-    temp = (uint64_t)a->coeffs[i+5] * b->coeffs[i+5];
-    t = temp * QINV;
-    t &= (1ULL << 32) - 1;
-    t *= Q;
-    t = temp + t;
-    c->coeffs[i+5] = t >> 32;
-
-    temp = (uint64_t)a->coeffs[i+6] * b->coeffs[i+6];
-    t = temp * QINV;
-    t &= (1ULL << 32) - 1;
-    t *= Q;
-    t = temp + t;
-    c->coeffs[i+6] = t >> 32;
-
-    temp = (uint64_t)a->coeffs[i+7] * b->coeffs[i+7];
-    t = temp * QINV;
-    t &= (1ULL << 32) - 1;
-    t *= Q;
-    t = temp + t;
-    c->coeffs[i+7] = t >> 32;
-  }
+/*************************************************
+* Name:        poly_pointwise_invmontgomery_leaktime
+*
+* Description: Pointwise multiplication of polynomials in NTT domain
+*              representation and multiplication of resulting polynomial
+*              with 2^{-32}. Output coefficients are less than 2*Q if input
+*              coefficient are less than 22*Q.
+*              Inputs must be public. 
+*
+* Arguments:   - poly *c: pointer to output polynomial
+*              - const poly *a: pointer to first input polynomial
+*              - const poly *b: pointer to second input polynomial
+**************************************************/
+void poly_pointwise_montgomery_leaktime(poly *c, const poly *a, const poly *b)
+{
+  #if PLATFORM == CORTEX_M4
+  poly_pointwise_invmontgomery_asm_smull(c->coeffs, a->coeffs, b->coeffs);
+  #else
+  poly_pointwise_invmontgomery_asm_smull(c->coeffs, a->coeffs, b->coeffs);
+  #endif
+}
+void poly_pointwise_acc_montgomery_leaktime(poly *c, const poly *a, const poly *b)
+{
+  #if PLATFORM == CORTEX_M4
+  poly_pointwise_acc_invmontgomery_asm_smull(c->coeffs, a->coeffs, b->coeffs);
+  #else
+  poly_pointwise_acc_invmontgomery_asm_smull(c->coeffs, a->coeffs, b->coeffs);
+  #endif
 }
 
 /*************************************************
@@ -440,7 +337,7 @@ void poly_power2round(poly *a1, poly *a0, const poly *a) {
 *              - poly *a0: pointer to output polynomial with coefficients Q + a0
 *              - const poly *c: pointer to input polynomial
 **************************************************/
-void poly_decompose(poly *a1, poly *a0, const poly *a) {
+void poly_decompose(wpacked *a1, poly *a0, const poly *a) {
   unsigned int i;
   int32_t t, u;
   uint32_t temp;
@@ -467,7 +364,7 @@ void poly_decompose(poly *a1, poly *a0, const poly *a) {
       temp -= u & 1;
 
       a0->coeffs[i] = Q + t - (temp >> 4);
-      a1->coeffs[i] = temp & 0xF;
+      a1->packedcoeffs[i >> 1] = (uint8_t)(temp & 0xF);
 
       // /* Centralized remainder mod ALPHA */
       temp = a->coeffs[i+1];
@@ -485,7 +382,7 @@ void poly_decompose(poly *a1, poly *a0, const poly *a) {
       temp -= u & 1;
 
       a0->coeffs[i+1] = Q + t - (temp >> 4);
-      a1->coeffs[i+1] = temp & 0xF;
+      a1->packedcoeffs[i >> 1] |= (uint8_t)((temp & 0xF) << 4);
 
       // /* Centralized remainder mod ALPHA */
       temp = a->coeffs[i+2];
@@ -503,7 +400,7 @@ void poly_decompose(poly *a1, poly *a0, const poly *a) {
       temp -= u & 1;
 
       a0->coeffs[i+2] = Q + t - (temp >> 4);
-      a1->coeffs[i+2] = temp & 0xF;
+      a1->packedcoeffs[(i >> 1) + 1] = (uint8_t)(temp & 0xF);
 
       // /* Centralized remainder mod ALPHA */
       temp = a->coeffs[i+3];
@@ -521,7 +418,7 @@ void poly_decompose(poly *a1, poly *a0, const poly *a) {
       temp -= u & 1;
 
       a0->coeffs[i+3] = Q + t - (temp >> 4);
-      a1->coeffs[i+3] = temp & 0xF;
+      a1->packedcoeffs[(i >> 1) + 1] |= (uint8_t)((temp & 0xF) << 4);
 
       // /* Centralized remainder mod ALPHA */
       temp = a->coeffs[i+4];
@@ -539,7 +436,7 @@ void poly_decompose(poly *a1, poly *a0, const poly *a) {
       temp -= u & 1;
 
       a0->coeffs[i+4] = Q + t - (temp >> 4);
-      a1->coeffs[i+4] = temp & 0xF;
+      a1->packedcoeffs[(i >> 1) + 2] = (uint8_t)(temp & 0xF);
 
       // /* Centralized remainder mod ALPHA */
       temp = a->coeffs[i+5];
@@ -557,7 +454,7 @@ void poly_decompose(poly *a1, poly *a0, const poly *a) {
       temp -= u & 1;
 
       a0->coeffs[i+5] = Q + t - (temp >> 4);
-      a1->coeffs[i+5] = temp & 0xF;
+      a1->packedcoeffs[(i >> 1) + 2]  |= (uint8_t)((temp & 0xF) << 4);
 
       // /* Centralized remainder mod ALPHA */
       temp = a->coeffs[i+6];
@@ -575,7 +472,7 @@ void poly_decompose(poly *a1, poly *a0, const poly *a) {
       temp -= u & 1;
 
       a0->coeffs[i+6] = Q + t - (temp >> 4);
-      a1->coeffs[i+6] = temp & 0xF;
+      a1->packedcoeffs[(i >> 1) + 3] = (uint8_t)(temp & 0xF);
 
       // /* Centralized remainder mod ALPHA */
       temp = a->coeffs[i+7];
@@ -593,9 +490,17 @@ void poly_decompose(poly *a1, poly *a0, const poly *a) {
       temp -= u & 1;
 
       a0->coeffs[i+7] = Q + t - (temp >> 4);
-      a1->coeffs[i+7] = temp & 0xF;
+      a1->packedcoeffs[(i >> 1) + 3] |= (uint8_t)((temp & 0xF) << 4);
   }
 
+}
+
+static uint8_t lo_nibble(const uint8_t x) {
+  return x & 0xF;
+}
+
+static uint8_t hi_nibble(const uint8_t x) {
+  return x >> 4;
 }
 
 /*************************************************
@@ -611,13 +516,13 @@ void poly_decompose(poly *a1, poly *a0, const poly *a) {
 *
 * Returns number of 1 bits.
 **************************************************/
-unsigned int poly_make_hint(poly *h, const poly *a0, const poly *a1)
+unsigned int poly_make_hint(poly *h, const poly *a0, const wpacked *a1)
 {
   unsigned int i, s = 0;
 
 for(i = 0; i < N; i=i+8)
 {
-    if (a0->coeffs[i] <= GAMMA2 || a0->coeffs[i] > Q - GAMMA2 || (a0->coeffs[i] == Q - GAMMA2 && a1->coeffs[i] == 0))
+    if (a0->coeffs[i] <= GAMMA2 || a0->coeffs[i] > Q - GAMMA2 || (a0->coeffs[i] == Q - GAMMA2 && lo_nibble(a1->packedcoeffs[i >> 1]) == 0))
     {
         h->coeffs[i] = 0;
     }
@@ -627,7 +532,7 @@ for(i = 0; i < N; i=i+8)
         s += h->coeffs[i];
     }
 
-    if (a0->coeffs[i+1] <= GAMMA2 || a0->coeffs[i+1] > Q - GAMMA2 || (a0->coeffs[i+1] == Q - GAMMA2 && a1->coeffs[i+1] == 0))
+    if (a0->coeffs[i+1] <= GAMMA2 || a0->coeffs[i+1] > Q - GAMMA2 || (a0->coeffs[i+1] == Q - GAMMA2 && hi_nibble(a1->packedcoeffs[(i+1) >> 1]) == 0))
     {
         h->coeffs[i+1] = 0;
     }
@@ -637,7 +542,7 @@ for(i = 0; i < N; i=i+8)
         s += h->coeffs[i+1];
     }
 
-    if (a0->coeffs[i+2] <= GAMMA2 || a0->coeffs[i+2] > Q - GAMMA2 || (a0->coeffs[i+2] == Q - GAMMA2 && a1->coeffs[i+2] == 0))
+    if (a0->coeffs[i+2] <= GAMMA2 || a0->coeffs[i+2] > Q - GAMMA2 || (a0->coeffs[i+2] == Q - GAMMA2 && lo_nibble(a1->packedcoeffs[(i+2) >> 1]) == 0))
     {
         h->coeffs[i+2] = 0;
     }
@@ -647,7 +552,7 @@ for(i = 0; i < N; i=i+8)
         s += h->coeffs[i+2];
     }
 
-    if (a0->coeffs[i+3] <= GAMMA2 || a0->coeffs[i+3] > Q - GAMMA2 || (a0->coeffs[i+3] == Q - GAMMA2 && a1->coeffs[i+3] == 0))
+    if (a0->coeffs[i+3] <= GAMMA2 || a0->coeffs[i+3] > Q - GAMMA2 || (a0->coeffs[i+3] == Q - GAMMA2 && hi_nibble(a1->packedcoeffs[(i+3) >> 1]) == 0))
     {
         h->coeffs[i+3] = 0;
     }
@@ -657,7 +562,7 @@ for(i = 0; i < N; i=i+8)
         s += h->coeffs[i+3];
     }
 
-    if (a0->coeffs[i+4] <= GAMMA2 || a0->coeffs[i+4] > Q - GAMMA2 || (a0->coeffs[i+4] == Q - GAMMA2 && a1->coeffs[i+4] == 0))
+    if (a0->coeffs[i+4] <= GAMMA2 || a0->coeffs[i+4] > Q - GAMMA2 || (a0->coeffs[i+4] == Q - GAMMA2 && lo_nibble(a1->packedcoeffs[(i >> 1) + 2]) == 0))
     {
         h->coeffs[i+4] = 0;
     }
@@ -667,7 +572,7 @@ for(i = 0; i < N; i=i+8)
         s += h->coeffs[i+4];
     }
 
-    if (a0->coeffs[i+5] <= GAMMA2 || a0->coeffs[i+5] > Q - GAMMA2 || (a0->coeffs[i+5] == Q - GAMMA2 && a1->coeffs[i+5] == 0))
+    if (a0->coeffs[i+5] <= GAMMA2 || a0->coeffs[i+5] > Q - GAMMA2 || (a0->coeffs[i+5] == Q - GAMMA2 && hi_nibble(a1->packedcoeffs[(i >> 1) + 2]) == 0))
     {
         h->coeffs[i+5] = 0;
     }
@@ -677,7 +582,7 @@ for(i = 0; i < N; i=i+8)
         s += h->coeffs[i+5];
     }
 
-    if (a0->coeffs[i+6] <= GAMMA2 || a0->coeffs[i+6] > Q - GAMMA2 || (a0->coeffs[i+6] == Q - GAMMA2 && a1->coeffs[i+6] == 0))
+    if (a0->coeffs[i+6] <= GAMMA2 || a0->coeffs[i+6] > Q - GAMMA2 || (a0->coeffs[i+6] == Q - GAMMA2 && lo_nibble(a1->packedcoeffs[(i >> 1) + 3]) == 0))
     {
         h->coeffs[i+6] = 0;
     }
@@ -687,7 +592,7 @@ for(i = 0; i < N; i=i+8)
         s += h->coeffs[i+6];
     }
 
-    if (a0->coeffs[i+7] <= GAMMA2 || a0->coeffs[i+7] > Q - GAMMA2 || (a0->coeffs[i+7] == Q - GAMMA2 && a1->coeffs[i+7] == 0))
+    if (a0->coeffs[i+7] <= GAMMA2 || a0->coeffs[i+7] > Q - GAMMA2 || (a0->coeffs[i+7] == Q - GAMMA2 && hi_nibble(a1->packedcoeffs[(i >> 1) + 3]) == 0))
     {
         h->coeffs[i+7] = 0;
     }
@@ -982,18 +887,19 @@ int poly_sub_freeze_chk_norm(poly *c, const poly *a, const poly *b, uint32_t B)
 {
   unsigned int i;
   int32_t t;
-  uint32_t temp;
-  uint32_t temp2;
+  int32_t temp;
+  int32_t temp2;
 
     for(i = 0; i < N; i=i+8)
     {
 
-        temp2 = a->coeffs[i] + 2*Q - b->coeffs[i];
+        temp2 = a->coeffs[i] - b->coeffs[i];
         temp = temp2 & 0x7FFFFF;
         temp2 >>= 23;
         temp2 = temp + (temp2 << 13) - temp2;
         temp2 -= Q;
-        temp2 = temp2 + (((int32_t)temp2 >> 31) & Q);
+        temp2 = temp2 + ((temp2 >> 31) & Q);
+        temp2 = temp2 + ((temp2 >> 31) & Q);
 
         /* Absolute value of centralized representative */
         t = (Q-1)/2 - temp2;
@@ -1007,12 +913,13 @@ int poly_sub_freeze_chk_norm(poly *c, const poly *a, const poly *b, uint32_t B)
           return 1;
         }
 
-        temp2 = a->coeffs[i+1] + 2*Q - b->coeffs[i+1];
+        temp2 = a->coeffs[i+1] - b->coeffs[i+1];
         temp = temp2 & 0x7FFFFF;
         temp2 >>= 23;
         temp2 = temp + (temp2 << 13) - temp2;
         temp2 -= Q;
-        temp2 = temp2 + (((int32_t)temp2 >> 31) & Q);
+        temp2 = temp2 + ((temp2 >> 31) & Q);
+        temp2 = temp2 + ((temp2 >> 31) & Q);
 
         /* Absolute value of centralized representative */
         t = (Q-1)/2 - temp2;
@@ -1026,12 +933,13 @@ int poly_sub_freeze_chk_norm(poly *c, const poly *a, const poly *b, uint32_t B)
           return 1;
         }
 
-        temp2 = a->coeffs[i+2] + 2*Q - b->coeffs[i+2];
+        temp2 = a->coeffs[i+2] - b->coeffs[i+2];
         temp = temp2 & 0x7FFFFF;
         temp2 >>= 23;
         temp2 = temp + (temp2 << 13) - temp2;
         temp2 -= Q;
-        temp2 = temp2 + (((int32_t)temp2 >> 31) & Q);
+        temp2 = temp2 + ((temp2 >> 31) & Q);
+        temp2 = temp2 + ((temp2 >> 31) & Q);
 
         /* Absolute value of centralized representative */
         t = (Q-1)/2 - temp2;
@@ -1045,12 +953,13 @@ int poly_sub_freeze_chk_norm(poly *c, const poly *a, const poly *b, uint32_t B)
           return 1;
         }
 
-        temp2 = a->coeffs[i+3] + 2*Q - b->coeffs[i+3];
+        temp2 = a->coeffs[i+3] - b->coeffs[i+3];
         temp = temp2 & 0x7FFFFF;
         temp2 >>= 23;
         temp2 = temp + (temp2 << 13) - temp2;
         temp2 -= Q;
-        temp2 = temp2 + (((int32_t)temp2 >> 31) & Q);
+        temp2 = temp2 + ((temp2 >> 31) & Q);
+        temp2 = temp2 + ((temp2 >> 31) & Q);
 
         /* Absolute value of centralized representative */
         t = (Q-1)/2 - temp2;
@@ -1064,12 +973,13 @@ int poly_sub_freeze_chk_norm(poly *c, const poly *a, const poly *b, uint32_t B)
           return 1;
         }
 
-        temp2 = a->coeffs[i+4] + 2*Q - b->coeffs[i+4];
+        temp2 = a->coeffs[i+4] - b->coeffs[i+4];
         temp = temp2 & 0x7FFFFF;
         temp2 >>= 23;
         temp2 = temp + (temp2 << 13) - temp2;
         temp2 -= Q;
-        temp2 = temp2 + (((int32_t)temp2 >> 31) & Q);
+        temp2 = temp2 + ((temp2 >> 31) & Q);
+        temp2 = temp2 + ((temp2 >> 31) & Q);
 
         /* Absolute value of centralized representative */
         t = (Q-1)/2 - temp2;
@@ -1083,12 +993,13 @@ int poly_sub_freeze_chk_norm(poly *c, const poly *a, const poly *b, uint32_t B)
           return 1;
         }
 
-        temp2 = a->coeffs[i+5] + 2*Q - b->coeffs[i+5];
+        temp2 = a->coeffs[i+5] - b->coeffs[i+5];
         temp = temp2 & 0x7FFFFF;
         temp2 >>= 23;
         temp2 = temp + (temp2 << 13) - temp2;
         temp2 -= Q;
-        temp2 = temp2 + (((int32_t)temp2 >> 31) & Q);
+        temp2 = temp2 + ((temp2 >> 31) & Q);
+        temp2 = temp2 + ((temp2 >> 31) & Q);
 
         /* Absolute value of centralized representative */
         t = (Q-1)/2 - temp2;
@@ -1102,12 +1013,13 @@ int poly_sub_freeze_chk_norm(poly *c, const poly *a, const poly *b, uint32_t B)
           return 1;
         }
 
-        temp2 = a->coeffs[i+6] + 2*Q - b->coeffs[i+6];
+        temp2 = a->coeffs[i+6] - b->coeffs[i+6];
         temp = temp2 & 0x7FFFFF;
         temp2 >>= 23;
         temp2 = temp + (temp2 << 13) - temp2;
         temp2 -= Q;
-        temp2 = temp2 + (((int32_t)temp2 >> 31) & Q);
+        temp2 = temp2 + ((temp2 >> 31) & Q);
+        temp2 = temp2 + ((temp2 >> 31) & Q);
 
         /* Absolute value of centralized representative */
         t = (Q-1)/2 - temp2;
@@ -1121,12 +1033,13 @@ int poly_sub_freeze_chk_norm(poly *c, const poly *a, const poly *b, uint32_t B)
           return 1;
         }
 
-        temp2 = a->coeffs[i+7] + 2*Q - b->coeffs[i+7];
+        temp2 = a->coeffs[i+7] - b->coeffs[i+7];
         temp = temp2 & 0x7FFFFF;
         temp2 >>= 23;
         temp2 = temp + (temp2 << 13) - temp2;
         temp2 -= Q;
-        temp2 = temp2 + (((int32_t)temp2 >> 31) & Q);
+        temp2 = temp2 + ((temp2 >> 31) & Q);
+        temp2 = temp2 + ((temp2 >> 31) & Q);
 
         /* Absolute value of centralized representative */
         t = (Q-1)/2 - temp2;
@@ -1162,7 +1075,7 @@ int poly_add_freeze_chk_norm(poly *c, const poly *a, const poly *b, uint32_t B)
 {
   unsigned int i;
   int32_t t;
-  uint32_t temp;
+  int32_t temp;
 
   for(i = 0; i < N; i=i+8)
   {
@@ -1173,7 +1086,8 @@ int poly_add_freeze_chk_norm(poly *c, const poly *a, const poly *b, uint32_t B)
     c->coeffs[i] >>= 23;
     c->coeffs[i] = temp + (c->coeffs[i] << 13) - c->coeffs[i];
     c->coeffs[i] -= Q;
-    c->coeffs[i] += ((int32_t)c->coeffs[i] >> 31) & Q;
+    c->coeffs[i] += (c->coeffs[i] >> 31) & Q;
+    c->coeffs[i] += (c->coeffs[i] >> 31) & Q;
     /* Absolute value of centralized representative */
     t = (Q-1)/2 - c->coeffs[i];
     t ^= (t >> 31);
@@ -1189,7 +1103,8 @@ int poly_add_freeze_chk_norm(poly *c, const poly *a, const poly *b, uint32_t B)
     c->coeffs[i+1] >>= 23;
     c->coeffs[i+1] = temp + (c->coeffs[i+1] << 13) - c->coeffs[i+1];
     c->coeffs[i+1] -= Q;
-    c->coeffs[i+1] += ((int32_t)c->coeffs[i+1] >> 31) & Q;
+    c->coeffs[i+1] += (c->coeffs[i+1] >> 31) & Q;
+    c->coeffs[i+1] += (c->coeffs[i+1] >> 31) & Q;
     /* Absolute value of centralized representative */
     t = (Q-1)/2 - c->coeffs[i+1];
     t ^= (t >> 31);
@@ -1205,7 +1120,8 @@ int poly_add_freeze_chk_norm(poly *c, const poly *a, const poly *b, uint32_t B)
     c->coeffs[i+2] >>= 23;
     c->coeffs[i+2] = temp + (c->coeffs[i+2] << 13) - c->coeffs[i+2];
     c->coeffs[i+2] -= Q;
-    c->coeffs[i+2] += ((int32_t)c->coeffs[i+2] >> 31) & Q;
+    c->coeffs[i+2] += (c->coeffs[i+2] >> 31) & Q;
+    c->coeffs[i+2] += (c->coeffs[i+2] >> 31) & Q;
     /* Absolute value of centralized representative */
     t = (Q-1)/2 - c->coeffs[i+2];
     t ^= (t >> 31);
@@ -1221,7 +1137,8 @@ int poly_add_freeze_chk_norm(poly *c, const poly *a, const poly *b, uint32_t B)
     c->coeffs[i+3] >>= 23;
     c->coeffs[i+3] = temp + (c->coeffs[i+3] << 13) - c->coeffs[i+3];
     c->coeffs[i+3] -= Q;
-    c->coeffs[i+3] += ((int32_t)c->coeffs[i+3] >> 31) & Q;
+    c->coeffs[i+3] += (c->coeffs[i+3] >> 31) & Q;
+    c->coeffs[i+3] += (c->coeffs[i+3] >> 31) & Q;
     /* Absolute value of centralized representative */
     t = (Q-1)/2 - c->coeffs[i+3];
     t ^= (t >> 31);
@@ -1237,7 +1154,8 @@ int poly_add_freeze_chk_norm(poly *c, const poly *a, const poly *b, uint32_t B)
     c->coeffs[i+4] >>= 23;
     c->coeffs[i+4] = temp + (c->coeffs[i+4] << 13) - c->coeffs[i+4];
     c->coeffs[i+4] -= Q;
-    c->coeffs[i+4] += ((int32_t)c->coeffs[i+4] >> 31) & Q;
+    c->coeffs[i+4] += (c->coeffs[i+4] >> 31) & Q;
+    c->coeffs[i+4] += (c->coeffs[i+4] >> 31) & Q;
     /* Absolute value of centralized representative */
     t = (Q-1)/2 - c->coeffs[i+4];
     t ^= (t >> 31);
@@ -1253,7 +1171,8 @@ int poly_add_freeze_chk_norm(poly *c, const poly *a, const poly *b, uint32_t B)
     c->coeffs[i+5] >>= 23;
     c->coeffs[i+5] = temp + (c->coeffs[i+5] << 13) - c->coeffs[i+5];
     c->coeffs[i+5] -= Q;
-    c->coeffs[i+5] += ((int32_t)c->coeffs[i+5] >> 31) & Q;
+    c->coeffs[i+5] += (c->coeffs[i+5] >> 31) & Q;
+    c->coeffs[i+5] += (c->coeffs[i+5] >> 31) & Q;
     /* Absolute value of centralized representative */
     t = (Q-1)/2 - c->coeffs[i+5];
     t ^= (t >> 31);
@@ -1269,7 +1188,8 @@ int poly_add_freeze_chk_norm(poly *c, const poly *a, const poly *b, uint32_t B)
     c->coeffs[i+6] >>= 23;
     c->coeffs[i+6] = temp + (c->coeffs[i+6] << 13) - c->coeffs[i+6];
     c->coeffs[i+6] -= Q;
-    c->coeffs[i+6] += ((int32_t)c->coeffs[i+6] >> 31) & Q;
+    c->coeffs[i+6] += (c->coeffs[i+6] >> 31) & Q;
+    c->coeffs[i+6] += (c->coeffs[i+6] >> 31) & Q;
     /* Absolute value of centralized representative */
     t = (Q-1)/2 - c->coeffs[i+6];
     t ^= (t >> 31);
@@ -1285,7 +1205,8 @@ int poly_add_freeze_chk_norm(poly *c, const poly *a, const poly *b, uint32_t B)
     c->coeffs[i+7] >>= 23;
     c->coeffs[i+7] = temp + (c->coeffs[i+7] << 13) - c->coeffs[i+7];
     c->coeffs[i+7] -= Q;
-    c->coeffs[i+7] += ((int32_t)c->coeffs[i+7] >> 31) & Q;
+    c->coeffs[i+7] += (c->coeffs[i+7] >> 31) & Q;
+    c->coeffs[i+7] += (c->coeffs[i+7] >> 31) & Q;
     /* Absolute value of centralized representative */
     t = (Q-1)/2 - c->coeffs[i+7];
     t ^= (t >> 31);
@@ -1318,7 +1239,8 @@ int poly_csubq_chknorm(poly *a, uint32_t B) {
   for(i = 0; i < N; i=i+8)
   {
     a->coeffs[i] -= Q;
-    a->coeffs[i] += ((int32_t)a->coeffs[i] >> 31) & Q;
+    a->coeffs[i] += (a->coeffs[i] >> 31) & Q;
+    a->coeffs[i] += (a->coeffs[i] >> 31) & Q;
     t = (Q-1)/2 - a->coeffs[i];
     t ^= (t >> 31);
     t = (Q-1)/2 - t;
@@ -1327,7 +1249,8 @@ int poly_csubq_chknorm(poly *a, uint32_t B) {
       return 1;
 
     a->coeffs[i+1] -= Q;
-    a->coeffs[i+1] += ((int32_t)a->coeffs[i+1] >> 31) & Q;
+    a->coeffs[i+1] += (a->coeffs[i+1] >> 31) & Q;
+    a->coeffs[i+1] += (a->coeffs[i+1] >> 31) & Q;
     t = (Q-1)/2 - a->coeffs[i+1];
     t ^= (t >> 31);
     t = (Q-1)/2 - t;
@@ -1336,7 +1259,8 @@ int poly_csubq_chknorm(poly *a, uint32_t B) {
     return 1;
 
     a->coeffs[i+2] -= Q;
-    a->coeffs[i+2] += ((int32_t)a->coeffs[i+2] >> 31) & Q;
+    a->coeffs[i+2] += (a->coeffs[i+2] >> 31) & Q;
+    a->coeffs[i+2] += (a->coeffs[i+2] >> 31) & Q;
     t = (Q-1)/2 - a->coeffs[i+2];
     t ^= (t >> 31);
     t = (Q-1)/2 - t;
@@ -1345,7 +1269,8 @@ int poly_csubq_chknorm(poly *a, uint32_t B) {
     return 1;
 
     a->coeffs[i+3] -= Q;
-    a->coeffs[i+3] += ((int32_t)a->coeffs[i+3] >> 31) & Q;
+    a->coeffs[i+3] += (a->coeffs[i+3] >> 31) & Q;
+    a->coeffs[i+3] += (a->coeffs[i+3] >> 31) & Q;
     t = (Q-1)/2 - a->coeffs[i+3];
     t ^= (t >> 31);
     t = (Q-1)/2 - t;
@@ -1353,7 +1278,8 @@ int poly_csubq_chknorm(poly *a, uint32_t B) {
     if((uint32_t)t >= B)
     return 1;
     a->coeffs[i+4] -= Q;
-    a->coeffs[i+4] += ((int32_t)a->coeffs[i+4] >> 31) & Q;
+    a->coeffs[i+4] += (a->coeffs[i+4] >> 31) & Q;
+    a->coeffs[i+4] += (a->coeffs[i+4] >> 31) & Q;
     t = (Q-1)/2 - a->coeffs[i+4];
     t ^= (t >> 31);
     t = (Q-1)/2 - t;
@@ -1362,7 +1288,8 @@ int poly_csubq_chknorm(poly *a, uint32_t B) {
     return 1;
 
     a->coeffs[i+5] -= Q;
-    a->coeffs[i+5] += ((int32_t)a->coeffs[i+5] >> 31) & Q;
+    a->coeffs[i+5] += (a->coeffs[i+5] >> 31) & Q;
+    a->coeffs[i+5] += (a->coeffs[i+5] >> 31) & Q;
     t = (Q-1)/2 - a->coeffs[i+5];
     t ^= (t >> 31);
     t = (Q-1)/2 - t;
@@ -1371,7 +1298,8 @@ int poly_csubq_chknorm(poly *a, uint32_t B) {
     return 1;
 
     a->coeffs[i+6] -= Q;
-    a->coeffs[i+6] += ((int32_t)a->coeffs[i+6] >> 31) & Q;
+    a->coeffs[i+6] += (a->coeffs[i+6] >> 31) & Q;
+    a->coeffs[i+6] += (a->coeffs[i+6] >> 31) & Q;
     t = (Q-1)/2 - a->coeffs[i+6];
     t ^= (t >> 31);
     t = (Q-1)/2 - t;
@@ -1380,7 +1308,8 @@ int poly_csubq_chknorm(poly *a, uint32_t B) {
     return 1;
 
     a->coeffs[i+7] -= Q;
-    a->coeffs[i+7] += ((int32_t)a->coeffs[i+7] >> 31) & Q;
+    a->coeffs[i+7] += (a->coeffs[i+7] >> 31) & Q;
+    a->coeffs[i+7] += (a->coeffs[i+7] >> 31) & Q;
     t = (Q-1)/2 - a->coeffs[i+7];
     t ^= (t >> 31);
     t = (Q-1)/2 - t;
@@ -1410,12 +1339,9 @@ int poly_chknorm(const poly *a, uint32_t B) {
        the probability for each coefficient is independent of secret
        data but we must not leak the sign of the centralized representative. */
     for (i = 0; i < N; ++i) {
-        /* Absolute value of centralized representative */
-        t = (int32_t) ((Q - 1) / 2 - a->coeffs[i]);
-        t ^= (t >> 31);
-        t = (Q - 1) / 2 - t;
+        t = (int32_t) a->coeffs[i];
 
-        if ((uint32_t)t >= B) {
+        if (t >= (int32_t)B || t <= - (int32_t)B) {
             return 1;
         }
     }
@@ -1437,27 +1363,28 @@ int poly_chknorm(const poly *a, uint32_t B) {
 * Returns number of sampled coefficients. Can be smaller than len if not enough
 * random bytes were given.
 **************************************************/
-static unsigned int rej_uniform(uint32_t *a,
-                                unsigned int len,
-                                const unsigned char *buf,
-                                unsigned int buflen) {
-    unsigned int ctr, pos;
-    uint32_t t;
-
-    ctr = pos = 0;
-    while (ctr < len && pos + 3 <= buflen) {
-        t  = buf[pos++];
-        t |= (uint32_t)buf[pos++] << 8;
-        t |= (uint32_t)buf[pos++] << 16;
-        t &= 0x7FFFFF;
-
-        if (t < Q) {
-            a[ctr++] = t;
-        }
-    }
-
-    return ctr;
-}
+// moved to assembly
+//static unsigned int rej_uniform(int32_t *a,
+//                                unsigned int len,
+//                                const unsigned char *buf,
+//                                unsigned int buflen) {
+//    unsigned int ctr, pos;
+//    int32_t t;
+//
+//    ctr = pos = 0;
+//    while (ctr < len && pos + 3 <= buflen) {
+//        t  = buf[pos++];
+//        t |= (int32_t)buf[pos++] << 8;
+//        t |= (int32_t)buf[pos++] << 16;
+//        t &= 0x7FFFFF;
+//
+//        if (t < Q) {
+//            a[ctr++] = t;
+//        }
+//    }
+//
+//    return ctr;
+//}
 
 /*************************************************
 * Name:        poly_uniform
@@ -1484,7 +1411,7 @@ void poly_uniform(poly *a,
     stream128_init(&state, seed, nonce);
     stream128_squeezeblocks(buf, POLY_UNIFORM_NBLOCKS, &state);
 
-    ctr = rej_uniform(a->coeffs, N, buf, buflen);
+    ctr = rej_uniform_asm(a->coeffs, N, buf, buflen);
 
     while (ctr < N) {
         off = buflen % 3;
@@ -1494,9 +1421,11 @@ void poly_uniform(poly *a,
 
         buflen = STREAM128_BLOCKBYTES + off;
         stream128_squeezeblocks(buf + off, 1, &state);
-        ctr += rej_uniform(a->coeffs + ctr, N - ctr, buf, buflen);
+        ctr += rej_uniform_asm(a->coeffs + ctr, N - ctr, buf, buflen);
     }
 }
+
+
 
 /*************************************************
 * Name:        rej_eta
@@ -1512,7 +1441,7 @@ void poly_uniform(poly *a,
 * Returns number of sampled coefficients. Can be smaller than len if not enough
 * random bytes were given.
 **************************************************/
-static unsigned int rej_eta(uint32_t *a,
+static unsigned int rej_eta(int32_t *a,
                             unsigned int len,
                             const unsigned char *buf,
                             unsigned int buflen) {
@@ -1530,10 +1459,10 @@ static unsigned int rej_eta(uint32_t *a,
         #endif
 
         if (t0 <= 2 * ETA) {
-            a[ctr++] = Q + ETA - t0;
+            a[ctr++] = ETA - t0;
         }
         if (t1 <= 2 * ETA && ctr < len) {
-            a[ctr++] = Q + ETA - t1;
+            a[ctr++] = ETA - t1;
         }
     }
 
@@ -1580,7 +1509,7 @@ void poly_uniform_eta(poly *a,
 *              in [-(GAMMA1 - 1), GAMMA1 - 1] by performing rejection sampling
 *              using array of random bytes.
 *
-* Arguments:   - uint32_t *a: pointer to output array (allocated)
+* Arguments:   - int32_t *a: pointer to output array (allocated)
 *              - unsigned int len: number of coefficients to be sampled
 *              - const unsigned char *buf: array of random bytes
 *              - unsigned int buflen: length of array of random bytes
@@ -1588,7 +1517,8 @@ void poly_uniform_eta(poly *a,
 * Returns number of sampled coefficients. Can be smaller than len if not enough
 * random bytes were given.
 **************************************************/
-static unsigned int rej_gamma1m1(uint32_t *a,
+
+static unsigned int rej_gamma1m1(int32_t *a,
                                  unsigned int len,
                                  const unsigned char *buf,
                                  unsigned int buflen) {
@@ -1609,15 +1539,16 @@ static unsigned int rej_gamma1m1(uint32_t *a,
         pos += 5;
 
         if (t0 <= 2 * GAMMA1 - 2) {
-            a[ctr++] = Q + GAMMA1 - 1 - t0;
+            a[ctr++] = GAMMA1 - 1 - t0;
         }
         if (t1 <= 2 * GAMMA1 - 2 && ctr < len) {
-            a[ctr++] = Q + GAMMA1 - 1 - t1;
+            a[ctr++] = GAMMA1 - 1 - t1;
         }
     }
 
     return ctr;
 }
+
 
 /*************************************************
 * Name:        poly_uniform_gamma1m1
@@ -1668,20 +1599,21 @@ void poly_uniform_gamma1m1(poly *a,
 *                                  POLETA_SIZE_PACKED bytes
 *              - const poly *a: pointer to input polynomial
 **************************************************/
+
 void polyeta_pack(unsigned char *r, const poly *a) {
     unsigned int i;
     unsigned char t[8];
 
     #if 2*ETA <= 7
     for(i = 0; i < N/8; ++i) {
-        t[0] = Q + ETA - a->coeffs[8*i+0];
-        t[1] = Q + ETA - a->coeffs[8*i+1];
-        t[2] = Q + ETA - a->coeffs[8*i+2];
-        t[3] = Q + ETA - a->coeffs[8*i+3];
-        t[4] = Q + ETA - a->coeffs[8*i+4];
-        t[5] = Q + ETA - a->coeffs[8*i+5];
-        t[6] = Q + ETA - a->coeffs[8*i+6];
-        t[7] = Q + ETA - a->coeffs[8*i+7];
+        t[0] = ETA - a->coeffs[8*i+0];
+        t[1] = ETA - a->coeffs[8*i+1];
+        t[2] = ETA - a->coeffs[8*i+2];
+        t[3] = ETA - a->coeffs[8*i+3];
+        t[4] = ETA - a->coeffs[8*i+4];
+        t[5] = ETA - a->coeffs[8*i+5];
+        t[6] = ETA - a->coeffs[8*i+6];
+        t[7] = ETA - a->coeffs[8*i+7];
 
         r[3*i+0]  = (t[0] >> 0) | (t[1] << 3) | (t[2] << 6);
         r[3*i+1]  = (t[2] >> 2) | (t[3] << 1) | (t[4] << 4) | (t[5] << 7);
@@ -1689,12 +1621,13 @@ void polyeta_pack(unsigned char *r, const poly *a) {
     }
     #else
     for(i = 0; i < N/2; ++i) {
-        t[0] = Q + ETA - a->coeffs[2*i+0];
-        t[1] = Q + ETA - a->coeffs[2*i+1];
+        t[0] = ETA - a->coeffs[2*i+0];
+        t[1] = ETA - a->coeffs[2*i+1];
         r[i] = t[0] | (t[1] << 4);
     }
     #endif
 }
+
 
 /*************************************************
 * Name:        polyeta_unpack
@@ -1913,9 +1846,7 @@ void polyz_unpack(poly *r, const unsigned char *a) {
         r->coeffs[2 * i + 1] |= (uint32_t)a[5 * i + 4] << 12;
 
         r->coeffs[2 * i + 0] = GAMMA1 - 1 - r->coeffs[2 * i + 0];
-        r->coeffs[2 * i + 0] += ((int32_t)r->coeffs[2 * i + 0] >> 31) & Q;
         r->coeffs[2 * i + 1] = GAMMA1 - 1 - r->coeffs[2 * i + 1];
-        r->coeffs[2 * i + 1] += ((int32_t)r->coeffs[2 * i + 1] >> 31) & Q;
     }
 
 }
@@ -1938,3 +1869,5 @@ void polyw1_pack(unsigned char *r, const poly *a) {
     }
 
 }
+
+

@@ -91,13 +91,10 @@ void polyvecl_pointwise_acc_montgomery(poly *w,
                                        const polyvecl *v)
 {
   unsigned int i;
-  poly t;
-
   poly_pointwise_montgomery(w, &u->vec[0], &v->vec[0]);
 
   for(i = 1; i < L; ++i) {
-    poly_pointwise_montgomery(&t, &u->vec[i], &v->vec[i]);
-    poly_add(w, w, &t);
+    poly_pointwise_acc_montgomery(w, &u->vec[i], &v->vec[i]);
   }
 }
 
@@ -296,51 +293,6 @@ void polyveck_power2round(polyveck *v1, polyveck *v0, const polyveck *v) {
 
   for(i = 0; i < K; ++i)
     poly_power2round(&v1->vec[i], &v0->vec[i], &v->vec[i]);
-}
-
-/*************************************************
-* Name:        polyveck_decompose
-*
-* Description: For all coefficients a of polynomials in vector of length K,
-*              compute high and low bits a0, a1 such a mod Q = a1*ALPHA + a0
-*              with -ALPHA/2 < a0 <= ALPHA/2 except a1 = (Q-1)/ALPHA where we
-*              set a1 = 0 and -ALPHA/2 <= a0 = a mod Q - Q < 0.
-*              Assumes coefficients to be standard representatives.
-*
-* Arguments:   - polyveck *v1: pointer to output vector of polynomials with
-*                              coefficients a1
-*              - polyveck *v0: pointer to output vector of polynomials with
-*                              coefficients Q + a0
-*              - const polyveck *v: pointer to input vector
-**************************************************/
-void polyveck_decompose(polyveck *v1, polyveck *v0, const polyveck *v) {
-  unsigned int i;
-
-  for(i = 0; i < K; ++i)
-    poly_decompose(&v1->vec[i], &v0->vec[i], &v->vec[i]);
-}
-
-/*************************************************
-* Name:        polyveck_make_hint
-*
-* Description: Compute hint vector.
-*
-* Arguments:   - polyveck *h: pointer to output vector
-*              - const polyveck *v0: pointer to low part of input vector
-*              - const polyveck *v1: pointer to high part of input vector
-*
-* Returns number of 1 bits.
-**************************************************/
-unsigned int polyveck_make_hint(polyveck *h,
-                                const polyveck *v0,
-                                const polyveck *v1)
-{
-  unsigned int i, s = 0;
-
-  for(i = 0; i < K; ++i)
-    s += poly_make_hint(&h->vec[i], &v0->vec[i], &v1->vec[i]);
-
-  return s;
 }
 
 /*************************************************

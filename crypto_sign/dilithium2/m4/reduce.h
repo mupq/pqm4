@@ -23,4 +23,13 @@ uint32_t csubq(uint32_t a);
 #define freeze DILITHIUM_NAMESPACE(_freeze)
 uint32_t freeze(uint32_t a);
 
+//SIGNED REDUCTIONS
+//int32_t montgomery_reduce_signed(int64_t a);
+
+int32_t reduce32_signed(int32_t a);
+
+uint32_t csubaddq(int32_t a);
+
+uint32_t freeze_signed(int32_t a);
+
 #endif

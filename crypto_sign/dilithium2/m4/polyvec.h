@@ -27,7 +27,6 @@ void polyvecl_pointwise_acc_montgomery(poly *w,
                                        const polyvecl *u,
                                        const polyvecl *v);
 
-
 #define polyvecl_chknorm DILITHIUM_NAMESPACE(_polyvecl_chknorm)
 int polyvecl_chknorm(const polyvecl *v, uint32_t B);
 
