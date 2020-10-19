@@ -49,11 +49,14 @@ sntrup857 (100 executions),ref,920319337,920319337,920319337,90319892,90319892,9
 Signature Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [cycles] (mean),Key Generation [cycles] (min),Key Generation [cycles] (max),Sign [cycles] (mean),Sign [cycles] (min),Sign [cycles] (max),Verify [cycles] (mean),Verify [cycles] (min),Verify [cycles] (max)
 dilithium2 (100 executions),clean,1614477,1613563,1626981,8032479,2987832,36923036,1830445,1829963,1830901
-dilithium2 (100 executions),m4,1407272,1406859,1407763,4331922,1805767,17876042,1374748,1374336,1375098
+dilithium2 (100 executions),m4,1318459,1318012,1318931,3959810,1622146,17275661,1259327,1258790,1259982
+dilithium2 (100 executions),stack,1318532,1317884,1319036,12972203,2561310,73306579,1259289,1258776,1259819
 dilithium3 (100 executions),clean,2539785,2538961,2540640,11759429,4161883,64856628,2671904,2671471,2672362
-dilithium3 (100 executions),m4,2156465,2155790,2157193,7314596,2656760,27632645,2090983,2090722,2091343
+dilithium3 (100 executions),m4,1989249,1988511,1990289,6480747,2392221,23557165,1913130,1912282,1913833
+dilithium3 (100 executions),stack,1989225,1988168,1990021,27116438,3952331,179657735,1913111,1912366,1914099
 dilithium4 (100 executions),clean,3398499,3398034,3398906,12168851,5509148,52054919,3684357,3683668,3684920
-dilithium4 (100 executions),m4,3046239,3045914,3046773,6846027,3657053,20885859,2962577,2962265,2962975
+dilithium4 (100 executions),m4,2837216,2836824,2837662,6449214,3302923,14659109,2719554,2718738,2720437
+dilithium4 (100 executions),stack,2837227,2836759,2837676,22600922,5644173,115212171,2719582,2718704,2720570
 falcon-1024 (100 executions),clean,622175711,337571831,1880024329,133629247,133291572,133967706,1528951,1528400,1529571
 falcon-1024 (100 executions),m4-ct,459534839,273177640,1047054767,85072673,84815948,85305908,980052,969152,985686
 falcon-1024 (100 executions),opt-ct,495167251,273177640,1379271017,85054991,84783337,85362818,977782,967975,987002
@@ -152,11 +155,14 @@ sntrup857,ref,18260,17868,21404,,,,,,
 Signature Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [bytes],Sign [bytes],Verify [bytes],,,,,,
 dilithium2,clean,36396,61292,40644,,,,,,
-dilithium2,m4,32324,54156,31460,,,,,,
+dilithium2,m4,7916,38300,9004,,,,,,
+dilithium2,stack,7916,8924,9004,,,,,,
 dilithium3,clean,50732,81772,54980,,,,,,
-dilithium3,m4,45636,72596,43748,,,,,,
+dilithium3,m4,8940,52756,10028,,,,,,
+dilithium3,stack,8940,9948,10028,,,,,,
 dilithium4,clean,67116,104388,71452,,,,,,
-dilithium4,m4,60996,93076,58084,,,,,,
+dilithium4,m4,9964,69276,11052,,,,,,
+dilithium4,stack,9964,10972,11052,,,,,,
 falcon-1024,clean,35256,82484,8796,,,,,,
 falcon-1024,m4-ct,1432,2680,492,,,,,,
 falcon-1024,opt-ct,1504,2568,496,,,,,,
@@ -255,11 +261,14 @@ sntrup857,ref,0.0,0.3,0.0,,,,,,
 Signature Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [%],Sign [%],Verify [%],,,,,,
 dilithium2,clean,61.4,30.0,53.0,,,,,,
-dilithium2,m4,77.1,53.3,70.8,,,,,,
+dilithium2,m4,82.2,58.9,77.3,,,,,,
+dilithium2,stack,82.2,75.9,77.3,,,,,,
 dilithium3,clean,66.0,31.2,57.1,,,,,,
-dilithium3,m4,78.1,52.8,73.3,,,,,,
+dilithium3,m4,83.4,60.7,79.8,,,,,,
+dilithium3,stack,83.4,78.7,79.8,,,,,,
 dilithium4,clean,66.6,35.6,60.1,,,,,,
-dilithium4,m4,79.2,57.6,75.0,,,,,,
+dilithium4,m4,85.1,64.1,81.6,,,,,,
+dilithium4,stack,85.1,79.2,81.6,,,,,,
 falcon-1024,clean,8.5,0.3,27.0,,,,,,
 falcon-1024,m4-ct,11.1,0.5,34.2,,,,,,
 falcon-1024,opt-ct,10.7,0.5,34.3,,,,,,
@@ -358,11 +367,14 @@ sntrup857,ref,6180,0,0,6180,,,,,
 Signature Schemes,,,,,,,,,,
 Scheme,Implementation,.text [bytes],.data [bytes],.bss [bytes],Total [bytes],,,,,
 dilithium2,clean,11184,0,0,11184,,,,,
-dilithium2,m4,17736,0,0,17736,,,,,
+dilithium2,m4,20212,0,0,20212,,,,,
+dilithium2,stack,20224,0,0,20224,,,,,
 dilithium3,clean,11068,0,0,11068,,,,,
-dilithium3,m4,17676,0,0,17676,,,,,
+dilithium3,m4,20188,0,0,20188,,,,,
+dilithium3,stack,20192,0,0,20192,,,,,
 dilithium4,clean,11256,0,0,11256,,,,,
-dilithium4,m4,17824,0,0,17824,,,,,
+dilithium4,m4,20340,0,0,20340,,,,,
+dilithium4,stack,20320,0,0,20320,,,,,
 falcon-1024,clean,80193,0,0,80193,,,,,
 falcon-1024,m4-ct,81289,0,79872,161161,,,,,
 falcon-1024,opt-ct,81289,0,79872,161161,,,,,
