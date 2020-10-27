@@ -120,7 +120,7 @@ Short_fromlist_asm_zero:
   str.w r2, [r0], #4
 
   mov.w r0, sp
-  mov.w r2, #761
+  movw.w r2, #761
   mov.w r3, #0
   vmov.w r4, s0
   bl.w uint32_sort
@@ -155,7 +155,7 @@ Short_fromlist_asm_back:
   str.w r2, [r4], #8
   cmp.w r0, lr
   bne.w Short_fromlist_asm_back
-    
+
   ldr.w r5, [r0]
   and.w r5, #3
   sub.w r5, #1

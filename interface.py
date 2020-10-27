@@ -41,6 +41,7 @@ class M4Settings(mupq.PlatformSettings):
         {'scheme': 'rainbowVc-classic', 'implementation': 'clean'},
         {'scheme': 'rainbowVc-cyclic', 'implementation': 'clean'},
         {'scheme': 'rainbowVc-cyclic-compressed', 'implementation': 'clean'},
+        {'scheme': 'mceliece348864', 'implementation': 'clean'},
         {'scheme': 'mceliece348864f', 'implementation': 'clean'},
         {'scheme': 'mceliece460896', 'implementation': 'clean'},
         {'scheme': 'mceliece460896f', 'implementation': 'clean'},
