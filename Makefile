@@ -11,7 +11,7 @@ OBJCOPY     = $(PREFIX)-objcopy
 ARCH_FLAGS  = -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16
 DEFINES     = -DSTM32F4
 
-CFLAGS     += -O3 \
+CFLAGS     += -O3 -std=gnu99 \
               -Wall -Wextra -Wimplicit-function-declaration \
               -Wredundant-decls -Wmissing-prototypes -Wstrict-prototypes \
               -Wundef -Wshadow \
