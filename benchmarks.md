@@ -3,7 +3,7 @@
 | scheme | implementation | key generation [cycles] | encapsulation [cycles] | decapsulation [cycles] |
 | ------ | -------------- | ----------------------- | ---------------------- | ---------------------- |
 | firesaber (100 executions) | clean | AVG: 3,742,077 <br /> MIN: 3,742,077 <br /> MAX: 3,742,077 | AVG: 4,652,854 <br /> MIN: 4,652,854 <br /> MAX: 4,652,854 | AVG: 5,099,065 <br /> MIN: 5,099,065 <br /> MAX: 5,099,065 |
-| firesaber (100 executions) | m4 | AVG: 1,445,891 <br /> MIN: 1,445,891 <br /> MAX: 1,445,891 | AVG: 1,782,978 <br /> MIN: 1,782,978 <br /> MAX: 1,782,978 | AVG: 1,843,481 <br /> MIN: 1,843,481 <br /> MAX: 1,843,481 |
+| firesaber (100 executions) | m4f | AVG: 1,007,477 <br /> MIN: 1,007,477 <br /> MAX: 1,007,477 | AVG: 1,256,353 <br /> MIN: 1,256,353 <br /> MAX: 1,256,353 | AVG: 1,231,994 <br /> MIN: 1,231,994 <br /> MAX: 1,231,994 |
 | frodokem640aes (100 executions) | m4 | AVG: 48,348,105 <br /> MIN: 48,348,105 <br /> MAX: 48,348,105 | AVG: 47,130,922 <br /> MIN: 47,130,922 <br /> MAX: 47,130,922 | AVG: 46,594,383 <br /> MIN: 46,594,383 <br /> MAX: 46,594,383 |
 | frodokem640shake (100 executions) | m4 | AVG: 79,325,705 <br /> MIN: 79,325,705 <br /> MAX: 79,325,705 | AVG: 79,699,757 <br /> MIN: 79,699,757 <br /> MAX: 79,699,757 | AVG: 79,145,449 <br /> MIN: 79,145,449 <br /> MAX: 79,145,449 |
 | frodokem640shake (100 executions) | opt | AVG: 91,896,318 <br /> MIN: 91,896,318 <br /> MAX: 91,896,318 | AVG: 104,912,447 <br /> MIN: 104,912,447 <br /> MAX: 104,912,447 | AVG: 104,638,561 <br /> MIN: 104,638,561 <br /> MAX: 104,638,561 |
@@ -20,21 +20,21 @@
 | kyber768-90s (100 executions) | clean | AVG: 936,990 <br /> MIN: 936,598 <br /> MAX: 937,329 | AVG: 1,135,877 <br /> MIN: 1,135,485 <br /> MAX: 1,136,216 | AVG: 1,337,409 <br /> MIN: 1,337,017 <br /> MAX: 1,337,748 |
 | kyber768-90s (100 executions) | m4 | AVG: 624,485 <br /> MIN: 624,067 <br /> MAX: 625,074 | AVG: 695,432 <br /> MIN: 695,004 <br /> MAX: 696,031 | AVG: 708,683 <br /> MIN: 708,255 <br /> MAX: 709,282 |
 | lightsaber (100 executions) | clean | AVG: 1,033,020 <br /> MIN: 1,033,020 <br /> MAX: 1,033,020 | AVG: 1,509,916 <br /> MIN: 1,509,916 <br /> MAX: 1,509,916 | AVG: 1,820,857 <br /> MIN: 1,820,857 <br /> MAX: 1,820,857 |
-| lightsaber (100 executions) | m4 | AVG: 458,660 <br /> MIN: 458,660 <br /> MAX: 458,660 | AVG: 649,332 <br /> MIN: 649,332 <br /> MAX: 649,332 | AVG: 673,339 <br /> MIN: 673,339 <br /> MAX: 673,339 |
+| lightsaber (100 executions) | m4f | AVG: 361,687 <br /> MIN: 361,687 <br /> MAX: 361,687 | AVG: 513,581 <br /> MIN: 513,581 <br /> MAX: 513,581 | AVG: 498,590 <br /> MIN: 498,590 <br /> MAX: 498,590 |
 | ntruhps2048509 (100 executions) | clean | AVG: 111,492,425 <br /> MIN: 111,492,425 <br /> MAX: 111,492,425 | AVG: 3,066,947 <br /> MIN: 3,066,947 <br /> MAX: 3,066,947 | AVG: 7,884,197 <br /> MIN: 7,884,197 <br /> MAX: 7,884,197 |
-| ntruhps2048509 (100 executions) | m4 | AVG: 79,686,034 <br /> MIN: 79,686,034 <br /> MAX: 79,686,034 | AVG: 577,135 <br /> MIN: 577,135 <br /> MAX: 577,135 | AVG: 545,283 <br /> MIN: 545,283 <br /> MAX: 545,283 |
+| ntruhps2048509 (100 executions) | m4f | AVG: 79,658,656 <br /> MIN: 79,658,656 <br /> MAX: 79,658,656 | AVG: 564,411 <br /> MIN: 564,411 <br /> MAX: 564,411 | AVG: 537,473 <br /> MIN: 537,473 <br /> MAX: 537,473 |
 | ntruhps2048677 (100 executions) | clean | AVG: 200,216,118 <br /> MIN: 200,216,118 <br /> MAX: 200,216,118 | AVG: 5,265,948 <br /> MIN: 5,265,948 <br /> MAX: 5,265,948 | AVG: 13,846,001 <br /> MIN: 13,846,001 <br /> MAX: 13,846,001 |
-| ntruhps2048677 (100 executions) | m4 | AVG: 143,820,865 <br /> MIN: 143,820,865 <br /> MAX: 143,820,865 | AVG: 854,493 <br /> MIN: 854,493 <br /> MAX: 854,493 | AVG: 841,809 <br /> MIN: 841,809 <br /> MAX: 841,809 |
+| ntruhps2048677 (100 executions) | m4f | AVG: 143,734,184 <br /> MIN: 143,734,184 <br /> MAX: 143,734,184 | AVG: 821,524 <br /> MIN: 821,524 <br /> MAX: 821,524 | AVG: 815,516 <br /> MIN: 815,516 <br /> MAX: 815,516 |
 | ntruhps4096821 (100 executions) | clean | AVG: 297,661,023 <br /> MIN: 297,661,023 <br /> MAX: 297,661,023 | AVG: 7,590,614 <br /> MIN: 7,590,614 <br /> MAX: 7,590,614 | AVG: 20,275,565 <br /> MIN: 20,275,565 <br /> MAX: 20,275,565 |
-| ntruhps4096821 (100 executions) | m4 | AVG: 208,965,432 <br /> MIN: 208,965,432 <br /> MAX: 208,965,432 | AVG: 1,077,000 <br /> MIN: 1,077,000 <br /> MAX: 1,077,000 | AVG: 1,073,275 <br /> MIN: 1,073,275 <br /> MAX: 1,073,275 |
+| ntruhps4096821 (100 executions) | m4f | AVG: 208,835,863 <br /> MIN: 208,835,863 <br /> MAX: 208,835,863 | AVG: 1,028,465 <br /> MIN: 1,028,465 <br /> MAX: 1,028,465 | AVG: 1,032,726 <br /> MIN: 1,032,726 <br /> MAX: 1,032,726 |
 | ntruhrss701 (100 executions) | clean | AVG: 214,355,083 <br /> MIN: 214,355,083 <br /> MAX: 214,355,083 | AVG: 5,149,624 <br /> MIN: 5,149,624 <br /> MAX: 5,149,624 | AVG: 14,880,399 <br /> MIN: 14,880,399 <br /> MAX: 14,880,399 |
-| ntruhrss701 (100 executions) | m4 | AVG: 153,182,039 <br /> MIN: 153,182,039 <br /> MAX: 153,182,039 | AVG: 404,905 <br /> MIN: 404,905 <br /> MAX: 404,905 | AVG: 894,739 <br /> MIN: 894,739 <br /> MAX: 894,739 |
+| ntruhrss701 (100 executions) | m4f | AVG: 153,104,418 <br /> MIN: 153,104,418 <br /> MAX: 153,104,418 | AVG: 377,377 <br /> MIN: 377,377 <br /> MAX: 377,377 | AVG: 869,701 <br /> MIN: 869,701 <br /> MAX: 869,701 |
 | ntrulpr653 (100 executions) | ref | AVG: 52,643,753 <br /> MIN: 52,643,753 <br /> MAX: 52,643,753 | AVG: 104,706,486 <br /> MIN: 104,706,486 <br /> MAX: 104,706,486 | AVG: 156,559,108 <br /> MIN: 156,559,108 <br /> MAX: 156,559,108 |
 | ntrulpr761 (100 executions) | m4f | AVG: 830,885 <br /> MIN: 830,885 <br /> MAX: 830,885 | AVG: 1,317,654 <br /> MIN: 1,317,654 <br /> MAX: 1,317,654 | AVG: 1,499,988 <br /> MIN: 1,499,988 <br /> MAX: 1,499,988 |
 | ntrulpr761 (100 executions) | ref | AVG: 71,314,438 <br /> MIN: 71,314,438 <br /> MAX: 71,314,438 | AVG: 141,912,418 <br /> MIN: 141,912,418 <br /> MAX: 141,912,418 | AVG: 212,280,542 <br /> MIN: 212,280,542 <br /> MAX: 212,280,542 |
 | ntrulpr857 (100 executions) | ref | AVG: 90,283,987 <br /> MIN: 90,283,987 <br /> MAX: 90,283,987 | AVG: 179,731,561 <br /> MIN: 179,731,561 <br /> MAX: 179,731,561 | AVG: 268,923,453 <br /> MIN: 268,923,453 <br /> MAX: 268,923,453 |
 | saber (100 executions) | clean | AVG: 2,179,303 <br /> MIN: 2,179,303 <br /> MAX: 2,179,303 | AVG: 2,885,871 <br /> MIN: 2,885,871 <br /> MAX: 2,885,871 | AVG: 3,351,158 <br /> MIN: 3,351,158 <br /> MAX: 3,351,158 |
-| saber (100 executions) | m4 | AVG: 893,994 <br /> MIN: 893,994 <br /> MAX: 893,994 | AVG: 1,162,082 <br /> MIN: 1,162,082 <br /> MAX: 1,162,082 | AVG: 1,198,307 <br /> MIN: 1,198,307 <br /> MAX: 1,198,307 |
+| saber (100 executions) | m4f | AVG: 654,407 <br /> MIN: 654,407 <br /> MAX: 654,407 | AVG: 862,856 <br /> MIN: 862,856 <br /> MAX: 862,856 | AVG: 835,122 <br /> MIN: 835,122 <br /> MAX: 835,122 |
 | sikep434 (100 executions) | m4 | AVG: 48,264,129 <br /> MIN: 48,264,129 <br /> MAX: 48,264,129 | AVG: 78,911,465 <br /> MIN: 78,911,465 <br /> MAX: 78,911,465 | AVG: 84,276,911 <br /> MIN: 84,276,911 <br /> MAX: 84,276,911 |
 | sikep434 (100 executions) | opt | AVG: 643,140,813 <br /> MIN: 643,140,813 <br /> MAX: 643,140,813 | AVG: 1,053,374,539 <br /> MIN: 1,053,374,539 <br /> MAX: 1,053,374,539 | AVG: 1,123,506,035 <br /> MIN: 1,123,506,035 <br /> MAX: 1,123,506,035 |
 | sikep503 (100 executions) | m4 | AVG: 67,365,363 <br /> MIN: 67,365,363 <br /> MAX: 67,365,363 | AVG: 110,846,067 <br /> MIN: 110,846,067 <br /> MAX: 110,846,067 | AVG: 117,993,160 <br /> MIN: 117,993,160 <br /> MAX: 117,993,160 |
@@ -111,7 +111,7 @@
 | Scheme | Implementation | Key Generation [bytes] | Encapsulation [bytes] | Decapsulation [bytes] |
 | ------ | -------------- | ---------------------- | --------------------- | --------------------- |
 | firesaber | clean | 22,700 | 25,556 | 27,036 |
-| firesaber | m4 | 20,124 | 22,972 | 24,452 |
+| firesaber | m4f | 37,116 | 40,484 | 41,964 |
 | frodokem640aes | m4 | 31,992 | 62,488 | 83,104 |
 | frodokem640shake | m4 | 26,600 | 51,976 | 72,592 |
 | frodokem640shake | opt | 36,664 | 58,320 | 78,944 |
@@ -128,21 +128,21 @@
 | kyber768-90s | clean | 11,080 | 14,248 | 15,344 |
 | kyber768-90s | m4 | 3,976 | 3,488 | 3,512 |
 | lightsaber | clean | 10,540 | 12,276 | 13,020 |
-| lightsaber | m4 | 9,652 | 11,388 | 12,132 |
+| lightsaber | m4f | 14,604 | 16,252 | 16,996 |
 | ntruhps2048509 | clean | 11,848 | 6,864 | 5,144 |
-| ntruhps2048509 | m4 | 21,392 | 15,424 | 14,800 |
+| ntruhps2048509 | m4f | 21,392 | 14,068 | 14,800 |
 | ntruhps2048677 | clean | 15,680 | 9,036 | 6,792 |
-| ntruhps2048677 | m4 | 28,504 | 20,576 | 19,728 |
+| ntruhps2048677 | m4f | 28,504 | 9,036 | 19,728 |
 | ntruhps4096821 | clean | 18,968 | 10,924 | 8,408 |
-| ntruhps4096821 | m4 | 34,504 | 24,904 | 23,952 |
+| ntruhps4096821 | m4f | 34,504 | 10,924 | 23,952 |
 | ntruhrss701 | clean | 14,304 | 7,400 | 8,592 |
-| ntruhrss701 | m4 | 27,560 | 19,352 | 20,552 |
+| ntruhrss701 | m4f | 27,560 | 7,400 | 20,552 |
 | ntrulpr653 | ref | 12,204 | 18,468 | 23,012 |
 | ntrulpr761 | m4f | 28,444 | 33,460 | 39,684 |
 | ntrulpr761 | ref | 14,012 | 21,100 | 26,396 |
 | ntrulpr857 | ref | 15,668 | 23,532 | 29,500 |
 | saber | clean | 15,792 | 17,964 | 19,060 |
-| saber | m4 | 13,252 | 15,516 | 16,612 |
+| saber | m4f | 23,284 | 32,620 | 33,824 |
 | sikep434 | m4 | 6,272 | 6,504 | 6,840 |
 | sikep434 | opt | 6,752 | 7,040 | 7,376 |
 | sikep503 | m4 | 6,992 | 7,344 | 7,720 |
@@ -219,7 +219,7 @@
 | Scheme | Implementation | Key Generation [%] | Encapsulation [%] | Decapsulation [%] |
 | ------ | -------------- | ------------------ | ----------------- | ----------------- |
 | firesaber | clean | 19.1% | 18.9% | 14.5% |
-| firesaber | m4 | 49.4% | 49.4% | 40.1% |
+| firesaber | m4f | 70.9% | 70.1% | 60.1% |
 | frodokem640aes | m4 | 74.3% | 77.8% | 77.1% |
 | frodokem640shake | m4 | 85.5% | 86.5% | 86.2% |
 | frodokem640shake | opt | 74.2% | 65.7% | 65.2% |
@@ -236,21 +236,21 @@
 | kyber768-90s | clean | 42.7% | 40.9% | 31.1% |
 | kyber768-90s | m4 | 62.9% | 65.6% | 57.3% |
 | lightsaber | clean | 25.1% | 24.0% | 15.6% |
-| lightsaber | m4 | 56.5% | 55.8% | 42.2% |
+| lightsaber | m4f | 71.6% | 70.5% | 57.0% |
 | ntruhps2048509 | clean | 0.0% | 0.9% | 1.3% |
-| ntruhps2048509 | m4 | 0.0% | 4.6% | 18.9% |
+| ntruhps2048509 | m4f | 0.0% | 4.7% | 19.2% |
 | ntruhps2048677 | clean | 0.0% | 0.7% | 1.0% |
-| ntruhps2048677 | m4 | 0.0% | 4.6% | 16.7% |
+| ntruhps2048677 | m4f | 0.0% | 4.7% | 17.3% |
 | ntruhps4096821 | clean | 0.0% | 0.5% | 0.8% |
-| ntruhps4096821 | m4 | 0.0% | 3.6% | 15.5% |
+| ntruhps4096821 | m4f | 0.0% | 3.8% | 16.1% |
 | ntruhrss701 | clean | 0.0% | 0.8% | 1.0% |
-| ntruhrss701 | m4 | 0.0% | 9.6% | 17.2% |
+| ntruhrss701 | m4f | 0.0% | 10.3% | 17.7% |
 | ntrulpr653 | ref | 0.4% | 0.4% | 0.3% |
 | ntrulpr761 | m4f | 20.8% | 26.2% | 23.0% |
 | ntrulpr761 | ref | 0.4% | 0.4% | 0.2% |
 | ntrulpr857 | ref | 0.3% | 0.3% | 0.2% |
 | saber | clean | 21.8% | 21.3% | 14.9% |
-| saber | m4 | 53.0% | 52.8% | 41.7% |
+| saber | m4f | 71.6% | 71.3% | 59.8% |
 | sikep434 | m4 | 0.0% | 0.1% | 0.1% |
 | sikep434 | opt | 0.0% | 0.0% | 0.0% |
 | sikep503 | m4 | 0.0% | 0.1% | 0.1% |
@@ -327,7 +327,7 @@
 | Scheme | Implementation | .text [bytes] | .data [bytes] | .bss [bytes] | Total [bytes] |
 | ------ | -------------- | ------------- | ------------- | ------------ | ------------- |
 | firesaber | clean | 11,832 | 0 | 0 | 11,832 |
-| firesaber | m4 | 44,424 | 0 | 0 | 44,424 |
+| firesaber | m4f | 10,972 | 0 | 0 | 10,972 |
 | frodokem640aes | m4 | 8,568 | 0 | 0 | 8,568 |
 | frodokem640shake | m4 | 8,644 | 0 | 0 | 8,644 |
 | frodokem640shake | opt | 6,476 | 0 | 0 | 6,476 |
@@ -344,21 +344,21 @@
 | kyber768-90s | clean | 5,332 | 0 | 0 | 5,332 |
 | kyber768-90s | m4 | 10,924 | 0 | 0 | 10,924 |
 | lightsaber | clean | 11,952 | 0 | 0 | 11,952 |
-| lightsaber | m4 | 44,576 | 0 | 0 | 44,576 |
+| lightsaber | m4f | 10,928 | 0 | 0 | 10,928 |
 | ntruhps2048509 | clean | 5,896 | 0 | 0 | 5,896 |
-| ntruhps2048509 | m4 | 89,020 | 0 | 0 | 89,020 |
+| ntruhps2048509 | m4f | 91,656 | 0 | 0 | 91,656 |
 | ntruhps2048677 | clean | 5,908 | 0 | 0 | 5,908 |
-| ntruhps2048677 | m4 | 129,440 | 0 | 0 | 129,440 |
+| ntruhps2048677 | m4f | 142,240 | 0 | 12,288 | 154,528 |
 | ntruhps4096821 | clean | 5,596 | 0 | 0 | 5,596 |
-| ntruhps4096821 | m4 | 154,388 | 0 | 0 | 154,388 |
+| ntruhps4096821 | m4f | 167,356 | 0 | 13,824 | 181,180 |
 | ntruhrss701 | clean | 5,804 | 0 | 0 | 5,804 |
-| ntruhrss701 | m4 | 132,160 | 0 | 0 | 132,160 |
+| ntruhrss701 | m4f | 145,324 | 0 | 12,288 | 157,612 |
 | ntrulpr653 | ref | 4,452 | 0 | 0 | 4,452 |
 | ntrulpr761 | m4f | 114,293 | 0 | 0 | 114,293 |
 | ntrulpr761 | ref | 4,456 | 0 | 0 | 4,456 |
 | ntrulpr857 | ref | 4,564 | 0 | 0 | 4,564 |
 | saber | clean | 11,868 | 0 | 0 | 11,868 |
-| saber | m4 | 44,444 | 0 | 0 | 44,444 |
+| saber | m4f | 11,688 | 0 | 0 | 11,688 |
 | sikep434 | m4 | 29,600 | 0 | 0 | 29,600 |
 | sikep434 | opt | 28,232 | 0 | 0 | 28,232 |
 | sikep503 | m4 | 31,576 | 0 | 0 | 31,576 |
