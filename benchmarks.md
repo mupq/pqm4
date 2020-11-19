@@ -29,10 +29,10 @@
 | ntruhps4096821 (100 executions) | m4f | AVG: 208,835,863 <br /> MIN: 208,835,863 <br /> MAX: 208,835,863 | AVG: 1,028,465 <br /> MIN: 1,028,465 <br /> MAX: 1,028,465 | AVG: 1,032,726 <br /> MIN: 1,032,726 <br /> MAX: 1,032,726 |
 | ntruhrss701 (100 executions) | clean | AVG: 214,355,083 <br /> MIN: 214,355,083 <br /> MAX: 214,355,083 | AVG: 5,149,624 <br /> MIN: 5,149,624 <br /> MAX: 5,149,624 | AVG: 14,880,399 <br /> MIN: 14,880,399 <br /> MAX: 14,880,399 |
 | ntruhrss701 (100 executions) | m4f | AVG: 153,104,418 <br /> MIN: 153,104,418 <br /> MAX: 153,104,418 | AVG: 377,377 <br /> MIN: 377,377 <br /> MAX: 377,377 | AVG: 869,701 <br /> MIN: 869,701 <br /> MAX: 869,701 |
-| ntrulpr653 (100 executions) | ref | AVG: 52,643,753 <br /> MIN: 52,643,753 <br /> MAX: 52,643,753 | AVG: 104,706,486 <br /> MIN: 104,706,486 <br /> MAX: 104,706,486 | AVG: 156,559,108 <br /> MIN: 156,559,108 <br /> MAX: 156,559,108 |
+| ntrulpr653 (100 executions) | clean | AVG: 4,097,458 <br /> MIN: 4,097,458 <br /> MAX: 4,097,458 | AVG: 7,821,693 <br /> MIN: 7,821,693 <br /> MAX: 7,821,693 | AVG: 11,273,153 <br /> MIN: 11,273,153 <br /> MAX: 11,273,153 |
+| ntrulpr761 (100 executions) | clean | AVG: 5,445,686 <br /> MIN: 5,445,686 <br /> MAX: 5,445,686 | AVG: 10,433,316 <br /> MIN: 10,433,316 <br /> MAX: 10,433,316 | AVG: 15,114,288 <br /> MIN: 15,114,288 <br /> MAX: 15,114,288 |
 | ntrulpr761 (100 executions) | m4f | AVG: 830,885 <br /> MIN: 830,885 <br /> MAX: 830,885 | AVG: 1,317,654 <br /> MIN: 1,317,654 <br /> MAX: 1,317,654 | AVG: 1,499,988 <br /> MIN: 1,499,988 <br /> MAX: 1,499,988 |
-| ntrulpr761 (100 executions) | ref | AVG: 71,314,438 <br /> MIN: 71,314,438 <br /> MAX: 71,314,438 | AVG: 141,912,418 <br /> MIN: 141,912,418 <br /> MAX: 141,912,418 | AVG: 212,280,542 <br /> MIN: 212,280,542 <br /> MAX: 212,280,542 |
-| ntrulpr857 (100 executions) | ref | AVG: 90,283,987 <br /> MIN: 90,283,987 <br /> MAX: 90,283,987 | AVG: 179,731,561 <br /> MIN: 179,731,561 <br /> MAX: 179,731,561 | AVG: 268,923,453 <br /> MIN: 268,923,453 <br /> MAX: 268,923,453 |
+| ntrulpr857 (100 executions) | clean | AVG: 6,794,314 <br /> MIN: 6,794,314 <br /> MAX: 6,794,314 | AVG: 13,061,118 <br /> MIN: 13,061,118 <br /> MAX: 13,061,118 | AVG: 18,992,752 <br /> MIN: 18,992,752 <br /> MAX: 18,992,752 |
 | saber (100 executions) | clean | AVG: 2,179,303 <br /> MIN: 2,179,303 <br /> MAX: 2,179,303 | AVG: 2,885,871 <br /> MIN: 2,885,871 <br /> MAX: 2,885,871 | AVG: 3,351,158 <br /> MIN: 3,351,158 <br /> MAX: 3,351,158 |
 | saber (100 executions) | m4f | AVG: 654,407 <br /> MIN: 654,407 <br /> MAX: 654,407 | AVG: 862,856 <br /> MIN: 862,856 <br /> MAX: 862,856 | AVG: 835,122 <br /> MIN: 835,122 <br /> MAX: 835,122 |
 | sikep434 (100 executions) | m4 | AVG: 48,264,129 <br /> MIN: 48,264,129 <br /> MAX: 48,264,129 | AVG: 78,911,465 <br /> MIN: 78,911,465 <br /> MAX: 78,911,465 | AVG: 84,276,911 <br /> MIN: 84,276,911 <br /> MAX: 84,276,911 |
@@ -43,10 +43,10 @@
 | sikep610 (100 executions) | opt | AVG: 1,815,959,387 <br /> MIN: 1,815,959,387 <br /> MAX: 1,815,959,387 | AVG: 3,341,196,195 <br /> MIN: 3,341,196,195 <br /> MAX: 3,341,196,195 | AVG: 3,360,955,305 <br /> MIN: 3,360,955,305 <br /> MAX: 3,360,955,305 |
 | sikep751 (100 executions) | m4 | AVG: 204,646,661 <br /> MIN: 204,646,661 <br /> MAX: 204,646,661 | AVG: 331,934,480 <br /> MIN: 331,934,480 <br /> MAX: 331,934,480 | AVG: 356,425,812 <br /> MIN: 356,425,812 <br /> MAX: 356,425,812 |
 | sikep751 (100 executions) | opt | AVG: 3,288,678,781 <br /> MIN: 3,288,678,781 <br /> MAX: 3,288,678,781 | AVG: 5,333,567,877 <br /> MIN: 5,333,567,877 <br /> MAX: 5,333,567,877 | AVG: 5,728,790,883 <br /> MIN: 5,728,790,883 <br /> MAX: 5,728,790,883 |
-| sntrup653 (100 executions) | ref | AVG: 548,355,501 <br /> MIN: 538,684,068 <br /> MAX: 780,469,915 | AVG: 52,679,631 <br /> MIN: 52,679,618 <br /> MAX: 52,679,632 | AVG: 159,534,443 <br /> MIN: 159,534,442 <br /> MAX: 159,534,473 |
+| sntrup653 (100 executions) | clean | AVG: 107,454,880 <br /> MIN: 105,111,497 <br /> MAX: 144,167,887 | AVG: 4,058,297 <br /> MIN: 4,058,297 <br /> MAX: 4,058,297 | AVG: 11,719,072 <br /> MIN: 11,719,072 <br /> MAX: 11,719,073 |
+| sntrup761 (100 executions) | clean | AVG: 140,229,196 <br /> MIN: 140,229,196 <br /> MAX: 140,229,196 | AVG: 5,393,601 <br /> MIN: 5,393,601 <br /> MAX: 5,393,601 | AVG: 15,823,589 <br /> MIN: 15,823,589 <br /> MAX: 15,823,589 |
 | sntrup761 (100 executions) | m4f | AVG: 11,392,072 <br /> MIN: 11,392,072 <br /> MAX: 11,392,072 | AVG: 794,049 <br /> MIN: 794,049 <br /> MAX: 794,049 | AVG: 743,378 <br /> MIN: 743,378 <br /> MAX: 743,378 |
-| sntrup761 (100 executions) | ref | AVG: 728,600,979 <br /> MIN: 728,600,979 <br /> MAX: 728,600,979 | AVG: 71,354,215 <br /> MIN: 71,354,215 <br /> MAX: 71,354,215 | AVG: 216,152,106 <br /> MIN: 216,152,106 <br /> MAX: 216,152,106 |
-| sntrup857 (100 executions) | ref | AVG: 920,319,337 <br /> MIN: 920,319,337 <br /> MAX: 920,319,337 | AVG: 90,319,892 <br /> MIN: 90,319,892 <br /> MAX: 90,319,892 | AVG: 274,303,217 <br /> MIN: 274,303,217 <br /> MAX: 274,303,217 |
+| sntrup857 (100 executions) | clean | AVG: 177,668,015 <br /> MIN: 177,668,015 <br /> MAX: 177,668,015 | AVG: 6,739,738 <br /> MIN: 6,739,738 <br /> MAX: 6,739,738 | AVG: 19,262,010 <br /> MIN: 19,262,010 <br /> MAX: 19,262,010 |
 ## Signature Schemes
 | scheme | implementation | key generation [cycles] | sign [cycles] | verify [cycles] |
 | ------ | -------------- | ----------------------- | ------------- | --------------- |
@@ -137,10 +137,10 @@
 | ntruhps4096821 | m4f | 34,504 | 10,924 | 23,952 |
 | ntruhrss701 | clean | 14,304 | 7,400 | 8,592 |
 | ntruhrss701 | m4f | 27,560 | 7,400 | 20,552 |
-| ntrulpr653 | ref | 12,204 | 18,468 | 23,012 |
+| ntrulpr653 | clean | 11,864 | 12,048 | 13,416 |
+| ntrulpr761 | clean | 10,784 | 12,376 | 13,864 |
 | ntrulpr761 | m4f | 28,444 | 33,460 | 39,684 |
-| ntrulpr761 | ref | 14,012 | 21,100 | 26,396 |
-| ntrulpr857 | ref | 15,668 | 23,532 | 29,500 |
+| ntrulpr857 | clean | 15,640 | 15,600 | 17,376 |
 | saber | clean | 15,792 | 17,964 | 19,060 |
 | saber | m4f | 23,284 | 32,620 | 33,824 |
 | sikep434 | m4 | 6,272 | 6,504 | 6,840 |
@@ -151,10 +151,10 @@
 | sikep610 | opt | 10,072 | 10,488 | 10,936 |
 | sikep751 | m4 | 12,272 | 12,272 | 12,840 |
 | sikep751 | opt | 11,616 | 11,728 | 12,296 |
-| sntrup653 | ref | 13,972 | 13,964 | 16,660 |
+| sntrup653 | clean | 10,664 | 8,096 | 9,656 |
+| sntrup761 | clean | 12,284 | 9,256 | 11,200 |
 | sntrup761 | m4f | 98,420 | 28,612 | 31,452 |
-| sntrup761 | ref | 16,244 | 15,988 | 19,116 |
-| sntrup857 | ref | 18,260 | 17,868 | 21,404 |
+| sntrup857 | clean | 13,912 | 10,400 | 12,696 |
 ## Signature Schemes
 | Scheme | Implementation | Key Generation [bytes] | Sign [bytes] | Verify [bytes] |
 | ------ | -------------- | ---------------------- | ------------ | -------------- |
@@ -245,10 +245,10 @@
 | ntruhps4096821 | m4f | 0.0% | 3.8% | 16.1% |
 | ntruhrss701 | clean | 0.0% | 0.8% | 1.0% |
 | ntruhrss701 | m4f | 0.0% | 10.3% | 17.7% |
-| ntrulpr653 | ref | 0.4% | 0.4% | 0.3% |
+| ntrulpr653 | clean | 5.4% | 6.0% | 3.5% |
+| ntrulpr761 | clean | 4.6% | 5.1% | 3.0% |
 | ntrulpr761 | m4f | 20.8% | 26.2% | 23.0% |
-| ntrulpr761 | ref | 0.4% | 0.4% | 0.2% |
-| ntrulpr857 | ref | 0.3% | 0.3% | 0.2% |
+| ntrulpr857 | clean | 4.2% | 4.6% | 2.7% |
 | saber | clean | 21.8% | 21.3% | 14.9% |
 | saber | m4f | 71.6% | 71.3% | 59.8% |
 | sikep434 | m4 | 0.0% | 0.1% | 0.1% |
@@ -259,10 +259,10 @@
 | sikep610 | opt | 0.0% | 0.0% | 0.0% |
 | sikep751 | m4 | 0.0% | 0.0% | 0.0% |
 | sikep751 | opt | 0.0% | 0.0% | 0.0% |
-| sntrup653 | ref | 0.0% | 0.4% | 0.1% |
+| sntrup653 | clean | 0.1% | 4.2% | 1.0% |
+| sntrup761 | clean | 0.1% | 3.7% | 0.8% |
 | sntrup761 | m4f | 0.0% | 0.0% | 0.0% |
-| sntrup761 | ref | 0.0% | 0.3% | 0.1% |
-| sntrup857 | ref | 0.0% | 0.3% | 0.0% |
+| sntrup857 | clean | 0.1% | 3.2% | 0.7% |
 ## Signature Schemes
 | Scheme | Implementation | Key Generation [%] | Sign [%] | Verify [%] |
 | ------ | -------------- | ------------------ | -------- | ---------- |
@@ -353,10 +353,10 @@
 | ntruhps4096821 | m4f | 167,356 | 0 | 13,824 | 181,180 |
 | ntruhrss701 | clean | 5,804 | 0 | 0 | 5,804 |
 | ntruhrss701 | m4f | 145,324 | 0 | 12,288 | 157,612 |
-| ntrulpr653 | ref | 4,452 | 0 | 0 | 4,452 |
+| ntrulpr653 | clean | 7,612 | 0 | 0 | 7,612 |
+| ntrulpr761 | clean | 8,100 | 0 | 0 | 8,100 |
 | ntrulpr761 | m4f | 114,293 | 0 | 0 | 114,293 |
-| ntrulpr761 | ref | 4,456 | 0 | 0 | 4,456 |
-| ntrulpr857 | ref | 4,564 | 0 | 0 | 4,564 |
+| ntrulpr857 | clean | 8,340 | 0 | 0 | 8,340 |
 | saber | clean | 11,868 | 0 | 0 | 11,868 |
 | saber | m4f | 11,688 | 0 | 0 | 11,688 |
 | sikep434 | m4 | 29,600 | 0 | 0 | 29,600 |
@@ -367,10 +367,10 @@
 | sikep610 | opt | 19,420 | 0 | 0 | 19,420 |
 | sikep751 | m4 | 33,012 | 0 | 0 | 33,012 |
 | sikep751 | opt | 21,064 | 0 | 0 | 21,064 |
-| sntrup653 | ref | 5,980 | 0 | 0 | 5,980 |
+| sntrup653 | clean | 12,420 | 0 | 0 | 12,420 |
+| sntrup761 | clean | 13,160 | 0 | 0 | 13,160 |
 | sntrup761 | m4f | 146,845 | 40 | 6,952 | 153,837 |
-| sntrup761 | ref | 6,176 | 0 | 0 | 6,176 |
-| sntrup857 | ref | 6,180 | 0 | 0 | 6,180 |
+| sntrup857 | clean | 13,536 | 0 | 0 | 13,536 |
 ## Signature Schemes
 | Scheme | Implementation | .text [bytes] | .data [bytes] | .bss [bytes] | Total [bytes] |
 | ------ | -------------- | ------------- | ------------- | ------------ | ------------- |
