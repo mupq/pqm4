@@ -58,11 +58,9 @@ The benchmarking scripts used in **pqm4** require Python >= 3.6.
 
 ### Installing pyserial
 The host-side Python code requires the [pyserial](https://github.com/pyserial/pyserial) module. 
-Your package repository might offer `python-serial` or `python-pyserial` directly 
-(as of writing, this is the case for Ubuntu, Debian and Arch). 
-Alternatively, this can be easily installed from PyPA by calling `pip install -r requirements.txt` 
-(or `pip3`, depending on your system). 
-If you do not have `pip` installed yet, you can typically find it as `python3-pip` using your package manager. 
+Your package repository might offer `python3-serial` (Debian, Ubuntu) or `python-pyserial` (Arch) or `python3-pyserial` (Fedora, openSUSE) or `pyserial` (Slack, CentOS, Gentoo) or `py3-pyserial` (Alpine) directly.
+Alternatively, this can be easily installed from PyPA by calling `pip3 install -r requirements.txt`.
+If you do not have `pip3` installed yet, you can typically find it as `python3-pip` (Debian, Ubuntu) or `python-pip` (Arch) using your package manager.
 
 ### Connecting the board to the host
 Connect the board to your host machine using the mini-USB port. 
