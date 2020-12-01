@@ -7,6 +7,8 @@
 | frodokem640aes (100 executions) | m4 | AVG: 48,348,105 <br /> MIN: 48,348,105 <br /> MAX: 48,348,105 | AVG: 47,130,922 <br /> MIN: 47,130,922 <br /> MAX: 47,130,922 | AVG: 46,594,383 <br /> MIN: 46,594,383 <br /> MAX: 46,594,383 |
 | frodokem640shake (100 executions) | m4 | AVG: 79,325,705 <br /> MIN: 79,325,705 <br /> MAX: 79,325,705 | AVG: 79,699,757 <br /> MIN: 79,699,757 <br /> MAX: 79,699,757 | AVG: 79,145,449 <br /> MIN: 79,145,449 <br /> MAX: 79,145,449 |
 | frodokem640shake (100 executions) | opt | AVG: 91,896,318 <br /> MIN: 91,896,318 <br /> MAX: 91,896,318 | AVG: 104,912,447 <br /> MIN: 104,912,447 <br /> MAX: 104,912,447 | AVG: 104,638,561 <br /> MIN: 104,638,561 <br /> MAX: 104,638,561 |
+| hqc-128 (100 executions) | clean | AVG: 2,132,416 <br /> MIN: 2,125,906 <br /> MAX: 2,161,455 | AVG: 6,665,059 <br /> MIN: 6,655,059 <br /> MAX: 6,697,264 | AVG: 9,664,004 <br /> MIN: 9,645,881 <br /> MAX: 9,725,177 |
+| hqc-rmrs-128 (100 executions) | clean | AVG: 1,847,396 <br /> MIN: 1,844,043 <br /> MAX: 1,862,775 | AVG: 4,456,732 <br /> MIN: 4,445,936 <br /> MAX: 4,488,450 | AVG: 7,413,041 <br /> MIN: 7,399,014 <br /> MAX: 7,458,060 |
 | kyber1024 (100 executions) | clean | AVG: 1,901,335 <br /> MIN: 1,900,859 <br /> MAX: 1,901,899 | AVG: 2,260,972 <br /> MIN: 2,260,496 <br /> MAX: 2,261,536 | AVG: 2,416,774 <br /> MIN: 2,416,298 <br /> MAX: 2,417,338 |
 | kyber1024 (100 executions) | m4 | AVG: 1,430,558 <br /> MIN: 1,430,058 <br /> MAX: 1,431,255 | AVG: 1,626,057 <br /> MIN: 1,625,562 <br /> MAX: 1,626,720 | AVG: 1,545,585 <br /> MIN: 1,545,090 <br /> MAX: 1,546,248 |
 | kyber1024-90s (100 executions) | clean | AVG: 1,472,425 <br /> MIN: 1,472,014 <br /> MAX: 1,472,782 | AVG: 1,720,606 <br /> MIN: 1,720,195 <br /> MAX: 1,720,963 | AVG: 1,973,517 <br /> MIN: 1,973,106 <br /> MAX: 1,973,874 |
@@ -115,6 +117,8 @@
 | frodokem640aes | m4 | 31,992 | 62,488 | 83,104 |
 | frodokem640shake | m4 | 26,600 | 51,976 | 72,592 |
 | frodokem640shake | opt | 36,664 | 58,320 | 78,944 |
+| hqc-128 | clean | 64,864 | 85,904 | 93,928 |
+| hqc-rmrs-128 | clean | 56,128 | 74,200 | 82,016 |
 | kyber1024 | clean | 15,164 | 18,844 | 20,420 |
 | kyber1024 | m4 | 3,788 | 3,484 | 3,516 |
 | kyber1024-90s | clean | 15,736 | 19,416 | 20,332 |
@@ -223,6 +227,8 @@
 | frodokem640aes | m4 | 74.3% | 77.8% | 77.1% |
 | frodokem640shake | m4 | 85.5% | 86.5% | 86.2% |
 | frodokem640shake | opt | 74.2% | 65.7% | 65.2% |
+| hqc-128 | clean | 14.1% | 11.8% | 8.7% |
+| hqc-rmrs-128 | clean | 14.3% | 15.6% | 10.1% |
 | kyber1024 | clean | 58.4% | 57.7% | 47.1% |
 | kyber1024 | m4 | 77.5% | 80.1% | 73.5% |
 | kyber1024-90s | clean | 44.8% | 43.2% | 34.4% |
@@ -331,6 +337,8 @@
 | frodokem640aes | m4 | 8,568 | 0 | 0 | 8,568 |
 | frodokem640shake | m4 | 8,644 | 0 | 0 | 8,644 |
 | frodokem640shake | opt | 6,476 | 0 | 0 | 6,476 |
+| hqc-128 | clean | 26,395 | 0 | 0 | 26,395 |
+| hqc-rmrs-128 | clean | 21,772 | 0 | 0 | 21,772 |
 | kyber1024 | clean | 5,752 | 0 | 0 | 5,752 |
 | kyber1024 | m4 | 11,580 | 0 | 0 | 11,580 |
 | kyber1024-90s | clean | 5,896 | 0 | 0 | 5,896 |
