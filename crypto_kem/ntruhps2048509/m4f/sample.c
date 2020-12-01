@@ -1,3 +1,4 @@
+#include "crypto_sort.h"
 #include "sample.h"
 #include "fips202.h"
 
@@ -21,7 +22,6 @@ void sample_iid(poly *r, const unsigned char uniformbytes[NTRU_SAMPLE_IID_BYTES]
     r->coeffs[NTRU_N - 1] = 0;
 }
 
-#include "crypto_sort.h"
 void sample_fixed_type(poly *r, const unsigned char u[NTRU_SAMPLE_FT_BYTES]) {
     // Assumes NTRU_SAMPLE_FT_BYTES = ceil(30*(n-1)/8)
 
@@ -33,7 +33,7 @@ void sample_fixed_type(poly *r, const unsigned char u[NTRU_SAMPLE_FT_BYTES]) {
         s[4 * i + 0] =                                  (u[15 * i +  0] << 2) + (u[15 * i +  1] << 10) + (u[15 * i +  2] << 18) + ((uint32_t) u[15 * i + 3] << 26);
         s[4 * i + 1] = ((u[15 * i +  3] & 0xc0) >> 4) + (u[15 * i +  4] << 4) + (u[15 * i +  5] << 12) + (u[15 * i +  6] << 20) + ((uint32_t) u[15 * i + 7] << 28);
         s[4 * i + 2] = ((u[15 * i +  7] & 0xf0) >> 2) + (u[15 * i +  8] << 6) + (u[15 * i +  9] << 14) + (u[15 * i + 10] << 22) + ((uint32_t) u[15 * i + 11] << 30);
-        s[4 * i + 3] =  (u[15 * i + 11] & 0xfc)       + (u[15 * i + 12] << 8) + (u[15 * i + 13] << 15) + ((uint32_t) u[15 * i + 14] << 24);
+        s[4 * i + 3] =  (u[15 * i + 11] & 0xfc)       + (u[15 * i + 12] << 8) + (u[15 * i + 13] << 16) + ((uint32_t) u[15 * i + 14] << 24);
     }
 
     for (i = 0; i < NTRU_WEIGHT / 2; i++) {
