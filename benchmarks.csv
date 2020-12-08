@@ -2,11 +2,11 @@ Speed Evaluation,,,,,,,,,,
 Key Encapsulation Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [cycles] (mean),Key Generation [cycles] (min),Key Generation [cycles] (max),Encapsulation [cycles] (mean),Encapsulation [cycles] (min),Encapsulation [cycles] (max),Decapsulation [cycles] (mean),Decapsulation [cycles] (min),Decapsulation [cycles] (max)
 firesaber (1 executions),clean,3748435,3748435,3748435,4660830,4660830,4660830,5108568,5108568,5108568
-firesaber (1 executions),m4f,981367,981367,981367,1196359,1196359,1196359,1141368,1141368,1141368
+firesaber (1 executions),m4f,978537,978537,978537,1193409,1193409,1193409,1138295,1138295,1138295
 lightsaber (1 executions),clean,1034702,1034702,1034702,1512452,1512452,1512452,1824151,1824151,1824151
-lightsaber (1 executions),m4f,351863,351863,351863,484963,484963,484963,456085,456085,456085
+lightsaber (1 executions),m4f,351155,351155,351155,483551,483551,483551,453969,453969,453969
 saber (1 executions),clean,2182941,2182941,2182941,2890738,2890738,2890738,3357169,3357169,3357169
-saber (1 executions),m4f,638608,638608,638608,820306,820306,820306,770998,770998,770998
+saber (1 executions),m4f,637570,637570,637570,818618,818618,818618,769216,769216,769216
 Memory Evaluation,,,,,,,,,,
 Key Encapsulation Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [bytes],Encapsulation [bytes],Decapsulation [bytes],,,,,,
@@ -20,17 +20,17 @@ Hashing Evaluation,,,,,,,,,,
 Key Encapsulation Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [%],Encapsulation [%],Decapsulation [%],,,,,,
 firesaber,clean,19.1,18.9,14.5,,,,,,
-firesaber,m4f,72.8,73.6,64.9,,,,,,
+firesaber,m4f,73.1,73.8,65.0,,,,,,
 lightsaber,clean,25.1,24.0,15.6,,,,,,
-lightsaber,m4f,73.6,74.7,62.4,,,,,,
+lightsaber,m4f,73.8,74.9,62.6,,,,,,
 saber,clean,21.7,21.3,14.9,,,,,,
-saber,m4f,74.1,74.9,64.7,,,,,,
+saber,m4f,74.3,75.1,64.9,,,,,,
 Size Evaluation,,,,,,,,,,
 Key Encapsulation Schemes,,,,,,,,,,
 Scheme,Implementation,.text [bytes],.data [bytes],.bss [bytes],Total [bytes],,,,,
 firesaber,clean,11832,0,0,11832,,,,,
-firesaber,m4f,9916,0,0,9916,,,,,
+firesaber,m4f,9928,0,0,9928,,,,,
 lightsaber,clean,11952,0,0,11952,,,,,
-lightsaber,m4f,9580,0,0,9580,,,,,
+lightsaber,m4f,9596,0,0,9596,,,,,
 saber,clean,11868,0,0,11868,,,,,
-saber,m4f,9996,0,0,9996,,,,,
+saber,m4f,10008,0,0,10008,,,,,
