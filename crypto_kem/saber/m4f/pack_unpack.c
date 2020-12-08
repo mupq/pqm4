@@ -146,44 +146,58 @@ This is equivalent to a central reduction, as needed by the NTT */
 static void BS2POLp(const uint8_t bytes[SABER_POLYCOMPRESSEDBYTES], uint16_t data[SABER_N])
 {
     size_t j;
-    size_t offset_in = 0, offset_out = 0;
     const uint8_t *in = bytes;
     int16_t *out = (int16_t *)data;
 
     struct int10_t { // bitfield struct to sign-extend p-bit to 16-bit.
 signed int bits:
         SABER_EP;
-    } p1, p2, p3, p4;
+    } p0, p1, p2, p3;
 
-    for (j = 0; j < SABER_N / 4; j++) {
-        p1.bits = (in[offset_in + 0] & 0xff) | ((in[offset_in + 1] & 0x03) << 8);
-        p2.bits = ((in[offset_in + 1] >> 2) & (0x3f)) | ((in[offset_in + 2] & 0x0f) << 6);
-        p3.bits = ((in[offset_in + 2] >> 4) & (0x0f)) | ((in[offset_in + 3] & 0x3f) << 4);
-        p4.bits = ((in[offset_in + 3] >> 6) & (0x03)) | ((in[offset_in + 4] & 0xff) << 2);
-        out[offset_out + 0] = (int16_t)p1.bits;
-        out[offset_out + 1] = (int16_t)p2.bits;
-        out[offset_out + 2] = (int16_t)p3.bits;
-        out[offset_out + 3] = (int16_t)p4.bits;
-        offset_in += 5;
-        offset_out += 4;
+    for (j = 0; j < SABER_N / 4; j++) { //TODO: double-check that this sign-extends correctly
+        p0.bits = (in[0]) | (in[1] << 8);
+        p1.bits = (in[1] >> 2) | (in[2] << 6);
+        p2.bits = (in[2] >> 4) | (in[3] << 4);
+        p3.bits = (in[3] >> 6) | (in[4] << 2);
+        out[0] = (int16_t)p0.bits;
+        out[1] = (int16_t)p1.bits;
+        out[2] = (int16_t)p2.bits;
+        out[3] = (int16_t)p3.bits;
+        in += 5;
+        out += 4;
     }
 }
 
-/* This function does NOT reduce its output mod q */
+/* This function sign-extends its output from q-bit to 16-bit.
+This is equivalent to a central reduction, as needed by the NTT */
 void BS2POLq(const uint8_t bytes[SABER_POLYBYTES], uint16_t data[SABER_N])
 {
     size_t i;
     const uint8_t *in = bytes;
-    uint16_t *out = &data[0];
+    int16_t *out = (int16_t *)data;
+
+    struct int13_t { // bitfield struct to sign-extend p-bit to 16-bit.
+signed int bits:
+        SABER_EQ;
+    } q0, q1, q2, q3, q4, q5, q6, q7;
+
     for (i = 0; i < SABER_N / 8; i++) {
-        out[0] = (in[0]) | (in[1] << 8);
-        out[1] = (in[1] >> 5) | (in[2] << 3) | (in[3] << 11);
-        out[2] = (in[3] >> 2) | (in[4] << 6);
-        out[3] = (in[4] >> 7) | (in[5] << 1) | (in[6] << 9);
-        out[4] = (in[6] >> 4) | (in[7] << 4) | (in[8] << 12);
-        out[5] = (in[8] >> 1) | (in[9] << 7);
-        out[6] = (in[9] >> 6) | (in[10] << 2) | (in[11] << 10);
-        out[7] = (in[11] >> 3) | (in[12] << 5);
+        q0.bits = (in[0]) | (in[1] << 8);
+        q1.bits = (in[1] >> 5) | (in[2] << 3) | (in[3] << 11);
+        q2.bits = (in[3] >> 2) | (in[4] << 6);
+        q3.bits = (in[4] >> 7) | (in[5] << 1) | (in[6] << 9);
+        q4.bits = (in[6] >> 4) | (in[7] << 4) | (in[8] << 12);
+        q5.bits = (in[8] >> 1) | (in[9] << 7);
+        q6.bits = (in[9] >> 6) | (in[10] << 2) | (in[11] << 10);
+        q7.bits = (in[11] >> 3) | (in[12] << 5);
+        out[0] = (int16_t)q0.bits;
+        out[1] = (int16_t)q1.bits;
+        out[2] = (int16_t)q2.bits;
+        out[3] = (int16_t)q3.bits;
+        out[4] = (int16_t)q4.bits;
+        out[5] = (int16_t)q5.bits;
+        out[6] = (int16_t)q6.bits;
+        out[7] = (int16_t)q7.bits;
         in += 13;
         out += 8;
     }
@@ -275,7 +289,7 @@ void BS2POLVECq(const uint8_t bytes[SABER_POLYVECBYTES], uint16_t data[SABER_L][
 {
     size_t i;
     for (i = 0; i < SABER_L; i++) {
-        /* This function does NOT reduce its output mod q */
+        /* This function sign-extends its output from q-bit to 16-bit */
         BS2POLq(&bytes[i * SABER_POLYBYTES], data[i]);
     }
 }
@@ -306,13 +320,13 @@ static void BS2POL4(const uint8_t bytes[SABER_N / 2], uint16_t data[SABER_N])
 
     struct int4_t { // bitfield struct to sign-extend 4-bit to 16-bit.
         signed int bits: 4;
-    } s1, s2;
+    } s0, s1;
 
     for (j = 0; j < SABER_N / 2; j++) {
-        s1.bits = (in[0] & 0xf);
-        s2.bits = (in[0] >> 4) & 0xf;
-        out[0] = (int16_t) s1.bits;
-        out[1] = (int16_t) s2.bits;
+        s0.bits = (in[0] & 0xf);
+        s1.bits = (in[0] >> 4) & 0xf;
+        out[0] = (int16_t) s0.bits;
+        out[1] = (int16_t) s1.bits;
         in += 1;
         out += 2;
     }
