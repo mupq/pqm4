@@ -25,8 +25,8 @@
 .cpu cortex-m4
 
 .align 2
-.global NTT_forward
-.type NTT_forward, %function
+.global _NTT_forward
+.type _NTT_forward, %function
 
 // r0 --> src
 // r1 --> root
@@ -34,7 +34,7 @@
 // r3 --> M_inv
 // sp --> dest
 
-NTT_forward:
+_NTT_forward:
 push.w {r4-r12, r14}
 vldr.w s8, [sp, #40]
 vldm.w r1!, {s0-s6}

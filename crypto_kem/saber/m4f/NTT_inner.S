@@ -25,8 +25,8 @@
 .cpu cortex-m4
 
 .align 2
-.global NTT_forward_pk
-.type NTT_forward_pk, %function
+.global _NTT_forward_inner
+.type _NTT_forward_inner, %function
 
 // r0 --> src
 // r1 --> root
@@ -34,7 +34,7 @@
 // r3 --> M_inv
 // sp --> dest
 
-NTT_forward_pk:
+_NTT_forward_inner:
 push.w {r4-r12, r14}
 vldr.w s8, [sp, #40]
 vldm.w r1!, {s0-s6}
@@ -48,8 +48,8 @@ _1_2_3:
 // s10 --> outer counter
 // s11 --> inner counter
 
-add.w r12, r0, #1024 // set outer counter
-vmov.w s10, r12
+@ add.w r12, r0, #1536 // set outer counter
+@ vmov.w s10, r12
 
 // 828 bytes
 .align 2
@@ -68,17 +68,6 @@ outer_loop_1_2_3:
         ldrsh.w r9, [r0, #320]
         ldrsh.w r10, [r0, #384]
         ldrsh.w r11, [r0, #448]
-
-        mov.w r1, #512
-        add.w r12, r1, r1
-        central_reduce r4, r1, r12
-        central_reduce r5, r1, r12
-        central_reduce r6, r1, r12
-        central_reduce r7, r1, r12
-        central_reduce r8, r1, r12
-        central_reduce r9, r1, r12
-        central_reduce r10, r1, r12
-        central_reduce r11, r1, r12
 
         // level 1
         vmov.w r1, s0
@@ -129,17 +118,6 @@ outer_loop_1_2_3:
         ldrsh.w r9, [r0, #322]
         ldrsh.w r10, [r0, #386]
         ldrsh.w r11, [r0, #450]
-
-        mov.w r1, #512
-        add.w r12, r1, r1
-        central_reduce r4, r1, r12
-        central_reduce r5, r1, r12
-        central_reduce r6, r1, r12
-        central_reduce r7, r1, r12
-        central_reduce r8, r1, r12
-        central_reduce r9, r1, r12
-        central_reduce r10, r1, r12
-        central_reduce r11, r1, r12
 
         // level 1
         vmov.w r1, s0
@@ -194,15 +172,16 @@ outer_loop_1_2_3:
     add.w r1, #896
     vmov.w s8, r1
     add.w r0, #448
-    vmov.w r5, s10
-    cmp.w r0, r5
-    bne.w outer_loop_1_2_3
+    @ vmov.w r5, s10
+    @ cmp.w r0, r5
+    @ bne.w outer_loop_1_2_3
 
 .align 2
 _4_5_6:
 
 vmov.w r0, s8
-sub.w r0, #2048 // reset pointer
+sub.w r0, #1024 // reset pointer
+@ sub.w r0, #3072 // reset pointer
 add.w r1, r0, #1024   // outer iteration set counter
 vmov.w s10, r1
 
@@ -268,55 +247,105 @@ normal_4_5_6_outer:
         str.w r10, [r0, #96]
         str.w r11, [r0, #112]
 
-        ldr.w r4, [r0, #1024]
-        ldr.w r5, [r0, #1040]
-        ldr.w r6, [r0, #1056]
-        ldr.w r7, [r0, #1072]
-        ldr.w r8, [r0, #1088]
-        ldr.w r9, [r0, #1104]
-        ldr.w r10, [r0, #1120]
-        ldr.w r11, [r0, #1136]
+        @ ldr.w r4, [r0, #1024]
+        @ ldr.w r5, [r0, #1040]
+        @ ldr.w r6, [r0, #1056]
+        @ ldr.w r7, [r0, #1072]
+        @ ldr.w r8, [r0, #1088]
+        @ ldr.w r9, [r0, #1104]
+        @ ldr.w r10, [r0, #1120]
+        @ ldr.w r11, [r0, #1136]
 
-        // level 4
-        vmov.w r1, s0
-        montgomery_mul r8, r1, r12, r8, r14, r3, r2
-        montgomery_mul r9, r1, r12, r9, r14, r3, r2
-        montgomery_mul r10, r1, r12, r10, r14, r3, r2
-        montgomery_mul r11, r1, r12, r11, r14, r3, r2
+        @ // level 4
+        @ vmov.w r1, s0
+        @ montgomery_mul r8, r1, r12, r8, r14, r3, r2
+        @ montgomery_mul r9, r1, r12, r9, r14, r3, r2
+        @ montgomery_mul r10, r1, r12, r10, r14, r3, r2
+        @ montgomery_mul r11, r1, r12, r11, r14, r3, r2
 
-        add_sub r4, r8, r5, r9, r6, r10, r7, r11
+        @ add_sub r4, r8, r5, r9, r6, r10, r7, r11
 
-        // level 5
-        vmov.w r1, s1
-        montgomery_mul r6, r1, r12, r6, r14, r3, r2
-        montgomery_mul r7, r1, r12, r7, r14, r3, r2
-        vmov.w r1, s2
-        montgomery_mul r10, r1, r12, r10, r14, r3, r2
-        montgomery_mul r11, r1, r12, r11, r14, r3, r2
+        @ // level 5
+        @ vmov.w r1, s1
+        @ montgomery_mul r6, r1, r12, r6, r14, r3, r2
+        @ montgomery_mul r7, r1, r12, r7, r14, r3, r2
+        @ vmov.w r1, s2
+        @ montgomery_mul r10, r1, r12, r10, r14, r3, r2
+        @ montgomery_mul r11, r1, r12, r11, r14, r3, r2
 
-        add_sub r4, r6, r5, r7, r8, r10, r9, r11
+        @ add_sub r4, r6, r5, r7, r8, r10, r9, r11
 
-        // level 6
-        vmov.w r1, s3
-        montgomery_mul r5, r1, r12, r5, r14, r3, r2
-        vmov.w r1, s4
-        montgomery_mul r7, r1, r12, r7, r14, r3, r2
-        vmov.w r1, s5
-        montgomery_mul r9, r1, r12, r9, r14, r3, r2
-        vmov.w r1, s6
-        montgomery_mul r11, r1, r12, r11, r14, r3, r2
+        @ // level 6
+        @ vmov.w r1, s3
+        @ montgomery_mul r5, r1, r12, r5, r14, r3, r2
+        @ vmov.w r1, s4
+        @ montgomery_mul r7, r1, r12, r7, r14, r3, r2
+        @ vmov.w r1, s5
+        @ montgomery_mul r9, r1, r12, r9, r14, r3, r2
+        @ vmov.w r1, s6
+        @ montgomery_mul r11, r1, r12, r11, r14, r3, r2
 
-        add_sub r4, r5, r6, r7, r8, r9, r10, r11
+        @ add_sub r4, r5, r6, r7, r8, r9, r10, r11
 
-        // save
-        str.w r4, [r0, #1024]
-        str.w r5, [r0, #1040]
-        str.w r6, [r0, #1056]
-        str.w r7, [r0, #1072]
-        str.w r8, [r0, #1088]
-        str.w r9, [r0, #1104]
-        str.w r10, [r0, #1120]
-        str.w r11, [r0, #1136]
+        @ // save
+        @ str.w r4, [r0, #1024]
+        @ str.w r5, [r0, #1040]
+        @ str.w r6, [r0, #1056]
+        @ str.w r7, [r0, #1072]
+        @ str.w r8, [r0, #1088]
+        @ str.w r9, [r0, #1104]
+        @ str.w r10, [r0, #1120]
+        @ str.w r11, [r0, #1136]
+
+        @ ldr.w r4, [r0, #2048]
+        @ ldr.w r5, [r0, #2064]
+        @ ldr.w r6, [r0, #2080]
+        @ ldr.w r7, [r0, #2096]
+        @ ldr.w r8, [r0, #2112]
+        @ ldr.w r9, [r0, #2128]
+        @ ldr.w r10, [r0, #2144]
+        @ ldr.w r11, [r0, #2160]
+
+        @ // level 4
+        @ vmov.w r1, s0
+        @ montgomery_mul r8, r1, r12, r8, r14, r3, r2
+        @ montgomery_mul r9, r1, r12, r9, r14, r3, r2
+        @ montgomery_mul r10, r1, r12, r10, r14, r3, r2
+        @ montgomery_mul r11, r1, r12, r11, r14, r3, r2
+
+        @ add_sub r4, r8, r5, r9, r6, r10, r7, r11
+
+        @ // level 5
+        @ vmov.w r1, s1
+        @ montgomery_mul r6, r1, r12, r6, r14, r3, r2
+        @ montgomery_mul r7, r1, r12, r7, r14, r3, r2
+        @ vmov.w r1, s2
+        @ montgomery_mul r10, r1, r12, r10, r14, r3, r2
+        @ montgomery_mul r11, r1, r12, r11, r14, r3, r2
+
+        @ add_sub r4, r6, r5, r7, r8, r10, r9, r11
+
+        @ // level 6
+        @ vmov.w r1, s3
+        @ montgomery_mul r5, r1, r12, r5, r14, r3, r2
+        @ vmov.w r1, s4
+        @ montgomery_mul r7, r1, r12, r7, r14, r3, r2
+        @ vmov.w r1, s5
+        @ montgomery_mul r9, r1, r12, r9, r14, r3, r2
+        @ vmov.w r1, s6
+        @ montgomery_mul r11, r1, r12, r11, r14, r3, r2
+
+        @ add_sub r4, r5, r6, r7, r8, r9, r10, r11
+
+        @ // save
+        @ str.w r4, [r0, #2048]
+        @ str.w r5, [r0, #2064]
+        @ str.w r6, [r0, #2080]
+        @ str.w r7, [r0, #2096]
+        @ str.w r8, [r0, #2112]
+        @ str.w r9, [r0, #2128]
+        @ str.w r10, [r0, #2144]
+        @ str.w r11, [r0, #2160]
 
         add.w r0, #4
         vmov.w r4, s11

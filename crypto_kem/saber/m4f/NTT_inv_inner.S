@@ -31,15 +31,15 @@
 // sp -> output
 // sp + 4 --> 1023
 .align 2
-.global NTT_inv_inner
-.type NTT_inv_inner, %function
-NTT_inv_inner:
+.global _NTT_inv_inner
+.type _NTT_inv_inner, %function
+_NTT_inv_inner:
 // s9 --> root
 // s12 --> output
 // s13 --> 8191
 push.w {r4-r12, lr}
 vldr.w s12, [sp, #40]
-vldr.w s13, [sp, #44]
+@ vldr.w s13, [sp, #44]
 vmov.w s9, r1
 
 .align 2
@@ -186,26 +186,26 @@ outer_loop_3_2_1:
         montgomery_mul r6, r1, r12, r6, r14, r3, r2
         montgomery_mul r7, r1, r12, r7, r14, r3, r2
         // reduce and back to unsigned
-        mov.w r1, r2, lsr #1  // Mhalf
-        central_reduce r4, r1, r2
-        central_reduce r5, r1, r2
-        central_reduce r6, r1, r2
-        central_reduce r7, r1, r2
-        central_reduce r8, r1, r2
-        central_reduce r9, r1, r2
-        central_reduce r10, r1, r2
-        central_reduce r11, r1, r2
+        @ mov.w r1, r2, lsr #1  // Mhalf
+        @ central_reduce r4, r1, r2
+        @ central_reduce r5, r1, r2
+        @ central_reduce r6, r1, r2
+        @ central_reduce r7, r1, r2
+        @ central_reduce r8, r1, r2
+        @ central_reduce r9, r1, r2
+        @ central_reduce r10, r1, r2
+        @ central_reduce r11, r1, r2
 
         // & lower 13 bits
-        vmov.w r1, s13
-        and.w r4, r4, r1
-        and.w r5, r5, r1
-        and.w r6, r6, r1
-        and.w r7, r7, r1
-        and.w r8, r8, r1
-        and.w r9, r9, r1
-        and.w r10, r10, r1
-        and.w r11, r11, r1
+        @ vmov.w r1, s13
+        @ and.w r4, r4, r1
+        @ and.w r5, r5, r1
+        @ and.w r6, r6, r1
+        @ and.w r7, r7, r1
+        @ and.w r8, r8, r1
+        @ and.w r9, r9, r1
+        @ and.w r10, r10, r1
+        @ and.w r11, r11, r1
 
         vmov.w r1, s12
         strh.w r4, [r1, #0]
