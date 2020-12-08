@@ -61,9 +61,7 @@ class M4Settings(mupq.PlatformSettings):
         {'scheme': 'mceliece6960119f', 'implementation': 'vec'},
         {'scheme': 'mceliece8192128', 'implementation': 'vec'},
         {'scheme': 'mceliece8192128f', 'implementation': 'vec'},
-        {'scheme': 'hqc-192', 'implementation': 'clean'},
         {'scheme': 'hqc-rmrs-192', 'implementation': 'clean'},
-        {'scheme': 'hqc-256', 'implementation': 'clean'},
         {'scheme': 'hqc-rmrs-256', 'implementation': 'clean'},
     )
 
