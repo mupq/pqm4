@@ -2,6 +2,21 @@
 #include "poly.h"
 #include "sample.h"
 
+static int owcpa_check_ciphertext(const unsigned char *ciphertext) {
+    /* A ciphertext is log2(q)*(n-1) bits packed into bytes.  */
+    /* Check that any unused bits of the final byte are zero. */
+
+    uint16_t t = 0;
+
+    t = ciphertext[NTRU_CIPHERTEXTBYTES - 1];
+    t &= 0xff << (8 - (7 & (NTRU_LOGQ * NTRU_PACK_DEG)));
+
+    /* We have 0 <= t < 256 */
+    /* Return 0 on success (t=0), 1 on failure */
+    return (int) (1 & ((~t + 1) >> 15));
+}
+
+
 static int owcpa_check_r(const poly *r) {
     /* Check that r is in message space. */
     /* Note: Assumes that r has coefficients in {0, 1, ..., q-1} */
@@ -144,11 +159,15 @@ int owcpa_dec(unsigned char *rm,
     poly_S3_mul(m, mf, finv3);
     poly_S3_tobytes(rm + NTRU_PACK_TRINARY_BYTES, m);
 
+    fail = 0;
+
+    /* Check that the unused bits of the last byte of the ciphertext are zero */
+    fail |= owcpa_check_ciphertext(ciphertext);
+
     /* NOTE: For the IND-CCA2 KEM we must ensure that c = Enc(h, (r,m)).       */
     /* We can avoid re-computing r*h + Lift(m) as long as we check that        */
     /* r (defined as b/h mod (q, Phi_n)) and m are in the message space.       */
     /* (m can take any value in S3 in NTRU_HRSS) */
-    fail = 0;
     fail |= owcpa_check_m(m);
 
     /* b = c - Lift(m) mod (q, x^n - 1) */
