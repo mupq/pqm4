@@ -1,1 +1,1 @@
-../../kyber768-90s/m4/cbd.h
+../../kyber512/m4/cbd.h
