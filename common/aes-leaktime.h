@@ -1,5 +1,5 @@
-#ifndef AES_H
-#define AES_H
+#ifndef AES_LEAKTIME_H
+#define AES_LEAKTIME_H
 
 #include <stdint.h>
 #include <stdlib.h>
