@@ -29,10 +29,11 @@ TYPE=kem
 
 COMMONSOURCES=mupq/common/fips202.c mupq/common/sp800-185.c mupq/common/nistseedexpander.c
 COMMONSOURCES_HOST=$(COMMONSOURCES) mupq/common/keccakf1600.c mupq/pqclean/common/aes.c mupq/pqclean/common/sha2.c
-COMMONSOURCES_M4=$(COMMONSOURCES) common/keccakf1600.S mupq/common/aes.c common/aes.S mupq/common/sha2.c common/crypto_hashblocks_sha512.c common/crypto_hashblocks_sha512_inner32.s
+COMMONSOURCES_M4=$(COMMONSOURCES) common/keccakf1600.S common/aes.c common/aes-encrypt.S common/aes-keyschedule.S common/aes-leaktime.c common/aes-leaktime.S mupq/common/sha2.c common/crypto_hashblocks_sha512.c common/crypto_hashblocks_sha512_inner32.s
 
 COMMONINCLUDES=-I"mupq/common"
 COMMONINCLUDES_M4=$(COMMONINCLUDES) -I"common"
+COMMONINCLUDES_HOST=$(COMMONINCLUDES) -I"mupq/pqclean/common"
 
 RANDOMBYTES_M4=common/randombytes.c
 
@@ -70,7 +71,7 @@ $(DEST_HOST)/%_testvectors: $(COMMONSOURCES_HOST) $(IMPLEMENTATION_SOURCES) $(IM
 		$(COMMONSOURCES_HOST) \
 		$(IMPLEMENTATION_SOURCES) \
 		-I$(IMPLEMENTATION_PATH) \
-		$(COMMONINCLUDES) \
+		$(COMMONINCLUDES_HOST) \
 		$(LDFLAGS_HOST)
 
 $(DEST)/%.bin: elf/%.elf

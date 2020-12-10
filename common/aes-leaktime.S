@@ -73,12 +73,12 @@ AES_Te0:
 .size AES_Te0,.-AES_Te0
 
 .section .text.aes128
-@ void aes128_keyexp_asm(const uint8_t *key,
+@ void aes128_keyexp_leaktime_asm(const uint8_t *key,
 @       uint8_t *rk) {
-.global aes128_keyexp_asm
-.type   aes128_keyexp_asm,%function
+.global aes128_keyexp_leaktime_asm
+.type   aes128_keyexp_leaktime_asm,%function
 .align 2
-aes128_keyexp_asm:
+aes128_keyexp_leaktime_asm:
 
     //function prologue, preserve registers
     push {r4-r11}
@@ -358,7 +358,7 @@ aes128_keyexp_asm:
     //function epilogue, restore state
     pop {r4-r11}
     bx lr
-.size aes128_keyexp_asm,.-aes128_keyexp_asm
+.size aes128_keyexp_leaktime_asm,.-aes128_keyexp_leaktime_asm
 
 .macro aesencrypt_oddround
     ldr r8, [r14], #4
@@ -528,12 +528,12 @@ aes128_keyexp_asm:
     bfi r7, r3, #16, #8
 .endm
 
-@ void aes128_encrypt_asm(const uint8_t *rk,
+@ void aes128_encrypt_leaktime_asm(const uint8_t *rk,
 @       const uint8_t *in, uint8_t *out) {
-.global aes128_encrypt_asm
-.type   aes128_encrypt_asm,%function
+.global aes128_encrypt_leaktime_asm
+.type   aes128_encrypt_leaktime_asm,%function
 .align 2
-aes128_encrypt_asm:
+aes128_encrypt_leaktime_asm:
 
     //function prologue, preserve registers and free r2
     push {r2,r4-r12,r14}
@@ -588,15 +588,15 @@ aes128_encrypt_asm:
     //function epilogue, restore state
     pop {r4-r12,r14}
     bx lr
-.size aes128_encrypt_asm,.-aes128_encrypt_asm
+.size aes128_encrypt_leaktime_asm,.-aes128_encrypt_leaktime_asm
 
 .section .text.aes192
-@ void aes192_keyexp_asm(const uint8_t *key,
+@ void aes192_keyexp_leaktime_asm(const uint8_t *key,
 @       uint8_t *rk) {
-.global aes192_keyexp_asm
-.type   aes192_keyexp_asm,%function
+.global aes192_keyexp_leaktime_asm
+.type   aes192_keyexp_leaktime_asm,%function
 .align 2
-aes192_keyexp_asm:
+aes192_keyexp_leaktime_asm:
 
     //function prologue, preserve registers
     push {r4-r11}
@@ -852,14 +852,14 @@ aes192_keyexp_asm:
     //function epilogue, restore state
     pop {r4-r11}
     bx lr
-.size aes192_keyexp_asm,.-aes192_keyexp_asm
+.size aes192_keyexp_leaktime_asm,.-aes192_keyexp_leaktime_asm
 
-@ void aes192_encrypt_asm(const uint8_t *rk,
+@ void aes192_encrypt_leaktime_asm(const uint8_t *rk,
 @       const uint8_t *in, uint8_t *out) {
-.global aes192_encrypt_asm
-.type   aes192_encrypt_asm,%function
+.global aes192_encrypt_leaktime_asm
+.type   aes192_encrypt_leaktime_asm,%function
 .align 2
-aes192_encrypt_asm:
+aes192_encrypt_leaktime_asm:
 
     //function prologue, preserve registers and free r2
     push {r2,r4-r12,r14}
@@ -914,15 +914,15 @@ aes192_encrypt_asm:
     //function epilogue, restore state
     pop {r4-r12,r14}
     bx lr
-.size aes192_encrypt_asm,.-aes192_encrypt_asm
+.size aes192_encrypt_leaktime_asm,.-aes192_encrypt_leaktime_asm
 
 .section .text.aes256
-@ void aes256_keyexp_asm(const uint8_t *key,
+@ void aes256_keyexp_leaktime_asm(const uint8_t *key,
 @       uint8_t *rk) {
-.global aes256_keyexp_asm
-.type   aes256_keyexp_asm,%function
+.global aes256_keyexp_leaktime_asm
+.type   aes256_keyexp_leaktime_asm,%function
 .align 2
-aes256_keyexp_asm:
+aes256_keyexp_leaktime_asm:
 
     //function prologue, preserve registers
     push {r4-r12,r14}
@@ -1259,17 +1259,17 @@ aes256_keyexp_asm:
     //function epilogue, restore state
     pop {r4-r12,r14}
     bx lr
-.size aes256_keyexp_asm,.-aes256_keyexp_asm
+.size aes256_keyexp_leaktime_asm,.-aes256_keyexp_leaktime_asm
 
 .align 2
 .ltorg
 
-@ void aes256_encrypt_asm(const uint8_t *rk,
+@ void aes256_encrypt_leaktime_asm(const uint8_t *rk,
 @       const uint8_t *in, uint8_t *out) {
-.global aes256_encrypt_asm
-.type   aes256_encrypt_asm,%function
+.global aes256_encrypt_leaktime_asm
+.type   aes256_encrypt_leaktime_asm,%function
 .align 2
-aes256_encrypt_asm:
+aes256_encrypt_leaktime_asm:
 
     //function prologue, preserve registers and free r2
     push {r2,r4-r12,r14}
@@ -1324,4 +1324,4 @@ aes256_encrypt_asm:
     //function epilogue, restore state
     pop {r4-r12,r14}
     bx lr
-.size aes256_encrypt_asm,.-aes256_encrypt_asm
+.size aes256_encrypt_leaktime_asm,.-aes256_encrypt_leaktime_asm
