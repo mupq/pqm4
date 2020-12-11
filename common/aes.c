@@ -170,7 +170,7 @@ void aes256_ecb(unsigned char *out, const unsigned char *in, size_t nblocks, con
     hash_cycles += (t1-t0);
     #endif
 }
-
+char str[100];
 void aes256_ctr_keyexp(aes256ctx *r, const unsigned char *key){
     #ifdef PROFILE_HASHING
     uint64_t t0 = hal_get_time();

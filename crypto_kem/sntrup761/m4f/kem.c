@@ -2,6 +2,7 @@
 #include "randombytes.h"
 #include "sha512_hash.h"
 #ifdef LPR
+#include "aes-leaktime.h"
 #include "aes.h"
 #endif
 
@@ -588,6 +589,13 @@ static void Inputs_encode(unsigned char *s,const Inputs r)
 
 static const unsigned char aes_nonce[16] = {0};
 
+static void ExpandLeaktime(uint32 *L,const unsigned char *k)
+{
+  aes256leaktimectx ctx;
+  aes256_ctr_keyexp_leaktime(&ctx, k);
+  aes256_ctr_leaktime((unsigned char *) L, 4*p, aes_nonce, &ctx);
+}
+
 static void Expand(uint32 *L,const unsigned char *k)
 {
   aes256ctx ctx;
@@ -615,12 +623,12 @@ static void Seeds_random(unsigned char *s)
 #ifdef LPR
 
 /* G = Generator(k) */
-static void Generator(Fq *G,const unsigned char *k)
+static void GeneratorLeaktime(Fq *G,const unsigned char *k)
 {
   uint32 L[p];
   int i;
 
-  Expand(L,k);
+  ExpandLeaktime(L,k);
 #if 0
   for (i = 0;i < p;++i) G[i] = uint32_mod_uint14(L[i],q)-q12;
 #else
@@ -660,7 +668,7 @@ static void XKeyGen(unsigned char *S,Fq *A,small *a)
   Fq G[p];
 
   Seeds_random(S);
-  Generator(G,S);
+  GeneratorLeaktime(G,S);
   KeyGen(A,a,G);
 }
 
@@ -670,7 +678,7 @@ static void XEncrypt(Fq *B,int8 *T,const int8 *r,const unsigned char *S,const Fq
   Fq G[p];
   small b[p];
 
-  Generator(G,S);
+  GeneratorLeaktime(G,S);
   HashShort(b,r);
   Encrypt(B,T,r,G,A,b);
 }

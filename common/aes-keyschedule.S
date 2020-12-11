@@ -706,8 +706,14 @@ loop_inv_sr_3:
 aes128_keyschedule_ffs:
     push    {r0-r12,r14}
     sub.w   sp, #56                 // allow space on the stack for tmp var
-    ldm     r1, {r4-r7}             // load the 128-bit key in r4-r7
-    ldm     r1, {r8-r11}            // load the 128-bit key in r8-r11
+    ldr.w   r4, [r1]                // load the 128-bit key in r4-r7
+    ldr     r5, [r1, #4]
+    ldr     r6, [r1, #8]
+    ldr     r7, [r1, #12]
+    ldr.w   r8, [r1]                // load the 128-bit key in r8-r11
+    ldr     r9, [r1, #4]
+    ldr     r10,[r1, #8]
+    ldr     r11,[r1, #12]
     bl      packing                 // pack the master key
     ldr.w   r0, [sp, #56]           // restore 'rkeys' address
     stm     r0, {r4-r11}            // store the packed master key in 'rkeys'
@@ -784,14 +790,26 @@ aes128_keyschedule_ffs:
 aes256_keyschedule_ffs:
     push    {r0-r12,r14}
     sub.w   sp, #56                 // allow space on the stack for tmp var
-    ldm     r1, {r4-r7}             // load the 128 first key bits in r4-r7
-    ldm     r1, {r8-r11}            // load the 128 first key bits in r8-r11
+    ldr.w   r4, [r1]                // load the 128 first key bits in r4-r7
+    ldr     r5, [r1, #4]
+    ldr     r6, [r1, #8]
+    ldr     r7, [r1, #12]
+    ldr.w   r8, [r1]                // load the 128 first key bits in r8-r11
+    ldr     r9, [r1, #4]
+    ldr     r10,[r1, #8]
+    ldr     r11,[r1, #12]
     bl      packing                 // pack the master key
     ldrd    r0,r1, [sp, #56]        // restore 'rkeys' and 'key' addresses
     stm     r0, {r4-r11}            // store the packed master key in 'rkeys'
     add.w   r1, #16                 // points to the 128 last bits of the key
-    ldm     r1, {r4-r7}             // load the 128 first key bits in r4-r7
-    ldm     r1, {r8-r11}            // load the 128 first key bits in r8-r11
+    ldr.w   r4, [r1]                // load the 128 first key bits in r4-r7
+    ldr     r5, [r1, #4]
+    ldr     r6, [r1, #8]
+    ldr     r7, [r1, #12]
+    ldr.w   r8, [r1]                // load the 128 first key bits in r8-r11
+    ldr     r9, [r1, #4]
+    ldr     r10,[r1, #8]
+    ldr     r11,[r1, #12]
     bl      packing                 // pack the master key
     ldr.w   r0, [sp, #56]           // restore 'rkeys' address
     add.w   r0, #32                 // points to the 128 last bits of the key
