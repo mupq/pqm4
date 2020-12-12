@@ -9,11 +9,22 @@
 * @author   Alexandre Adomnicai, Nanyang Technological University, Singapore
 *           alexandre.adomnicai@ntu.edu.sg
 *
-* @date     August 2020
+* @date     October 2020
 ******************************************************************************/
 
 .syntax unified
 .thumb
+
+/******************************************************************************
+* Macro to compute the SWAPMOVE technique: swap the bits in 'in1' masked by 'm'
+* by the bits in 'in0' masked by 'm << n' and put the results in 'out0', 'out1'
+******************************************************************************/
+.macro swpmv out0, out1, in0, in1, m, n, tmp
+    eor     \tmp, \in1, \in0, lsr \n
+    and     \tmp, \m
+    eor     \out1, \in1, \tmp
+    eor     \out0, \in0, \tmp, lsl \n
+.endm
 
 /******************************************************************************
 * Packing routine. Note that it is the same as the one used in the encryption
@@ -25,54 +36,18 @@ packing:
     movt    r3, #0x0f0f             // r3 <- 0x0f0f0f0f (mask for SWAPMOVE)
     eor     r2, r3, r3, lsl #2      // r2 <- 0x33333333 (mask for SWAPMOVE)
     eor     r1, r2, r2, lsl #1      // r1 <- 0x55555555 (mask for SWAPMOVE)
-    eor     r12, r4, r8, lsr #1     // SWAPMOVE(r8, r4, 0x55555555, 1) ....
-    and     r12, r1
-    eor     r4, r12
-    eor     r8, r8, r12, lsl #1     // .... SWAPMOVE(r8, r4, 0x55555555, 1)
-    eor     r12, r5, r9, lsr #1     // SWAPMOVE(r9, r5, 0x55555555, 1) ....
-    and     r12, r1
-    eor     r5, r12
-    eor     r9, r9, r12, lsl #1     // .... SWAPMOVE(r9, r5, 0x55555555, 1)
-    eor     r12, r6, r10, lsr #1    // SWAPMOVE(r10, r6, 0x55555555, 1) ....
-    and     r12, r1
-    eor     r6, r12
-    eor     r10, r10, r12, lsl #1   // .... SWAPMOVE(r10, r6, 0x55555555, 1)
-    eor     r12, r7, r11, lsr #1    // SWAPMOVE(r11, r7, 0x55555555, 1) ....
-    and     r12, r1
-    eor     r7, r12
-    eor     r11, r11, r12, lsl #1   // .... SWAPMOVE(r11, r7, 0x55555555, 1)
-    eor     r12, r4, r5, lsr #2     // SWAPMOVE(r5, r4, 0x33333333, 2) ....
-    and     r12, r2
-    eor     r4, r12
-    eor     r0, r5, r12, lsl #2     // .... SWAPMOVE(r5, r4, 0x33333333, 2)
-    eor     r12, r8, r9, lsr #2     // SWAPMOVE(r9, r8, 0x33333333, 2) ....
-    and     r12, r2
-    eor     r5, r8, r12
-    eor     r9, r9, r12, lsl #2     // .... SWAPMOVE(r9, r8, 0x33333333, 2)
-    eor     r12, r6, r7, lsr #2     // SWAPMOVE(r7, r6, 0x33333333, 2) ....
-    and     r12, r2
-    eor     r8, r6, r12
-    eor     r7, r7, r12, lsl #2     // .... SWAPMOVE(r7, r6, 0x33333333, 2)
-    eor     r12, r10, r11, lsr #2   // SWAPMOVE(r11, r10, 0x33333333, 2) ....
-    and     r12, r2
-    eor     r2, r10, r12
-    eor     r11, r11, r12, lsl #2   // .... SWAPMOVE(r11, r10, 0x33333333, 2)
-    eor     r12, r4, r8, lsr #4     // SWAPMOVE(r8, r4, 0x0f0f0f0f, 4) ....
-    and     r12, r3
-    eor     r4, r12
-    eor     r8, r8, r12, lsl #4     // .... SWAPMOVE(r8, r4, 0x0f0f0f0f,4)
-    eor     r12, r0, r7, lsr #4     // SWAPMOVE(r7, r1, 0x0f0f0f0f, 4) ....
-    and     r12, r3
-    eor     r6, r0, r12
-    eor     r10, r7, r12, lsl #4    // .... SWAPMOVE(r7, r1, 0x0f0f0f0f, 4)
-    eor     r12, r9, r11, lsr #4    // SWAPMOVE(r11, r9, 0x0f0f0f0f, 4) ....
-    and     r12, r3
-    eor     r7, r9, r12
-    eor     r11, r11, r12, lsl #4   // .... SWAPMOVE(r11,r9, 0x0f0f0f0f, 4)
-    eor     r12, r5, r2, lsr #4     // SWAPMOVE(r2, r5, 0x0f0f0f0f, 4) ....
-    and     r12, r3
-    eor     r5, r12
-    eor     r9, r2, r12, lsl #4     // .... SWAPMOVE(r2, r5, 0x0f0f0f0f, 4)
+    swpmv   r8, r4, r8, r4, r1, #1, r12
+    swpmv   r9, r5, r9, r5, r1, #1, r12
+    swpmv   r10, r6, r10, r6, r1, #1, r12
+    swpmv   r11, r7, r11, r7, r1, #1, r12
+    swpmv   r0, r4, r5, r4, r2, #2, r12
+    swpmv   r9, r5, r9, r8, r2, #2, r12
+    swpmv   r7, r8, r7, r6, r2, #2, r12
+    swpmv   r11, r2, r11, r10, r2, #2, r12
+    swpmv   r8, r4, r8, r4, r3, #4, r12
+    swpmv   r10, r6, r7, r0, r3, #4, r12
+    swpmv   r11, r7, r11, r9, r3, #4, r12
+    swpmv   r9, r5, r2, r5, r3, #4, r12
     bx      lr
 
 /******************************************************************************
@@ -616,27 +591,24 @@ aes256_xorcolumns:
 ******************************************************************************/
 .align 2
 inv_shiftrows_1:
+    ldr.w   r2, [r12, #-32]!
+    str     r14, [sp, #52]          // store link register
     movw    r1, #8
-    sub.w   r12, #32
+    movw    r14, #0x0300
+    movt    r14, #0x0c0f            // r14<- 0x0c0f0300 for ShiftRows^[-1]
 loop_inv_sr_1:
-    ldr.w   r2, [r12]
-    and     r3, r2, #0xfc00         // r3 <- r2 & 0x0000fc00
-    and     r0, r2, #0x0300         // r0 <- r2 & 0x00000300
-    orr     r3, r3, r0, lsl #8      // r3 <- r3 | r0 << 8
-    and     r0, r2, #0xf00000       // r0 <- r2 & 0x00f00000
-    orr     r3, r3, r0, lsr #2      // r3 <- r3 | r0 >> 2
-    and     r0, r2, #0xf0000        // r0 <- r2 & 0x000f0000
-    orr     r3, r3, r0, lsl #6      // r3 <- r3 | r0 << 6
-    and     r0, r2, #0xc0000000     // r0 <- r2 & 0xc0000000
-    orr     r3, r3, r0, lsr #4      // r3 <- r3 | r0 >> 4
-    and     r0, r2, #0x3f000000     // r0 <- r2 & 0x3f000000
-    orr     r3, r3, r0, ror #28     // r3 <- r3 | (r0 >>> 28)
-    and     r0, r2, #0xff           // r0 <- r2 & 0xff
-    orr     r3, r0, r3, ror #2      // r3 <- ShiftRows^[-1](r2)
+    movw    r3, #0x3300
+    movt    r3, #0x3300             // r3 <- 0x33003300 for ShiftRows^[-1]
+    swpmv   r2, r2, r2, r2, r14, 4, r0
+    eor     r0, r2, r2, lsr #2
+    and     r0, r3
+    eor     r2, r2, r0
+    eor     r3, r2, r0, lsl #2
     ldr.w   r2, [r12, #4]!
     str.w   r3, [r12, #-4]
     subs    r1, #1
     bne     loop_inv_sr_1
+    ldr     r14, [sp, #52]          // restore link register
     bx      lr
 
 /******************************************************************************
@@ -645,19 +617,16 @@ loop_inv_sr_1:
 ******************************************************************************/
 .align 2
 inv_shiftrows_2:
+    ldr.w   r2, [r12, #-32]!
     str     r14, [sp, #52]          // store link register
     movw    r1, #8
-    sub     r12, #32
     movw    r14, #0x0f00
     movt    r14, #0x0f00            // r14<- 0x0f000f00 for ShiftRows^[-2]
 loop_inv_sr_2:
-    ldr.w   r2, [r12]
-    and     r3, r14, r2, lsr #4     // r3 <- (r2 >> 4) & 0x0f000f00
-    and     r0, r14, r2             // r0 <- r2 & 0x0f000f00
-    orr     r3, r3, r0, lsl #4      // r3 <- r3 | r0 << 4
-    eor     r0, r14, r14, lsl #4    // r0 <- 0xff00ff00
-    and     r0, r2, r0, ror #8      // r0 <- r2 & 0xff00ff00
-    orr     r3, r3, r0              // r3 <- ShiftRows^[-2](r2)
+    eor     r0, r2, r2, lsr #4
+    and     r0, r14
+    eor     r2, r2, r0
+    eor     r3, r2, r0, lsl #4
     ldr.w   r2, [r12, #4]!
     str.w   r3, [r12, #-4]
     subs    r1, #1
@@ -671,27 +640,24 @@ loop_inv_sr_2:
 ******************************************************************************/
 .align 2
 inv_shiftrows_3:
+    ldr.w   r2, [r12, #-32]!
+    str     r14, [sp, #52]          // store link register
     movw    r1, #8
-    sub.w   r12, #32
+    movw    r14, #0x0c00
+    movt    r14, #0x030f            // r14<- 0x030f0c00 for ShiftRows^[-3]
 loop_inv_sr_3:
-    ldr.w   r2, [r12]
-    and     r3, r2, #0xc000         // r3 <- r2 & 0x0000c000
-    and     r0, r2, #0x3f00         // r0 <- r2 & 0x00003f00
-    orr     r3, r3, r0, lsl #8      // r3 <- r3 | r0 << 8
-    and     r0, r2, #0xf00000       // r0 <- r2 & 0x00f00000
-    orr     r3, r3, r0, lsl #2      // r3 <- r3 | r0 << 2
-    and     r0, r2, #0xf0000        // r0 <- r2 & 0x000f0000
-    orr     r3, r3, r0, lsl #10     // r3 <- r3 | r0 << 10
-    and     r0, r2, #0xfc000000     // r0 <- r2 & 0xfc000000
-    orr     r3, r3, r0, ror #28     // r3 <- r3 | r0 >>> 8
-    and     r0, r2, #0x03000000     // r0 <- r2 & 0x03000000
-    orr     r3, r3, r0, ror #20     // r3 <- r3 | (r0 >>> 20)
-    and     r0, r2, #0xff           // r0 <- r2 & 0xff
-    orr     r3, r0, r3, ror #6      // r3 <- ShiftRows^[-3](r2)
+    movw    r3, #0x3300
+    movt    r3, #0x3300             // r3 <- 0x33003300 for ShiftRows^[-3]
+    swpmv   r2, r2, r2, r2, r14, 4, r0
+    eor     r0, r2, r2, lsr #2
+    and     r0, r3
+    eor     r2, r2, r0
+    eor     r3, r2, r0, lsl #2
     ldr.w   r2, [r12, #4]!
     str.w   r3, [r12, #-4]
     subs    r1, #1
     bne     loop_inv_sr_3
+    ldr     r14, [sp, #52]          // restore link register
     bx      lr
 
 /******************************************************************************
