@@ -9,18 +9,19 @@ void indcpa_kem_keypair(uint8_t pk[SABER_INDCPA_PUBLICKEYBYTES], uint8_t sk[SABE
 {
     uint8_t *seed_A = pk + SABER_POLYVECCOMPRESSEDBYTES; // pk[1] <- seed_A
     uint8_t *seed_s = sk; // temporary storage
-    uint32_t A_NTT[SABER_L][SABER_L][SABER_N];
-    uint32_t s_NTT[SABER_L][SABER_N];
+    // uint32_t A_NTT[SABER_L][SABER_L][SABER_N];
+    // uint32_t s_NTT[SABER_L][SABER_N];
 
     randombytes(seed_A, SABER_SEEDBYTES);
     randombytes(seed_s, SABER_NOISE_SEEDBYTES);
     shake128(seed_A, SABER_SEEDBYTES, seed_A, SABER_SEEDBYTES); // for not revealing system RNG state
 
-    GenNTTMatrix(A_NTT, seed_A);
-    GenNTTSecret(s_NTT, seed_s, 1); // sk <- s
-    MatrixVectorMulKeyPair(pk, A_NTT, s_NTT); // pk[0] <- Pack(Round((A^T)*s))
+    // GenNTTMatrix(A_NTT, seed_A);
+    // GenNTTSecret(s_NTT, seed_s, 1); // sk <- s
+    // MatrixVectorMulKeyPair(pk, A_NTT, s_NTT); // pk[0] <- Pack(Round((A^T)*s))
 
     // MatrixVectorMulKeyPairJIT(pk, sk); // pk[0] <- Pack(Round((A^T)*s)), sk <- s
+    MatrixVectorMulKeyPairJIT(pk, sk); // pk[0] <- Pack(Round((A^T)*s)), sk <- s
 
 }
 

@@ -7,6 +7,7 @@
 #define SABER_L 4 /* FireSaber */
 
 // #define SABER_COMPRESS_SECRETKEY //TODO
+#define SABER_MEMORY_EFFICIENT
 
 /* Don't change anything below this line */
 #if SABER_L == 2

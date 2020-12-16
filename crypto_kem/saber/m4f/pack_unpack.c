@@ -37,7 +37,7 @@ void POLp2BS(uint8_t bytes[SABER_POLYCOMPRESSEDBYTES], const uint16_t data[SABER
     }
 }
 
-static uint32_t POLp2BS_cmp(const uint8_t bytes[SABER_POLYCOMPRESSEDBYTES], const uint16_t data[SABER_N])
+uint32_t POLp2BS_cmp(const uint8_t bytes[SABER_POLYCOMPRESSEDBYTES], const uint16_t data[SABER_N])
 {
     size_t j;
     const uint16_t *in = data;
@@ -143,7 +143,7 @@ void BS2POLmsg(const uint8_t bytes[SABER_KEYBYTES], uint16_t data[SABER_N])
 
 /* This function sign-extends its output from p-bit to 16-bit.
 This is equivalent to a central reduction, as needed by the NTT */
-static void BS2POLp(const uint8_t bytes[SABER_POLYCOMPRESSEDBYTES], uint16_t data[SABER_N])
+void BS2POLp(const uint8_t bytes[SABER_POLYCOMPRESSEDBYTES], uint16_t data[SABER_N])
 {
     size_t j;
     const uint8_t *in = bytes;
@@ -249,7 +249,7 @@ void BS2POLT(const uint8_t bytes[SABER_SCALEBYTES_KEM], uint16_t data[SABER_N])
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-void POLVECp2BS(uint8_t bytes[SABER_POLYVECCOMPRESSEDBYTES], const uint16_t data[SABER_L][SABER_N])
+void POLVECp2BS(uint8_t bytes[SABER_POLYVECCOMPRESSEDBYTES], const uint16_t data[SABER_L][SABER_N]) //TODO: polycompressedbytes
 {
     size_t i;
 
@@ -312,7 +312,7 @@ void POL42BS(uint8_t bytes[SABER_N / 2], const uint16_t data[SABER_N])
     }
 }
 
-static void BS2POL4(const uint8_t bytes[SABER_N / 2], uint16_t data[SABER_N])
+void BS2POL4(const uint8_t bytes[SABER_N / 2], uint16_t data[SABER_N])
 {
     size_t j;
     const uint8_t *in = bytes;

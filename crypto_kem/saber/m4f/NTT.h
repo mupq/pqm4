@@ -47,24 +47,32 @@ void _NTT_inv_inner(uint32_t *in, const int32_t *inv_root_table, uint32_t mod, u
 
 #endif
 
+void mul(uint32_t *poly1, const int32_t *mul_table, uint32_t mod, uint32_t modprime, uint32_t *poly2, uint32_t *res);
+// out = in1 * in2
+#define NTT_mul(in1, in2, out) mul(in1, mul_table, MOD, Mprime, in2, out);
+
+void mul_acc(uint32_t *poly1, const int32_t *mul_table, uint32_t mod, uint32_t modprime, uint32_t *poly2, uint32_t *res);
+// out = out + in1 * in2
+#define NTT_mul_acc(in1, in2, out) mul_acc(in1, mul_table, MOD, Mprime, in2, out);
+
 
 #if SABER_L == 2
-    void my_mul(uint32_t *a, const int32_t *mul_table, uint32_t mod, uint32_t modprime, uint32_t *matrix0, uint32_t *matrix1, uint32_t *res);
+    void mul_vec(uint32_t *a, const int32_t *mul_table, uint32_t mod, uint32_t modprime, uint32_t *matrix0, uint32_t *matrix1, uint32_t *res);
 
-    #define NTT_vector_mul(in1, in2, out) my_mul(&in1[0][0], mul_table, MOD, Mprime, &in2[0][0], &in2[1][0], &out[0])
-    #define NTT_matrix_mul_transpose(in1, in2, out, j) my_mul(&in1[0][0], mul_table, MOD, Mprime, &in2[0][j][0], &in2[1][j][0], &out[j][0])
+    #define NTT_vector_mul(in1, in2, out) mul_vec(&in1[0][0], mul_table, MOD, Mprime, &in2[0][0], &in2[1][0], &out[0])
+    #define NTT_matrix_mul_transpose(in1, in2, out, j) mul_vec(&in1[0][0], mul_table, MOD, Mprime, &in2[0][j][0], &in2[1][j][0], &out[j][0])
 
 #elif SABER_L == 3
-    void my_mul(uint32_t *a, const int32_t *mul_table, uint32_t mod, uint32_t modprime, uint32_t *matrix0, uint32_t *matrix1, uint32_t *matrix2, uint32_t *res);
+    void mul_vec(uint32_t *a, const int32_t *mul_table, uint32_t mod, uint32_t modprime, uint32_t *matrix0, uint32_t *matrix1, uint32_t *matrix2, uint32_t *res);
 
-    #define NTT_vector_mul(in1, in2, out) my_mul(&in1[0][0], mul_table, MOD, Mprime, &in2[0][0], &in2[1][0], &in2[2][0], &out[0])
-    #define NTT_matrix_mul_transpose(in1, in2, out, j) my_mul(&in1[0][0], mul_table, MOD, Mprime, &in2[0][j][0], &in2[1][j][0], &in2[2][j][0], &out[j][0])
+    #define NTT_vector_mul(in1, in2, out) mul_vec(&in1[0][0], mul_table, MOD, Mprime, &in2[0][0], &in2[1][0], &in2[2][0], &out[0])
+    #define NTT_matrix_mul_transpose(in1, in2, out, j) mul_vec(&in1[0][0], mul_table, MOD, Mprime, &in2[0][j][0], &in2[1][j][0], &in2[2][j][0], &out[j][0])
 
 #elif SABER_L == 4
-    void my_mul(uint32_t *a, const int32_t *mul_table, uint32_t mod, uint32_t modprime, uint32_t *matrix0, uint32_t *matrix1, uint32_t *matrix2, uint32_t *matrix3, uint32_t *res);
+    void mul_vec(uint32_t *a, const int32_t *mul_table, uint32_t mod, uint32_t modprime, uint32_t *matrix0, uint32_t *matrix1, uint32_t *matrix2, uint32_t *matrix3, uint32_t *res);
 
-    #define NTT_vector_mul(in1, in2, out) my_mul(&in1[0][0], mul_table, MOD, Mprime, &in2[0][0], &in2[1][0], &in2[2][0], &in2[3][0], &out[0])
-    #define NTT_matrix_mul_transpose(in1, in2, out, j) my_mul(&in1[0][0], mul_table, MOD, Mprime, &in2[0][j][0], &in2[1][j][0], &in2[2][j][0], &in2[3][j][0], &out[j][0])
+    #define NTT_vector_mul(in1, in2, out) mul_vec(&in1[0][0], mul_table, MOD, Mprime, &in2[0][0], &in2[1][0], &in2[2][0], &in2[3][0], &out[0])
+    #define NTT_matrix_mul_transpose(in1, in2, out, j) mul_vec(&in1[0][0], mul_table, MOD, Mprime, &in2[0][j][0], &in2[1][j][0], &in2[2][j][0], &in2[3][j][0], &out[j][0])
 
 #endif
 

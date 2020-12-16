@@ -29,7 +29,7 @@
 // r2 -> M
 // r3 -> M_inv
 // sp -> output
-// sp + 4 --> 1023
+
 .align 2
 .global _NTT_inv_inner
 .type _NTT_inv_inner, %function
@@ -39,7 +39,6 @@ _NTT_inv_inner:
 // s13 --> 8191
 push.w {r4-r12, lr}
 vldr.w s12, [sp, #40]
-@ vldr.w s13, [sp, #44]
 vmov.w s9, r1
 
 .align 2
@@ -50,6 +49,7 @@ vmov.w s10, r1
 // 976 bytes
 .align 2
 normal_6_5_4_outer:
+
     vmov.w r1, s9
     vldm.w r1!, {s0-s6}
     vmov.w s9, r1
@@ -126,18 +126,39 @@ vmov.w s10, r12
 // avoid overflow
 vmov.w r1, s8
 ldr.w r4, [r0, #0]
+ldr.w r5, [r0, #128]
+ldr.w r6, [r0, #256]
+ldr.w r7, [r0, #384]
 ldr.w r8, [r0, #512]
+ldr.w r9, [r0, #640]
+ldr.w r10, [r0, #768]
+ldr.w r11, [r0, #896]
 montgomery_mul r4, r1, r12, r4, r14, r3, r2
+montgomery_mul r5, r1, r12, r5, r14, r3, r2
+montgomery_mul r6, r1, r12, r6, r14, r3, r2
+montgomery_mul r7, r1, r12, r7, r14, r3, r2
 montgomery_mul r8, r1, r12, r8, r14, r3, r2
+montgomery_mul r9, r1, r12, r9, r14, r3, r2
+montgomery_mul r10, r1, r12, r10, r14, r3, r2
+montgomery_mul r11, r1, r12, r11, r14, r3, r2
 str.w r4, [r0, #0]
+str.w r5, [r0, #128]
+str.w r6, [r0, #256]
+str.w r7, [r0, #384]
 str.w r8, [r0, #512]
+str.w r9, [r0, #640]
+str.w r10, [r0, #768]
+str.w r11, [r0, #896]
 
 // 988 bytes
 .align 2
 _3_2_1:
+
 outer_loop_3_2_1:
+
     add.w r12, r0, #128 // set inner counter
     vmov.w s11, r12
+
     .align 2
     inner_loop_3_2_1:
 
@@ -185,16 +206,17 @@ outer_loop_3_2_1:
         montgomery_mul r5, r1, r12, r5, r14, r3, r2
         montgomery_mul r6, r1, r12, r6, r14, r3, r2
         montgomery_mul r7, r1, r12, r7, r14, r3, r2
+
         // reduce and back to unsigned
-        @ mov.w r1, r2, lsr #1  // Mhalf
-        @ central_reduce r4, r1, r2
-        @ central_reduce r5, r1, r2
-        @ central_reduce r6, r1, r2
-        @ central_reduce r7, r1, r2
-        @ central_reduce r8, r1, r2
-        @ central_reduce r9, r1, r2
-        @ central_reduce r10, r1, r2
-        @ central_reduce r11, r1, r2
+        mov.w r1, r2, lsr #1  // Mhalf
+        central_reduce r4, r1, r2
+        central_reduce r5, r1, r2
+        central_reduce r6, r1, r2
+        central_reduce r7, r1, r2
+        central_reduce r8, r1, r2
+        central_reduce r9, r1, r2
+        central_reduce r10, r1, r2
+        central_reduce r11, r1, r2
 
         // & lower 13 bits
         @ vmov.w r1, s13
@@ -223,6 +245,7 @@ outer_loop_3_2_1:
         vmov.w r5, s11
         cmp.w r0, r5
         bne.w inner_loop_3_2_1
+
     vmov.w r1, s12
     add.w r1, #448
     vmov.w s12, r1
@@ -232,4 +255,3 @@ outer_loop_3_2_1:
     bne.w outer_loop_3_2_1
 
 pop.w {r4-r12, pc}
-
