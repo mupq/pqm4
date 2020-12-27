@@ -50,6 +50,17 @@ const struct rcc_clock_scale benchmarkclock = {
 #define SERIAL_PINS (GPIO2 | GPIO3)
 #define STM32
 #define NUCLEO_BOARD
+#elif defined(STM32F303RCT7)
+#include <libopencm3/stm32/rcc.h>
+#include <libopencm3/stm32/gpio.h>
+#include <libopencm3/stm32/usart.h>
+#include <libopencm3/stm32/flash.h>
+
+#define SERIAL_GPIO GPIOA
+#define SERIAL_USART USART1
+#define SERIAL_PINS (GPIO9 | GPIO10)
+#define STM32
+#define CW_BOARD
 #else
 #error Unsupported libopencm3 board
 #endif
@@ -86,7 +97,6 @@ static void clock_setup(enum clock_mode clock)
   flash_prefetch_enable();
 #elif defined(CW_BOARD)
   /* Some STM32 Platform */
-  rcc_periph_clock_enable(RCC_RNG);
   rcc_periph_clock_enable(RCC_GPIOH);
   rcc_osc_off(RCC_HSE);
   rcc_osc_bypass_enable(RCC_HSE);
@@ -98,8 +108,8 @@ static void clock_setup(enum clock_mode clock)
   rcc_apb2_frequency = 7372800;
   _clock_freq = 7372800;
   rcc_set_hpre(RCC_CFGR_HPRE_DIV_NONE);
-  rcc_set_ppre1(RCC_CFGR_PPRE_DIV_NONE);
-  rcc_set_ppre2(RCC_CFGR_PPRE_DIV_NONE);
+  rcc_set_ppre1(RCC_CFGR_PPRE1_DIV_NONE);
+  rcc_set_ppre2(RCC_CFGR_PPRE2_DIV_NONE);
   rcc_set_sysclk_source(RCC_CFGR_SW_HSE);
   rcc_wait_for_sysclk_status(RCC_HSE);
 #elif defined(NUCLEO_BOARD)
@@ -199,7 +209,6 @@ void hal_setup(const enum clock_mode clock)
   clock_setup(clock);
   usart_setup();
   systick_setup();
-  rng_enable();
 }
 
 void hal_send_str(const char* in)
