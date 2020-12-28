@@ -37,14 +37,17 @@ def parse_arguments():
 
 
 def get_platform(args):
-    settings = M4Settings(args.platform, args.opt, args.lto, args.aio)
+    platform = None
+    bin_type = 'bin'
     if args.platform in ['stm32f4discovery', 'nucleo-l476rg']:
-        return StLink(args.uart), settings
+        platform = StLink(args.uart)
     elif args.platform == "cw308t-stm32f3":
-        raise NotImplementedError('The ChipWhisperer platform requires some changes in mupq')
-        return ChipWhisperer(), settings
+        bin_type = 'hex'
+        platform = ChipWhisperer()
     else:
         raise NotImplementedError("Unsupported Platform")
+    settings = M4Settings(args.platform, args.opt, args.lto, args.aio, bin_type)
+    return platform, settings
 
 
 class M4Settings(mupq.PlatformSettings):
@@ -107,8 +110,9 @@ class M4Settings(mupq.PlatformSettings):
         {'scheme': 'hqc-rmrs-256', 'implementation': 'clean'},
     )
 
-    def __init__(self, platform, opt="speed", lto=False, aio=False):
-        """Initialize with a specific pqvexriscv platform"""
+    def __init__(self, platform, opt="speed", lto=False, aio=False, binary_type='bin'):
+        """Initialize with a specific platform"""
+        self.binary_type = binary_type
         optflags = {"speed": [], "size": ["OPT_SIZE=1"], "debug": ["DEBUG=1"]}
         if opt not in optflags:
             raise ValueError(f"Optimization flag should be in {list(optflags.keys())}")
@@ -190,7 +194,7 @@ class Qemu(mupq.Platform):
 class SerialCommsPlatform(mupq.Platform):
 
     # Start pattern is at least five equal signs
-    start_pat = re.compile(b'.*={4,}\n')
+    start_pat = re.compile(b'.*={4,}\n', re.DOTALL)
 
     def __init__(self, tty="/dev/ttyACM0", baud=38400, timeout=60):
         super().__init__()
@@ -257,16 +261,11 @@ except ImportError:
 
 
 class ChipWhisperer(mupq.Platform):
-    class Wrapper(object):
-        def __init__(self, target, timeout=10*1000):
-            self.target = target
-            self.timeout = timeout
 
-        def read(self, n=1):
-            return self.target.read(n, self.timeout).encode('ascii')
-
-        def reset_input_buffer(self):
-            pass
+    # Start pattern is at least five equal signs
+    start_pat = re.compile('.*={4,}\n', re.DOTALL)
+    # End pattern is a hash with a newline
+    end_pat = re.compile('.*#\n', re.DOTALL)
 
     def __init__(self):
         super().__init__()
@@ -274,30 +273,54 @@ class ChipWhisperer(mupq.Platform):
         self.scope = cw.scope()
         self.target = cw.target(self.scope)
         self.scope.default_setup()
-        self.wrapper = self.Wrapper(self.target)
-
-    def _reset_target(self):
-        self.scope.io.nrst = 'low'
-        time.sleep(0.05)
-        self.scope.io.nrst = 'high'
-        time.sleep(0.05)
 
     def __enter__(self):
         return super().__enter__()
 
     def __exit__(self, *args, **kwargs):
+        self.target.close()
         return super().__exit__(*args, **kwargs)
 
     def device(self):
         return self.wrapper
 
+    def reset_target(self):
+        self.scope.io.nrst = 'low'
+        time.sleep(0.05)
+        self.scope.io.nrst = 'high'
+        time.sleep(0.05)
+
     def flash(self, binary_path):
-        super().flash(binary_path)
-        cw.program_target(self.scope,
-                          cw.programmers.STM32FProgrammer,
-                          binary_path)
+        prog = cw.programmers.STM32FProgrammer()
+        prog.scope = self.scope
+        prog.open()
+        prog.find()
+        prog.erase()
+        prog.program(binary_path, memtype="flash", verify=False)
+        prog.close()
+
+    def run(self, binary_path):
+        self.flash(binary_path)
         self.target.flush()
-        self._reset_target()
+        self.reset_target()
+        data = ''
+        # Wait for the first equal sign
+        while '=' not in data:
+            data += self.target.read()
+        # Wait for the end of the equal delimiter
+        match = None
+        while match is None:
+            data += self.target.read()
+            match = self.start_pat.match(data)
+        # Remove the start pattern
+        data = data[:match.end()]
+        # Wait for the end
+        match = None
+        while match is None:
+            data += self.target.read()
+            match = self.end_pat.match(data)
+        # Remove stop pattern and return
+        return data[:match.end() - 2]
 
 
-logging.getLogger().setLevel(logging.DEBUG)
+# logging.getLogger().setLevel(logging.DEBUG)
