@@ -1,7 +1,7 @@
 #include "hal.h"
 #include <sys/cdefs.h>
 
-#define SERIAL_BAUD 9600
+#define SERIAL_BAUD 38400
 
 #include <libopencm3/cm3/dwt.h>
 #include <libopencm3/cm3/nvic.h>
@@ -89,10 +89,8 @@ static void clock_setup(enum clock_mode clock)
     break;
   }
 
-  rcc_periph_clock_enable(RCC_GPIOA);
-  rcc_periph_clock_enable(RCC_USART2);
-  rcc_periph_clock_enable(RCC_DMA1);
   rcc_periph_clock_enable(RCC_RNG);
+  rng_enable();
 
   flash_prefetch_enable();
 #elif defined(CW_BOARD)
@@ -159,6 +157,9 @@ static void clock_setup(enum clock_mode clock)
     rcc_wait_for_sysclk_status(RCC_PLL);
     break;
   }
+
+  rcc_periph_clock_enable(RCC_RNG);
+  rng_enable();
 #else
 #error Unsupported platform
 #endif
