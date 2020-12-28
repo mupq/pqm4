@@ -1,8 +1,10 @@
+import abc
 import argparse
 
 import serial
 import select
 import subprocess
+import re
 
 from mupq import mupq
 import logging
@@ -186,6 +188,10 @@ class Qemu(mupq.Platform):
 
 
 class SerialCommsPlatform(mupq.Platform):
+
+    # Start pattern is at least five equal signs
+    start_pat = re.compile(b'.*={4,}\n')
+
     def __init__(self, tty="/dev/ttyACM0", baud=38400, timeout=60):
         super().__init__()
         self._dev = serial.Serial(tty, baud, timeout=timeout)
@@ -197,12 +203,27 @@ class SerialCommsPlatform(mupq.Platform):
         self._dev.close()
         return super().__exit__(*args, **kwargs)
 
-    def device(self):
-        return self._dev
-
-    def flash(self, binary_path):
-        super().flash(binary_path)
+    def run(self, binary_path):
+        self.flash(binary_path)
         self._dev.reset_input_buffer()
+        # Wait for the first equal sign
+        if self._dev.read_until(b'=') != b'=':
+            raise Exception('Timout waiting for start')
+        # Wait for the end of the equal delimiter
+        start = self._dev.read_until(b'\n')
+        self.log.debug(f'Found start pattern: {start}')
+        if self.start_pat.fullmatch(start) is None:
+            raise Exception('Start does not match')
+        # Wait for the end
+        output = bytearray()
+        while len(output) == 0 or output[-1] != b'#'[0]:
+            data = self._dev.read_until(b'#')
+            output.extend(data)
+        return output[:-1].decode('utf-8', 'ignore')
+
+    @abc.abstractmethod
+    def flash(self, binary_path):
+        pass
 
 
 class OpenOCD(SerialCommsPlatform):
@@ -211,7 +232,6 @@ class OpenOCD(SerialCommsPlatform):
         self.script = script
 
     def flash(self, binary_path):
-        super().flash(binary_path)
         subprocess.check_call(
             ["openocd", "-f", self.script, "-c", f"program {binary_path} verify reset exit"],
             # stdout=subprocess.DEVNULL,
@@ -221,7 +241,6 @@ class OpenOCD(SerialCommsPlatform):
 
 class StLink(SerialCommsPlatform):
     def flash(self, binary_path):
-        super().flash(binary_path)
         subprocess.check_call(
             ["st-flash", "--reset", "write", binary_path, "0x8000000"],
             stdout=subprocess.DEVNULL,
@@ -281,4 +300,4 @@ class ChipWhisperer(mupq.Platform):
         self._reset_target()
 
 
-logging.getLogger().setLevel(logging.INFO)
+logging.getLogger().setLevel(logging.DEBUG)
