@@ -16,21 +16,27 @@ SIGN_SEARCH_PATHS = \
 
 # $(info KEM_SCHEMES: $(KEM_SCHEMES))
 
-# .PHONY: obj/.schemes.mk
+IGNORE_IMPLEMENTATIONS ?= \
+	-name avx \
+	-or -name avx2 \
+	-or -name sse \
+	-or -name vec \
+	-or -name aesni
+
+.PHONY: obj/.schemes.mk
 obj/.schemes.mk:
-	$(Q)echo "KEM_SCHEMES := \\" > $@
+	$(Q)printf "KEM_SCHEMES :=" > $@
 	$(Q)for SPATH in $(KEM_SEARCH_PATHS); do \
 		SCHEMES=$$(find $${SPATH} -mindepth 1 -maxdepth 1 -type d); \
 		for SCHEME in $${SCHEMES}; do \
-			find $${SCHEME} -mindepth 1 -maxdepth 1 -type d \! \( -name avx -or -name avx2 -or -name sse -or -name vec -or -name aesni \) -printf "\\t%p \\\\\\n"  >> $@; \
+			find $${SCHEME} -mindepth 1 -maxdepth 1 -type d \! \( $(IGNORE_IMPLEMENTATIONS) \) -print0 | xargs -0 printf " \\\\\\n\\t%s" >> $@; \
 		done; \
 	done;
-	$(Q)echo "" >> $@
-	$(Q)echo "SIGN_SCHEMES := \\" >> $@
+	$(Q)printf "\n\nSIGN_SCHEMES :=" >> $@
 	$(Q)for SPATH in $(SIGN_SEARCH_PATHS); do \
 		SCHEMES=$$(find $${SPATH} -mindepth 1 -maxdepth 1 -type d); \
 		for SCHEME in $${SCHEMES}; do \
-			find $${SCHEME} -mindepth 1 -maxdepth 1 -type d \! \( -name avx -or -name avx2 -or -name sse -or -name vec -or -name aesni \) -printf "\\t%p \\\\\\n"  >> $@; \
+			find $${SCHEME} -mindepth 1 -maxdepth 1 -type d \! \( $(IGNORE_IMPLEMENTATIONS) \) -print0 | xargs -0 printf " \\\\\\n\\t%s" >> $@; \
 		done; \
 	done;
 
