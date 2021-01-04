@@ -32,7 +32,7 @@ COMMONSOURCES_HOST=$(COMMONSOURCES) mupq/common/keccakf1600.c mupq/pqclean/commo
 COMMONSOURCES_M4=$(COMMONSOURCES) common/keccakf1600.S common/aes.c common/aes-encrypt.S common/aes-keyschedule.S common/aes-publicinputs.c common/aes-publicinputs.S mupq/common/sha2.c common/crypto_hashblocks_sha512.c common/crypto_hashblocks_sha512_inner32.s
 
 COMMONINCLUDES=-I"mupq/common"
-COMMONINCLUDES_M4=$(COMMONINCLUDES) -I"common"
+COMMONINCLUDES_M4=-I"common" $(COMMONINCLUDES)
 COMMONINCLUDES_HOST=$(COMMONINCLUDES) -I"mupq/pqclean/common"
 
 RANDOMBYTES_M4=common/randombytes.c
