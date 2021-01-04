@@ -263,7 +263,7 @@ new subdirectory under `crypto_sign/`.
   Some schemes submitted to NIST make use of AES as a subroutine.
   We included assembly-optimized implementations of AES-128 and AES-256 in ECB mode and in CTR mode.
 
-  Up until December 2020, pqm4 relied on the [t-table implementation](https://github.com/Ko-/aes-armcortexm) by Schwabe and Stoffelen published at [SAC2016](https://eprint.iacr.org/2016/714.pdf).
+  Up until January 2021, pqm4 relied on the [t-table implementation](https://github.com/Ko-/aes-armcortexm) by Schwabe and Stoffelen published at [SAC2016](https://eprint.iacr.org/2016/714.pdf).
   On Cortex-M4 platforms with a data cache, this implementation may be vulnerable to cache attacks.
   Hence, pqm4 is now using the [bitsliced implementation](https://github.com/aadomn/aes) by Adomnicai and Peyrin published in [TCHES2021/1](https://eprint.iacr.org/2020/1123.pdf).
 
@@ -283,22 +283,22 @@ new subdirectory under `crypto_sign/`.
 
   Some post-quantum schemes use AES with only public inputs (e.g., Kyber and FrodoKEM) and, consequently, do not need a constant-time AES implementation.
   As those schemes would be unfairly penalized by swiching to a slower constant-time implementation, we additionally provide the t-table implementation.
-  The functions that can be used are stated in `common/aes-leaktime.h` as follows:
+  The functions that can be used are stated in `common/aes-publicinputs.h` as follows:
  ```c
-  void aes128_ecb_keyexp_leaktime(aes128leaktimectx *r, const unsigned char *key);
-  void aes128_ctr_keyexp_leaktime(aes128leaktimectx *r, const unsigned char *key);
-  void aes128_ecb_leaktime(unsigned char *out, const unsigned char *in, size_t nblocks, const aes128leaktimectx *ctx);
-  void aes128_ctr_leaktime(unsigned char *out, size_t outlen, const unsigned char *iv, const aes128leaktimectx *ctx);
+  void aes128_ecb_keyexp_publicinputs(aes128ctx_publicinputs *r, const unsigned char *key);
+  void aes128_ctr_keyexp_publicinputs(aes128ctx_publicinputs *r, const unsigned char *key);
+  void aes128_ecb_publicinputs(unsigned char *out, const unsigned char *in, size_t nblocks, const aes128ctx_publicinputs *ctx);
+  void aes128_ctr_publicinputs(unsigned char *out, size_t outlen, const unsigned char *iv, const aes128ctx_publicinputs *ctx);
 
-  void aes192_ecb_keyexp_leaktime(aes192leaktimectx *r, const unsigned char *key);
-  void aes192_ctr_keyexp_leaktime(aes192leaktimectx *r, const unsigned char *key);
-  void aes192_ecb_leaktime(unsigned char *out, const unsigned char *in, size_t nblocks, const aes192leaktimectx *ctx);
-  void aes192_ctr_leaktime(unsigned char *out, size_t outlen, const unsigned char *iv, const aes192leaktimectx *ctx);
+  void aes192_ecb_keyexp_publicinputs(aes192ctx_publicinputs *r, const unsigned char *key);
+  void aes192_ctr_keyexp_publicinputs(aes192ctx_publicinputs *r, const unsigned char *key);
+  void aes192_ecb_publicinputs(unsigned char *out, const unsigned char *in, size_t nblocks, const aes192ctx_publicinputs *ctx);
+  void aes192_ctr_publicinputs(unsigned char *out, size_t outlen, const unsigned char *iv, const aes192ctx_publicinputs *ctx);
 
-  void aes256_ecb_keyexp_leaktime(aes256leaktimectx *r, const unsigned char *key);
-  void aes256_ctr_keyexp_leaktime(aes256leaktimectx *r, const unsigned char *key);
-  void aes256_ecb_leaktime(unsigned char *out, const unsigned char *in, size_t nblocks, const aes256leaktimectx *ctx);
-  void aes256_ctr_leaktime(unsigned char *out, size_t outlen, const unsigned char *iv, const aes256leaktimectx *ctx);
+  void aes256_ecb_keyexp_publicinputs(aes256ctx_publicinputs *r, const unsigned char *key);
+  void aes256_ctr_keyexp_publicinputs(aes256ctx_publicinputs *r, const unsigned char *key);
+  void aes256_ecb_publicinputs(unsigned char *out, const unsigned char *in, size_t nblocks, const aes256ctx_publicinputs *ctx);
+  void aes256_ctr_publicinputs(unsigned char *out, size_t outlen, const unsigned char *iv, const aes256ctx_publicinputs *ctx);
  ```
 
 ## Bibliography

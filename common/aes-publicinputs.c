@@ -29,19 +29,19 @@
 #include <stdint.h>
 #include <string.h>
 
-#include "aes-leaktime.h"
+#include "aes-publicinputs.h"
 
 #ifdef PROFILE_HASHING
 #include "hal.h"
 extern unsigned long long hash_cycles;
 #endif
 
-extern void aes128_keyexp_leaktime_asm(const uint8_t *key, uint8_t *rk);
-extern void aes192_keyexp_leaktime_asm(const uint8_t *key, uint8_t *rk);
-extern void aes256_keyexp_leaktime_asm(const uint8_t *key, uint8_t *rk);
-extern void aes128_encrypt_leaktime_asm(const uint8_t *rk, const uint8_t *in, uint8_t *out);
-extern void aes192_encrypt_leaktime_asm(const uint8_t *rk, const uint8_t *in, uint8_t *out);
-extern void aes256_encrypt_leaktime_asm(const uint8_t *rk, const uint8_t *in, uint8_t *out);
+extern void aes128_keyexp_publicinputs_asm(const uint8_t *key, uint8_t *rk);
+extern void aes192_keyexp_publicinputs_asm(const uint8_t *key, uint8_t *rk);
+extern void aes256_keyexp_publicinputs_asm(const uint8_t *key, uint8_t *rk);
+extern void aes128_encrypt_publicinputs_asm(const uint8_t *rk, const uint8_t *in, uint8_t *out);
+extern void aes192_encrypt_publicinputs_asm(const uint8_t *rk, const uint8_t *in, uint8_t *out);
+extern void aes256_encrypt_publicinputs_asm(const uint8_t *rk, const uint8_t *in, uint8_t *out);
 
 
 static inline uint32_t br_swap32(uint32_t x) {
@@ -89,13 +89,13 @@ static void aes_ctr(unsigned char *out, size_t outlen, const unsigned char *iv, 
 }
 
 
-static void aes128_keyexp_leaktime(aes128leaktimectx *r, const unsigned char *key) {
+static void aes128_keyexp_publicinputs(aes128ctx_publicinputs *r, const unsigned char *key) {
 #ifdef PROFILE_HASHING
     uint64_t t0 = hal_get_time();
 #endif
 
     memcpy((uint8_t *)r->sk_exp, key, AES128_KEYBYTES);
-    aes128_keyexp_leaktime_asm(key, ((uint8_t *)r->sk_exp) + AES128_KEYBYTES);
+    aes128_keyexp_publicinputs_asm(key, ((uint8_t *)r->sk_exp) + AES128_KEYBYTES);
 
 #ifdef PROFILE_HASHING
     uint64_t t1 = hal_get_time();
@@ -103,21 +103,21 @@ static void aes128_keyexp_leaktime(aes128leaktimectx *r, const unsigned char *ke
 #endif
 }
 
-void aes128_ecb_keyexp_leaktime(aes128leaktimectx *r, const unsigned char *key) {
-    aes128_keyexp_leaktime(r, key);
+void aes128_ecb_keyexp_publicinputs(aes128ctx_publicinputs *r, const unsigned char *key) {
+    aes128_keyexp_publicinputs(r, key);
 }
 
-void aes128_ctr_keyexp_leaktime(aes128leaktimectx *r, const unsigned char *key) {
-    aes128_keyexp_leaktime(r, key);
+void aes128_ctr_keyexp_publicinputs(aes128ctx_publicinputs *r, const unsigned char *key) {
+    aes128_keyexp_publicinputs(r, key);
 }
 
-static void aes192_keyexp_leaktime(aes192leaktimectx *r, const unsigned char *key) {
+static void aes192_keyexp_publicinputs(aes192ctx_publicinputs *r, const unsigned char *key) {
 #ifdef PROFILE_HASHING
     uint64_t t0 = hal_get_time();
 #endif
 
     memcpy((uint8_t *)r->sk_exp, key, AES192_KEYBYTES);
-    aes192_keyexp_leaktime_asm(key, ((uint8_t *)r->sk_exp) + AES192_KEYBYTES);
+    aes192_keyexp_publicinputs_asm(key, ((uint8_t *)r->sk_exp) + AES192_KEYBYTES);
 
 #ifdef PROFILE_HASHING
     uint64_t t1 = hal_get_time();
@@ -126,22 +126,22 @@ static void aes192_keyexp_leaktime(aes192leaktimectx *r, const unsigned char *ke
 }
 
 
-void aes192_ecb_keyexp_leaktime(aes192leaktimectx *r, const unsigned char *key) {
-    aes192_keyexp_leaktime(r, key);
+void aes192_ecb_keyexp_publicinputs(aes192ctx_publicinputs *r, const unsigned char *key) {
+    aes192_keyexp_publicinputs(r, key);
 }
 
-void aes192_ctr_keyexp_leaktime(aes192leaktimectx *r, const unsigned char *key) {
-    aes192_keyexp_leaktime(r, key);
+void aes192_ctr_keyexp_publicinputs(aes192ctx_publicinputs *r, const unsigned char *key) {
+    aes192_keyexp_publicinputs(r, key);
 }
 
 
-static void aes256_keyexp_leaktime(aes256leaktimectx *r, const unsigned char *key) {
+static void aes256_keyexp_publicinputs(aes256ctx_publicinputs *r, const unsigned char *key) {
 #ifdef PROFILE_HASHING
     uint64_t t0 = hal_get_time();
 #endif
 
     memcpy((uint8_t *)r->sk_exp, key, AES256_KEYBYTES);
-    aes256_keyexp_leaktime_asm(key, ((uint8_t *)r->sk_exp) + AES256_KEYBYTES);
+    aes256_keyexp_publicinputs_asm(key, ((uint8_t *)r->sk_exp) + AES256_KEYBYTES);
 
 #ifdef PROFILE_HASHING
     uint64_t t1 = hal_get_time();
@@ -149,21 +149,21 @@ static void aes256_keyexp_leaktime(aes256leaktimectx *r, const unsigned char *ke
 #endif
 }
 
-void aes256_ecb_keyexp_leaktime(aes256leaktimectx *r, const unsigned char *key) {
-    aes256_keyexp_leaktime(r, key);
+void aes256_ecb_keyexp_publicinputs(aes256ctx_publicinputs *r, const unsigned char *key) {
+    aes256_keyexp_publicinputs(r, key);
 }
 
-void aes256_ctr_keyexp_leaktime(aes256leaktimectx *r, const unsigned char *key) {
-    aes256_keyexp_leaktime(r, key);
+void aes256_ctr_keyexp_publicinputs(aes256ctx_publicinputs *r, const unsigned char *key) {
+    aes256_keyexp_publicinputs(r, key);
 }
 
 
-void aes128_ecb_leaktime(unsigned char *out, const unsigned char *in, size_t nblocks, const aes128leaktimectx *ctx) {
+void aes128_ecb_publicinputs(unsigned char *out, const unsigned char *in, size_t nblocks, const aes128ctx_publicinputs *ctx) {
 #ifdef PROFILE_HASHING
     uint64_t t0 = hal_get_time();
 #endif
 
-    aes_ecb(out, in, nblocks, ctx->sk_exp, aes128_encrypt_leaktime_asm);
+    aes_ecb(out, in, nblocks, ctx->sk_exp, aes128_encrypt_publicinputs_asm);
 
 #ifdef PROFILE_HASHING
     uint64_t t1 = hal_get_time();
@@ -171,12 +171,12 @@ void aes128_ecb_leaktime(unsigned char *out, const unsigned char *in, size_t nbl
 #endif
 }
 
-void aes128_ctr_leaktime(unsigned char *out, size_t outlen, const unsigned char *iv, const aes128leaktimectx *ctx) {
+void aes128_ctr_publicinputs(unsigned char *out, size_t outlen, const unsigned char *iv, const aes128ctx_publicinputs *ctx) {
 #ifdef PROFILE_HASHING
     uint64_t t0 = hal_get_time();
 #endif
 
-    aes_ctr(out, outlen, iv, ctx->sk_exp, aes128_encrypt_leaktime_asm);
+    aes_ctr(out, outlen, iv, ctx->sk_exp, aes128_encrypt_publicinputs_asm);
 
 #ifdef PROFILE_HASHING
     uint64_t t1 = hal_get_time();
@@ -184,12 +184,12 @@ void aes128_ctr_leaktime(unsigned char *out, size_t outlen, const unsigned char 
 #endif
 }
 
-void aes192_ecb_leaktime(unsigned char *out, const unsigned char *in, size_t nblocks, const aes192leaktimectx *ctx) {
+void aes192_ecb_publicinputs(unsigned char *out, const unsigned char *in, size_t nblocks, const aes192ctx_publicinputs *ctx) {
 #ifdef PROFILE_HASHING
     uint64_t t0 = hal_get_time();
 #endif
 
-    aes_ecb(out, in, nblocks, ctx->sk_exp, aes192_encrypt_leaktime_asm);
+    aes_ecb(out, in, nblocks, ctx->sk_exp, aes192_encrypt_publicinputs_asm);
 
 #ifdef PROFILE_HASHING
     uint64_t t1 = hal_get_time();
@@ -197,12 +197,12 @@ void aes192_ecb_leaktime(unsigned char *out, const unsigned char *in, size_t nbl
 #endif
 }
 
-void aes192_ctr_leaktime(unsigned char *out, size_t outlen, const unsigned char *iv, const aes192leaktimectx *ctx) {
+void aes192_ctr_publicinputs(unsigned char *out, size_t outlen, const unsigned char *iv, const aes192ctx_publicinputs *ctx) {
 #ifdef PROFILE_HASHING
     uint64_t t0 = hal_get_time();
 #endif
 
-    aes_ctr(out, outlen, iv, ctx->sk_exp, aes192_encrypt_leaktime_asm);
+    aes_ctr(out, outlen, iv, ctx->sk_exp, aes192_encrypt_publicinputs_asm);
 
 #ifdef PROFILE_HASHING
     uint64_t t1 = hal_get_time();
@@ -210,12 +210,12 @@ void aes192_ctr_leaktime(unsigned char *out, size_t outlen, const unsigned char 
 #endif
 }
 
-void aes256_ecb_leaktime(unsigned char *out, const unsigned char *in, size_t nblocks, const aes256leaktimectx *ctx) {
+void aes256_ecb_publicinputs(unsigned char *out, const unsigned char *in, size_t nblocks, const aes256ctx_publicinputs *ctx) {
 #ifdef PROFILE_HASHING
     uint64_t t0 = hal_get_time();
 #endif
 
-    aes_ecb(out, in, nblocks, ctx->sk_exp, aes256_encrypt_leaktime_asm);
+    aes_ecb(out, in, nblocks, ctx->sk_exp, aes256_encrypt_publicinputs_asm);
 
 #ifdef PROFILE_HASHING
     uint64_t t1 = hal_get_time();
@@ -223,12 +223,12 @@ void aes256_ecb_leaktime(unsigned char *out, const unsigned char *in, size_t nbl
 #endif
 }
 
-void aes256_ctr_leaktime(unsigned char *out, size_t outlen, const unsigned char *iv, const aes256leaktimectx *ctx) {
+void aes256_ctr_publicinputs(unsigned char *out, size_t outlen, const unsigned char *iv, const aes256ctx_publicinputs *ctx) {
 #ifdef PROFILE_HASHING
     uint64_t t0 = hal_get_time();
 #endif
 
-    aes_ctr(out, outlen, iv, ctx->sk_exp, aes256_encrypt_leaktime_asm);
+    aes_ctr(out, outlen, iv, ctx->sk_exp, aes256_encrypt_publicinputs_asm);
 
 #ifdef PROFILE_HASHING
     uint64_t t1 = hal_get_time();
@@ -236,21 +236,21 @@ void aes256_ctr_leaktime(unsigned char *out, size_t outlen, const unsigned char 
 #endif
 }
 
-void aes128_ctx_release_leaktime(aes128leaktimectx *r) {
+void aes128_ctx_release_publicinputs(aes128ctx_publicinputs *r) {
     // no-op for mupq's basic AES operation
     // this is required for compatibility with code from PQClean
     // see https://github.com/PQClean/PQClean/pull/198
     (void) r;
 }
 
-void aes192_ctx_release_leaktime(aes192leaktimectx *r) {
+void aes192_ctx_release_publicinputs(aes192ctx_publicinputs *r) {
     // no-op for mupq's basic AES operation
     // this is required for compatibility with code from PQClean
     // see https://github.com/PQClean/PQClean/pull/198
     (void) r;
 }
 
-void aes256_ctx_release_leaktime(aes256leaktimectx *r) {
+void aes256_ctx_release_publicinputs(aes256ctx_publicinputs *r) {
     // no-op for mupq's basic AES operation
     // this is required for compatibility with code from PQClean
     // see https://github.com/PQClean/PQClean/pull/198

@@ -1,13 +1,13 @@
 #ifndef AES256CTR_H
 #define AES256CTR_H
 
-#include "aes-leaktime.h"
+#include "aes-publicinputs.h"
 
 #include <stddef.h>
 #include <stdint.h>
 
 typedef struct {
-    aes256leaktimectx sk_exp;
+    aes256ctx_publicinputs sk_exp;
     uint8_t iv[12];
     uint32_t ctr;
 } aes256xof_ctx;
