@@ -261,18 +261,18 @@ new subdirectory under `crypto_sign/`.
 ## Using optimized AES
 
   Some schemes submitted to NIST make use of AES as a subroutine.
-  We included assembly-optimized implementations of AES-128/-192/-256 in ECB mode and in CTR mode.
-  The functions that can be used are stated in `mupq/common/aes.h` as follows:
+  We included assembly-optimized implementations of AES-128 and AES-256 in ECB mode and in CTR mode.
+
+  Up until January 2021, pqm4 relied on the [t-table implementation](https://github.com/Ko-/aes-armcortexm) by Schwabe and Stoffelen published at [SAC2016](https://eprint.iacr.org/2016/714.pdf).
+  On Cortex-M4 platforms with a data cache, this implementation may be vulnerable to cache attacks.
+  Hence, pqm4 is now using the [bitsliced implementation](https://github.com/aadomn/aes) by Adomnicai and Peyrin published in [TCHES2021/1](https://eprint.iacr.org/2020/1123.pdf).
+
+  The functions that can be used are stated in `common/aes.h` as follows:
   ```c
   void aes128_ecb_keyexp(aes128ctx *r, const unsigned char *key);
   void aes128_ctr_keyexp(aes128ctx *r, const unsigned char *key);
   void aes128_ecb(unsigned char *out, const unsigned char *in, size_t nblocks, const aes128ctx *ctx);
   void aes128_ctr(unsigned char *out, size_t outlen, const unsigned char *iv, const aes128ctx *ctx);
-
-  void aes192_ecb_keyexp(aes192ctx *r, const unsigned char *key);
-  void aes192_ctr_keyexp(aes192ctx *r, const unsigned char *key);
-  void aes192_ecb(unsigned char *out, const unsigned char *in, size_t nblocks, const aes192ctx *ctx);
-  void aes192_ctr(unsigned char *out, size_t outlen, const unsigned char *iv, const aes192ctx *ctx);
 
   void aes256_ecb_keyexp(aes256ctx *r, const unsigned char *key);
   void aes256_ctr_keyexp(aes256ctx *r, const unsigned char *key);
@@ -280,6 +280,26 @@ new subdirectory under `crypto_sign/`.
   void aes256_ctr(unsigned char *out, size_t outlen, const unsigned char *iv, const aes256ctx *ctx);
   ```
   Implementations can use these by including `aes.h`.
+
+  Some post-quantum schemes use AES with only public inputs (e.g., Kyber and FrodoKEM) and, consequently, do not need a constant-time AES implementation.
+  As those schemes would be unfairly penalized by swiching to a slower constant-time implementation, we additionally provide the t-table implementation.
+  The functions that can be used are stated in `common/aes-publicinputs.h` as follows:
+ ```c
+  void aes128_ecb_keyexp_publicinputs(aes128ctx_publicinputs *r, const unsigned char *key);
+  void aes128_ctr_keyexp_publicinputs(aes128ctx_publicinputs *r, const unsigned char *key);
+  void aes128_ecb_publicinputs(unsigned char *out, const unsigned char *in, size_t nblocks, const aes128ctx_publicinputs *ctx);
+  void aes128_ctr_publicinputs(unsigned char *out, size_t outlen, const unsigned char *iv, const aes128ctx_publicinputs *ctx);
+
+  void aes192_ecb_keyexp_publicinputs(aes192ctx_publicinputs *r, const unsigned char *key);
+  void aes192_ctr_keyexp_publicinputs(aes192ctx_publicinputs *r, const unsigned char *key);
+  void aes192_ecb_publicinputs(unsigned char *out, const unsigned char *in, size_t nblocks, const aes192ctx_publicinputs *ctx);
+  void aes192_ctr_publicinputs(unsigned char *out, size_t outlen, const unsigned char *iv, const aes192ctx_publicinputs *ctx);
+
+  void aes256_ecb_keyexp_publicinputs(aes256ctx_publicinputs *r, const unsigned char *key);
+  void aes256_ctr_keyexp_publicinputs(aes256ctx_publicinputs *r, const unsigned char *key);
+  void aes256_ecb_publicinputs(unsigned char *out, const unsigned char *in, size_t nblocks, const aes256ctx_publicinputs *ctx);
+  void aes256_ctr_publicinputs(unsigned char *out, size_t outlen, const unsigned char *iv, const aes256ctx_publicinputs *ctx);
+ ```
 
 ## Bibliography
 

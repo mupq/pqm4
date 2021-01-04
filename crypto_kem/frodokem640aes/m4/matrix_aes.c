@@ -7,7 +7,7 @@
 #include <stdint.h>
 #include <string.h>
 
-#include "aes.h"
+#include "aes-publicinputs.h"
 
 #include "api.h"
 #include "common.h"
@@ -22,9 +22,9 @@ int mul_add_as_plus_e(uint16_t *out, const uint16_t *s, const uint8_t *seed_A) {
     uint16_t i, j;
     int16_t a_row[4 * PARAMS_N];
     int16_t a_row_temp[4 * PARAMS_N] = {0};                     // Take four lines of A at once
-    aes128ctx ctx128;
+    aes128ctx_publicinputs ctx128;
 
-    aes128_ecb_keyexp(&ctx128, seed_A);
+    aes128_ecb_keyexp_publicinputs(&ctx128, seed_A);
 
     for (j = 0; j < PARAMS_N; j += PARAMS_STRIPE_STEP) {
         a_row_temp[j + 1 + 0 * PARAMS_N] = UINT16_TO_LE(j);     // Loading values in the little-endian order
@@ -40,7 +40,7 @@ int mul_add_as_plus_e(uint16_t *out, const uint16_t *s, const uint8_t *seed_A) {
             a_row_temp[j + 2 * PARAMS_N] = UINT16_TO_LE(i + 2);
             a_row_temp[j + 3 * PARAMS_N] = UINT16_TO_LE(i + 3);
         }
-        aes128_ecb((uint8_t *)a_row, (uint8_t *)a_row_temp, 4 * PARAMS_N * sizeof(int16_t) / AES_BLOCKBYTES, &ctx128);
+        aes128_ecb_publicinputs((uint8_t *)a_row, (uint8_t *)a_row_temp, 4 * PARAMS_N * sizeof(int16_t) / AES_BLOCKBYTES, &ctx128);
         for (k = 0; k < 4 * PARAMS_N; k++) {
             a_row[k] = LE_TO_UINT16(a_row[k]);
         }
@@ -64,10 +64,10 @@ int mul_add_sa_plus_e(uint16_t *out, const uint16_t *s, const uint8_t *seed_A)
     int i, j, kk;
 
     uint16_t a_cols[PARAMS_N*PARAMS_STRIPE_STEP] = {0};
-    uint16_t a_cols_temp[PARAMS_N*PARAMS_STRIPE_STEP] = {0};       
+    uint16_t a_cols_temp[PARAMS_N*PARAMS_STRIPE_STEP] = {0};
 
-    aes128ctx roundkeys;
-    aes128_ecb_keyexp(&roundkeys, seed_A);
+    aes128ctx_publicinputs roundkeys;
+    aes128_ecb_keyexp_publicinputs(&roundkeys, seed_A);
 
     for (i = 0, j = 0; i < PARAMS_N; i++, j += PARAMS_STRIPE_STEP) {
         a_cols_temp[j] = i; // Loading values in the little-endian order
@@ -77,8 +77,8 @@ int mul_add_sa_plus_e(uint16_t *out, const uint16_t *s, const uint8_t *seed_A)
         for (i = 0; i < (PARAMS_N*PARAMS_STRIPE_STEP); i += PARAMS_STRIPE_STEP) {
             a_cols_temp[i + 1] = kk; // Loading values in the little-endian order
         }
-        
-        aes128_ecb((unsigned char *)a_cols, (unsigned char *)a_cols_temp, PARAMS_N*PARAMS_STRIPE_STEP*sizeof(int16_t) / AES_BLOCKBYTES, &roundkeys);
+
+        aes128_ecb_publicinputs((unsigned char *)a_cols, (unsigned char *)a_cols_temp, PARAMS_N*PARAMS_STRIPE_STEP*sizeof(int16_t) / AES_BLOCKBYTES, &roundkeys);
         for (i = 0; i < PARAMS_N; i += 8) {
             for (j = 0; j < PARAMS_STRIPE_STEP; j++) {
                 sa(out+kk+j, s+i, a_cols+i*PARAMS_STRIPE_STEP+j);
