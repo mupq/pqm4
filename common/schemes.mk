@@ -1,5 +1,7 @@
 _git_submodule_update_mupq := $(shell git submodule update --init --recursive mupq)
 
+ifndef IMPLEMENTATION_PATH
+
 KEM_SEARCH_PATHS = \
 	crypto_kem \
 	mupq/crypto_kem \
@@ -29,6 +31,13 @@ obj/.schemes.mk:
 
 KEM_SCHEMES := $(filter-out $(EXCLUDED_SCHEMES),$(KEM_SCHEMES))
 SIGN_SCHEMES := $(filter-out $(EXCLUDED_SCHEMES),$(SIGN_SCHEMES))
+
+else
+
+KEM_SCHEMES := $(if $(findstring crypto_kem,$(IMPLEMENTATION_PATH)),$(IMPLEMENTATION_PATH))
+SIGN_SCHEMES := $(if $(findstring crypto_sign,$(IMPLEMENTATION_PATH)),$(IMPLEMENTATION_PATH))
+
+endif
 
 schemename = $(subst /,_,$(1))
 schemesrc = $(wildcard $(1)/*.c) $(wildcard $(1)/*.s) $(wildcard $(1)/*.S)
