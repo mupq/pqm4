@@ -10,12 +10,6 @@ SIGN_SEARCH_PATHS = \
 	mupq/crypto_sign \
 	mupq/pqclean/crypto_sign
 
-# findschemes = $(foreach spath,$(1),$(wildcard $(spath)*/))
-# KEM_SCHEMES := $(call findschemes,$(KEM_SEARCH_PATHS))
-# KEM_SCHEMES := $(call findschemes,$(KEM_SCHEMES))
-
-# $(info KEM_SCHEMES: $(KEM_SCHEMES))
-
 IGNORE_IMPLEMENTATIONS ?= \
 	-name avx \
 	-or -name avx2 \
@@ -25,20 +19,11 @@ IGNORE_IMPLEMENTATIONS ?= \
 
 .PHONY: obj/.schemes.mk
 obj/.schemes.mk:
-	$(Q)printf "KEM_SCHEMES :=" > $@
-	$(Q)for SPATH in $(KEM_SEARCH_PATHS); do \
-		SCHEMES=$$(find $${SPATH} -mindepth 1 -maxdepth 1 -type d); \
-		for SCHEME in $${SCHEMES}; do \
-			find $${SCHEME} -mindepth 1 -maxdepth 1 -type d \! \( $(IGNORE_IMPLEMENTATIONS) \) -print0 | xargs -0 printf " \\\\\\n\\t%s" >> $@; \
-		done; \
-	done;
-	$(Q)printf "\n\nSIGN_SCHEMES :=" >> $@
-	$(Q)for SPATH in $(SIGN_SEARCH_PATHS); do \
-		SCHEMES=$$(find $${SPATH} -mindepth 1 -maxdepth 1 -type d); \
-		for SCHEME in $${SCHEMES}; do \
-			find $${SCHEME} -mindepth 1 -maxdepth 1 -type d \! \( $(IGNORE_IMPLEMENTATIONS) \) -print0 | xargs -0 printf " \\\\\\n\\t%s" >> $@; \
-		done; \
-	done;
+	$(Q)touch $@; \
+	printf "KEM_SCHEMES :=" > $@; \
+	find $(KEM_SEARCH_PATHS) -mindepth 2 -maxdepth 2 -type d \! \( $(IGNORE_IMPLEMENTATIONS) \) -print0 | xargs -0 printf " \\\\\\n\\t%s" >> $@; \
+	printf "\n\nSIGN_SCHEMES :=" >> $@; \
+	find $(SIGN_SEARCH_PATHS) -mindepth 2 -maxdepth 2 -type d \! \( $(IGNORE_IMPLEMENTATIONS) \) -print0 | xargs -0 printf " \\\\\\n\\t%s" >> $@;
 
 -include obj/.schemes.mk
 
