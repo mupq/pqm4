@@ -16,7 +16,7 @@ def parse_arguments():
         "-p",
         "--platform",
         help="The PQM4 platform",
-        choices=["stm32f4discovery", "nucleo-l476rg", "cw308t-stm32f3"],
+        choices=["stm32f4discovery", "nucleo-l476rg", "cw308t-stm32f3", "mps2-an386"],
         default="stm32f4discovery",
     )
     parser.add_argument(
@@ -39,14 +39,19 @@ def parse_arguments():
 def get_platform(args):
     platform = None
     bin_type = 'bin'
+    allschemes = False
     if args.platform in ['stm32f4discovery', 'nucleo-l476rg']:
         platform = StLink(args.uart)
     elif args.platform == "cw308t-stm32f3":
         bin_type = 'hex'
         platform = ChipWhisperer()
+    elif args.platform == 'mps2-an386':
+        bin_type = 'bin'
+        platform = Qemu('mps2-an386')
+        allschemes = True
     else:
         raise NotImplementedError("Unsupported Platform")
-    settings = M4Settings(args.platform, args.opt, args.lto, args.aio, bin_type)
+    settings = M4Settings(args.platform, args.opt, args.lto, args.aio, bin_type, allschemes)
     return platform, settings
 
 
@@ -110,7 +115,9 @@ class M4Settings(mupq.PlatformSettings):
         {'scheme': 'hqc-rmrs-256', 'implementation': 'clean'},
     )
 
-    def __init__(self, platform, opt="speed", lto=False, aio=False, binary_type='bin'):
+    def __init__(self, platform, opt="speed", lto=False, aio=False, binary_type='bin', allschemes=False):
+        if allschemes:
+            self.skip_list = ()
         """Initialize with a specific platform"""
         self.binary_type = binary_type
         optflags = {"speed": [], "size": ["OPT_SIZE=1"], "debug": ["DEBUG=1"]}
@@ -126,69 +133,38 @@ class M4Settings(mupq.PlatformSettings):
 
 
 class Qemu(mupq.Platform):
-    class Wrapper(object):
-        def __init__(self, proc, timeout=60):
-            self.log = logging.getLogger("platform interface")
-            self.proc = proc
-            self.timeout = timeout
 
-        def terminate(self):
-            self.log.debug("Terminating QEMU process")
-            self.proc.stdout.close()
-            self.proc.terminate()
-            self.proc.kill()
-
-        def read(self, n=1):
-            r, w, x = select.select([self.proc.stdout], [], [], self.timeout)
-            for stdio in r:
-                return stdio.read(n)
-            raise Exception("timeout")
-
-        def reset_input_buffer(self):
-            pass
+    start_pat = re.compile(b'.*={4,}\n', re.DOTALL)
+    end_pat = re.compile(b'#\n', re.DOTALL)
 
     def __init__(self, machine):
         super().__init__()
         self.machine = machine
         self.platformname = "qemu"
-        self.wrapper = None
 
     def __enter__(self):
         return super().__enter__()
 
     def __exit__(self, *args, **kwargs):
-        if self.wrapper is not None:
-            self.wrapper.terminate()
-            self.wrapper = None
         return super().__exit__(*args, **kwargs)
 
-    def device(self):
-        if self.wrapper is None:
-            raise Exception("No process started yet")
-        return self.wrapper
-
-    def flash(self, binary_path):
-        super().flash(binary_path)
-        if self.wrapper is not None:
-            self.wrapper.terminate()
-            self.wrapper = None
+    def run(self, binary_path):
         args = [
             "qemu-system-arm",
-            "-cpu",
-            "cortex-m4",
             "-M",
             self.machine,
             "-nographic",
+            "-semihosting",
             "-kernel",
             binary_path,
         ]
-        proc = subprocess.Popen(
-            args,
-            stdin=subprocess.PIPE,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.DEVNULL,
-        )
-        self.wrapper = self.Wrapper(proc)
+        self.log.info(f'Running QEMU: {" ".join(args)}')
+        output = subprocess.check_output(args)
+        start = self.start_pat.search(output)
+        end = self.end_pat.search(output, start.end())
+        if end is None:
+            raise Exception('QEMU execution failed!')
+        return output[start.end():end.start()].decode('utf-8', 'ignore')
 
 
 class SerialCommsPlatform(mupq.Platform):

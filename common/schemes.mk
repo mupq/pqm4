@@ -52,7 +52,7 @@ namespace = $(shell echo $(if $(filter mupq_pqclean_%,$(1)),$(subst mupq_pqclean
 define compiletest =
 	@echo "  CC      $@"
 	$(Q)[ -d $(@D) ] || mkdir -p $(@D)
-	$(Q)$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(if $(AIO),$(filter %.c %.S %.s,$^),$<) -Wl,--start-group $(LDLIBS) -Wl,--end-group
+	$(Q)$(CC) $(filter-out --specs=%,$(CFLAGS)) $(LDFLAGS) -o $@ $(if $(AIO),$(filter %.c %.S %.s,$^),$<) -Wl,--start-group $(LDLIBS) -Wl,--end-group
 endef
 
 define schemelib =
