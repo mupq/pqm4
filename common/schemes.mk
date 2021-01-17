@@ -21,7 +21,8 @@ IGNORE_IMPLEMENTATIONS ?= \
 
 .PHONY: obj/.schemes.mk
 obj/.schemes.mk:
-	$(Q)touch $@; \
+	$(Q)[ -d $(@D) ] || mkdir -p $(@D); \
+	touch $@; \
 	printf "KEM_SCHEMES :=" > $@; \
 	find $(KEM_SEARCH_PATHS) -mindepth 2 -maxdepth 2 -type d \! \( $(IGNORE_IMPLEMENTATIONS) \) -print0 | xargs -0 printf " \\\\\\n\\t%s" >> $@; \
 	printf "\n\nSIGN_SCHEMES :=" >> $@; \
