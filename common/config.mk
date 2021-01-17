@@ -81,6 +81,8 @@ CFLAGS += -flto
 LDFLAGS += -flto
 endif
 
+CPPFLAGS += -DMUPQ_NAMESPACE=$(MUPQ_NAMESPACE)
+
 CFLAGS += \
 	-Wall -Wextra -Wshadow \
 	-MMD \
