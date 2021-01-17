@@ -29,9 +29,9 @@ LIBHAL_SRC := \
 	common/hal-mps2.c
 
 obj/libpqm4hal.a: $(call objs,$(LIBHAL_SRC))
-obj/libpqm4hal.a: CFLAGS += -Icommon/mps2
+obj/libpqm4hal.a: CPPFLAGS += -Icommon/mps2
 $(LDSCRIPT): CPPFLAGS += $(if $(MPS2_DATA_IN_FLASH),-DDATA_IN_FLASH)
-obj/common/mps2/startup_MPS2.S.o: CFLAGS += $(if $(MPS2_DATA_IN_FLASH),-DDATA_IN_FLASH)
+obj/common/mps2/startup_MPS2.S.o: CPPFLAGS += $(if $(MPS2_DATA_IN_FLASH),-DDATA_IN_FLASH)
 
 LDLIBS += -lpqm4hal
 LIBDEPS += obj/libpqm4hal.a
@@ -41,7 +41,7 @@ $(LDSCRIPT): common/mps2/MPS2.ld
 	[ -d $(@D) ] || $(Q)mkdir -p $(@D); \
 	arm-none-eabi-gcc -x assembler-with-cpp -E -Wp,-P $(CPPFLAGS) $< -o $@
 
-$(LDSCRIPT): CFLAGS += -Icommon/mps2
+$(LDSCRIPT): CPPFLAGS += -Icommon/mps2
 
 LINKDEPS += $(LDSCRIPT) $(LIBDEPS)
 
