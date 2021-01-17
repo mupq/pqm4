@@ -1,5 +1,3 @@
-_git_submodule_update_mupq := $(shell git submodule update --init --recursive mupq)
-
 ifndef IMPLEMENTATION_PATH
 
 KEM_SEARCH_PATHS = \
