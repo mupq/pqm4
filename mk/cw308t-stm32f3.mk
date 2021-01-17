@@ -13,4 +13,4 @@ EXCLUDED_SCHEMES = \
   crypto_sign/falcon-1024% \
   crypto_sign/falcon-512% \
 
-include common/opencm3.mk
+include mk/opencm3.mk

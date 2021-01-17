@@ -1,11 +1,11 @@
 .PHONY: all
 all: tests
 
-include common/config.mk
-include common/crypto.mk
-include common/rules.mk
-include common/schemes.mk
-include common/tests.mk
+include mupq/mk/config.mk
+include mk/crypto.mk
+include mupq/mk/rules.mk
+include mupq/mk/schemes.mk
+include mk/tests.mk
 
 .PHONY: clean libclean
 
