@@ -239,3 +239,24 @@ uint64_t hal_get_time()
     }
   }
 }
+
+/* End of BSS is where the heap starts (defined in the linker script) */
+extern char end;
+static char* heap_end = &end;
+
+void* __wrap__sbrk (int incr)
+{
+  char* prev_heap_end;
+
+  prev_heap_end = heap_end;
+  heap_end += incr;
+
+  return (void *) prev_heap_end;
+}
+
+size_t hal_get_stack_size(void)
+{
+  register char* cur_stack;
+	__asm__ volatile ("mov %0, sp" : "=r" (cur_stack));
+  return cur_stack - heap_end;
+}

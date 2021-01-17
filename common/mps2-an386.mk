@@ -19,6 +19,7 @@ CFLAGS += \
 LDFLAGS += \
 	--specs=nano.specs \
 	--specs=nosys.specs \
+	-Wl,--wrap=_sbrk \
 	-ffreestanding \
 	-T$(LDSCRIPT) \
 	$(ARCH_FLAGS)
