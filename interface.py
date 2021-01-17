@@ -1,13 +1,13 @@
 import abc
 import argparse
 
+import pprint
+
 import serial
-import select
 import subprocess
 import re
 
 from mupq import mupq
-import logging
 
 
 def parse_arguments():
@@ -48,10 +48,9 @@ def get_platform(args):
     elif args.platform == 'mps2-an386':
         bin_type = 'bin'
         platform = Qemu('mps2-an386')
-        allschemes = True
     else:
         raise NotImplementedError("Unsupported Platform")
-    settings = M4Settings(args.platform, args.opt, args.lto, args.aio, bin_type, allschemes)
+    settings = M4Settings(args.platform, args.opt, args.lto, args.aio, bin_type)
     return platform, settings
 
 
@@ -66,59 +65,24 @@ class M4Settings(mupq.PlatformSettings):
         ("pqclean", "mupq/pqclean/crypto_sign", "PQCLEAN"),
     ]
 
-    #: List of dicts, in each dict specify (Scheme class) attributes of the
-    #: scheme with values, if all attributes match the scheme is skipped.
-    skip_list = (
-        {'scheme': 'falcon-1024-tree', 'implementation': 'opt-leaktime'},
-        {'scheme': 'falcon-1024-tree', 'implementation': 'opt-ct'},
-        {'scheme': 'frodokem640aes', 'implementation': 'clean'},
-        {'scheme': 'frodokem640aes', 'implementation': 'opt'},
-        {'scheme': 'frodokem976aes', 'implementation': 'clean'},
-        {'scheme': 'frodokem976aes', 'implementation': 'opt'},
-        {'scheme': 'frodokem1344aes', 'implementation': 'clean'},
-        {'scheme': 'frodokem1344aes', 'implementation': 'opt'},
-        {'scheme': 'frodokem640shake', 'implementation': 'clean'},
-        {'scheme': 'frodokem976shake', 'implementation': 'clean'},
-        {'scheme': 'frodokem976shake', 'implementation': 'opt'},
-        {'scheme': 'frodokem1344shake', 'implementation': 'clean'},
-        {'scheme': 'frodokem1344shake', 'implementation': 'opt'},
-        {'scheme': 'rainbowI-classic', 'implementation': 'clean'},
-        {'scheme': 'rainbowI-circumzenithal', 'implementation': 'clean'},
-        {'scheme': 'rainbowI-compressed', 'implementation': 'clean'},
-        {'scheme': 'rainbowIII-classic', 'implementation': 'clean'},
-        {'scheme': 'rainbowIII-circumzenithal', 'implementation': 'clean'},
-        {'scheme': 'rainbowIII-compressed', 'implementation': 'clean'},
-        {'scheme': 'rainbowV-classic', 'implementation': 'clean'},
-        {'scheme': 'rainbowV-circumzenithal', 'implementation': 'clean'},
-        {'scheme': 'rainbowV-compressed', 'implementation': 'clean'},
-        {'scheme': 'mceliece348864', 'implementation': 'clean'},
-        {'scheme': 'mceliece348864f', 'implementation': 'clean'},
-        {'scheme': 'mceliece460896', 'implementation': 'clean'},
-        {'scheme': 'mceliece460896f', 'implementation': 'clean'},
-        {'scheme': 'mceliece6688128', 'implementation': 'clean'},
-        {'scheme': 'mceliece6688128f', 'implementation': 'clean'},
-        {'scheme': 'mceliece6960119', 'implementation': 'clean'},
-        {'scheme': 'mceliece6960119f', 'implementation': 'clean'},
-        {'scheme': 'mceliece8192128', 'implementation': 'clean'},
-        {'scheme': 'mceliece8192128f', 'implementation': 'clean'},
-        {'scheme': 'mceliece348864', 'implementation': 'vec'},
-        {'scheme': 'mceliece348864f', 'implementation': 'vec'},
-        {'scheme': 'mceliece460896', 'implementation': 'vec'},
-        {'scheme': 'mceliece460896f', 'implementation': 'vec'},
-        {'scheme': 'mceliece6688128', 'implementation': 'vec'},
-        {'scheme': 'mceliece6688128f', 'implementation': 'vec'},
-        {'scheme': 'mceliece6960119', 'implementation': 'vec'},
-        {'scheme': 'mceliece6960119f', 'implementation': 'vec'},
-        {'scheme': 'mceliece8192128', 'implementation': 'vec'},
-        {'scheme': 'mceliece8192128f', 'implementation': 'vec'},
-        {'scheme': 'hqc-rmrs-192', 'implementation': 'clean'},
-        {'scheme': 'hqc-rmrs-256', 'implementation': 'clean'},
-    )
+    platform_memory = {
+        'stm32f4discovery': 112*1024,
+        'nucleo-l476rg': 128*1024,
+        'cw308t-stm32f3': 64*1024,
+        'mps2-an386': 4096*1024
+    }
 
-    def __init__(self, platform, opt="speed", lto=False, aio=False, binary_type='bin', allschemes=False):
-        if allschemes:
-            self.skip_list = ()
+    def __init__(self, platform, opt="speed", lto=False, aio=False, binary_type='bin'):
         """Initialize with a specific platform"""
+        import skiplist
+        self.skip_list = []
+        for impl in skiplist.skip_list:
+            if impl['estmemory'] > self.platform_memory[platform]:
+                impl = impl.copy()
+                del impl['estmemory']
+                self.skip_list.append(impl)
+        self.skip_list.append({'implementation': 'vec'})
+        pprint.pp(self.skip_list)
         self.binary_type = binary_type
         optflags = {"speed": [], "size": ["OPT_SIZE=1"], "debug": ["DEBUG=1"]}
         if opt not in optflags:
@@ -164,7 +128,7 @@ class Qemu(mupq.Platform):
         start = self.start_pat.search(output)
         end = self.end_pat.search(output, start.end())
         if end is None:
-            raise Exception('QEMU execution failed!')
+            return 'ERROR'
         return output[start.end():end.start()].decode('utf-8', 'ignore')
 
 
