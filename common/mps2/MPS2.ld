@@ -122,20 +122,12 @@ SECTIONS
     } > FLASH
     __exidx_end = .;
 
-    .interrupts_ram :
-    {
-        . = ALIGN(8);
-        __VECTOR_RAM__ = .;
-        __interrupts_ram_start__ = .;   /* Create a global symbol at data start */
-        . += M_VECTOR_RAM_SIZE;
-        . = ALIGN(8);
-        __interrupts_ram_end__ = .;     /* Define a global symbol at data end */
-    } > RAM
-
     .data :
     {
+#ifndef DATA_IN_FLASH
         PROVIDE(__etext = LOADADDR(.data));
         . = ALIGN(8);
+#endif
         __data_start__ = .;
         *(vtable)
         *(.data)
@@ -166,17 +158,11 @@ SECTIONS
         /* All data end */
         __data_end__ = .;
 
+#ifdef DATA_IN_FLASH
+    } > FLASH
+#else
     } > RAM AT > FLASH
-
-    .uninitialized (NOLOAD):
-    {
-        . = ALIGN(32);
-        __uninitialized_start = .;
-        *(.uninitialized)
-        KEEP(*(.keep.uninitialized))
-        . = ALIGN(32);
-        __uninitialized_end = .;
-    } > RAM
+#endif
 
     .bss :
     {
@@ -190,7 +176,11 @@ SECTIONS
         __bss_end__ = .;
         __END_BSS = .;
 
+#ifdef DATA_IN_FLASH
+    } > FLASH
+#else
     } > RAM
+#endif
 
     bss_size = __bss_end__ - __bss_start__;
 

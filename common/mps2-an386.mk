@@ -1,3 +1,4 @@
+MPS2_DATA_IN_FLASH = 1
 CROSS_PREFIX ?= arm-none-eabi
 CC := $(CROSS_PREFIX)-gcc
 CPP := $(CROSS_PREFIX)-cpp
@@ -28,14 +29,16 @@ LIBHAL_SRC := \
 
 obj/libpqm4hal.a: $(call objs,$(LIBHAL_SRC))
 obj/libpqm4hal.a: CFLAGS += -Icommon/mps2
+$(LDSCRIPT): CPPFLAGS += $(if $(MPS2_DATA_IN_FLASH),-DDATA_IN_FLASH)
+obj/common/mps2/startup_MPS2.S.o: CFLAGS += $(if $(MPS2_DATA_IN_FLASH),-DDATA_IN_FLASH)
 
 LDLIBS += -lpqm4hal
 LIBDEPS += obj/libpqm4hal.a
 
 $(LDSCRIPT): common/mps2/MPS2.ld
-	@printf "  GENLNK  $@\n"
-	$(Q)mkdir -p $(@D)
-	$(Q)arm-none-eabi-gcc -x assembler-with-cpp -E -Wp,-P $< -o $@
+	@printf "  GENLNK  $@\n"; \
+	[ -d $(@D) ] || $(Q)mkdir -p $(@D); \
+	arm-none-eabi-gcc -x assembler-with-cpp -E -Wp,-P $(CPPFLAGS) $< -o $@
 
 $(LDSCRIPT): CFLAGS += -Icommon/mps2
 

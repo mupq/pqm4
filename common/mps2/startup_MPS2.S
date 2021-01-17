@@ -88,8 +88,6 @@ __isr_vector:
     .globl   Reset_Handler
     .type    Reset_Handler, %function
 Reset_Handler:
-    ldr    r0, =SystemInit
-    blx    r0
 /*
  * Loop to copy data from read only memory to RAM. The ranges
  * of copy from/to are specified by following symbols evaluated in
@@ -98,7 +96,7 @@ Reset_Handler:
  * __data_start__/__data_end__: RAM address range that data should be
  * copied to. Both must be aligned to 4 bytes boundary.
  */
-
+#if !defined(DATA_IN_FLASH)
     ldr    r1, =__etext
     ldr    r2, =__data_start__
     ldr    r3, =__data_end__
@@ -114,6 +112,7 @@ Reset_Handler:
     cmp    r4, r3
     blt    .Lflash_to_ram_loop
 .Lflash_to_ram_loop_end:
+#endif /* DATA_IN_FLASH */
 
 /* Initialize .bss */
 init_bss:
