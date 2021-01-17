@@ -75,3 +75,23 @@ $(foreach scheme,$(KEM_SCHEMES), \
 	$(eval $(call schemelib,$(scheme),$(call schemename,$(scheme)),kem)))
 $(foreach scheme,$(SIGN_SCHEMES), \
 	$(eval $(call schemelib,$(scheme),$(call schemename,$(scheme)),sign)))
+
+ifeq ($(ENABLE_QEMU_TESTS),1)
+
+benchmarks/%/frommake:
+	@echo "  RUN     $<"
+	$(Q)[ -d $(@D) ] || mkdir -p $(@D); \
+	$(QEMU) $(QEMUFLAGS) -kernel $< > $@ < /dev/null
+
+define runtest =
+benchmarks/$(3)/$(1)/frommake: elf/$(2)_$(3).elf
+run-$(3)-tests: benchmarks/$(3)/$(1)/frommake
+endef
+
+$(foreach test,speed stack hashing, \
+	$(foreach scheme,$(KEM_SCHEMES), \
+		$(eval $(call runtest,$(scheme),$(call schemename,$(scheme)),$(test)))) \
+	$(foreach scheme,$(SIGN_SCHEMES), \
+		$(eval $(call runtest,$(scheme),$(call schemename,$(scheme)),$(test)))))
+
+endif

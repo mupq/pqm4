@@ -44,3 +44,7 @@ $(LDSCRIPT): common/mps2/MPS2.ld
 $(LDSCRIPT): CFLAGS += -Icommon/mps2
 
 LINKDEPS += $(LDSCRIPT) $(LIBDEPS)
+
+ENABLE_QEMU_TESTS = 1
+QEMU = qemu-system-arm
+QEMUFLAGS = -M mps2-an386 -nographic -semihosting
