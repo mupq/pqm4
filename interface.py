@@ -159,7 +159,8 @@ class Qemu(mupq.Platform):
             binary_path,
         ]
         self.log.info(f'Running QEMU: {" ".join(args)}')
-        output = subprocess.check_output(args)
+        output = subprocess.check_output(args,
+                                         stdin=subprocess.DEVNULL)
         start = self.start_pat.search(output)
         end = self.end_pat.search(output, start.end())
         if end is None:
