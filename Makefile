@@ -3,6 +3,7 @@ all: tests
 
 include mupq/mk/config.mk
 include mk/crypto.mk
+include mupq/mk/host-crypto.mk
 include mupq/mk/rules.mk
 include mupq/mk/schemes.mk
 include mk/tests.mk

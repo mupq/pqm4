@@ -26,15 +26,17 @@ LDFLAGS += \
 
 LIBHAL_SRC := \
 	common/mps2/startup_MPS2.S \
-	common/hal-mps2.c
+	common/hal-mps2.c \
+	common/randombytes.c
 
 obj/libpqm4hal.a: $(call objs,$(LIBHAL_SRC))
+obj/libpqm4hal-nornd.a: $(call objs,$(filter-out common/randombytes.c,$(LIBHAL_SRC)))
 obj/libpqm4hal.a: CPPFLAGS += -Icommon/mps2
 $(LDSCRIPT): CPPFLAGS += $(if $(MPS2_DATA_IN_FLASH),-DDATA_IN_FLASH)
 obj/common/mps2/startup_MPS2.S.o: CPPFLAGS += $(if $(MPS2_DATA_IN_FLASH),-DDATA_IN_FLASH)
 
-LDLIBS += -lpqm4hal
-LIBDEPS += obj/libpqm4hal.a
+LDLIBS += -lpqm4hal$(if $(NO_RANDOMBYTES),-nornd)
+LIBDEPS += obj/libpqm4hal.a obj/libpqm4hal-nornd.a
 
 $(LDSCRIPT): common/mps2/MPS2.ld
 	@printf "  GENLNK  $@\n"; \
