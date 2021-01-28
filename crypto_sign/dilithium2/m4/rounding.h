@@ -4,16 +4,16 @@
 #include <stdint.h>
 #include "params.h"
 
-#define power2round DILITHIUM_NAMESPACE(_power2round)
-uint32_t power2round(const uint32_t a, uint32_t *a0);
+#define power2round DILITHIUM_NAMESPACE(power2round)
+int32_t power2round(int32_t *a0, int32_t a);
 
-#define decompose DILITHIUM_NAMESPACE(_decompose)
-uint32_t decompose(uint32_t a, uint32_t *a0);
+#define decompose DILITHIUM_NAMESPACE(decompose)
+int32_t decompose(int32_t *a0, int32_t a);
 
-#define make_hint DILITHIUM_NAMESPACE(_make_hint)
-unsigned int make_hint(const uint32_t a0, const uint32_t a1);
+#define make_hint DILITHIUM_NAMESPACE(make_hint)
+unsigned int make_hint(int32_t a0, int32_t a1);
 
-#define use_hint DILITHIUM_NAMESPACE(_use_hint)
-uint32_t use_hint(const uint32_t a, const unsigned int hint);
+#define use_hint DILITHIUM_NAMESPACE(use_hint)
+int32_t use_hint(int32_t a, unsigned int hint);
 
 #endif
