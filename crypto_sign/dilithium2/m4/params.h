@@ -3,65 +3,70 @@
 
 #include "config.h"
 
-#define DILITHIUM_NAMESPACE(s) pqcrystals_dilithium##s
+#define DILITHIUM_NAMESPACE(s) pqcrystals_dilithium_##s
 
 
 #define SEEDBYTES 32
 #define CRHBYTES 48
 #define N 256
 #define Q 8380417
+#define D 13
 #define ROOT_OF_UNITY 1753
-#define D 14
-#define GAMMA1 ((Q - 1)/16)
-#define GAMMA2 (GAMMA1/2)
-#define ALPHA (2*GAMMA2)
 
-#if DILITHIUM_MODE == 1
-#define K 3
-#define L 2
-#define ETA 7
-#define BETA 375
-#define OMEGA 64
-#define CRYPTO_ALGNAME "Dilithium1"
-
-#elif DILITHIUM_MODE == 2
+#if DILITHIUM_MODE == 2
 #define K 4
-#define L 3
-#define ETA 6
-#define SETABITS 4
-#define BETA 325
+#define L 4
+#define ETA 2
+#define TAU 39
+#define BETA 78
+#define GAMMA1 (1 << 17)
+#define GAMMA2 ((Q-1)/88)
 #define OMEGA 80
 #define CRYPTO_ALGNAME "Dilithium2"
 
 #elif DILITHIUM_MODE == 3
-#define K 5
-#define L 4
-#define ETA 5
-#define SETABITS 4
-#define BETA 275
-#define OMEGA 96
-#define CRYPTO_ALGNAME "Dilithium3"
-
-#elif DILITHIUM_MODE == 4
 #define K 6
 #define L 5
-#define ETA 3
-#define SETABITS 3
-#define BETA 175
-#define OMEGA 120
-#define CRYPTO_ALGNAME "Dilithium4"
+#define ETA 4
+#define TAU 49
+#define BETA 196
+#define GAMMA1 (1 << 19)
+#define GAMMA2 ((Q-1)/32)
+#define OMEGA 55
+#define CRYPTO_ALGNAME "Dilithium3"
 
-#else
-#error "DILITHIUM_MODE must be 1, 2, 3, or 4"
+#elif DILITHIUM_MODE == 5
+#define K 8
+#define L 7
+#define ETA 2
+#define TAU 60
+#define BETA 120
+#define GAMMA1 (1 << 19)
+#define GAMMA2 ((Q-1)/32)
+#define OMEGA 75
+#define CRYPTO_ALGNAME "Dilithium5"
+
 #endif
 
-#define POLYT1_PACKEDBYTES  288
-#define POLYT0_PACKEDBYTES  448
+#define POLYT1_PACKEDBYTES  320
+#define POLYT0_PACKEDBYTES  416
+#define POLYVECH_PACKEDBYTES (OMEGA + K)
+
+#if GAMMA1 == (1 << 17)
+#define POLYZ_PACKEDBYTES   576
+#elif GAMMA1 == (1 << 19)
 #define POLYZ_PACKEDBYTES   640
+#endif
+
+#if GAMMA2 == (Q-1)/88
+#define POLYW1_PACKEDBYTES  192
+#elif GAMMA2 == (Q-1)/32
 #define POLYW1_PACKEDBYTES  128
-#if ETA <= 3
+#endif
+
+#if ETA == 2
 #define POLYETA_PACKEDBYTES  96
-#else
+#elif ETA == 4
 #define POLYETA_PACKEDBYTES 128
 #endif
 
@@ -70,6 +75,6 @@
                                + L*POLYETA_PACKEDBYTES \
                                + K*POLYETA_PACKEDBYTES \
                                + K*POLYT0_PACKEDBYTES)
-#define CRYPTO_BYTES (L*POLYZ_PACKEDBYTES + OMEGA + K + N/8 + 8)
+#define CRYPTO_BYTES (SEEDBYTES + L*POLYZ_PACKEDBYTES + POLYVECH_PACKEDBYTES)
 
 #endif
