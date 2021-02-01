@@ -27,6 +27,7 @@ def parse_arguments():
         "--no-aio", help="Disable all-in-one compilation", default=False, action="store_true"
     )
     parser.add_argument("-u", "--uart", help="Path to UART output")
+    parser.add_argument("-i", "--iterations", default=1, help="Number of iterations for benchmarks")
     return parser.parse_known_args()
 
 
@@ -43,7 +44,7 @@ def get_platform(args):
         platform = platforms.Qemu('qemu-system-arm', 'mps2-an386')
     else:
         raise NotImplementedError("Unsupported Platform")
-    settings = M4Settings(args.platform, args.opt, args.lto, not args.no_aio, bin_type)
+    settings = M4Settings(args.platform, args.opt, args.lto, not args.no_aio, args.iterations, bin_type)
     return platform, settings
 
 
@@ -65,7 +66,7 @@ class M4Settings(mupq.PlatformSettings):
         'mps2-an386': 4096*1024
     }
 
-    def __init__(self, platform, opt="speed", lto=False, aio=False, binary_type='bin'):
+    def __init__(self, platform, opt="speed", lto=False, aio=False, iterations=1, binary_type='bin'):
         """Initialize with a specific platform"""
         import skiplist
         self.skip_list = []
@@ -81,6 +82,7 @@ class M4Settings(mupq.PlatformSettings):
             raise ValueError(f"Optimization flag should be in {list(optflags.keys())}")
         super(M4Settings, self).__init__()
         self.makeflags = [f"PLATFORM={platform}"]
+        self.makeflags += [f"MUPQ_ITERATIONS={iterations}"]
         self.makeflags += optflags[opt]
         if lto:
             self.makeflags += ["LTO=1"]
