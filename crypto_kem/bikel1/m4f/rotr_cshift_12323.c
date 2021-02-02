@@ -5,7 +5,7 @@
 
 static inline uint32_t bit_mask(uint32_t s,int i) { return -((s>>i)&1); }
 
-#if defined(_M4_ASM_)
+#if 0 //defined(_M4_ASM_)
 void cshift(uint32_t *array, int s) { cshift_asm(array,s); }
 #else
 
