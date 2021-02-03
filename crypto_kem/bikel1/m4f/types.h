@@ -132,12 +132,24 @@ typedef struct syndrome_s {
 #endif
 
 
+#define _UPC_SMALL_MEM_
+
+#if defined( _UPC_SMALL_MEM_ )
+typedef struct upc_slice_s {
+  union {
+    r_t r;
+    uint64_t qw[R_QWORDS];
+  } u;
+} upc_slice_t;
+#else
 typedef struct upc_slice_s {
   union {
     pad_r_t  r;
     uint64_t qw[sizeof(pad_r_t) / sizeof(uint64_t)];
   } ALIGN(ALIGN_BYTES) u;
 } ALIGN(ALIGN_BYTES) upc_slice_t;
+#endif
+
 
 typedef struct upc_s {
   upc_slice_t slice[SLICES];

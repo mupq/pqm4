@@ -43,13 +43,6 @@
 
 #include "run_config.h"
 
-#define _USE_CSHIFT_
-
-#if defined(_USE_CSHIFT_)
-#include "rotr_cshift.h"
-#else
-#include "rotate_cmov.h"
-#endif
 
 // Decoding (bit-flipping) parameter
 #if defined(BG_DECODER)
@@ -72,17 +65,41 @@
 
 
 
+#if defined(_USE_CSHIFT_)
+#include "rotr_cshift.h"
+#elif defined(_USE_CMOV_)
+#include "rotate_cmov.h"
+#else
+// Duplicates the first R_BITS of the syndrome three times
+// |------------------------------------------|
+// |  Third copy | Second copy | first R_BITS |
+// |------------------------------------------|
+// This is required by the rotate functions.
+_INLINE_ void dup(IN OUT syndrome_t *s)
+{
+  s->qw[R_QWORDS - 1] =
+    (s->qw[0] << LAST_R_QWORD_LEAD) | (s->qw[R_QWORDS - 1] & LAST_R_QWORD_MASK);
+
+  for(size_t i = 0; i < (2 * R_QWORDS) - 1; i++) {
+    s->qw[R_QWORDS + i] =
+      (s->qw[i] >> LAST_R_QWORD_TRAIL) | (s->qw[i + 1] << LAST_R_QWORD_LEAD);
+  }
+}
+#endif
+
+
 ret_t compute_syndrome(OUT syndrome_t *syndrome,
                        IN const pad_r_t *c0,
                        IN const mul_internal_t *th0)
 {
   ring_mul_rep((pad_r_t*)syndrome->qw, c0, th0);  // use precomputed input transform of h0
-  //dup(syndrome);
 
 #if defined(_USE_CSHIFT_)
   rotr_cshift_prepare((uint32_t*)syndrome);
-#else
+#elif defined(_USE_CMOV_)
   rotate_cmov_prepare(syndrome);
+#else
+  dup(syndrome);
 #endif
 
   return SUCCESS;
@@ -242,6 +259,8 @@ void accumulate_unsat_syndrome(OUT my_upc_t *upc,
 {
 
 //rotate_cmov_right(rotated_syndrome, syndrome,
+//rotr_cshift(rotated_syndrome, syndrome,
+//rotate_right(rotated_syndrome, syndrome,
 rotr_cshift((uint32_t*)rotated_syndrome, (uint32_t*)syndrome, wlist_val[0]);
 adder_size_k(upc, rotated_syndrome, 0, 0);
 rotr_cshift((uint32_t*)rotated_syndrome, (uint32_t*)syndrome, wlist_val[1]);

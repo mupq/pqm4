@@ -25,8 +25,8 @@ ptr2		.req r14
   and Ry0, #1
   mov Rx0, #0x7FFFFFFF
   adds Ry0, Rx0 //overflow flag V = s bit
-  add ptr2, ptr_a, #4096
   add ptr, ptr_a, #-16
+  add ptr2, ptr, #4096
   add ptr_end, ptr, #2048
   loop512_a:
     ldr Rx0, [ptr, #16]!
@@ -46,10 +46,10 @@ ptr2		.req r14
       str Rx1, [ptr, #4]
       str Rx2, [ptr, #8]
       str Rx3, [ptr, #12]
-      ldr Rx0, [ptr2, #12]
-      ldr Rx1, [ptr2, #16]!
-      ldr Rx2, [ptr2, #4]
-      ldr Rx3, [ptr2, #8]
+      ldr Rx0, [ptr2, #16]!
+      ldr Rx1, [ptr2, #4]
+      ldr Rx2, [ptr2, #8]
+      ldr Rx3, [ptr2, #12]
       itttt vs 
         movvs Ry0, Rx0
         movvs Ry1, Rx1

@@ -197,30 +197,46 @@ void ring_mul_rep(OUT pad_r_t *c, IN const pad_r_t *a, IN const mul_internal_t *
 ////////////////////////////////////////////////////
 
 
-static void _bitsqu(OUT dbl_pad_r_t *c, IN const pad_r_t *a)
+static inline
+uint64_t squ32(uint32_t a32 )
 {
-  const uint32_t *a32 = (const uint32_t *)a;
-  uint32_t *      c32 = (uint32_t *)c;
+  static const uint32_t m16 = 0xffff0000;
+  static const uint32_t m8 = 0xff00ff00;
+  static const uint32_t m4 = 0xf0f0f0f0;
+  static const uint32_t m2 = 0xcccccccc;
+  static const uint32_t m1 = 0xaaaaaaaa;
 
-  const uint32_t m16 = 0xffff0000;
-  const uint32_t m8 = 0xff00ff00;
-  const uint32_t m4 = 0xf0f0f0f0;
-  const uint32_t m2 = 0xcccccccc;
-  const uint32_t m1 = 0xaaaaaaaa;
+  uint32_t c0 = a32&~m16;
+  uint32_t c1 = (a32&m16)>>16;
+  c0 = (c0&~m8)|((c0&m8)<<8);
+  c1 = (c1&~m8)|((c1&m8)<<8);
+  c0 = (c0&~m4)|((c0&m4)<<4);
+  c1 = (c1&~m4)|((c1&m4)<<4);
+  c0 = (c0&~m2)|((c0&m2)<<2);
+  c1 = (c1&~m2)|((c1&m2)<<2);
+  c0 = (c0&~m1)|((c0&m1)<<1);
+  c1 = (c1&~m1)|((c1&m1)<<1);
 
-  for(size_t i = 0; i < ((R_BITS+31)/32); i++) {
-    uint32_t c0 = a32[i] &~m16;
-    uint32_t c1 = (a32[i] &m16)>>16;
-    c0 = (c0&~m8)|((c0&m8)<<8);
-    c1 = (c1&~m8)|((c1&m8)<<8);
-    c0 = (c0&~m4)|((c0&m4)<<4);
-    c1 = (c1&~m4)|((c1&m4)<<4);
-    c0 = (c0&~m2)|((c0&m2)<<2);
-    c1 = (c1&~m2)|((c1&m2)<<2);
-    c0 = (c0&~m1)|((c0&m1)<<1);
-    c1 = (c1&~m1)|((c1&m1)<<1);
-    c32[i*2] = c0;
-    c32[i*2+1] = c1;
+  uint64_t r = c0;
+  r |= ((uint64_t)c1)<<32;
+
+  return r;
+}
+
+static inline
+void squ64(uint64_t *r, uint64_t a64 )
+{
+  r[0] = squ32(a64&0xffffffff);
+  r[1] = squ32((a64>>32)&0xffffffff);
+}
+
+static inline
+void _bitsqu(OUT dbl_pad_r_t *c, IN const pad_r_t *a)
+{
+  const uint64_t *a64 = (const uint64_t *)a;
+  uint64_t *      c64 = (uint64_t *)c;
+  for(int i = 0; i < (R_QWORDS); i++) {
+    squ64( c64+i*2 , a64[i] );
   }
 }
 
@@ -228,13 +244,11 @@ static void _bitsqu(OUT dbl_pad_r_t *c, IN const pad_r_t *a)
 
 void ring_squ(OUT pad_r_t *c, IN const pad_r_t *a )
 {
-
   DEFER_CLEANUP(dbl_pad_r_t t = {0}, dbl_pad_r_cleanup);
 
   _bitsqu( &t , a );
 
   ring_red(c, &t);
-
 }
 
 

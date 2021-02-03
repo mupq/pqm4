@@ -107,8 +107,11 @@ typedef struct func_k_s {
 } func_k_t;
 
 
-#include "rotr_cshift.h"
+#define _USE_CSHIFT_
+//#define _USE_CMOV_
 
+#if defined(_USE_CMOV_)||defined(_USE_CSHIFT_)
+#include "rotr_cshift.h"
 #if 12323 == R_BITS
 typedef struct syndrome_s {
   //uint64_t qw[R_QWORDS + 2*128];
@@ -123,28 +126,32 @@ typedef struct syndrome_s {
   uint64_t qw[R_QWORDS*2];  // rotation with cmov
   //uint64_t qw[SIZE_MEMORY_CSHIFT_24659/2];  // rotation with cshift
 } ALIGN(ALIGN_BYTES) syndrome_t;
-#else 
-error : original syndrime_t
+#endif
+#else
+//error : original syndrime_t
 // For a faster rotate we triplicate the syndrome (into 3 copies)
 typedef struct syndrome_s {
   uint64_t qw[3 * R_QWORDS];
 } ALIGN(ALIGN_BYTES) syndrome_t;
 #endif
 
-#if 0
-typedef struct upc_slice_s {
-  union {
-    pad_r_t  r;
-    uint64_t qw[sizeof(pad_r_t) / sizeof(uint64_t)];
-  } ALIGN(ALIGN_BYTES) u;
-} ALIGN(ALIGN_BYTES) upc_slice_t;
-#else
+
+#define _UPC_SMALL_MEM_
+
+#if defined( _UPC_SMALL_MEM_ )
 typedef struct upc_slice_s {
   union {
     r_t r;
     uint64_t qw[R_QWORDS];
   } u;
 } upc_slice_t;
+#else
+typedef struct upc_slice_s {
+  union {
+    pad_r_t  r;
+    uint64_t qw[sizeof(pad_r_t) / sizeof(uint64_t)];
+  } ALIGN(ALIGN_BYTES) u;
+} ALIGN(ALIGN_BYTES) upc_slice_t;
 #endif
 
 

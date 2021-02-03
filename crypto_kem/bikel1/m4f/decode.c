@@ -241,7 +241,7 @@ void accumulate_unsat_syndrome(OUT upc_t *_upc,
                                IN const idx_t *wlist_val,
                                IN const syndrome_t *syndrome)
 {
-#if 0
+#if 0   // original bike implementation
   bike_memset(_upc, 0, sizeof(upc_t));
   for(size_t j = 0; j < D; j++) {
 #if defined(_USE_CSHIFT_)
@@ -252,7 +252,7 @@ void accumulate_unsat_syndrome(OUT upc_t *_upc,
     bit_sliced_adder(_upc, rotated_syndrome, LOG2_MSB(j + 1));
   }
 #elif 71 == D
-#if defined(_STM32F4_)
+#if !defined( _UPC_SMALL_MEM_ ) && defined(_STM32F4_)
 my_upc_t * upc = (my_upc_t*)0x10000000;
 #else
 my_upc_t __upc;
@@ -694,7 +694,11 @@ _INLINE_ void find_err1(OUT e_t *e,
     //    minus the threshold. Every zero bit indicates a potential error bit.
     //    The errors values are stored in the black array and xored with the
     //    errors Of the previous iteration.
+#if defined( _UPC_SMALL_MEM_ )
+    const r_t *last_slice = &(upc.slice[SLICES - 1].u.r);
+#else
     const r_t *last_slice = &(upc.slice[SLICES - 1].u.r.val);
+#endif
     for(size_t j = 0; j < R_BYTES; j++) {
       const uint8_t sum_msb  = (~last_slice->raw[j]);
       black_e->val[i].raw[j] = sum_msb;
@@ -744,7 +748,11 @@ _INLINE_ void find_err2(OUT e_t *e,
     // 3) Update the errors vector.
     //    The last slice of the UPC array holds the MSB of the accumulated values
     //    minus the threshold. Every zero bit indicates a potential error bit.
+#if defined( _UPC_SMALL_MEM_ )
+    const r_t *last_slice = &(upc.slice[SLICES - 1].u.r);
+#else
     const r_t *last_slice = &(upc.slice[SLICES - 1].u.r.val);
+#endif
     for(size_t j = 0; j < R_BYTES; j++) {
       const uint8_t sum_msb = (~last_slice->raw[j]);
       e->val[i].raw[j] ^= (pos_e->val[i].raw[j] & sum_msb);
