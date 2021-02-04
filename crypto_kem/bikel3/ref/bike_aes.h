@@ -8,15 +8,7 @@
 #pragma once
 #include "defs.h"
 
-#if defined(STM32F4)
-
 #include "aes.h"
-
-#elif defined(USE_OPENSSL)
-#  include <openssl/evp.h>
-#else
-#  include <immintrin.h>
-#endif
 
 #include "cleanup.h"
 
@@ -32,8 +24,6 @@ typedef ALIGN(16) struct aes256_key_s {
 } aes256_key_t;
 
 CLEANUP_FUNC(aes256_key, aes256_key_t)
-
-#if defined(STM32F4)
 
 typedef aes256ctx aes256_ks_t;
 
@@ -53,57 +43,3 @@ _INLINE_ ret_t aes256_enc(OUT uint8_t *ct, IN const uint8_t *pt, IN const aes256
 // Empty function
 _INLINE_ void aes256_free_ks(OUT BIKE_UNUSED_ATT aes256_ks_t *ks) {}
 
-
-#elif defined(USE_OPENSSL)
-
-// Using OpenSSL structures
-typedef EVP_CIPHER_CTX *aes256_ks_t;
-
-_INLINE_ ret_t aes256_key_expansion(OUT aes256_ks_t *ks,
-                                    IN const aes256_key_t *key)
-{
-  *ks = EVP_CIPHER_CTX_new();
-  if(*ks == NULL) {
-    BIKE_ERROR(EXTERNAL_LIB_ERROR_OPENSSL);
-  }
-  if(0 == EVP_EncryptInit_ex(*ks, EVP_aes_256_ecb(), NULL, key->raw, NULL)) {
-    EVP_CIPHER_CTX_free(*ks);
-    BIKE_ERROR(EXTERNAL_LIB_ERROR_OPENSSL);
-  }
-
-  EVP_CIPHER_CTX_set_padding(*ks, 0);
-
-  return SUCCESS;
-}
-
-_INLINE_ ret_t aes256_enc(OUT uint8_t *ct,
-                          IN const uint8_t *pt,
-                          IN const aes256_ks_t *ks)
-{
-  int outlen = 0;
-  if(0 == EVP_EncryptUpdate(*ks, ct, &outlen, pt, AES256_BLOCK_BYTES)) {
-    BIKE_ERROR(EXTERNAL_LIB_ERROR_OPENSSL);
-  }
-  return SUCCESS;
-}
-
-_INLINE_ void aes256_free_ks(OUT aes256_ks_t *ks)
-{
-  EVP_CIPHER_CTX_free(*ks);
-  ks = NULL;
-}
-
-#else
-
-typedef ALIGN(16) struct aes256_ks_s {
-  __m128i keys[AES256_ROUNDS + 1];
-} aes256_ks_t;
-
-ret_t aes256_key_expansion(OUT aes256_ks_t *ks, IN const aes256_key_t *key);
-
-ret_t aes256_enc(OUT uint8_t *ct, IN const uint8_t *pt, IN const aes256_ks_t *ks);
-
-// Empty function
-_INLINE_ void aes256_free_ks(OUT BIKE_UNUSED_ATT aes256_ks_t *ks) {}
-
-#endif // USE_OPENSSL
