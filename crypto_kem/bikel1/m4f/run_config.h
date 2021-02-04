@@ -4,7 +4,7 @@
 #if defined(STM32F4)
 
 #define _M4_ASM_
-#define _STM32F4_
+//#define _USE_CCM_IF_STM32F4_   // l1 can run with < 112KB SRAM. no need to use CCM
 
 #endif
 

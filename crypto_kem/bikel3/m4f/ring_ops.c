@@ -45,7 +45,7 @@ _INLINE_ void ring_red(OUT pad_r_t *c, IN const dbl_pad_r_t *a)
 
 #include "run_config.h"
 
-#if defined(_STM32F4_)
+#if defined(_USE_CCM_IF_STM32F4_)
 
 
 #if 2048 == R_PADDED_BYTES
@@ -97,7 +97,7 @@ error
 
 void ring_mul_inputtransform(OUT mul_internal_t *c, IN const pad_r_t *a)
 {
-#if defined(_STM32F4_)
+#if defined(_USE_CCM_IF_STM32F4_)
   uint8_t * ptr = 0x10000000;
   bitpolymul_input_transform( (uint16_t*)c, (const uint8_t*)a , LOG_POLYLEN , ptr );
 #else
@@ -111,7 +111,7 @@ void ring_mul_inputtransform(OUT mul_internal_t *c, IN const pad_r_t *a)
 
 void ring_mul(OUT pad_r_t *c, IN const pad_r_t *a, IN const pad_r_t *b)
 {
-#if defined(_STM32F4_)
+#if defined(_USE_CCM_IF_STM32F4_)
   uint8_t * ptr = 0x10000000;
   dbl_pad_r_t * t = ptr; ptr += sizeof(dbl_pad_r_t);
 
@@ -142,7 +142,7 @@ void ring_mul(OUT pad_r_t *c, IN const pad_r_t *a, IN const pad_r_t *b)
 #if 0
 void ring_mul_2(OUT pad_r_t *c, IN const pad_r_t *a, IN const mul_internal_t *tb)
 {
-#if defined(_STM32F4_)
+#if defined(_USE_CCM_IF_STM32F4_)
   uint8_t * ptr = 0x10000000;
   mul_internal_t * t = ptr; ptr += sizeof(mul_internal_t);
 
@@ -169,7 +169,7 @@ void ring_mul_2(OUT pad_r_t *c, IN const pad_r_t *a, IN const mul_internal_t *tb
 
 void ring_mul_rep(OUT pad_r_t *c, IN const pad_r_t *a, IN const mul_internal_t *tb)
 {
-#if defined(_STM32F4_)
+#if defined(_USE_CCM_IF_STM32F4_)
   uint8_t * ptr = 0x10000000;
   mul_internal_t * t = ptr; ptr += sizeof(mul_internal_t);
 

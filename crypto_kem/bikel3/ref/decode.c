@@ -91,7 +91,7 @@ ret_t compute_syndrome(OUT syndrome_t *syndrome,
 
 #include "run_config.h"
 
-#if defined(_STM32F4_)
+#if defined(_USE_CCM_IF_STM32F4_)
 #define _USE_CCM_
 #endif
 
