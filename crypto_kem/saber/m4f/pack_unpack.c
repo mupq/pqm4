@@ -24,7 +24,7 @@ void POLmsg2BS(uint8_t bytes[SABER_KEYBYTES], const uint16_t data[SABER_N])
 void POLp2BS(uint8_t bytes[SABER_POLYCOMPRESSEDBYTES], const uint16_t data[SABER_N])
 {
     size_t i;
-    const uint16_t *in = &data[0];
+    const uint16_t *in = data;
     uint8_t *out = bytes;
     for (i = 0; i < SABER_N / 4; i++) {
         out[0] = (uint8_t) (in[0]);
@@ -37,6 +37,7 @@ void POLp2BS(uint8_t bytes[SABER_POLYCOMPRESSEDBYTES], const uint16_t data[SABER
     }
 }
 
+/* This function reduces its input mod p */
 uint32_t POLp2BS_cmp(const uint8_t bytes[SABER_POLYCOMPRESSEDBYTES], const uint16_t data[SABER_N])
 {
     size_t j;
@@ -55,6 +56,32 @@ uint32_t POLp2BS_cmp(const uint8_t bytes[SABER_POLYCOMPRESSEDBYTES], const uint1
     }
     return fail;
 }
+
+/* This function reduces its input mod q */
+void POLq2BS(uint8_t bytes[SABER_POLYBYTES], const uint16_t data[SABER_N])
+{
+    size_t i;
+    const uint16_t *in = data;
+    uint8_t *out = bytes;
+    for (i = 0; i < SABER_N / 8; i++) {
+        out[0] = (uint8_t) (in[0]);
+        out[1] = (uint8_t) (((in[0] >> 8) & 0x1f) | (in[1] << 5));
+        out[2] = (uint8_t) (in[1] >> 3);
+        out[3] = (uint8_t) (((in[1] >> 11) & 0x03) | (in[2] << 2));
+        out[4] = (uint8_t) (((in[2] >> 6) & 0x7f) | (in[3] << 7));
+        out[5] = (uint8_t) (in[3] >> 1);
+        out[6] = (uint8_t) (((in[3] >> 9) & 0x0f) | (in[4] << 4));
+        out[7] = (uint8_t) (in[4] >> 4);
+        out[8] = (uint8_t) (((in[4] >> 12) & 0x01) | (in[5] << 1));
+        out[9] = (uint8_t) (((in[5] >> 7) & 0x3f) | (in[6] << 6));
+        out[10] = (uint8_t) (in[6] >> 2);
+        out[11] = (uint8_t) (((in[6] >> 10) & 0x07) | (in[7] << 3));
+        out[12] = (uint8_t) (in[7] >> 5);
+        in += 8;
+        out += 13;
+    }
+}
+
 
 /* This function reduces its input mod T */
 void POLT2BS(uint8_t bytes[SABER_SCALEBYTES_KEM], const uint16_t data[SABER_N])
@@ -154,7 +181,7 @@ signed int bits:
         SABER_EP;
     } p0, p1, p2, p3;
 
-    for (j = 0; j < SABER_N / 4; j++) { //TODO: double-check that this sign-extends correctly
+    for (j = 0; j < SABER_N / 4; j++) { 
         p0.bits = (in[0]) | (in[1] << 8);
         p1.bits = (in[1] >> 2) | (in[2] << 6);
         p2.bits = (in[2] >> 4) | (in[3] << 4);
@@ -176,7 +203,7 @@ void BS2POLq(const uint8_t bytes[SABER_POLYBYTES], uint16_t data[SABER_N])
     const uint8_t *in = bytes;
     int16_t *out = (int16_t *)data;
 
-    struct int13_t { // bitfield struct to sign-extend p-bit to 16-bit.
+    struct int13_t { // bitfield struct to sign-extend q-bit to 16-bit.
 signed int bits:
         SABER_EQ;
     } q0, q1, q2, q3, q4, q5, q6, q7;
@@ -249,13 +276,13 @@ void BS2POLT(const uint8_t bytes[SABER_SCALEBYTES_KEM], uint16_t data[SABER_N])
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-void POLVECp2BS(uint8_t bytes[SABER_POLYVECCOMPRESSEDBYTES], const uint16_t data[SABER_L][SABER_N]) //TODO: polycompressedbytes
+void POLVECp2BS(uint8_t bytes[SABER_POLYVECCOMPRESSEDBYTES], const uint16_t data[SABER_L][SABER_N]) 
 {
     size_t i;
 
     for (i = 0; i < SABER_L; i++) {
         /* This function reduces its input mod p */
-        POLp2BS(&bytes[i * (SABER_EP * SABER_N / 8)], data[i]);
+        POLp2BS(&bytes[i * SABER_POLYCOMPRESSEDBYTES], data[i]);
     }
 }
 
@@ -266,10 +293,21 @@ uint32_t POLVECp2BS_cmp(const uint8_t bytes[SABER_POLYVECCOMPRESSEDBYTES], const
 
     for (i = 0; i < SABER_L; i++) {
         /* This function reduces its input mod p */
-        fail |= POLp2BS_cmp(&bytes[i * (SABER_EP * SABER_N / 8)], data[i]);
+        fail |= POLp2BS_cmp(&bytes[i * SABER_POLYCOMPRESSEDBYTES], data[i]);
     }
 
     return fail;
+}
+
+
+void POLVECq2BS(uint8_t bytes[SABER_POLYVECBYTES], const uint16_t data[SABER_L][SABER_N]) 
+{
+    size_t i;
+
+    for (i = 0; i < SABER_L; i++) {
+        /* This function reduces its input mod q */
+        POLq2BS(&bytes[i * SABER_POLYBYTES], data[i]);
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -298,9 +336,10 @@ void BS2POLVECq(const uint8_t bytes[SABER_POLYVECBYTES], uint16_t data[SABER_L][
 /// The following functions are for compressed secret. Secrets are stored with their 4-bit value in [-SABER_MU/2, SABER_MU/2]. ///
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+#ifdef SABER_COMPRESS_SECRETKEY
 
 /* This function reduces its input mod 2**4 */
-void POL42BS(uint8_t bytes[SABER_N / 2], const uint16_t data[SABER_N])
+void POLmu2BS(uint8_t bytes[SABER_POLYSECRETBYTES], const uint16_t data[SABER_N])
 {
     size_t j;
     const uint16_t *in = data;
@@ -312,7 +351,8 @@ void POL42BS(uint8_t bytes[SABER_N / 2], const uint16_t data[SABER_N])
     }
 }
 
-void BS2POL4(const uint8_t bytes[SABER_N / 2], uint16_t data[SABER_N])
+/* This function sign-extends its output from 4-bit to 16-bit */
+void BS2POLmu(const uint8_t bytes[SABER_POLYSECRETBYTES], uint16_t data[SABER_N])
 {
     size_t j;
     const uint8_t *in = bytes;
@@ -332,18 +372,21 @@ void BS2POL4(const uint8_t bytes[SABER_N / 2], uint16_t data[SABER_N])
     }
 }
 
-void POLVEC42BS(uint8_t bytes[SABER_L * SABER_N / 2], const uint16_t data[SABER_L][SABER_N])
+void POLVECmu2BS(uint8_t bytes[SABER_INDCPA_SECRETKEYBYTES], const uint16_t data[SABER_L][SABER_N])
 {
     size_t i;
     for (i = 0; i < SABER_L; i++) {
-        POL42BS(bytes + i * (SABER_N / 2), data[i]);
+        POLmu2BS(bytes + i * SABER_POLYSECRETBYTES, data[i]);
     }
 }
 
-void BS2POLVEC4(const uint8_t bytes[SABER_POLYVECCOMPRESSEDBYTES], uint16_t data[SABER_L][SABER_N])
+void BS2POLVECmu(const uint8_t bytes[SABER_INDCPA_SECRETKEYBYTES], uint16_t data[SABER_L][SABER_N])
 {
     size_t i;
     for (i = 0; i < SABER_L; i++) {
-        BS2POL4(bytes + i * (SABER_N / 2), data[i]);
+        /* This function sign-extends its output from 4-bit to 16-bit */
+        BS2POLmu(bytes + i * SABER_POLYSECRETBYTES, data[i]);
     }
 }
+
+#endif
