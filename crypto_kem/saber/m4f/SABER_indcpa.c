@@ -17,14 +17,13 @@ void indcpa_kem_keypair(uint8_t pk[SABER_INDCPA_PUBLICKEYBYTES], uint8_t sk[SABE
     MatrixVectorMulKeyPairNTT(pk, sk); // pk[0] <- Pack(Round((A^T)*s)), sk <- s
 }
 
-
 void indcpa_kem_enc(const uint8_t m[SABER_KEYBYTES], const uint8_t seed_sp[SABER_NOISE_SEEDBYTES], const uint8_t pk[SABER_INDCPA_PUBLICKEYBYTES], uint8_t ciphertext[SABER_BYTES_CCA_DEC])
 {
     const uint8_t *seed_A = pk + SABER_POLYVECCOMPRESSEDBYTES;
     uint8_t *ct0 = ciphertext;
     uint8_t *ct1 = ciphertext + SABER_POLYVECCOMPRESSEDBYTES;
     uint32_t sp_NTT[SABER_L][SABER_N];
-    
+
     GenSecretNTT(sp_NTT, (uint8_t *)seed_sp, 0);
     MatrixVectorMulEncNTT(ct0, seed_A, sp_NTT, 0); // ct[0] <- Pack(Round(A*s'))
     InnerProdEncNTT(ct1, pk, sp_NTT, m, 0); // ct[1] <- Pack(Round(b*s' + m'))
