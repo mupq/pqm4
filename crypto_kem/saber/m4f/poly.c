@@ -41,13 +41,19 @@ void __attribute__((noinline)) GenSecretNTT(uint32_t s_NTT[SABER_L][SABER_N], ui
 /* pk[0] <- Pack(Round((A^T)*s)) */
 void MatrixVectorMulKeyPairNTT(uint8_t pk[SABER_INDCPA_PUBLICKEYBYTES], uint8_t sk[SABER_INDCPA_SECRETKEYBYTES])
 {
-
     size_t i, j;
-    uint32_t A_NTT[SABER_N];
     uint32_t s_NTT[SABER_N];
     uint32_t b_NTT[SABER_L][SABER_N];
     uint16_t poly[SABER_N]; // polynomial buffer for s[i], A[i][j], b[i]
-    uint8_t shake_out[MAX(SABER_POLYBYTES, SABER_POLYCOINBYTES)];
+
+    // overlap some memory
+    union {
+        uint32_t poly_NTT[SABER_N];
+        uint8_t buff[MAX(SABER_POLYBYTES, SABER_POLYCOINBYTES)];
+    } u;
+
+    uint32_t (*A_NTT) = u.poly_NTT; // uint32_t A_NTT[SABER_N];
+    uint8_t (*shake_out) = u.buff; // uint8_t shake_out[MAX(SABER_POLYBYTES, SABER_POLYCOINBYTES)];
 
     uint8_t *seed_A = pk + SABER_POLYVECCOMPRESSEDBYTES;
     uint8_t *seed_s = sk;
@@ -104,12 +110,19 @@ uint32_t MatrixVectorMulEncNTT(uint8_t ct0[SABER_POLYVECCOMPRESSEDBYTES], const 
 {
     size_t i, j;
     uint32_t fail = 0;
-    uint32_t A_NTT[SABER_N];
     uint32_t bp_NTT[SABER_N];
     uint16_t poly[SABER_N];
 
     shake128incctx shake_A_ctx = shake128_absorb_seed(seed_A);
-    uint8_t shake_out[SABER_POLYVECBYTES];
+
+    // overlap some memory
+    union {
+        uint32_t poly_NTT[SABER_N];
+        uint8_t buff[SABER_POLYBYTES];
+    } u;
+    
+    uint32_t (*A_NTT) = u.poly_NTT; // uint32_t A_NTT[SABER_N];
+    uint8_t (*shake_out) = u.buff; // uint8_t shake_out[SABER_POLYBYTES];
 
     for (i = 0; i < SABER_L; i++) {
 
@@ -154,11 +167,18 @@ uint32_t InnerProdEncNTT(uint8_t ct1[SABER_SCALEBYTES_KEM], const uint8_t pk[SAB
 {
     size_t j;
     uint32_t fail = 0;
-    uint16_t mp[SABER_N];
     uint32_t vp_NTT[SABER_N];
     uint16_t b[SABER_N];
-    uint32_t b_NTT[SABER_N];
     uint16_t (*vp) = b;
+
+    // overlap some memory
+    union {
+        uint32_t poly_NTT[SABER_N];
+        uint16_t poly[SABER_N];
+    } u;
+ 
+    uint32_t (*b_NTT) = u.poly_NTT; // uint32_t b_NTT[SABER_N];
+    uint16_t (*mp) = u.poly;  // uint16_t mp[SABER_N];
 
     for (j = 0; j < SABER_L; j++) {
 
@@ -192,11 +212,18 @@ uint32_t InnerProdEncNTT(uint8_t ct1[SABER_SCALEBYTES_KEM], const uint8_t pk[SAB
 void InnerProdDecNTT(uint8_t m[SABER_KEYBYTES], const uint8_t ciphertext[SABER_BYTES_CCA_DEC], const uint8_t sk[SABER_INDCPA_SECRETKEYBYTES])
 {
     size_t i;
-    uint16_t cm[SABER_N];
     uint32_t v_NTT[SABER_N];
     uint16_t poly[SABER_N];
     uint32_t s_NTT[SABER_N];
-    uint32_t bp_NTT[SABER_N];
+
+    // overlap some memory
+    union {
+        uint32_t poly_NTT[SABER_N];
+        uint16_t poly[SABER_N];
+    } u;
+ 
+    uint32_t (*bp_NTT) = u.poly_NTT; // uint32_t bp_NTT[SABER_N];
+    uint16_t (*cm) = u.poly;  // uint16_t cm[SABER_N];
 
     for (i = 0; i < SABER_L; i++) {
 
