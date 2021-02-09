@@ -10,8 +10,8 @@
 #define MOD 25166081
 #define Mprime 41877759
 
-static const int32_t mul_table[64] = {
--9600669, 9600669, 10575964, -10575964, 8064557, -8064557, -819256, 819256, -588496, 588496, -8693794, 8693794, -7460755, 7460755, 2723061, -2723061, 4092287, -4092287, -3261033, 3261033, -5563113, 5563113, -11307548, 11307548, -9567042, 9567042, 11980428, -11980428, 6931502, -6931502, 2510833, -2510833, -10319196, 10319196, -6726360, 6726360, 10171507, -10171507, 8693725, -8693725, -42688, 42688, 10505644, -10505644, -9502337, 9502337, 10910265, -10910265, 5318976, -5318976, -1134236, 1134236, -614272, 614272, -6236460, 6236460, 5184115, -5184115, -1069349, 1069349, -9233574, 9233574, 12174351, -12174351
+static const int32_t mul_table[32] = {
+9600669, -10575964, -8064557, 819256, 588496, 8693794, 7460755, -2723061, -4092287, 3261033, 5563113, 11307548, 9567042, -11980428, -6931502, -2510833, 10319196, 6726360, -10171507, -8693725, 42688, -10505644, 9502337, -10910265, -5318976, 1134236, 614272, 6236460, -5184115, 1069349, 9233574, -12174351
 };
 
 static const int32_t root_table[64] = {
@@ -23,20 +23,20 @@ static const int32_t inv_root_table[64] = {
 };
 
 // void _NTT_forward(uint16_t *a, const int32_t *root_table, uint32_t mod, uint32_t modprime, uint32_t *tmp);
-void _NTT_forward_inner(uint32_t *tmp, const int32_t *root_table, uint32_t modprime, uint32_t mod, uint16_t *a);
+void _NTT_forward(uint32_t *tmp, const int32_t *root_table, uint32_t modprime, uint32_t mod, uint16_t *a);
 // void _NTT_inv(uint32_t *in, const int32_t *inv_root_table, uint32_t mod, uint32_t modprime,  uint16_t *out);
-void _NTT_inv_inner(uint16_t *out, const int32_t *inv_root_table, uint32_t modprime, uint32_t mod, uint32_t *in);
+void _NTT_inv(uint16_t *out, const int32_t *inv_root_table, uint32_t modprime, uint32_t mod, uint32_t *in);
 
-#define NTT_forward_inner(out, in) _NTT_forward_inner(&out[0], root_table, Mprime, MOD, &in[0])
-#define NTT_inv_inner(out, in) _NTT_inv_inner(&out[0], inv_root_table, Mprime, MOD, &in[0])
+#define NTT_forward(out, in) _NTT_forward(&out[0], root_table, Mprime, MOD, &in[0])
+#define NTT_inv(out, in) _NTT_inv(&out[0], inv_root_table, Mprime, MOD, &in[0])
 
-void mul(uint32_t *poly1, const int32_t *mul_table, uint32_t mod, uint32_t modprime, uint32_t *poly2, uint32_t *res);
+void mul(uint32_t *res, const int32_t *mul_table, uint32_t modprime, uint32_t mod, uint32_t *poly1, uint32_t *poly2);
 // out = in1 * in2
-#define NTT_mul(out, in1, in2) mul(in1, mul_table, MOD, Mprime, in2, out);
+#define NTT_mul(out, in1, in2) mul(out, mul_table, Mprime, MOD, in1, in2);
 
-void mul_acc(uint32_t *poly1, const int32_t *mul_table, uint32_t mod, uint32_t modprime, uint32_t *poly2, uint32_t *res);
+void mul_acc(uint32_t *res, const int32_t *mul_table, uint32_t modprime, uint32_t mod, uint32_t *poly1, uint32_t *poly2);
 // out = out + in1 * in2
-#define NTT_mul_acc(out, in1, in2) mul_acc(in1, mul_table, MOD, Mprime, in2, out);
+#define NTT_mul_acc(out, in1, in2) mul_acc(out, mul_table, Mprime, MOD, in1, in2);
 
 
 

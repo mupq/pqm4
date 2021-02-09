@@ -1,1 +1,1 @@
-../../lightsaber/m4f/NTT_inv.S
+../../saber/m4f/NTT_inv.S

@@ -9,9 +9,9 @@
 .cpu cortex-m4
 
 .align 2
-.global _NTT_inv_inner
-.type _NTT_inv_inner, %function
-_NTT_inv_inner:
+.global _NTT_inv
+.type _NTT_inv, %function
+_NTT_inv:
     vldr.w s0, [sp, #0]
     push.w {r4-r12, lr}
 

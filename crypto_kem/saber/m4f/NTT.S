@@ -9,9 +9,9 @@
 .cpu cortex-m4
 
 .align 2
-.global _NTT_forward_inner
-.type _NTT_forward_inner, %function
-_NTT_forward_inner:
+.global _NTT_forward
+.type _NTT_forward, %function
+_NTT_forward:
     vldr.w s0, [sp, #0]
     push.w {r4-r12, lr}
 
