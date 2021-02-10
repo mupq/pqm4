@@ -17,7 +17,7 @@ static inline shake128incctx shake128_absorb_seed(const uint8_t seed[SABER_SEEDB
     return ctx;
 }
 
-void __attribute__((noinline)) GenSecretNTT(uint32_t s_NTT[SABER_L][SABER_N], uint8_t seed_s[SABER_NOISE_SEEDBYTES], int keypair)
+void GenSecretNTT(uint32_t s_NTT[SABER_L][SABER_N], uint8_t seed_s[SABER_NOISE_SEEDBYTES], int keypair)
 {
     size_t i;
     uint8_t shake_out[SABER_L * SABER_POLYCOINBYTES];
@@ -29,12 +29,10 @@ void __attribute__((noinline)) GenSecretNTT(uint32_t s_NTT[SABER_L][SABER_N], ui
         cbd(s, &shake_out[i * SABER_POLYCOINBYTES]);
         NTT_forward(s_NTT[i], s);
 
-        if(keypair){
+        if(keypair){ // during keypair generation: sk <- s
             POLmu2BS(sk + i * SABER_POLYSECRETBYTES, s);
         }
-
     }
-
 }
 
 
