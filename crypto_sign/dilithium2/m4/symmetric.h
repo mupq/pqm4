@@ -12,7 +12,7 @@
 typedef aes256ctr_ctx stream128_state;
 typedef aes256ctr_ctx stream256_state;
 
-#define dilithium_aes256ctr_init DILITHIUM_NAMESPACE(_dilithium_aes256ctr_init)
+#define dilithium_aes256ctr_init DILITHIUM_NAMESPACE(dilithium_aes256ctr_init)
 void dilithium_aes256ctr_init(aes256ctr_ctx *state,
                               const uint8_t key[32],
                               uint16_t nonce);
@@ -36,12 +36,15 @@ void dilithium_aes256ctr_init(aes256ctr_ctx *state,
 typedef shake128incctx stream128_state;
 typedef shake256incctx stream256_state;
 
-#define dilithium_shake128_stream_init DILITHIUM_NAMESPACE(_dilithium_shake128_stream_init)
+#define shake256_inc_squeezeblocks(OUT, OUTBLOCKS, STATE) \
+        shake256_inc_squeeze(OUT, OUTBLOCKS*SHAKE256_RATE, STATE)
+
+#define dilithium_shake128_stream_init DILITHIUM_NAMESPACE(dilithium_shake128_stream_init)
 void dilithium_shake128_stream_init(stream128_state *state,
                                     const uint8_t seed[SEEDBYTES],
                                     uint16_t nonce);
 
-#define dilithium_shake256_stream_init DILITHIUM_NAMESPACE(_dilithium_shake256_stream_init)
+#define dilithium_shake256_stream_init DILITHIUM_NAMESPACE(dilithium_shake256_stream_init)
 void dilithium_shake256_stream_init(stream256_state *state,
                                     const uint8_t seed[CRHBYTES],
                                     uint16_t nonce);

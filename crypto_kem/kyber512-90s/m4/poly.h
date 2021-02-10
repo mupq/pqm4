@@ -1,1 +1,1 @@
-../../kyber768-90s/m4/poly.h
+../../kyber512/m4/poly.h
