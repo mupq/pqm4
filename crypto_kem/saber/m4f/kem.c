@@ -46,7 +46,7 @@ int crypto_kem_dec(uint8_t *k, const uint8_t *c, const uint8_t *sk)
     uint8_t buf[64];
     uint8_t kr[64]; // Will contain key, coins
     const uint8_t *pk = sk + SABER_INDCPA_SECRETKEYBYTES;
-    const uint8_t *hpk = sk + + SABER_SECRETKEYBYTES - 64; // Save hash by storing h(pk) in sk
+    const uint8_t *hpk = sk + SABER_SECRETKEYBYTES - 64; // Save hash by storing h(pk) in sk
 
     indcpa_kem_dec(sk, c, buf); // buf[0:31] <-- message
 
