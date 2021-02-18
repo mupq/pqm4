@@ -19,6 +19,8 @@ class M4Settings(mupq.PlatformSettings):
     #: List of dicts, in each dict specify (Scheme class) attributes of the
     #: scheme with values, if all attributes match the scheme is skipped.
     skip_list = (
+        {'scheme': 'bikel3', 'implementation': 'ref'},
+        {'scheme': 'bikel3', 'implementation': 'm4f'},
         {'scheme': 'falcon-1024-tree', 'implementation': 'opt-leaktime'},
         {'scheme': 'falcon-1024-tree', 'implementation': 'opt-ct'},
         {'scheme': 'frodokem640aes', 'implementation': 'clean'},
