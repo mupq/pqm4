@@ -60,51 +60,6 @@ pqcrystals_dilithium_asm_reduce32:
     caddq \a, \tmp, \q
 .endm
 
-// // void asm_freeze(int32_t a[N]);
-// .global pqcrystals_dilithium_asm_freeze
-// .type pqcrystals_dilithium_asm_freeze, %function
-// .align 2
-// pqcrystals_dilithium_asm_freeze:
-//     push {r4-r10}
-
-//     movw r12,#:lower16:8380417
-//     movt r12,#:upper16:8380417
-
-//     movw r10, #32
-//     1:
-//         ldr.w r1, [r0]
-//         ldr.w r2, [r0, #1*4]
-//         ldr.w r3, [r0, #2*4]
-//         ldr.w r4, [r0, #3*4]
-//         ldr.w r5, [r0, #4*4]
-//         ldr.w r6, [r0, #5*4]
-//         ldr.w r7, [r0, #6*4]
-//         ldr.w r8, [r0, #7*4]
-
-//         freezeq r1, r9, r12
-//         freezeq r2, r9, r12
-//         freezeq r3, r9, r12
-//         freezeq r4, r9, r12
-//         freezeq r5, r9, r12
-//         freezeq r6, r9, r12
-//         freezeq r7, r9, r12
-//         freezeq r8, r9, r12
-
-//         str.w r2, [r0, #1*4]
-//         str.w r3, [r0, #2*4]
-//         str.w r4, [r0, #3*4]
-//         str.w r5, [r0, #4*4]
-//         str.w r6, [r0, #5*4]
-//         str.w r7, [r0, #6*4]
-//         str.w r8, [r0, #7*4]
-//         str r1, [r0], #8*4
-//         subs r10, #1
-//         bne.w 1b
-
-//     pop {r4-r10}
-//     bx lr
-// .size pqcrystals_dilithium_asm_freeze, .-pqcrystals_dilithium_asm_freeze
-
 // void asm_caddq(int32_t a[N]);
 .global pqcrystals_dilithium_asm_caddq
 .type pqcrystals_dilithium_asm_caddq, %function

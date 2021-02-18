@@ -7,7 +7,7 @@
 
 
 #define SEEDBYTES 32
-#define CRHBYTES 48
+#define CRHBYTES 64
 #define N 256
 #define Q 8380417
 #define D 13
@@ -71,7 +71,7 @@
 #endif
 
 #define CRYPTO_PUBLICKEYBYTES (SEEDBYTES + K*POLYT1_PACKEDBYTES)
-#define CRYPTO_SECRETKEYBYTES (2*SEEDBYTES + CRHBYTES \
+#define CRYPTO_SECRETKEYBYTES (3*SEEDBYTES \
                                + L*POLYETA_PACKEDBYTES \
                                + K*POLYETA_PACKEDBYTES \
                                + K*POLYT0_PACKEDBYTES)
