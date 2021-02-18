@@ -2,7 +2,7 @@ Speed Evaluation,,,,,,,,,,
 Key Encapsulation Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [cycles] (mean),Key Generation [cycles] (min),Key Generation [cycles] (max),Encapsulation [cycles] (mean),Encapsulation [cycles] (min),Encapsulation [cycles] (max),Decapsulation [cycles] (mean),Decapsulation [cycles] (min),Decapsulation [cycles] (max)
 firesaber (100 executions),clean,3723480,3723480,3723480,4622127,4622127,4622127,5233205,5233205,5233205
-firesaber (100 executions),m4f,1007477,1007477,1007477,1256353,1256353,1256353,1231994,1231994,1231994
+firesaber (100 executions),m4f,1006981,1006981,1006981,1220602,1220602,1220602,1171348,1171348,1171348
 frodokem640aes (100 executions),m4,48348105,48348105,48348105,47130922,47130922,47130922,46594383,46594383,46594383
 frodokem640shake (100 executions),m4,79325705,79325705,79325705,79699757,79699757,79699757,79145449,79145449,79145449
 frodokem640shake (100 executions),opt,91896318,91896318,91896318,104912447,104912447,104912447,104638561,104638561,104638561
@@ -20,7 +20,7 @@ kyber768 (100 executions),m4,763979,761596,788310,923856,921477,948186,862176,85
 kyber768-90s (100 executions),clean,1813167,1812309,1828332,2036400,2035542,2051565,2223819,2222961,2238984
 kyber768-90s (100 executions),m4,660765,656834,665216,741256,737325,745707,754570,750639,759021
 lightsaber (100 executions),clean,1026004,1026004,1026004,1498300,1498300,1498300,1806894,1806894,1806894
-lightsaber (100 executions),m4f,361687,361687,361687,513581,513581,513581,498590,498590,498590
+lightsaber (100 executions),m4f,359451,359451,359451,490901,490901,490901,464470,464470,464470
 ntruhps2048509 (100 executions),clean,68795185,68795185,68795185,1062964,1062964,1062964,2435439,2435439,2435439
 ntruhps2048509 (100 executions),m4f,79658656,79658656,79658656,564411,564411,564411,537473,537473,537473
 ntruhps2048677 (100 executions),clean,123029086,123029086,123029086,1796535,1796535,1796535,4287726,4287726,4287726
@@ -34,7 +34,7 @@ ntrulpr761 (100 executions),clean,5637574,5637574,5637574,10817090,10817090,1081
 ntrulpr761 (100 executions),m4f,824669,824669,824669,1508936,1508936,1508936,1691312,1691312,1691312
 ntrulpr857 (100 executions),clean,6794314,6794314,6794314,13061118,13061118,13061118,18992752,18992752,18992752
 saber (100 executions),clean,2132294,2132294,2132294,2814441,2814441,2814441,3279418,3279418,3279418
-saber (100 executions),m4f,654407,654407,654407,862856,862856,862856,835122,835122,835122
+saber (100 executions),m4f,656540,656540,656540,835504,835504,835504,791138,791138,791138
 sikep434 (100 executions),m4,48264129,48264129,48264129,78911465,78911465,78911465,84276911,84276911,84276911
 sikep434 (100 executions),opt,643140813,643140813,643140813,1053374539,1053374539,1053374539,1123506035,1123506035,1123506035
 sikep503 (100 executions),m4,67365363,67365363,67365363,110846067,110846067,110846067,117993160,117993160,117993160
@@ -104,7 +104,7 @@ Memory Evaluation,,,,,,,,,,
 Key Encapsulation Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [bytes],Encapsulation [bytes],Decapsulation [bytes],,,,,,
 firesaber,clean,19524,19628,21108,,,,,,
-firesaber,m4f,37116,40484,41964,,,,,,
+firesaber,m4f,7388,7340,7356,,,,,,
 frodokem640aes,m4,31992,62488,83104,,,,,,
 frodokem640shake,m4,26600,51976,72592,,,,,,
 frodokem640shake,opt,36664,58320,78944,,,,,,
@@ -122,7 +122,7 @@ kyber768,m4,3276,2964,2988,,,,,,
 kyber768-90s,clean,10652,13820,14916,,,,,,
 kyber768-90s,m4,3432,3504,3520,,,,,,
 lightsaber,clean,9332,9436,10180,,,,,,
-lightsaber,m4f,14604,16252,16996,,,,,,
+lightsaber,m4f,5332,5292,5308,,,,,,
 ntruhps2048509,clean,25532,20680,18996,,,,,,
 ntruhps2048509,m4f,21392,14068,14800,,,,,,
 ntruhps2048677,clean,34296,27756,25548,,,,,,
@@ -136,7 +136,7 @@ ntrulpr761,clean,10784,12376,13864,,,,,,
 ntrulpr761,m4f,28444,33460,39684,,,,,,
 ntrulpr857,clean,15640,15600,17376,,,,,,
 saber,clean,12908,13012,14108,,,,,,
-saber,m4f,23284,32620,33824,,,,,,
+saber,m4f,6364,6316,6332,,,,,,
 sikep434,m4,6272,6504,6840,,,,,,
 sikep434,opt,6752,7040,7376,,,,,,
 sikep503,m4,6992,7344,7720,,,,,,
@@ -206,7 +206,7 @@ Hashing Evaluation,,,,,,,,,,
 Key Encapsulation Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [%],Encapsulation [%],Decapsulation [%],,,,,,
 firesaber,clean,19.2,19.1,14.1,,,,,,
-firesaber,m4f,70.9,70.1,60.1,,,,,,
+firesaber,m4f,71.0,72.2,63.2,,,,,,
 frodokem640aes,m4,74.3,77.8,77.1,,,,,,
 frodokem640shake,m4,85.5,86.5,86.2,,,,,,
 frodokem640shake,opt,74.2,65.7,65.2,,,,,,
@@ -224,7 +224,7 @@ kyber768,m4,74.2,78.2,69.0,,,,,,
 kyber768-90s,clean,71.4,67.4,59.4,,,,,,
 kyber768-90s,m4,66.0,69.0,61.1,,,,,,
 lightsaber,clean,25.3,24.2,15.7,,,,,,
-lightsaber,m4f,71.6,70.5,57.0,,,,,,
+lightsaber,m4f,72.1,73.8,61.2,,,,,,
 ntruhps2048509,clean,0.0,2.5,4.2,,,,,,
 ntruhps2048509,m4f,0.0,4.7,19.2,,,,,,
 ntruhps2048677,clean,0.0,2.2,3.3,,,,,,
@@ -238,7 +238,7 @@ ntrulpr761,clean,7.9,8.5,5.4,,,,,,
 ntrulpr761,m4f,20.9,35.6,31.8,,,,,,
 ntrulpr857,clean,4.2,4.6,2.7,,,,,,
 saber,clean,22.0,21.7,15.2,,,,,,
-saber,m4f,71.6,71.3,59.8,,,,,,
+saber,m4f,72.2,73.6,63.1,,,,,,
 sikep434,m4,0.0,0.1,0.1,,,,,,
 sikep434,opt,0.0,0.0,0.0,,,,,,
 sikep503,m4,0.0,0.1,0.1,,,,,,
@@ -308,7 +308,7 @@ Size Evaluation,,,,,,,,,,
 Key Encapsulation Schemes,,,,,,,,,,
 Scheme,Implementation,.text [bytes],.data [bytes],.bss [bytes],Total [bytes],,,,,
 firesaber,clean,10220,0,0,10220,,,,,
-firesaber,m4f,10972,0,0,10972,,,,,
+firesaber,m4f,9556,0,0,9556,,,,,
 frodokem640aes,m4,8568,0,0,8568,,,,,
 frodokem640shake,m4,8644,0,0,8644,,,,,
 frodokem640shake,opt,6476,0,0,6476,,,,,
@@ -326,7 +326,7 @@ kyber768,m4,10872,0,0,10872,,,,,
 kyber768-90s,clean,5172,0,0,5172,,,,,
 kyber768-90s,m4,10848,0,0,10848,,,,,
 lightsaber,clean,10380,0,0,10380,,,,,
-lightsaber,m4f,10928,0,0,10928,,,,,
+lightsaber,m4f,9660,0,0,9660,,,,,
 ntruhps2048509,clean,64644,0,0,64644,,,,,
 ntruhps2048509,m4f,91656,0,0,91656,,,,,
 ntruhps2048677,clean,17304,0,0,17304,,,,,
@@ -340,7 +340,7 @@ ntrulpr761,clean,8096,0,0,8096,,,,,
 ntrulpr761,m4f,114281,0,0,114281,,,,,
 ntrulpr857,clean,8340,0,0,8340,,,,,
 saber,clean,10128,0,0,10128,,,,,
-saber,m4f,11688,0,0,11688,,,,,
+saber,m4f,9412,0,0,9412,,,,,
 sikep434,m4,29600,0,0,29600,,,,,
 sikep434,opt,28232,0,0,28232,,,,,
 sikep503,m4,31576,0,0,31576,,,,,
