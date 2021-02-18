@@ -1,6 +1,8 @@
 Speed Evaluation,,,,,,,,,,
 Key Encapsulation Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [cycles] (mean),Key Generation [cycles] (min),Key Generation [cycles] (max),Encapsulation [cycles] (mean),Encapsulation [cycles] (min),Encapsulation [cycles] (max),Decapsulation [cycles] (mean),Decapsulation [cycles] (min),Decapsulation [cycles] (max)
+bikel1 (100 executions),m4f,25059586,25044097,25080997,3398384,3371979,3417178,54793168,54774340,54823993
+bikel1 (100 executions),ref,65551874,65532779,65569765,4962214,4941128,4978626,116543558,116510779,116572274
 firesaber (100 executions),clean,3723480,3723480,3723480,4622127,4622127,4622127,5233205,5233205,5233205
 firesaber (100 executions),m4f,1007477,1007477,1007477,1256353,1256353,1256353,1231994,1231994,1231994
 frodokem640aes (100 executions),m4,48348105,48348105,48348105,47130922,47130922,47130922,46594383,46594383,46594383
@@ -103,6 +105,8 @@ sphincs-shake256-256s-simple (1 executions),clean,3996764935,3996764935,39967649
 Memory Evaluation,,,,,,,,,,
 Key Encapsulation Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [bytes],Encapsulation [bytes],Decapsulation [bytes],,,,,,
+bikel1,m4f,44108,32156,91400,,,,,,
+bikel1,ref,35960,25908,78784,,,,,,
 firesaber,clean,19524,19628,21108,,,,,,
 firesaber,m4f,37116,40484,41964,,,,,,
 frodokem640aes,m4,31992,62488,83104,,,,,,
@@ -205,6 +209,8 @@ sphincs-shake256-256s-simple,clean,5904,5808,5172,,,,,,
 Hashing Evaluation,,,,,,,,,,
 Key Encapsulation Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [%],Encapsulation [%],Decapsulation [%],,,,,,
+bikel1,m4f,0.7,15.1,1.3,,,,,,
+bikel1,ref,0.3,10.3,0.6,,,,,,
 firesaber,clean,19.2,19.1,14.1,,,,,,
 firesaber,m4f,70.9,70.1,60.1,,,,,,
 frodokem640aes,m4,74.3,77.8,77.1,,,,,,
@@ -307,6 +313,8 @@ sphincs-shake256-256s-simple,clean,96.3,96.1,96.2,,,,,,
 Size Evaluation,,,,,,,,,,
 Key Encapsulation Schemes,,,,,,,,,,
 Scheme,Implementation,.text [bytes],.data [bytes],.bss [bytes],Total [bytes],,,,,
+bikel1,m4f,181430,24,49,181503,,,,,
+bikel1,ref,35199,24,1,35224,,,,,
 firesaber,clean,10220,0,0,10220,,,,,
 firesaber,m4f,10972,0,0,10972,,,,,
 frodokem640aes,m4,8568,0,0,8568,,,,,
