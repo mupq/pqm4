@@ -1,234 +1,322 @@
 
+#include "macros_common.S"
+
+#ifndef LOOP
+#define LOOP
+#endif
+
 .syntax unified
 .cpu cortex-m4
 
-.global my_mul
-.type my_mul, %function
-my_mul:
-    push.w {r4-r12,lr}
+.global mul
+.type mul, %function
+mul:
+    vldr.w s12, [sp, #0]
+    vldr.w s13, [sp, #4]
 
-    mul_out     .req r0
-    lower       .req r0
-    upper       .req r1
-    tmp1        .req r4
-    counter     .req r1
+    push.w {r4-r12, lr}
 
-    vector      .req r0
-    root_table  .req r1
-    M           .req r2
-    M_inv       .req r3
-    Matrix_0    .req r4
-    Matrix_1    .req r4
-    Matrix_2    .req r4
-    K0          .req r5
-    K1          .req r6
-    K2          .req r7
-    K3          .req r8
-    B0          .req r9
-    B1          .req r10
-    B2          .req r11
-    B3          .req r12
-    root        .req r14
+    vmov.w s0, s1, r0, r1
 
-    c0_lower       .req s0
-    c0_upper       .req s1
-    c1_lower       .req s2
-    c1_upper       .req s3
-    c2_lower       .req s4
-    c2_upper       .req s5
-    c3_lower       .req s6
-    c3_upper       .req s7
-    tmp_vector     .req s8
-    tmp_root_table .req s9
-    tmp_Matrix_0   .req s10
-    tmp_Matrix_1   .req s11
-    tmp_Matrix_2   .req s12
-    tmp_mul_out    .req s13
-    tmp_counter    .req s14
+#ifdef LOOP
+    add.w r12, r0, #1024
+    vmov.w s2, r12
+    mul_loop:
+#else
+.rept 16
+#endif
 
-    vmov.w tmp_vector, tmp_root_table, vector, root_table
-    vldr.w tmp_Matrix_0, [sp, #40]
-    vldr.w tmp_Matrix_1, [sp, #44]
-    vldr.w tmp_Matrix_2, [sp, #48]
-    ldr.w mul_out, [sp, #52]
-    vmov.w tmp_mul_out, mul_out
+.rept 2
 
-    add.w mul_out, mul_out, #1024  // set counter
-    vmov.w tmp_counter, mul_out
+    vmov.w r12, r14, s12, s13
+    ldrstr4 ldr.w, r12, r4, r5, r6, r7, #16, #20, #24, #28
+    ldrstr4 ldr.w, r14, r8, r9, r10, r11, #16, #20, #24, #28
 
-    my_multiply:
+    vmov.w r12, s1
+    ldr.w r1, [r12], #4
+    vmov.w s1, r12
 
-        // small[0] * Matrix_0
-        vmov.w vector, tmp_vector
-        vmov.w root_table, tmp_root_table
-        vmov.w Matrix_0, tmp_Matrix_0
-        ldm.w vector, {K0-K3}              @ r5~r8  <- K0 + K1*x + K2*x^2 + K3*x^3
-        ldm.w Matrix_0!, {B0-B3}           @ r9~r12 <- B0 + B1*x + B2*x^2 + B3*x^3
-        ldr.w root, [root_table], #4
-        vmov.w tmp_root_table, root_table
-        vmov.w tmp_Matrix_0, Matrix_0
+    smull.w r12, r14, r4, r11
+    smlal.w r12, r14, r5, r10
+    smlal.w r12, r14, r6, r9
+    smlal.w r12, r14, r7, r8
+    mul.w r0, r12, r2
+    smlal.w r12, r14, r0, r3
 
-        // for c0 = K0B0 + root*(K1B3 + K2B2 + K3B1)
-        smull.w lower, upper, K1, B3
-        smlal.w lower, upper, K2, B2
-        smlal.w lower, upper, K3, B1       @ K1B3 + K2B2 + K3B1
-        mul.w tmp1, lower, M_inv
-        smlal.w lower, upper, tmp1, M      @ reduction
-        smull.w lower, upper, upper, root  @ root*(K1B3 + K2B2 + K3B1)
-        smlal.w lower, upper, K0, B0       @ K0B0 + root*(K1B3 + K2B2 + K3B1)
-        vmov.w c0_lower, c0_upper, lower, upper
+    vmov.w r0, s0
+    str.w r14, [r0, #28]
 
-        // for c1 = K0B1 + K1B0 + root*(K2B3 + K3B2)
-        smull.w lower, upper, K2, B3
-        smlal.w lower, upper, K3, B2       @ K2B3 + K3B2
-        mul.w tmp1, lower, M_inv
-        smlal.w lower, upper, tmp1, M      @ reduction
-        smull.w lower, upper, upper, root  @ root*(K2B3 + K3B2)
-        smlal.w lower, upper, K0, B1
-        smlal.w lower, upper, K1, B0       @ K0B1 + K1B0 + root*(K2B3 + K3B2)
-        vmov.w c1_lower, c1_upper, lower, upper
+    smull.w r12, r14, r7, r11
+    mul.w r0, r12, r2
+    smlal.w r12, r14, r0, r3
+    smull.w r12, r14, r14, r1
+    smlal.w r12, r14, r4, r10
+    smlal.w r12, r14, r5, r9
+    smlal.w r12, r14, r6, r8
+    mul.w r0, r12, r2
+    smlal.w r12, r14, r0, r3
 
-        // for c2 = K0B2 + K2B0 + K1B1 + root*(K3B3)
-        smull.w lower, upper, K3, B3       @ K3B3
-        mul.w tmp1, lower, M_inv
-        smlal.w lower, upper, tmp1, M      @ reduction
-        smull.w lower, upper, upper, root  @ root*(K3B3)
-        smlal.w lower, upper, K0, B2
-        smlal.w lower, upper, K1, B1
-        smlal.w lower, upper, K2, B0       @ K0B2 + K2B0 + K1B1 + root*(K3B3)
-        vmov.w c2_lower, c2_upper, lower, upper
+    vmov.w r0, s0
+    str.w r14, [r0, #24]
 
-        // for c3 = K0B3 + K3B0 + K1B2 + K2B1
-        smull.w lower, upper, K0, B3
-        smlal.w lower, upper, K3, B0
-        smlal.w lower, upper, K1, B2
-        smlal.w lower, upper, K2, B1       @ K0B3 + K3B0 + K1B2 + K2B1
-        vmov.w c3_lower, c3_upper, lower, upper
+    smull.w r12, r14, r6, r11
+    smlal.w r12, r14, r7, r10
+    mul.w r0, r12, r2
+    smlal.w r12, r14, r0, r3
+    smull.w r12, r14, r14, r1
+    smlal.w r12, r14, r4, r9
+    smlal.w r12, r14, r5, r8
+    mul.w r0, r12, r2
+    smlal.w r12, r14, r0, r3
 
-        // small[1] * Matrix_1
-        vmov.w vector, tmp_vector
-        vmov.w Matrix_1, tmp_Matrix_1
-        ldr.w K0, [vector, #1024]
-        ldr.w K1, [vector, #1028]
-        ldr.w K2, [vector, #1032]
-        ldr.w K3, [vector, #1036]
-        ldm.w Matrix_1!, {B0-B3}
-        vmov.w tmp_Matrix_1, Matrix_1
+    vmov.w r0, s0
+    str.w r14, [r0, #20]
 
-        // for c0 = K0B0 + root*(K1B3 + K2B2 + K3B1)
-        smull.w lower, upper, K1, B3
-        smlal.w lower, upper, K2, B2
-        smlal.w lower, upper, K3, B1       @ K1B3 + K2B2 + K3B1
-        mul.w tmp1, lower, M_inv
-        smlal.w lower, upper, tmp1, M      @ reduction
-        vmov.w lower, tmp1, c0_lower, c0_upper
-        smlal.w lower, tmp1, upper, root   @ root*(K1B3 + K2B2 + K3B1)
-        smlal.w lower, tmp1, K0, B0        @ K0B0 + root*(K1B3 + K2B2 + K3B1)
-        vmov.w c0_lower, c0_upper, lower, tmp1
+    smull.w r12, r14, r5, r11
+    smlal.w r12, r14, r6, r10
+    smlal.w r12, r14, r7, r9
+    mul.w r0, r12, r2
+    smlal.w r12, r14, r0, r3
+    smull.w r12, r14, r14, r1
+    smlal.w r12, r14, r4, r8
+    mul.w r0, r12, r2
+    smlal.w r12, r14, r0, r3
 
-        // for c1 = K0B1 + K1B0 + root*(K2B3 + K3B2)
-        smull.w lower, upper, K2, B3
-        smlal.w lower, upper, K3, B2       @ K2B3 + K3B2
-        mul.w tmp1, lower, M_inv
-        smlal.w lower, upper, tmp1, M      @ reduction
-        vmov.w lower, tmp1, c1_lower, c1_upper
-        smlal.w lower, tmp1, upper, root   @ root*(K2B3 + K3B2)
-        smlal.w lower, tmp1, K0, B1
-        smlal.w lower, tmp1, K1, B0        @ K0B1 + K1B0 + root*(K2B3 + K3B2)
-        vmov.w c1_lower, c1_upper, lower, tmp1
+    vmov.w r0, s0
+    str.w r14, [r0, #16]
 
-        // for c2 = K0B2 + K2B0 + K1B1 + root*(K3B3)
-        smull.w lower, upper, K3, B3       @ K3B3
-        mul.w tmp1, lower, M_inv
-        smlal.w lower, upper, tmp1, M      @ reduction
-        vmov.w lower, tmp1, c2_lower, c2_upper
-        smlal.w lower, tmp1, upper, root   @ root*(K3B3)
-        smlal.w lower, tmp1, K0, B2
-        smlal.w lower, tmp1, K1, B1
-        smlal.w lower, tmp1, K2, B0        @ K0B2 + K2B0 + K1B1 + root*(K3B3)
-        vmov.w c2_lower, c2_upper, lower, tmp1
+// ================================
 
-        // for c3 = K0B3 + K3B0 + K1B2 + K2B1
-        vmov.w lower, upper, c3_lower, c3_upper
-        smlal.w lower, upper, K0, B3
-        smlal.w lower, upper, K3, B0
-        smlal.w lower, upper, K1, B2
-        smlal.w lower, upper, K2, B1       @ K0B3 + K3B0 + K1B2 + K2B1
-        vmov.w c3_lower, c3_upper, lower, upper
+    vmov.w r12, r14, s12, s13
+    ldrstr4jump ldr.w, r12, r4, r5, r6, r7, #4, #8, #12, #32
+    ldrstr4jump ldr.w, r14, r8, r9, r10, r11, #4, #8, #12, #32
+    vmov.w s12, s13, r12, r14
 
-        // small[2] * Matrix_2
-        vmov.w vector, tmp_vector
-        vmov.w Matrix_2, tmp_Matrix_2
-        ldr.w K0, [vector, #2048]
-        ldr.w K1, [vector, #2052]
-        ldr.w K2, [vector, #2056]
-        ldr.w K3, [vector, #2060]
-        ldm.w Matrix_2!, {B0-B3}
-        add.w vector, #16
-        vmov.w tmp_vector, vector
-        vmov.w tmp_Matrix_2, Matrix_2
+    neg.w r1, r1
 
-        // for c0 = K0B0 + root*(K1B3 + K2B2 + K3B1)
-        smull.w lower, upper, K1, B3
-        smlal.w lower, upper, K2, B2
-        smlal.w lower, upper, K3, B1       @ K1B3 + K2B2 + K3B1
-        mul.w tmp1, lower, M_inv
-        smlal.w lower, upper, tmp1, M      @ reduction
-        vmov.w lower, tmp1, c0_lower, c0_upper
-        smlal.w lower, tmp1, upper, root   @ root*(K1B3 + K2B2 + K3B1)
-        smlal.w lower, tmp1, K0, B0        @ K0B0 + root*(K1B3 + K2B2 + K3B1)
-        mul.w upper, lower, M_inv
-        smlal.w lower, tmp1, upper, M
-        vmov.w c0_upper, tmp1
+    smull.w r12, r14, r4, r11
+    smlal.w r12, r14, r5, r10
+    smlal.w r12, r14, r6, r9
+    smlal.w r12, r14, r7, r8
+    mul.w r0, r12, r2
+    smlal.w r12, r14, r0, r3
 
-        // for c1 = K0B1 + K1B0 + root*(K2B3 + K3B2)
-        smull.w lower, upper, K2, B3
-        smlal.w lower, upper, K3, B2       @ K2B3 + K3B2
-        mul.w tmp1, lower, M_inv
-        smlal.w lower, upper, tmp1, M      @ reduction
-        vmov.w lower, tmp1, c1_lower, c1_upper
-        smlal.w lower, tmp1, upper, root   @ root*(K2B3 + K3B2)
-        smlal.w lower, tmp1, K0, B1
-        smlal.w lower, tmp1, K1, B0        @ K0B1 + K1B0 + root*(K2B3 + K3B2)
-        mul.w upper, lower, M_inv
-        smlal.w lower, tmp1, upper, M
-        vmov.w c1_upper, tmp1
+    vmov.w r0, s0
+    str.w r14, [r0, #12]
 
-        // for c2 = K0B2 + K2B0 + K1B1 + root*(K3B3)
-        smull.w lower, upper, K3, B3       @ K3B3
-        mul.w tmp1, lower, M_inv
-        smlal.w lower, upper, tmp1, M      @ reduction
-        vmov.w lower, tmp1, c2_lower, c2_upper
-        smlal.w lower, tmp1, upper, root   @ root*(K3B3)
-        smlal.w lower, tmp1, K0, B2
-        smlal.w lower, tmp1, K1, B1
-        smlal.w lower, tmp1, K2, B0        @ K0B2 + K2B0 + K1B1 + root*(K3B3)
-        mul.w upper, lower, M_inv
-        smlal.w lower, tmp1, upper, M
-        @ c2 result in tmp1
+    smull.w r12, r14, r7, r11
+    mul.w r0, r12, r2
+    smlal.w r12, r14, r0, r3
+    smull.w r12, r14, r14, r1
+    smlal.w r12, r14, r4, r10
+    smlal.w r12, r14, r5, r9
+    smlal.w r12, r14, r6, r8
+    mul.w r0, r12, r2
+    smlal.w r12, r14, r0, r3
 
-        // for c3 = K0B3 + K3B0 + K1B2 + K2B1
-        vmov.w lower, upper, c3_lower, c3_upper
-        smlal.w lower, upper, K0, B3
-        smlal.w lower, upper, K3, B0
-        smlal.w lower, upper, K1, B2
-        smlal.w lower, upper, K2, B1       @ K0B3 + K3B0 + K1B2 + K2B1
-        mul.w K0, lower, M_inv
-        smlal.w lower, upper, K0, M
-        @ c3 result in upper
+    vmov.w r0, s0
+    str.w r14, [r0, #8]
 
+    smull.w r12, r14, r6, r11
+    smlal.w r12, r14, r7, r10
+    mul.w r0, r12, r2
+    smlal.w r12, r14, r0, r3
+    smull.w r12, r14, r14, r1
+    smlal.w r12, r14, r4, r9
+    smlal.w r12, r14, r5, r8
+    mul.w r0, r12, r2
+    smlal.w r12, r14, r0, r3
 
-        vmov.w mul_out, tmp_mul_out
-        vstr.w c0_upper, [mul_out, #0]
-        vstr.w c1_upper, [mul_out, #4]
-        str.w tmp1, [mul_out, #8]
-        str.w upper, [mul_out, #12]
-        add.w mul_out, #16
-        vmov.w tmp_mul_out, mul_out
+    vmov.w r0, s0
+    str.w r14, [r0, #4]
 
-        vmov.w counter, tmp_counter
-        cmp.w mul_out, counter
-        bne.w my_multiply
+    smull.w r12, r14, r5, r11
+    smlal.w r12, r14, r6, r10
+    smlal.w r12, r14, r7, r9
+    mul.w r0, r12, r2
+    smlal.w r12, r14, r0, r3
+    smull.w r12, r14, r14, r1
+    smlal.w r12, r14, r4, r8
+    mul.w r0, r12, r2
+    smlal.w r12, r14, r0, r3
 
-pop.w {r4-r12, pc}
+    vmov.w r0, s0
+    str.w r14, [r0], #32
+    vmov.w s0, r0
+
+.endr
+
+#ifdef LOOP
+    vmov.w r12, s2
+    cmp.w r0, r12
+    bne.w mul_loop
+#else
+.endr
+#endif
+
+    pop.w {r4-r12, pc}
+
+.global mul_acc
+.type mul_acc, %function
+mul_acc:
+    vldr.w s12, [sp, #0]
+    vldr.w s13, [sp, #4]
+
+    push.w {r4-r12, lr}
+
+    vmov.w s0, s1, r0, r1
+
+#ifdef LOOP
+    add.w r12, r0, #1024
+    vmov.w s2, r12
+    mul_acc_loop:
+#else
+.rept 16
+#endif
+
+.rept 2
+
+    vmov.w r12, r14, s12, s13
+    ldrstr4 ldr.w, r12, r4, r5, r6, r7, #16, #20, #24, #28
+    ldrstr4 ldr.w, r14, r8, r9, r10, r11, #16, #20, #24, #28
+
+    vmov.w r12, s1
+    ldr.w r1, [r12], #4
+    vmov.w s1, r12
+
+    smull.w r12, r14, r4, r11
+    smlal.w r12, r14, r5, r10
+    smlal.w r12, r14, r6, r9
+    smlal.w r12, r14, r7, r8
+    mul.w r0, r12, r2
+    smlal.w r12, r14, r0, r3
+
+    vmov.w r0, s0
+    ldr.w r12, [r0, #28]
+    add.w r14, r14, r12
+    str.w r14, [r0, #28]
+
+    smull.w r12, r14, r7, r11
+    mul.w r0, r12, r2
+    smlal.w r12, r14, r0, r3
+    smull.w r12, r14, r14, r1
+    smlal.w r12, r14, r4, r10
+    smlal.w r12, r14, r5, r9
+    smlal.w r12, r14, r6, r8
+    mul.w r0, r12, r2
+    smlal.w r12, r14, r0, r3
+
+    vmov.w r0, s0
+    ldr.w r12, [r0, #24]
+    add.w r14, r14, r12
+    str.w r14, [r0, #24]
+
+    smull.w r12, r14, r6, r11
+    smlal.w r12, r14, r7, r10
+    mul.w r0, r12, r2
+    smlal.w r12, r14, r0, r3
+    smull.w r12, r14, r14, r1
+    smlal.w r12, r14, r4, r9
+    smlal.w r12, r14, r5, r8
+    mul.w r0, r12, r2
+    smlal.w r12, r14, r0, r3
+
+    vmov.w r0, s0
+    ldr.w r12, [r0, #20]
+    add.w r14, r14, r12
+    str.w r14, [r0, #20]
+
+    smull.w r12, r14, r5, r11
+    smlal.w r12, r14, r6, r10
+    smlal.w r12, r14, r7, r9
+    mul.w r0, r12, r2
+    smlal.w r12, r14, r0, r3
+    smull.w r12, r14, r14, r1
+    smlal.w r12, r14, r4, r8
+    mul.w r0, r12, r2
+    smlal.w r12, r14, r0, r3
+
+    vmov.w r0, s0
+    ldr.w r12, [r0, #16]
+    add.w r14, r14, r12
+    str.w r14, [r0, #16]
+
+// ================================
+
+    vmov.w r12, r14, s12, s13
+    ldrstr4jump ldr.w, r12, r4, r5, r6, r7, #4, #8, #12, #32
+    ldrstr4jump ldr.w, r14, r8, r9, r10, r11, #4, #8, #12, #32
+    vmov.w s12, s13, r12, r14
+
+    neg.w r1, r1
+
+    smull.w r12, r14, r4, r11
+    smlal.w r12, r14, r5, r10
+    smlal.w r12, r14, r6, r9
+    smlal.w r12, r14, r7, r8
+    mul.w r0, r12, r2
+    smlal.w r12, r14, r0, r3
+
+    vmov.w r0, s0
+    ldr.w r12, [r0, #12]
+    add.w r14, r14, r12
+    str.w r14, [r0, #12]
+
+    smull.w r12, r14, r7, r11
+    mul.w r0, r12, r2
+    smlal.w r12, r14, r0, r3
+    smull.w r12, r14, r14, r1
+    smlal.w r12, r14, r4, r10
+    smlal.w r12, r14, r5, r9
+    smlal.w r12, r14, r6, r8
+    mul.w r0, r12, r2
+    smlal.w r12, r14, r0, r3
+
+    vmov.w r0, s0
+    ldr.w r12, [r0, #8]
+    add.w r14, r14, r12
+    str.w r14, [r0, #8]
+
+    smull.w r12, r14, r6, r11
+    smlal.w r12, r14, r7, r10
+    mul.w r0, r12, r2
+    smlal.w r12, r14, r0, r3
+    smull.w r12, r14, r14, r1
+    smlal.w r12, r14, r4, r9
+    smlal.w r12, r14, r5, r8
+    mul.w r0, r12, r2
+    smlal.w r12, r14, r0, r3
+
+    vmov.w r0, s0
+    ldr.w r12, [r0, #4]
+    add.w r14, r14, r12
+    str.w r14, [r0, #4]
+
+    smull.w r12, r14, r5, r11
+    smlal.w r12, r14, r6, r10
+    smlal.w r12, r14, r7, r9
+    mul.w r0, r12, r2
+    smlal.w r12, r14, r0, r3
+    smull.w r12, r14, r14, r1
+    smlal.w r12, r14, r4, r8
+    mul.w r0, r12, r2
+    smlal.w r12, r14, r0, r3
+
+    vmov.w r0, s0
+    ldr.w r12, [r0]
+    add.w r14, r14, r12
+    str.w r14, [r0], #32
+    vmov.w s0, r0
+
+.endr
+
+#ifdef LOOP
+    vmov.w r12, s2
+    cmp.w r0, r12
+    bne.w mul_acc_loop
+#else
+.endr
+#endif
+
+    pop.w {r4-r12, pc}
 
