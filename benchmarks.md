@@ -2,6 +2,8 @@
 ## Key Encapsulation Schemes
 | scheme | implementation | key generation [cycles] | encapsulation [cycles] | decapsulation [cycles] |
 | ------ | -------------- | ----------------------- | ---------------------- | ---------------------- |
+| bikel1 (100 executions) | m4f | AVG: 25,059,586 <br /> MIN: 25,044,097 <br /> MAX: 25,080,997 | AVG: 3,398,384 <br /> MIN: 3,371,979 <br /> MAX: 3,417,178 | AVG: 54,793,168 <br /> MIN: 54,774,340 <br /> MAX: 54,823,993 |
+| bikel1 (100 executions) | ref | AVG: 65,551,874 <br /> MIN: 65,532,779 <br /> MAX: 65,569,765 | AVG: 4,962,214 <br /> MIN: 4,941,128 <br /> MAX: 4,978,626 | AVG: 116,543,558 <br /> MIN: 116,510,779 <br /> MAX: 116,572,274 |
 | firesaber (100 executions) | clean | AVG: 3,723,480 <br /> MIN: 3,723,480 <br /> MAX: 3,723,480 | AVG: 4,622,127 <br /> MIN: 4,622,127 <br /> MAX: 4,622,127 | AVG: 5,233,205 <br /> MIN: 5,233,205 <br /> MAX: 5,233,205 |
 | firesaber (100 executions) | m4f | AVG: 1,007,477 <br /> MIN: 1,007,477 <br /> MAX: 1,007,477 | AVG: 1,256,353 <br /> MIN: 1,256,353 <br /> MAX: 1,256,353 | AVG: 1,231,994 <br /> MIN: 1,231,994 <br /> MAX: 1,231,994 |
 | frodokem640aes (100 executions) | m4 | AVG: 48,348,105 <br /> MIN: 48,348,105 <br /> MAX: 48,348,105 | AVG: 47,130,922 <br /> MIN: 47,130,922 <br /> MAX: 47,130,922 | AVG: 46,594,383 <br /> MIN: 46,594,383 <br /> MAX: 46,594,383 |
@@ -111,6 +113,8 @@
 ## Key Encapsulation Schemes
 | Scheme | Implementation | Key Generation [bytes] | Encapsulation [bytes] | Decapsulation [bytes] |
 | ------ | -------------- | ---------------------- | --------------------- | --------------------- |
+| bikel1 | m4f | 44,108 | 32,156 | 91,400 |
+| bikel1 | ref | 35,960 | 25,908 | 78,784 |
 | firesaber | clean | 19,524 | 19,628 | 21,108 |
 | firesaber | m4f | 37,116 | 40,484 | 41,964 |
 | frodokem640aes | m4 | 31,992 | 62,488 | 83,104 |
@@ -220,6 +224,8 @@
 ## Key Encapsulation Schemes
 | Scheme | Implementation | Key Generation [%] | Encapsulation [%] | Decapsulation [%] |
 | ------ | -------------- | ------------------ | ----------------- | ----------------- |
+| bikel1 | m4f | 0.7% | 15.1% | 1.3% |
+| bikel1 | ref | 0.3% | 10.3% | 0.6% |
 | firesaber | clean | 19.2% | 19.1% | 14.1% |
 | firesaber | m4f | 70.9% | 70.1% | 60.1% |
 | frodokem640aes | m4 | 74.3% | 77.8% | 77.1% |
@@ -329,6 +335,8 @@
 ## Key Encapsulation Schemes
 | Scheme | Implementation | .text [bytes] | .data [bytes] | .bss [bytes] | Total [bytes] |
 | ------ | -------------- | ------------- | ------------- | ------------ | ------------- |
+| bikel1 | m4f | 181,430 | 24 | 49 | 181,503 |
+| bikel1 | ref | 35,199 | 24 | 1 | 35,224 |
 | firesaber | clean | 10,220 | 0 | 0 | 10,220 |
 | firesaber | m4f | 10,972 | 0 | 0 | 10,972 |
 | frodokem640aes | m4 | 8,568 | 0 | 0 | 8,568 |
