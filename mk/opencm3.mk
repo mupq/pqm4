@@ -78,6 +78,7 @@ CFLAGS += \
 LDFLAGS += \
 	--specs=nano.specs \
 	--specs=nosys.specs \
+	-Wl,--wrap=_sbrk \
 	-nostartfiles \
 	-ffreestanding \
 	-T$(LDSCRIPT) \
