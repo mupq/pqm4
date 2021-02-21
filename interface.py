@@ -24,7 +24,7 @@ def parse_arguments():
         "-l", "--lto", help="Enable LTO flags", default=False, action="store_true"
     )
     parser.add_argument(
-        "-a", "--aio", help="Enable all-in-one compilation", default=False, action="store_true"
+        "--no-aio", help="Disable all-in-one compilation", default=False, action="store_true"
     )
     parser.add_argument("-u", "--uart", help="Path to UART output")
     return parser.parse_known_args()
@@ -43,7 +43,7 @@ def get_platform(args):
         platform = platforms.Qemu('qemu-system-arm', 'mps2-an386')
     else:
         raise NotImplementedError("Unsupported Platform")
-    settings = M4Settings(args.platform, args.opt, args.lto, args.aio, bin_type)
+    settings = M4Settings(args.platform, args.opt, args.lto, not args.no_aio, bin_type)
     return platform, settings
 
 
@@ -86,3 +86,5 @@ class M4Settings(mupq.PlatformSettings):
             self.makeflags += ["LTO=1"]
         if aio:
             self.makeflags += ["AIO=1"]
+        else:
+            self.makeflags += ["AIO="]
