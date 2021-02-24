@@ -3,9 +3,6 @@
 
 /* menu of parameter choices: */
 
-#define SNTRUP
-#define SIZE761
-
 /* what the menu means: */
 
 #if defined(SIZE761)
