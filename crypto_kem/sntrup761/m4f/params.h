@@ -3,6 +3,8 @@
 
 /* menu of parameter choices: */
 
+#include "paramsmenu.h"
+
 /* what the menu means: */
 
 #if defined(SIZE761)
