@@ -54,12 +54,12 @@ LIBDEPS += $(OPENCM3_DIR)/lib/lib$(LIBNAME).a
 LDFLAGS += -L$(OPENCM3_DIR)/lib
 CPPFLAGS += -I$(OPENCM3_DIR)/include
 
-$(OPENCM3_DIR)/lib/lib$(LIBNAME).a:
+$(OPENCM3_DIR)/lib/lib$(LIBNAME).a: $(CONFIG)
 	$(MAKE) -C $(OPENCM3_DIR)
 
 obj/common/hal-opencm3.c.o: $(OPENCM3_DIR)/lib/lib$(LIBNAME).a
 
-$(LDSCRIPT): $(OPENCM3_DIR)/ld/linker.ld.S $(OPENCM3_DIR)/ld/devices.data
+$(LDSCRIPT): $(OPENCM3_DIR)/ld/linker.ld.S $(OPENCM3_DIR)/ld/devices.data $(CONFIG)
 	@printf "  GENLNK  $(DEVICE)\n"
 	$(Q)mkdir -p $(@D)
 	$(Q)$(CPP) $(ARCH_FLAGS) $(shell $(OPENCM3_DIR)/scripts/genlink.py $(DEVICES_DATA) $(DEVICE) DEFS) -P -E $< -o $@

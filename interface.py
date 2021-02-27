@@ -86,6 +86,8 @@ class M4Settings(mupq.PlatformSettings):
         self.makeflags += optflags[opt]
         if lto:
             self.makeflags += ["LTO=1"]
+        else:
+            self.makeflags += ["LTO="]
         if aio:
             self.makeflags += ["AIO=1"]
         else:
