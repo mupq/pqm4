@@ -1,10 +1,7 @@
-SYMCRYPTO_SRC_COMMON = \
+SYMCRYPTO_SRC = \
 	mupq/common/fips202.c \
 	mupq/common/sp800-185.c \
 	mupq/common/nistseedexpander.c \
-
-SYMCRYPTO_SRC = \
-	$(SYMCRYPTO_SRC_COMMON) \
 	common/keccakf1600.S \
 	common/aes.c \
 	common/aes-encrypt.S \
