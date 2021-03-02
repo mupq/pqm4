@@ -34,7 +34,7 @@
 | ntruhrss701 (100 executions) | m4f | AVG: 153,104,418 <br /> MIN: 153,104,418 <br /> MAX: 153,104,418 | AVG: 377,377 <br /> MIN: 377,377 <br /> MAX: 377,377 | AVG: 869,701 <br /> MIN: 869,701 <br /> MAX: 869,701 |
 | ntrulpr653 (100 executions) | clean | AVG: 4,097,458 <br /> MIN: 4,097,458 <br /> MAX: 4,097,458 | AVG: 7,821,693 <br /> MIN: 7,821,693 <br /> MAX: 7,821,693 | AVG: 11,273,153 <br /> MIN: 11,273,153 <br /> MAX: 11,273,153 |
 | ntrulpr761 (100 executions) | clean | AVG: 5,637,576 <br /> MIN: 5,637,576 <br /> MAX: 5,637,576 | AVG: 10,817,101 <br /> MIN: 10,817,101 <br /> MAX: 10,817,101 | AVG: 15,498,068 <br /> MIN: 15,498,068 <br /> MAX: 15,498,068 |
-| ntrulpr761 (100 executions) | m4f | AVG: 928,394 <br /> MIN: 928,394 <br /> MAX: 928,394 | AVG: 1,484,243 <br /> MIN: 1,484,243 <br /> MAX: 1,484,243 | AVG: 1,577,459 <br /> MIN: 1,577,459 <br /> MAX: 1,577,459 |
+| ntrulpr761 (100 executions) | m4f | AVG: 736,506 <br /> MIN: 736,506 <br /> MAX: 736,506 | AVG: 1,292,350 <br /> MIN: 1,292,350 <br /> MAX: 1,292,350 | AVG: 1,385,470 <br /> MIN: 1,385,470 <br /> MAX: 1,385,470 |
 | ntrulpr857 (100 executions) | clean | AVG: 6,794,314 <br /> MIN: 6,794,314 <br /> MAX: 6,794,314 | AVG: 13,061,118 <br /> MIN: 13,061,118 <br /> MAX: 13,061,118 | AVG: 18,992,752 <br /> MIN: 18,992,752 <br /> MAX: 18,992,752 |
 | saber (100 executions) | clean | AVG: 2,132,294 <br /> MIN: 2,132,294 <br /> MAX: 2,132,294 | AVG: 2,814,441 <br /> MIN: 2,814,441 <br /> MAX: 2,814,441 | AVG: 3,279,418 <br /> MIN: 3,279,418 <br /> MAX: 3,279,418 |
 | saber (100 executions) | m4f | AVG: 656,540 <br /> MIN: 656,540 <br /> MAX: 656,540 | AVG: 835,504 <br /> MIN: 835,504 <br /> MAX: 835,504 | AVG: 791,138 <br /> MIN: 791,138 <br /> MAX: 791,138 |
@@ -246,7 +246,7 @@
 | ntruhrss701 | m4f | 0.0% | 10.3% | 17.7% |
 | ntrulpr653 | clean | 5.4% | 6.0% | 3.5% |
 | ntrulpr761 | clean | 7.9% | 8.5% | 5.4% |
-| ntrulpr761 | m4f | 39.3% | 49.1% | 46.2% |
+| ntrulpr761 | m4f | 23.5% | 41.6% | 38.8% |
 | ntrulpr857 | clean | 4.2% | 4.6% | 2.7% |
 | saber | clean | 22.0% | 21.7% | 15.2% |
 | saber | m4f | 72.2% | 73.6% | 63.1% |
