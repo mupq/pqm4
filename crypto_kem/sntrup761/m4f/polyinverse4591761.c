@@ -60,7 +60,7 @@ static int16_t pow4589(int16_t k){
 
 int Rq_recip3_jumpdivsteps(int16_t* H, int8_t* G){
     int16_t k;
-    int16_t f[768],g[768],M[7680];
+    int16_t f[768]={0},g[768]={0},M[768*4]={0};
     int i,j;
     int minusdelta=-1;
 
@@ -82,7 +82,7 @@ int Rq_recip3_jumpdivsteps(int16_t* H, int8_t* G){
 #else
     int jl, jh;
     int *HH = (int *)(void *)H;
-    int *MM = (int *)(void *)(M + 3846);
+    int *MM = (int *)(void *)(M + 2310);
     for(i=760; i>0; i-=2){
       j = *(MM--);
       jl = __SMULBB(k,j);

@@ -3,12 +3,13 @@
 #include "arith.h"
 
 extern int jump1521divsteps_mod3(int minusdelta, int* M, int* f, int* g);
-int polyinv4591761_mod3(uint8_t* H, uint8_t* G);
+//int polyinv4591761_mod3(uint8_t* H, uint8_t* G);
 int R3_recip_jumpdivsteps(int8_t *H, int8_t* G);
 
+/*
 int polyinv4591761_mod3(uint8_t* H, uint8_t* G){
-    uint8_t f[768],g[768],M[7680];
-    int i,j;
+    uint8_t f[768],g[768],M[5560];
+    int i;
     int minusdelta=-1;
 
     for(i=0;i<768;i++)f[i]=0;
@@ -18,18 +19,18 @@ int polyinv4591761_mod3(uint8_t* H, uint8_t* G){
     f[761]=2;
     for(i=0;i<761;i++)g[i]=G[760-i];
 
-    minusdelta = jump1521divsteps_mod3(minusdelta,M,f,g);
+    minusdelta = jump1521divsteps_mod3(minusdelta,(int*)M,(int*)f,(int*)g);
 
     for(i=0;i<761;i++){
         H[i] = (M[3847-i]*M[0])%3;
     }
 
     return minusdelta == 0 ? 1 : 0;
-}
+}*/
 
 int R3_recip_jumpdivsteps(int8_t* H, int8_t* G){
-    uint8_t f[768],g[768],M[7680];
-    int i,j;
+    uint8_t f[768]={0},g[768]={0},M[768*4]={0};
+    int i;
     int minusdelta=-1;
 
     for(i=0;i<768;i++)f[i]=0;
@@ -39,10 +40,10 @@ int R3_recip_jumpdivsteps(int8_t* H, int8_t* G){
     f[761]=2;
     for(i=0;i<761;i++)g[i]=F3_freeze_short(G[760-i]-1)+1;
 
-    minusdelta = jump1521divsteps_mod3(minusdelta,M,f,g);
+    minusdelta = jump1521divsteps_mod3(minusdelta,(int*)M,(int*)f,(int*)g);
 
     for(i=0;i<761;i++){
-        H[i] = F3_freeze_short(M[3847-i]*M[0]);
+        H[i] = F3_freeze_short(M[2311-i]*M[0]);
     }
     return minusdelta;
 }

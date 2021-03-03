@@ -1,3 +1,9 @@
+/*********************************
+*
+* Implementation of djbsort for signed 32-bit integer arrays
+* 
+***********************************/
+
 #include "crypto_sort.h"
 #include "int32.h"
 //#define int32 crypto_int32

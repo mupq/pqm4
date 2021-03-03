@@ -10,7 +10,7 @@ Encode_Rq_asm:
 
   add.w lr, r1, #1520
   mov.w r2, r1
-  movw.w r3, #4591
+  mov.w r3, #4591
   movw.w r4, #2295
   movt.w r4, #2295
 Encode_Rq_asm_radix4591:
@@ -151,7 +151,7 @@ Encode_Rounded_asm:
 
   add.w lr, r1, #1520
   mov.w r2, r1
-  movw.w r3, #1531
+  mov.w r3, #1531
   movw.w r4, #2295
   movt.w r4, #2295
   mov.w r5, #0x55555555
@@ -203,7 +203,7 @@ Encode_Rounded_asm_radix1531:
   sub.w r2, #760
 
   add.w lr, r1, #752
-  movw.w r3, #9157
+  mov.w r3, #9157
 Encode_Rounded_asm_radix9157:
   ldr.w r5, [r1, #4]
   ldr.w r6, [r1, #8]

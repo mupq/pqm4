@@ -27,7 +27,7 @@ int sha512_hash(unsigned char *out,const unsigned char *in,unsigned long long in
 {
   unsigned char h[64];
   unsigned char padded[256];
-  int i;
+  unsigned int i;
   unsigned long long bytes = inlen;
 
   for (i = 0;i < 64;++i) h[i] = iv[i];

@@ -28,7 +28,7 @@ Rq_mult3_asm:
 
   movw loopctr, #95
   movw three, #3
-  movw mq, #4591
+  mov mq, #4591
   neg mq, mq
   movw barrettconst, #0x465f
   movt barrettconst, #0xe

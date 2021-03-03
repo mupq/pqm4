@@ -3,7 +3,7 @@
 #include <stdio.h>
 extern void gf_polymul_128x128(void *h, void *f, void *g);
 extern int jump128divsteps(int minusdelta, int *M, int *f, int *g);
-void jump256steps(int minusdelta, int *M, int *f, int *g);
+int jump256divsteps(int minusdelta, int *M, int *f, int *g);
 void gf_polymul_128x128_2x2_x2p2 (int *V,int *M,int *fh,int *gh);
 void gf_polymul_128x128_2x2_x_2x2 (int *M, int *M1, int *M2);
 
@@ -25,23 +25,22 @@ static inline int barrett_16x2i(int X) {
 #define barrett_16x2i(A) (A)
 #endif
 //static
-int B256_1[129], B256_2[129];
+int B256_1[129];
 int * BB256_1 = (int *)((void *)B256_1 + 2);
-int * BB256_2 = (int *)((void *)B256_2 + 2);
 
 void gf_polymul_128x128_2x2_x2p2 (int *V,int *M,int *fh,int *gh){
-  int i, T, *X, *Y, *Z, *W;
+  int i, T, *X, *Y, *W;
 
-  B256_1[0] = B256_2[0] = 0;
+  B256_1[0] = V[0] = 0;
   gf_polymul_128x128(BB256_1, M+128, fh); 	// x * u * fh
-  gf_polymul_128x128(BB256_2, M+192, gh);	// x * v * gh
-  for (X=V, Y=B256_1, Z=B256_2, W=M, i=64; i>0; i--) {// x(u fh+v gh)+f1
+  gf_polymul_128x128((int*)((void*)V+2), M+192, gh);	// x * v * gh
+  for (X=V, Y=B256_1, W=M, i=64; i>0; i--) {// x(u fh+v gh)+f1
     //V[i] = barrett_16x2i(__SADD16(__SADD16(M[i],B256_1[i]),B256_2[i]));
-    *(X++) = barrett_16x2i(__SADD16(__SADD16(*(W++),*(Y++)),*(Z++)));
+    T = barrett_16x2i(__SADD16(__SADD16(*(W++),*(Y++)),*X)); *(X++) = T;
   }  
   for (i=64; i>0; i--) {  
     //V[i+64] = barrett_16x2i(__SADD16(B64_1[i+256],B64_2[i+256]));
-    *(X++) = barrett_16x2i(__SADD16(*(Y++),(*Z++)));
+    T = barrett_16x2i(__SADD16(*(Y++),*X)); *(X++) = T;
   } 
   gf_polymul_128x128(V+128, M+256, fh);	// r * fh
   gf_polymul_128x128(BB256_1, M+320, gh);	// s * gh
@@ -58,7 +57,7 @@ void gf_polymul_128x128_2x2_x2p2 (int *V,int *M,int *fh,int *gh){
 void gf_polymul_128x128_2x2_x_2x2 (int *M, int *M1, int *M2) {
   int i, T, *X, *Y;
 
-  B256_1[0] = B256_2[0] = 0;
+  B256_1[0] = 0;
   gf_polymul_128x128(BB256_1, M2, M1); 	// x * u2 * u1
   gf_polymul_128x128(M, M2+64, M1+128); 	// v2 * r1
   for (i=128, X=M, Y=B256_1; i>0; i--) {	// u = x u2 u1 + v2 r1
@@ -85,7 +84,7 @@ void gf_polymul_128x128_2x2_x_2x2 (int *M, int *M1, int *M2) {
   }
 }
 int jump256divsteps(int minusdelta, int *M, int *f, int *g){
-int M1[768], M2[768], fg[256];
+int M1[384], M2[384], fg[256];
   minusdelta = jump128divsteps(minusdelta, M1, f, g);
   /*
   printf("u1 = GF4591x(");

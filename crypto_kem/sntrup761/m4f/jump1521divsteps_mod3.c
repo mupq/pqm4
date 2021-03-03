@@ -58,9 +58,9 @@ int * CC1521_1 = (int *)((void *)C1521_1 + 1);
        *(X++) = T;
     }
     */
-    gf_polymul_768x768_mod3(CC1521_1, M2, M1+192); // x * u2 * v1 
-    gf_polymul_768x768_mod3(M+384, M2+192,M1+576); // v2 * s1
-    for (i=384, X=M+384, Y=C1521_1; i>0; i--) {	// v = x u2 v1 + v2 s1
+    gf_polymul_768x768_mod3(CC1521_1, M2, M1);//+192); // x * u2 * v1 
+    gf_polymul_768x768_mod3(M, M2+192,M1+192);//576); // v2 * s1
+    for (i=384, X=M, Y=C1521_1; i>0; i--) {	// v = x u2 v1 + v2 s1
      T = (add_ub3(*X,*(Y++)));
        *(X++) = T;
     }
@@ -81,7 +81,7 @@ int * CC1521_1 = (int *)((void *)C1521_1 + 1);
 }
 
 int jump1521divsteps_mod3(int minusdelta, int *M, int *f, int *g){
-    int M1[1152],M2[1152];
+  int M1[768],M2[768];
     int i;
     
     minusdelta = jump768divsteps_mod3(minusdelta,M1,f,g);

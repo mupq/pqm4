@@ -10,21 +10,20 @@ void gf_polymul_128x128_2x2_x_2x2_mod3(int* M,int* M1,int* M2);
 
 
 void gf_polymul_128x128_2x2_x2p2_mod3(int *V,int *M,int *fh,int *gh){
-int C256_1[65], C256_2[65];
-C256_1[0]=C256_2[0]=0;
+int C256_1[65];
+C256_1[0]=V[0]=0;
 int * CC256_1 = (int *)((void *)C256_1 + 1);
-int * CC256_2 = (int *)((void *)C256_2 + 1);
 
-  int i, T, *X, *Y, *Z, *W;
+  int i, T, *X, *Y, *W;
 
   gf_polymul_128x128_mod3(CC256_1, M+64, fh); // x * u * fh
-  gf_polymul_128x128_mod3(CC256_2, M+96, gh); // x * v * gh
+  gf_polymul_128x128_mod3((int*)((void*)V+1), M+96, gh); // x * v * gh
 
-  for (X=V, Y=C256_1, Z=C256_2, W=M, i=32; i>0; i--) {// x(u fh+v gh)+f1
-    *(X++) = add_ub3(add_ub3(*(W++),*(Y++)),*(Z++));
+  for (X=V, Y=C256_1, W=M, i=32; i>0; i--) {// x(u fh+v gh)+f1
+    T = add_ub3(add_ub3(*(W++),*(Y++)),*X); *(X++) = T;
   }
   for (i=32; i>0; i--) {
-    *(X++) = add_ub3(*(Y++),*(Z++));
+    T = add_ub3(*(Y++),*X); *(X++) = T;
   }
 
   gf_polymul_128x128_mod3(V+64, M+128, fh); // r * fh
@@ -39,10 +38,9 @@ int * CC256_2 = (int *)((void *)C256_2 + 1);
 }
 
 void gf_polymul_128x128_2x2_x_2x2_mod3(int *M, int *M1, int *M2){
-int C256_1[65], C256_2[65];
-C256_1[0]=C256_2[0]=0;
+int C256_1[65];
+C256_1[0]=0;
 int * CC256_1 = (int *)((void *)C256_1 + 1);
-int * CC256_2 = (int *)((void *)C256_2 + 1);
 
   int i, T, *X, *Y;
 
