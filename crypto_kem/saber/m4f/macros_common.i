@@ -30,7 +30,7 @@
 *
 * Constants:    Qprime = -MOD^{-1} mod^{+-} R, Q = MOD
 *
-* Output:       upper = a b R^{-1} mod^{+-} R
+* Output:       upper = a b R^{-1} mod^{+-} Q
 ************************************************************/
 .macro montgomery_mul lower, upper, a, b, Qprime, Q, tmp
     smull.w \lower, \upper, \a, \b
@@ -41,15 +41,15 @@
 /************************************************************
 * Name:         central_reduce
 *
-* Description:  reduce to [-M / 2, M / 2)
+* Description:  reduce to [-Q / 2, Q / 2)
 *
 * Input:        target
 *
 * Symbols:
 *
-* Constants:    Mhalf = MOD / 2, M = MOD
+* Constants:
 *
-* Output:       target = target mod^{+-} R (strictly in [-M / 2, M / 2) )
+* Output:       target = target mod^{+-} Q (strictly in [-Q / 2, Q / 2) )
 ************************************************************/
 .macro central_reduce target, Mhalf, M
     cmp \target, \Mhalf
@@ -71,10 +71,10 @@
 *
 * Constants:    Qprime = -MOD^{-1} mod^{+-} R, Q = MOD
 *
-* Output:       c0 = c0 xi R^{-1} mod^{+-} R
-*               c1 = c1 xi R^{-1} mod^{+-} R
-*               c2 = c2 xi R^{-1} mod^{+-} R
-*               c3 = c3 xi R^{-1} mod^{+-} R
+* Output:       c0 = c0 xi R^{-1} mod^{+-} Q
+*               c1 = c1 xi R^{-1} mod^{+-} Q
+*               c2 = c2 xi R^{-1} mod^{+-} Q
+*               c3 = c3 xi R^{-1} mod^{+-} Q
 ************************************************************/
 .macro montgomery_mul_vec4 c0, c1, c2, c3, xi, twiddle, Qprime, Q, tmp0, tmp1
     vmov.w \twiddle, \xi
@@ -95,14 +95,14 @@
 *
 * Constants:    Qprime = -MOD^{-1} mod^{+-} R, Q = MOD
 *
-* Output:       c0 = c0 xi R^{-1} mod^{+-} R
-*               c1 = c1 xi R^{-1} mod^{+-} R
-*               c2 = c2 xi R^{-1} mod^{+-} R
-*               c3 = c3 xi R^{-1} mod^{+-} R
-*               c4 = c4 xi R^{-1} mod^{+-} R
-*               c5 = c5 xi R^{-1} mod^{+-} R
-*               c6 = c6 xi R^{-1} mod^{+-} R
-*               c7 = c7 xi R^{-1} mod^{+-} R
+* Output:       c0 = c0 xi R^{-1} mod^{+-} Q
+*               c1 = c1 xi R^{-1} mod^{+-} Q
+*               c2 = c2 xi R^{-1} mod^{+-} Q
+*               c3 = c3 xi R^{-1} mod^{+-} Q
+*               c4 = c4 xi R^{-1} mod^{+-} Q
+*               c5 = c5 xi R^{-1} mod^{+-} Q
+*               c6 = c6 xi R^{-1} mod^{+-} Q
+*               c7 = c7 xi R^{-1} mod^{+-} Q
 ************************************************************/
 .macro montgomery_mul_vec8 c0, c1, c2, c3, c4, c5, c6, c7, xi, twiddle, Qprime, Q, tmp0, tmp1
     vmov.w \twiddle, \xi
@@ -129,14 +129,14 @@
 *
 * Constants:    Qprime = -MOD^{-1} mod^{+-} R, Q = MOD
 *
-* Output:       c0 = c0 xi0 R^{-1} mod^{+-} R
-*               c1 = c1 xi1 R^{-1} mod^{+-} R
-*               c2 = c2 xi2 R^{-1} mod^{+-} R
-*               c3 = c3 xi3 R^{-1} mod^{+-} R
-*               c4 = c4 xi4 R^{-1} mod^{+-} R
-*               c5 = c5 xi5 R^{-1} mod^{+-} R
-*               c6 = c6 xi6 R^{-1} mod^{+-} R
-*               c7 = c7 xi7 R^{-1} mod^{+-} R
+* Output:       c0 = c0 xi0 R^{-1} mod^{+-} Q
+*               c1 = c1 xi1 R^{-1} mod^{+-} Q
+*               c2 = c2 xi2 R^{-1} mod^{+-} Q
+*               c3 = c3 xi3 R^{-1} mod^{+-} Q
+*               c4 = c4 xi4 R^{-1} mod^{+-} Q
+*               c5 = c5 xi5 R^{-1} mod^{+-} Q
+*               c6 = c6 xi6 R^{-1} mod^{+-} Q
+*               c7 = c7 xi7 R^{-1} mod^{+-} Q
 ************************************************************/
 .macro montgomery_mul_point8 c0, c1, c2, c3, c4, c5, c6, c7, xi0, xi1, xi2, xi3, xi4, xi5, xi6, xi7, twiddle, Qprime, Q, tmp0, tmp1
     vmov.w \twiddle, \xi0
