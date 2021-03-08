@@ -1,5 +1,5 @@
 
-#include "macros_common.S"
+#include "macros_common.i"
 
 #ifndef LOOP
 #define LOOP

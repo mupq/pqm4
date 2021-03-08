@@ -1,5 +1,5 @@
 
-#include "macros_common.S"
+#include "macros_common.i"
 
 #ifndef LOOP
 #define LOOP
@@ -101,15 +101,15 @@ _NTT_inv:
     ldrstrvecjump ldr.w, r0, r4, r5, r6, r7, r8, r9, r10, r11, #128, #256, #384, #512, #640, #768, #896, #4
     _3_layer_GS_butterfly r4, r5, r6, r7, r8, r9, r10, r11, s4, s5, s6, s7, s8, s9, s10, r1, r2, r3, r12, r14
     montgomery_mul_vec4 r4, r5, r6, r7, s15, r1, r2, r3, r12, r14
-    lsr.w r1, r2, #1
-    central_reduce r4, r1, r2
-    central_reduce r5, r1, r2
-    central_reduce r6, r1, r2
-    central_reduce r7, r1, r2
-    central_reduce r8, r1, r2
-    central_reduce r9, r1, r2
-    central_reduce r10, r1, r2
-    central_reduce r11, r1, r2
+    lsr.w r1, r3, #1
+    central_reduce r4, r1, r3
+    central_reduce r5, r1, r3
+    central_reduce r6, r1, r3
+    central_reduce r7, r1, r3
+    central_reduce r8, r1, r3
+    central_reduce r9, r1, r3
+    central_reduce r10, r1, r3
+    central_reduce r11, r1, r3
     vmov.w r14, s0
     ldrstrvecjump strh.w r14, r4, r5, r6, r7, r8, r9, r10, r11, #32*width, #64*width, #96*width, #128*width, #160*width, #192*width, #224*width, #width
     vmov.w s0, r14
