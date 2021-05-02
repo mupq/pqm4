@@ -1,3 +1,7 @@
+// Implemented by Ming-Shing Chen, Tung Chou and Markus Krausz.
+// public domain
+
+
 #ifndef _RING_OPS_H_
 #define _RING_OPS_H_
 

@@ -1,3 +1,6 @@
+// Implemented by Ming-Shing Chen, Tung Chou and Markus Krausz.
+// public domain
+
 #ifndef _ROTR_CSHIFT_H_
 #define _ROTR_CSHIFT_H_
 

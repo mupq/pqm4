@@ -1,3 +1,6 @@
+// Implemented by Ming-Shing Chen, Tung Chou and Markus Krausz.
+// public domain
+
 #ifndef GFV_TOWER_ASM_H_
 #define GFV_TOWER_ASM_H_
 
