@@ -5,8 +5,15 @@ LIBHAL_SRC := \
 obj/libpqm4hal.a: $(call objs,$(LIBHAL_SRC))
 obj/libpqm4hal-nornd.a: $(call objs,$(filter-out common/randombytes.c,$(LIBHAL_SRC)))
 
+ifeq ($(AIO),1)
+LDLIBS +=
+LIBDEPS += $$(if $$(NO_RANDOMBYTES),$(filter-out common/randombytes.c,$(LIBHAL_SRC)),$(LIBHAL_SRC))
+else
 LDLIBS += -lpqm4hal$(if $(NO_RANDOMBYTES),-nornd)
-LIBDEPS += obj/libpqm4hal.a obj/libpqm4hal-nornd.a
+LIBDEPS += obj/libpqm4hal$$(if $$(NO_RANDOMBYTES),-nornd).a
+endif
+
+LDLIBS += -lc -lgcc
 
 export OPENCM3_DIR := $(CURDIR)/libopencm3
 
