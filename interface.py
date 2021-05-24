@@ -22,6 +22,7 @@ class M4Settings(mupq.PlatformSettings):
         {'scheme': 'bikel3', 'implementation': 'ref'},
         {'scheme': 'bikel3', 'implementation': 'm4f'},
         {'scheme': 'dilithium5', 'implementation': 'clean'},
+        {'scheme': 'dilithium5aes', 'implementation': 'clean'},
         {'scheme': 'falcon-1024-tree', 'implementation': 'opt-leaktime'},
         {'scheme': 'falcon-1024-tree', 'implementation': 'opt-ct'},
         {'scheme': 'frodokem640aes', 'implementation': 'clean'},
