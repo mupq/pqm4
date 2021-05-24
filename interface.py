@@ -19,7 +19,7 @@ class M4Settings(mupq.PlatformSettings):
     #: List of dicts, in each dict specify (Scheme class) attributes of the
     #: scheme with values, if all attributes match the scheme is skipped.
     skip_list = (
-        {'scheme': 'bikel3', 'implementation': 'ref'},
+        {'scheme': 'bikel3', 'implementation': 'opt'},
         {'scheme': 'bikel3', 'implementation': 'm4f'},
         {'scheme': 'dilithium5', 'implementation': 'clean'},
         {'scheme': 'dilithium5aes', 'implementation': 'clean'},
