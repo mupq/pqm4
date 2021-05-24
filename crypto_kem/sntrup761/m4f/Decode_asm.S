@@ -14,8 +14,8 @@ Decode_Rq_asm:
   add.w r2, r0, #92
   movw.w r4, #0xFEF0
   movt.w r4, #644
-  movw.w r5, #0x9A3C
-  movw.w r11, #0xE361
+  mov.w r5, #0x9A3C
+  mov.w r11, #0xE361
   movw.w r12, #0xFD7C
   movt.w r12, #0xFFFF
   movw.w r3, #0xEE11
@@ -73,8 +73,8 @@ Decode_Rq_asm_radix644:
   add.w r2, r0, #186
   movw.w r4, #78
   movt.w r4, #406
-  movw.w r5, #24213
-  movw.w r11, #25827
+  mov.w r5, #24213
+  mov.w r11, #25827
   movw.w r12, #0xFE6A
   movt.w r12, #0xFFFF
 
@@ -152,8 +152,8 @@ Decode_Rq_asm_radix406:
   add.w r2, r0, #376
   movw.w r4, #50
   movt.w r4, #322
-  movw.w r5, #13433
-  movw.w r11, #0xE361
+  mov.w r5, #13433
+  mov.w r11, #0xE361
   movw.w r12, #0xFEBE
   movt.w r12, #0xFFFF
 
@@ -214,8 +214,8 @@ Decode_Rq_asm_radix322:
   movt.w r3, #2295
   movw.w r4, #1702
   movt.w r4, #4591
-  movw.w r5, #0xF1BA
-  movw.w r11, #15631
+  mov.w r5, #0xF1BA
+  mov.w r11, #15631
   movw.w r12, #0xEE11
   movt.w r12, #0xFFFF
 
@@ -285,8 +285,8 @@ Decode_Rounded_asm:
   add.w r2, r0, #8
   movw.w r4, #2348
   movt.w r4, #9097
-  movw.w r5, #0xF8CC
-  movw.w r11, #17081
+  mov.w r5, #0xF8CC
+  mov.w r11, #17081
   movw.w r12, #0xDC77
   movt.w r12, #0xFFFF
   movw.w r3, #0xF774
@@ -350,8 +350,8 @@ Decode_Rounded_asm_radix9097:
   add.w r2, r0, #20
   movw.w r4, #372
   movt.w r4, #1526
-  movw.w r5, #0xD50E
-  movw.w r11, #0xB833
+  mov.w r5, #0xD50E
+  mov.w r11, #0xB833
   movw.w r12, #0xFA0A
   movt.w r12, #0xFFFF
   movw.w r3, #0xFE91
@@ -406,8 +406,8 @@ Decode_Rounded_asm_radix1526:
   add.w r2, r0, #44
   movw.w r4, #0xFEE4
   movt.w r4, #625
-  movw.w r5, #0x9724
-  movw.w r11, #32401
+  mov.w r5, #0x9724
+  mov.w r11, #32401
   movw.w r12, #0xFD8F
   movt.w r12, #0xFFFF
   movw.w r3, #0xFF6A
@@ -461,8 +461,8 @@ Decode_Rounded_asm_radix625:
   add.w r2, r0, #92
   movw.w r4, #2816
   movt.w r4, #6400
-  movw.w r5, #0xF5C3
-  movw.w r11, #23593
+  mov.w r5, #0xF5C3
+  mov.w r11, #23593
   movw.w r12, #0xE700
   movt.w r12, #0xFFFF
   movw.w r3, #0xFA05
@@ -535,7 +535,7 @@ Decode_Rounded_asm_radix6400:
   add.w r2, r0, #186
   movw.w r4, #256
   movt.w r4, #1280
-  movw.w r5, #0xCCCD
+  mov.w r5, #0xCCCD
   movw.w r12, #0xFB00
   movt.w r12, #0xFFFF
 
@@ -608,8 +608,8 @@ Decode_Rounded_asm_radix1280:
   add.w r2, r0, #376
   movw.w r4, #1592
   movt.w r4, #9157
-  movw.w r5, #0xF8D8
-  movw.w r11, #25357
+  mov.w r5, #0xF8D8
+  mov.w r11, #25357
   movw.w r12, #0xDC3B
   movt.w r12, #0xFFFF
 
@@ -675,8 +675,8 @@ Decode_Rounded_asm_radix9157:
   movt.w r3, #2295
   movw.w r4, #518
   movt.w r4, #1531
-  movw.w r5, #0xD532
-  movw.w r11, #15667
+  mov.w r5, #0xD532
+  mov.w r11, #15667
   movw.w r12, #0xFA05
   movt.w r12, #0xFFFF
 

@@ -1,3 +1,9 @@
+/*********************************
+*
+* Implementation of djbsort for unsigned 32-bit integer arrays
+* 
+***********************************/
+
 //#include "crypto_sort_int32.h"
 #include "crypto_sort.h"
 #include "uint32.h"

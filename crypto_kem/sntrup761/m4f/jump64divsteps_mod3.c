@@ -41,10 +41,9 @@ int * CC64_2 = (int *)((void *)C64_2 + 1);
 }
 
 void gf_polymul_32x32_2x2_x_2x2_mod3(int *M, int *M1, int *M2){
-int C64_1[17], C64_2[17];
-C64_1[0]=C64_2[0]=0;
+int C64_1[17];
+C64_1[0]=0;
 int * CC64_1 = (int *)((void *)C64_1 + 1);
-int * CC64_2 = (int *)((void *)C64_2 + 1);
 
   int i, T, *X, *Y;
 

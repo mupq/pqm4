@@ -38,10 +38,9 @@ int * CC32_2 = (int *)((void *)C32_2 + 1);
 }
 
 void gf_polymul_16x16_2x2_x_2x2_mod3(int *M, int *M1, int *M2){
-int C32_1[9], C32_2[9];
-C32_1[0]=C32_2[0]=0;
+int C32_1[9];
+C32_1[0]=0;
 int * CC32_1 = (int *)((void *)C32_1 + 1);
-int * CC32_2 = (int *)((void *)C32_2 + 1);
 
   int i, T, *X, *Y;
 

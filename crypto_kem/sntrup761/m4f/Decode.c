@@ -1,3 +1,10 @@
+/*
+ * Decode functions for NTRU Prime submission
+ * taken from pqm4 library.
+ */
+
+
+
 #include "int16.h"
 #include "int32.h"
 #include "uint16.h"
@@ -5,17 +12,33 @@
 #include "uint64.h"
 #include "Decode.h"
 #include "cmsis.h"
+
+/*
+ * Function prototypes from Decode_asm.S
+ */
 extern void Decode_Rq_asm(int16 *R,const unsigned char *s);
 extern void Decode_Rounded_asm(int16 *R,const unsigned char *s);
 
+/*
+ * 16-bit integer multiplication
+ */
 static int16 mullo(int16 x,int16 y) { return x*y; }
-static int16 mulhi(int16 x,int16 y) { return (x*(int32)y) >> 16; }
 
+
+/*************************************************
+* Name:        Decode_Rq
+*
+* Description: De-serialization of a polynomial for Streamlined NTRU Prime
+*
+* Arguments:   
+* int16 *R              : pointer to the output public-key polynomial in R_q
+* const unsigned char *s: pointer to the input serialized public key
+**************************************************/
 extern void Decode_Rq(int16 *R,const unsigned char *s)
 {
   // int16 *R = v;
   long long i;
-  int16 a0,a1,ri,lo,hi,s0,s1;
+  int16 a0,a1,ri,lo,s0,s1;
   int16 z,y,m0;
 
   s += 1158; // crypto_decode_STRBYTES;
@@ -238,17 +261,22 @@ extern void Decode_Rq(int16 *R,const unsigned char *s)
   }
 
   Decode_Rq_asm(R + 46, s - 2);
-  /* reconstruct mod 95*[644]+[4591] */
-  /* reconstruct mod 190*[406]+[4591] */
-  /* reconstruct mod 380*[322]+[4591] */
-  /* reconstruct mod 761*[4591] */
 }
 
+/*************************************************
+* Name:        Decode_Rounded
+*
+* Description: De-serialization and subsequent uncompression of a polynomial used in
+*              both Streamlined NTRU Prime and NTRU LPRime
+*
+* Arguments:   
+* int16 *R              : pointer to the output public-key polynomial in R_q
+* const unsigned char *s: pointer to the input serialized public key
+**************************************************/
 void Decode_Rounded(int16 *R,const unsigned char *s)
 {
   long long i;
-  int16 a0,a1,ri,lo,hi,s0,s1;
-  int16 z, y, m0;
+  int16 a0,a1,ri,lo,s0,s1;
 
   s += 1007; // crypto_decode_STRBYTES;
   a1 = 0;
@@ -338,11 +366,4 @@ void Decode_Rounded(int16 *R,const unsigned char *s)
   }
 
   Decode_Rounded_asm(R + 4, s - 4);
-  /* reconstruct mod 11*[9097]+[2188] */
-  /* reconstruct mod 23*[1526]+[367] */
-  /* reconstruct mod 47*[625]+[150] */
-  /* reconstruct mod 95*[6400]+[1531] */
-  /* reconstruct mod 190*[1280]+[1531] */
-  /* reconstruct mod 380*[9157]+[1531] */
-  /* reconstruct mod 761*[1531] */
 }

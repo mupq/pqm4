@@ -680,7 +680,7 @@ __attribute__( ( always_inline ) ) __STATIC_INLINE uint64_t __UMULL (uint32_t op
     uint32_t w32[2];
     uint64_t w64;
   } llr;
-
+  llr.w64=0;
 #ifndef __ARMEB__   // Little endian
   __ASM volatile ("umull %0, %1, %2, %3" : "=r" (llr.w32[0]), "=r" (llr.w32[1]): "r" (op1), "r" (op2) , "0" (llr.w32[0]), "1" (llr.w32[1]) : "cc");
 #else               // Big endian

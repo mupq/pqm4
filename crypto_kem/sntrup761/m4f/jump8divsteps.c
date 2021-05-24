@@ -88,7 +88,7 @@ void polymul_4x4_2x2_x_2x2 (int *M, int *M1, int *M2) {
 }
 
 int jump8divsteps(int minusdelta, int *M, int *f, int *g){
-  int M1[24], M2[24], fg[8];
+  int M1[12], M2[12], fg[8];
 
   minusdelta = jump4divsteps(minusdelta, M1, f, g);
 

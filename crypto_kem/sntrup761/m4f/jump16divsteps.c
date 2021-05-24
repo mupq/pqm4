@@ -3,7 +3,7 @@
 #include <stdio.h>
 extern void gf_polymul_8x8_nr(void *h, void *f, void *g);
 extern int jump8divsteps(int minusdelta, int *M, int *f, int *g);
-void jump16steps(int minusdelta, int *M, int *f, int *g);
+int jump16divsteps(int minusdelta, int *M, int *f, int *g);
 void gf_polymul_8x8_2x2_x2p2 (int *V,int *M,int *fh,int *gh);
 void gf_polymul_8x8_2x2_x_2x2 (int *M, int *M1, int *M2);
 
@@ -87,7 +87,7 @@ void gf_polymul_8x8_2x2_x_2x2 (int *M, int *M1, int *M2) {
 }
 
 int jump16divsteps(int minusdelta, int *M, int *f, int *g){
-int M1[48], M2[48], fg[16];
+int M1[24], M2[24], fg[16];
   minusdelta = jump8divsteps(minusdelta, M1, f, g);
   /*
   printf("u1 = GF4591x(");

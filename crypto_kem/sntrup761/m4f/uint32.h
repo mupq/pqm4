@@ -2,7 +2,7 @@
 #define UINT32_H
 
 #include "uint16.h"
-
+#include "crypto_sort.h"
 typedef uint32_t uint32;
 
 /*
@@ -16,6 +16,5 @@ extern uint32 uint32_div_uint14(uint32,uint16);
 extern uint16 uint32_mod_uint14(uint32,uint16);
 extern void uint32_divmod_uint14(uint32 *,uint16 *,uint32,uint16);
 
-extern void uint32_sort(void *, long long);
 
 #endif

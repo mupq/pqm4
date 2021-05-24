@@ -1,5 +1,5 @@
 #include "red-asm.h"
-	.p2align	2,,3
+	.p2align	2,,3	
 	.syntax		unified
 	.text
 M2x2x2s:
@@ -27,7 +27,7 @@ M2x2x2s:
 	str	r10, [r0, #20]
 	str	r2, [r0, #16]
 	pop	{pc}
-	.p2align	2,,3
+	.p2align	2,,3	
 	.syntax		unified
 	.text
 M2x2x2_2:
@@ -60,7 +60,7 @@ M2x2x2_2:
 	str	r2, [r0]
 	str	r10, [r0, #4]
 	pop	{pc}
-	.p2align	2,,3
+	.p2align	2,,3	
 	.syntax		unified
 	.text
 jump2divsteps_sub:
@@ -89,7 +89,7 @@ jump2divsteps_t0_1:	// end of first half
 	mov	r11, #0
 	ssub16	r8, r11, r3	// r8 = -g
 	sub	r0, r0, #1	// decrement minusdelta
-	smlsdx	r3, r2, r3, r11	// (f(0) g - g(0) f) / x
+	smlsdx	r3, r2, r3, r11	// (f(0) g - g(0) f) / x 
 	br_32	r3, r12, r1, r11 //red. new g[0] % 4591, 32b
 	uxth	r3, r3
 	smulbb	r9, r8, r4	// - u[0] g[0]
@@ -121,7 +121,7 @@ jump2divsteps_t1_1:	// end of first half
 	mov	r11, #0
 	sub	r0, r0, #1	// decrement minusdelta
 	ssub16	r8, r11, r3	// r8 = -g
-	smlsdx	r3, r2, r3, r11	// (f(0) g - g(0) f) / x
+	smlsdx	r3, r2, r3, r11	// (f(0) g - g(0) f) / x 
 	br_32	r3, r12, r1, r11 //red. new g[0] % 4591, 32b
 	uxth	r3, r3
 	smulbb	r9, r8, r4	// - u[0] g[0]
@@ -138,7 +138,7 @@ jump2divsteps_t1_1:	// end of first half
 	pkhbt	r7, r9, r11, LSL #16	// new s (new s[1] reduced)
 	// note, we don't shift u,v here
 	pop	{pc}
-	.p2align	2,,3
+	.p2align	2,,3	
 	.syntax		unified
 	.text
 // void jump4divsteps (int minusdelta, int *M, int *f, int *g);
@@ -146,7 +146,7 @@ jump2divsteps_t1_1:	// end of first half
 	.type	jump4divsteps, %function
 jump4divsteps:
 	push	{r1-r11,lr}
-	movw	r12, #4591	// load q
+	mov	r12, #4591	// load q
 	movw	r1, #47521
 	movt	r1, #65521
 	vmov	s0, r1		// save q32inv
@@ -185,7 +185,7 @@ jump4divsteps:
 	add	sp, sp, #76	// deallocate temp storage + pop r1-3
 	vmov	r0, s1		// reload minusdelta for return value
 	pop	{r4-r11,pc}
-	.p2align	2,,3
+	.p2align	2,,3	
 	.syntax		unified
 	.text
 jump2divsteps_1_sub:
@@ -214,7 +214,7 @@ jump2divsteps_1_t0_1:	// end of first half
 	mov	r11, #0
 	ssub16	r8, r11, r3	// r8 = -g
 	sub	r0, r0, #1	// decrement minusdelta
-	smlsdx	r3, r2, r3, r11	// (f(0) g - g(0) f) / x
+	smlsdx	r3, r2, r3, r11	// (f(0) g - g(0) f) / x 
 	br_32	r3, r12, r1, r11 //red. new g[0] % 4591, 32b
 	uxth	r3, r3
 	smulbb	r9, r8, r4	// - u[0] g[0]
@@ -232,7 +232,7 @@ jump2divsteps_1_t0_1:	// end of first half
  // note M redefined here
  // note pf redefined here
  // note pg redefined here
-	.p2align	2,,3
+	.p2align	2,,3	
 	.syntax		unified
 	.text
 // void jump4divsteps_3 (int minusdelta, int *M, int *f, int *g);
@@ -240,7 +240,7 @@ jump2divsteps_1_t0_1:	// end of first half
 	.type	jump4divsteps_3, %function
 jump4divsteps_3:
 	push	{r1-r11,lr}
-	movw	r12, #4591	// load q
+	mov	r12, #4591	// load q
 	movw	r1, #47521
 	movt	r1, #65521
 	vmov	s0, r1		// save q32inv
@@ -279,7 +279,7 @@ jump4divsteps_3:
 	add	sp, sp, #76	// deallocate temp storage + pop r1-3
 	vmov	r0, s1		// reload minusdelta for return value
 	pop	{r4-r11,pc}
-	.p2align	2,,3
+	.p2align	2,,3	
 	.syntax		unified
 	.text
 // void jump4divsteps_2 (int minusdelta, int *M, int *f, int *g);
@@ -287,7 +287,7 @@ jump4divsteps_3:
 	.type	jump4divsteps_2, %function
 jump4divsteps_2:
 	push	{r1-r11,lr}
-	movw	r12, #4591	// load q
+	mov	r12, #4591	// load q
 	movw	r1, #47521
 	movt	r1, #65521
 	vmov	s0, r1		// save q32inv
@@ -313,7 +313,7 @@ jump4divsteps_2:
 	str	r1, [r0, #40]
 	vmov	r0, s1		// reload minusdelta for return value
 	pop	{r1-r11,pc}
-	.p2align	2,,3
+	.p2align	2,,3	
 	.syntax		unified
 	.text
 // void jump4divsteps_1 (int minusdelta, int *M, int *f, int *g);
@@ -321,7 +321,7 @@ jump4divsteps_2:
 	.type	jump4divsteps_1, %function
 jump4divsteps_1:
 	push	{r1-r11,lr}
-	movw	r12, #4591	// load q
+	mov	r12, #4591	// load q
 	movw	r1, #47521
 	movt	r1, #65521
 	vmov	s0, r1		// save q32inv

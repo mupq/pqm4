@@ -26,9 +26,9 @@ Rq_redp:
   mq            .req r11
   barrettconst  .req r12
 
-  movw loopctr, #379
+  mov loopctr, #379
   mov twop15, #32768
-  movw mq, #4591
+  mov mq, #4591
   neg mq, mq
   movw barrettconst, #0x465f
   movt barrettconst, #0xe

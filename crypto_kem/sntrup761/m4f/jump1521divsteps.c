@@ -14,17 +14,18 @@ void gf_polymul_768x768_2x2_x_2x2 (int32_t *M, int32_t *M1, int32_t *M2){ //only
     int32_t B1521_1[769];
     int32_t *BB1521_1 = (int32_t *)((void *)B1521_1 + 2);
     B1521_1[0] = 0;
+    B1521_1[1] = 0;
 
-    gf_polymul_768x768(BB1521_1, M2, M1+384); // x * u2 * v1 
-    gf_polymul_768x768(M+768, M2+384,M1+1152); // v2 * s1
-    for (i=768, X=M+768, Y=B1521_1; i>0; i--) {	// v = x u2 v1 + v2 s1
+    gf_polymul_768x768(BB1521_1, M2, M1);//+384); // x * u2 * v1 
+    gf_polymul_768x768(M, M2+384,M1+384);//1152); // v2 * s1
+    for (i=768, X=M, Y=B1521_1; i>0; i--) {	// v = x u2 v1 + v2 s1
         T = __SADD16(*X,*(Y++));
         *(X++) = T;
     }
 }
 
 int jump1521divsteps(int minusdelta, int32_t *M, int32_t *f, int32_t *g){
-    int32_t M1[2304],M2[2304];
+    int32_t M1[1536],M2[1536];
     int i;
 
     minusdelta = jump768divsteps(minusdelta,M1,f,g);

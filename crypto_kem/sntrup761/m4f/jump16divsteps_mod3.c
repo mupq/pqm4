@@ -40,10 +40,9 @@ int * CC16_2 = (int *)((void *)C16_2 + 1);
 }
 
 void gf_polymul_8x8_2x2_x_2x2_mod3(int *M, int *M1, int *M2){
-int C16_1[5], C16_2[5];
-C16_1[0]=C16_2[0]=0;
+int C16_1[5];
+C16_1[0]=0;
 int * CC16_1 = (int *)((void *)C16_1 + 1);
-int * CC16_2 = (int *)((void *)C16_2 + 1);
 
   int i, T, *X, *Y;
 

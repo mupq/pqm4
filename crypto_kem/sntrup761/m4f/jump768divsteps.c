@@ -29,22 +29,23 @@ static inline int barrett_16x2i(int X) {
 #endif
 
 //static
-int B768_1[385], B768_2[385];
+int B768_1[385];
 int * BB768_1 = (int *)((void *)B768_1 + 2);
-int * BB768_2 = (int *)((void *)B768_2 + 2);
 
 void gf_polymul_512x256_2x2_x2p2 (int *V,int *M,int *fh,int *gh){
-  int i, T, *X, *Y, *Z, *W;
+  int i, T, *X, *Y, *W;
 
-  B768_1[0] = B768_2[0] = 0;
-
+  B768_1[0] = 0;
+  V[0]=0;
   gf_polymul_256x512(BB768_1, fh, M+512); // x * u * fh
-  gf_polymul_256x512(BB768_2, gh, M+768); // x * v * gh
-  for(X=V, Y=B768_1, Z=B768_2, W=M, i=256; i>0; i--){ // x(u fh+v gh)+f1, length ,u*fh & v*gh : 768, f1 : 512
-    *(X++) = barrett_16x2i(__SADD16(__SADD16(*(W++),*(Y++)),*(Z++)));
+  gf_polymul_256x512((int*)((void*)V+2), gh, M+768); // x * v * gh
+  for(X=V, Y=B768_1, W=M, i=256; i>0; i--){ // x(u fh+v gh)+f1, length ,u*fh & v*gh : 768, f1 : 512
+    T = barrett_16x2i(__SADD16(__SADD16(*(W++),*(Y++)),*X));
+    *(X++) = T;
   }
   for (i=128; i>0; i--) {  
-    *(X++) = barrett_16x2i(__SADD16(*(Y++),*(Z++)));
+    T = barrett_16x2i(__SADD16(*(Y++),*X));
+    *(X++) = T;
   }
 
   gf_polymul_256x512(V+384, fh, M+1024); // r * fh
@@ -61,16 +62,18 @@ void gf_polymul_512x256_2x2_x2p2 (int *V,int *M,int *fh,int *gh){
 }
 
 void gf_polymul_256x512_2x2_x2p2 (int *V,int *M,int *fh,int *gh){
-  int i, T, *X, *Y, *Z, *W;
+  int i, T, *X, *Y, *W;
 
-  B768_1[0] = B768_2[0] = 0;
+  B768_1[0] = V[0] = 0;
   gf_polymul_256x512(BB768_1, M+256, fh); // x * u * fh
-  gf_polymul_256x512(BB768_2, M+384, gh);	// x * v * gh
-  for (X=V, Y=B768_1, Z=B768_2, W=M, i=128; i>0; i--) {// x(u fh+v gh)+f1
-    *(X++) = barrett_16x2i(__SADD16(__SADD16(*(W++),*(Y++)),*(Z++)));
+  gf_polymul_256x512((int*)((void*)V+2), M+384, gh);	// x * v * gh
+  for (X=V, Y=B768_1, W=M, i=128; i>0; i--) {// x(u fh+v gh)+f1
+    T = barrett_16x2i(__SADD16(__SADD16(*(W++),*(Y++)),*X));
+    *(X++) = T;
   }  
   for (i=256; i>0; i--) {  
-    *(X++) = barrett_16x2i(__SADD16(*(Y++),(*Z++)));
+    T = barrett_16x2i(__SADD16(*(Y++),*X));
+    *(X++) = T;
   } 
 
 
@@ -88,36 +91,36 @@ void gf_polymul_256x512_2x2_x2p2 (int *V,int *M,int *fh,int *gh){
 
 void gf_polymul_256x512_2x2_x_2x2 (int *M, int *M1, int *M2){ // M = M2*M1, length M1 : 512*4   M2 : 256*4
   int i, T, *X, *Y;
+  B768_1[0] = 0;
 
-  B768_1[0] = B768_2[0] = 0;
-
-  gf_polymul_256x512(BB768_1, M2, M1); // x * u2 * u1 
+/*  gf_polymul_256x512(BB768_1, M2, M1); // x * u2 * u1 
   gf_polymul_256x512(M, M2+128, M1+512); // v2 * r1
   for (i=384, X=M, Y=B768_1; i>0; i--) {	// u = x u2 u1 + v2 r1
     T = barrett_16x2i(__SADD16(*X,*(Y++)));
     *(X++) = T;
   }
-
+*/
   gf_polymul_256x512(BB768_1, M2, M1+256); // x * u2 * v1
-  gf_polymul_256x512(M+384, M2+128, M1+768); // v2 * s1
-  for (i=384, Y=B768_1; i>0; i--) {	// v = x u2 v1 + v2 s1
+  gf_polymul_256x512(M, M2+128, M1+768); // v2 * s1
+  for (i=384, X=M, Y=B768_1; i>0; i--) {	// v = x u2 v1 + v2 s1
     T = barrett_16x2i(__SADD16(*X,*(Y++)));
     *(X++) = T;
   }
-
+/*
   gf_polymul_256x512(BB768_1, M2+256, M1); // x * r2 * u1
   gf_polymul_256x512(M+768, M2+384, M1+512); // s2 * r1
   for (i=384, Y=B768_1; i>0; i--) { // r = x r2 u1 + s2 r1
     T = barrett_16x2i(__SADD16(*X,*(Y++)));
     *(X++) = T;
   }
-
+*/
   gf_polymul_256x512(BB768_1, M2+256, M1+256); // x * r2 * v1
-  gf_polymul_256x512(M+1152, M2+384, M1+768); // s2 * s1
+  gf_polymul_256x512(M+384, M2+384, M1+768); // s2 * s1
   for (i=384, Y=B768_1; i>0; i--) { // s = x r2 v1 + s2 s1
     T = barrett_16x2i(__SADD16(*X,*(Y++)));
     *(X++) = T;
   }
+  
 }
 
 int jump768divsteps(int minusdelta, int *M, int *f, int *g){

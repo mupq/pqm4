@@ -12,7 +12,7 @@
 	
 copy_p_F3_mod3:
 	push	{r4-r8,lr}
-	mov	r7, #((p-1)/4)
+	mov	r7, #190
 	ldr	r8, =0x03030303
 copy_p_F3_mod3_0:
 	ldr	r4, [r0], #4
@@ -52,7 +52,7 @@ copy_p_F3_mod3_2:
 
 reduce_2p_minus1_mod3_F3:
 	push	{r4-r5,r7-r9,lr}
-	mov	r7, #((p-1)/4)
+	mov	r7, #190
 	ldr	r9, =0x01010101
 	add	r8, r9, r9, LSL #1 	// 0x03030303
 	add	r2, r1, #761		// fg+761

@@ -11,21 +11,20 @@ void gf_polymul_256x256_2x2_x_2x2_mod3(int* M,int* M1,int* M2);
 
 
 void gf_polymul_256x256_2x2_x2p2_mod3(int *V,int *M,int *fh,int *gh){
-int C512_1[129], C512_2[129];
-C512_1[0]=C512_2[0]=0;
+int C512_1[129];
+C512_1[0]=V[0]=0;
 int * CC512_1 = (int *)((void *)C512_1 + 1);
-int * CC512_2 = (int *)((void *)C512_2 + 1);
 
-  int i, T, *X, *Y, *Z, *W;
+  int i, T, *X, *Y, *W;
 
   gf_polymul_256x256_mod3(CC512_1, M+128, fh); // x * u * fh
-  gf_polymul_256x256_mod3(CC512_2, M+192, gh); // x * v * gh
+  gf_polymul_256x256_mod3((int*)((void*)V+1), M+192, gh); // x * v * gh
 
-  for (X=V, Y=C512_1, Z=C512_2, W=M, i=64; i>0; i--) {// x(u fh+v gh)+f1
-    *(X++) = add_ub3(add_ub3(*(W++),*(Y++)),*(Z++));
+  for (X=V, Y=C512_1, W=M, i=64; i>0; i--) {// x(u fh+v gh)+f1
+    T = add_ub3(add_ub3(*(W++),*(Y++)),*X); *(X++) = T;
   }
   for (i=64; i>0; i--) {
-    *(X++) = add_ub3(*(Y++),*(Z++));
+    T = add_ub3(*(Y++),*X); *(X++) = T;
   }
 
   gf_polymul_256x256_mod3(V+128, M+256, fh); // r * fh
@@ -40,10 +39,9 @@ int * CC512_2 = (int *)((void *)C512_2 + 1);
 }
 
 void gf_polymul_256x256_2x2_x_2x2_mod3(int *M, int *M1, int *M2){
-int C512_1[129], C512_2[129];
-C512_1[0]=C512_2[0]=0;
+int C512_1[129];
+C512_1[0]=0;
 int * CC512_1 = (int *)((void *)C512_1 + 1);
-int * CC512_2 = (int *)((void *)C512_2 + 1);
 
   int i, T, *X, *Y;
 
@@ -70,7 +68,7 @@ int * CC512_2 = (int *)((void *)C512_2 + 1);
 }
 
 int jump512divsteps_mod3(int minusdelta, int* M, int* f, int* g){
-  int M1[384], M2[384], fg[256];
+  int M1[384]={0}, M2[384]={0}, fg[256]={0};
 
   minusdelta = jump256divsteps_mod3(minusdelta, M1, f, g);
   gf_polymul_256x256_2x2_x2p2_mod3(fg, M1, f+64, g+64);

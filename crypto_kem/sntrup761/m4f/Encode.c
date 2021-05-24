@@ -3,7 +3,16 @@
 #include "uint32.h"
 #include "Encode.h"
 
-void Encode_Rq(unsigned char *out,int16 *R)
+/*************************************************
+* Name:        Encode_Rq
+*
+* Description: Serialization of a public-key polynomial for Streamlined NTRU LPrime
+*
+* Arguments:   
+* unsigned char *s: pointer to the output serialized public key 
+* int16 *R        : pointer to the input public-key polynomial in R_q
+**************************************************/
+void Encode_Rq(unsigned char *out, int16 *R)
 {
   // const int16 *R0 = R;
   /* XXX: caller could overlap R with input */
@@ -122,8 +131,17 @@ void Encode_Rq(unsigned char *out,int16 *R)
   *out++ = r0; r0 >>= 8;
   *out++ = r0; r0 >>= 8;
 }
-
-void Encode_Rounded(unsigned char *out,int16 *R)
+/*************************************************
+* Name:        Encode_Rounded
+*
+* Description: Compression and subsequent serialization of a polynomial used in
+*              both Streamlined NTRU Prime and NTRU LPRime
+*
+* Arguments:   
+* unsigned char *out: pointer to the output serialized polynomial
+* int16 *R          : pointer to the input polynomial in R_q
+**************************************************/
+void Encode_Rounded(unsigned char *out, int16 *R)
 {
   // const int16 *R0 = v;
   /* XXX: caller could overlap R with input */
