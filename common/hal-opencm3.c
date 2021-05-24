@@ -204,12 +204,18 @@ void systick_setup()
   systick_interrupt_enable();
   systick_counter_enable();
 }
-
+static volatile unsigned long long overflowcnt = 0;
 void hal_setup(const enum clock_mode clock)
 {
   clock_setup(clock);
   usart_setup();
   systick_setup();
+
+  // wait for the first systick overflow
+  // improves reliability of the benchmarking scripts since it makes it much
+  // less likely that the host will miss the start of the output
+  unsigned long long old = overflowcnt;
+  while(old == overflowcnt);
 }
 
 void hal_send_str(const char* in)
@@ -221,8 +227,6 @@ void hal_send_str(const char* in)
   }
   usart_send_blocking(SERIAL_USART, '\n');
 }
-
-static volatile unsigned long long overflowcnt = 0;
 
 void sys_tick_handler(void)
 {
