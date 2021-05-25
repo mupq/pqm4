@@ -1,3 +1,5 @@
+// Implemented by Ming-Shing Chen, Tung Chou and Markus Krausz.
+// public domain
 
 #ifndef _GFV_TOWER_H_
 #define _GFV_TOWER_H_

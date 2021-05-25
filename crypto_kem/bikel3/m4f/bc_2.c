@@ -1,4 +1,5 @@
-
+// Implemented by Ming-Shing Chen, Tung Chou and Markus Krausz.
+// public domain
 
 #include "bc_2.h"
 

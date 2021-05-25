@@ -1,3 +1,6 @@
+// Implemented by Ming-Shing Chen, Tung Chou and Markus Krausz.
+// public domain
+
 .syntax unified
 .cpu cortex-m4
 .fpu fpv4-sp-d16

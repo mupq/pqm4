@@ -1,3 +1,6 @@
+// Implemented by Ming-Shing Chen, Tung Chou and Markus Krausz.
+// public domain
+
 #include <stdint.h>
 #define r 12323
 
@@ -607,14 +610,38 @@ void cshift(uint32_t *array, int s)
 #endif //defined(_M4_ASM_)
 
 
+static inline
+uint64_t umlal( uint64_t c, uint32_t a, uint32_t b ) { return c + (uint64_t)((uint64_t)a)*((uint64_t)b); }
+
+static inline
+void shiftright_small_umlal_C(uint32_t *array, int s, int len ) {
+
+  uint32_t s_mul = (((1ULL)<<(32-s))-1)&0xffffffff;
+  union {
+    uint64_t u64;
+    uint32_t u32[2];
+  } c;
+
+  c.u64 = umlal( array[len] , s_mul , array[len] );
+  for(int i=len-1;i>=0;i--) {
+    c.u32[1] = c.u32[0];
+    c.u32[0] = array[i];
+    c.u64 = umlal( c.u64 , s_mul , array[i] );
+    array[i] = c.u32[1];
+  }
+}
+
+
 static inline void cshift_small(uint32_t *array1, int s) {
   s &= 31;
-  int sh = 32-s;
-  for(int i = 0; i < (r+31)/32; i++) 
 #if defined(_M4_ASM_)
-    array1[i] = (array1[i]>>s)|(array1[i+1]<<sh);
+  shiftright_small_umlal(array1, s , (r+31)/32 );
 #else
+  int sh = 32-s;
+  for(int i = 0; i < (r+31)/32; i++) {
     array1[i] = (array1[i]>>s)|((((uint64_t)array1[i+1])<<sh)&0xffffffff);
+    //array1[i] = (array1[i]>>s)|(array1[i+1]<<sh);
+  }
 #endif
 }
 

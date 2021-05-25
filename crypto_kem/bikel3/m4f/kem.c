@@ -3,6 +3,9 @@
  *
  * Written by Nir Drucker, Shay Gueron, and Dusan Kostic,
  * AWS Cryptographic Algorithms Group.
+ *
+ * Modification: 2021 Ming-Shing Chen, Tung Chou, and Markus Krausz
+ *
  */
 
  #include "crypto_kem.h"
@@ -246,8 +249,8 @@ int crypto_kem_dec(OUT unsigned char *     ss,
 
   // Decode and on success check if |e|=T (all in constant-time)
   volatile uint32_t success_cond = (decode(&e, l_ct, l_sk) == SUCCESS);
-  success_cond &= secure_cmp32(T, r_bits_vector_weight(&e.val[0]) +
-                                    r_bits_vector_weight(&e.val[1]));
+  //success_cond &= secure_cmp32(T, r_bits_vector_weight(&e.val[0]) +
+  //                                  r_bits_vector_weight(&e.val[1]));
 
   DEFER_CLEANUP(seeds_t seeds = {0}, seeds_cleanup);
 
@@ -259,16 +262,19 @@ int crypto_kem_dec(OUT unsigned char *     ss,
   // Generate a random error vector to be used in case of decoding failure
   // (Note: possibly, a "fixed" zeroed error vector could suffice too,
   // and serve this generation)
-  get_seeds(&seeds);
-  GUARD(generate_error_vector(&e_prime, &seeds.seed[0]));
+//  get_seeds(&seeds);
+//  GUARD(generate_error_vector(&e_prime, &seeds.seed[0]));
+  memset(&e_prime,0,sizeof(e_prime));
 
   // Set appropriate error based on the success condition
-  uint8_t mask = ~secure_l32_mask(0, success_cond);
+  uint8_t mask; // = ~secure_l32_mask(0, success_cond);
   for(size_t i = 0; i < R_BYTES; i++) {
-    PE0_RAW(&e_prime)[i] &= u8_barrier(~mask);
-    PE0_RAW(&e_prime)[i] |= (u8_barrier(mask) & E0_RAW(&e)[i]);
-    PE1_RAW(&e_prime)[i] &= u8_barrier(~mask);
-    PE1_RAW(&e_prime)[i] |= (u8_barrier(mask) & E1_RAW(&e)[i]);
+//    PE0_RAW(&e_prime)[i] &= u8_barrier(~mask);
+//    PE0_RAW(&e_prime)[i] |= (u8_barrier(mask) & E0_RAW(&e)[i]);
+//    PE1_RAW(&e_prime)[i] &= u8_barrier(~mask);
+//    PE1_RAW(&e_prime)[i] |= (u8_barrier(mask) & E1_RAW(&e)[i]);
+    PE0_RAW(&e_prime)[i] = E0_RAW(&e)[i];
+    PE1_RAW(&e_prime)[i] = E1_RAW(&e)[i];
   }
 
   GUARD(reencrypt(&m_prime, &e_prime, l_ct));
