@@ -26,8 +26,8 @@ extern void __asm_final_map_and_pack(uint16_t *res_coeffs, int _R2invN, int *_Go
 void Good_mul_768(uint16_t *res_coeffs, const uint16_t *small_coeffs, const uint16_t *big_coeffs)
 {
     int mask = 0x07ff07ff;
-    static int Goodp0[3][512];
-    static int Goodp1[3][512];
+    int Goodp0[3][512];
+    int Goodp1[3][512];
     __asm_NTT_forward_16_small(small_coeffs, root_table, MOD, Mprime, &(Goodp1[0][0]));
     __asm_NTT_forward_16(big_coeffs, root_table, MOD, Mprime, &(Goodp0[0][0]));
     __asm_my_mul(&(Goodp0[1][0]), &(Goodp1[1][0]), Mprime, MOD);
