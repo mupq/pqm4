@@ -27,11 +27,11 @@
 | ntruhps2048509 (100 executions) | clean | AVG: 68,756,837 <br /> MIN: 68,756,837 <br /> MAX: 68,756,837 | AVG: 1,062,050 <br /> MIN: 1,062,050 <br /> MAX: 1,062,050 | AVG: 2,433,557 <br /> MIN: 2,433,557 <br /> MAX: 2,433,557 |
 | ntruhps2048509 (100 executions) | m4f | AVG: 79,658,904 <br /> MIN: 79,658,904 <br /> MAX: 79,658,904 | AVG: 563,499 <br /> MIN: 563,499 <br /> MAX: 563,499 | AVG: 536,107 <br /> MIN: 536,107 <br /> MAX: 536,107 |
 | ntruhps2048677 (100 executions) | clean | AVG: 122,979,463 <br /> MIN: 122,979,463 <br /> MAX: 122,979,463 | AVG: 1,795,198 <br /> MIN: 1,795,198 <br /> MAX: 1,795,198 | AVG: 4,285,233 <br /> MIN: 4,285,233 <br /> MAX: 4,285,233 |
-| ntruhps2048677 (100 executions) | m4f | AVG: 143,734,515 <br /> MIN: 143,734,515 <br /> MAX: 143,734,515 | AVG: 820,185 <br /> MIN: 820,185 <br /> MAX: 820,185 | AVG: 812,347 <br /> MIN: 812,347 <br /> MAX: 812,347 |
+| ntruhps2048677 (100 executions) | m4f | AVG: 143,734,165 <br /> MIN: 143,734,165 <br /> MAX: 143,734,165 | AVG: 820,153 <br /> MIN: 820,153 <br /> MAX: 820,153 | AVG: 812,273 <br /> MIN: 812,273 <br /> MAX: 812,273 |
 | ntruhps4096821 (100 executions) | clean | AVG: 181,263,287 <br /> MIN: 181,263,287 <br /> MAX: 181,263,287 | AVG: 2,346,238 <br /> MIN: 2,346,238 <br /> MAX: 2,346,238 | AVG: 5,666,273 <br /> MIN: 5,666,273 <br /> MAX: 5,666,273 |
-| ntruhps4096821 (100 executions) | m4f | AVG: 208,836,263 <br /> MIN: 208,836,263 <br /> MAX: 208,836,263 | AVG: 1,027,433 <br /> MIN: 1,027,433 <br /> MAX: 1,027,433 | AVG: 1,030,711 <br /> MIN: 1,030,711 <br /> MAX: 1,030,711 |
+| ntruhps4096821 (100 executions) | m4f | AVG: 208,836,269 <br /> MIN: 208,836,269 <br /> MAX: 208,836,269 | AVG: 1,027,435 <br /> MIN: 1,027,435 <br /> MAX: 1,027,435 | AVG: 1,030,713 <br /> MIN: 1,030,713 <br /> MAX: 1,030,713 |
 | ntruhrss701 (100 executions) | clean | AVG: 132,453,629 <br /> MIN: 132,453,629 <br /> MAX: 132,453,629 | AVG: 1,509,081 <br /> MIN: 1,509,081 <br /> MAX: 1,509,081 | AVG: 4,345,484 <br /> MIN: 4,345,484 <br /> MAX: 4,345,484 |
-| ntruhrss701 (100 executions) | m4f | AVG: 153,104,763 <br /> MIN: 153,104,763 <br /> MAX: 153,104,763 | AVG: 376,085 <br /> MIN: 376,085 <br /> MAX: 376,085 | AVG: 867,504 <br /> MIN: 867,504 <br /> MAX: 867,504 |
+| ntruhrss701 (100 executions) | m4f | AVG: 153,104,410 <br /> MIN: 153,104,410 <br /> MAX: 153,104,410 | AVG: 375,974 <br /> MIN: 375,974 <br /> MAX: 375,974 | AVG: 867,459 <br /> MIN: 867,459 <br /> MAX: 867,459 |
 | ntrulpr653 (100 executions) | clean | AVG: 4,261,295 <br /> MIN: 4,261,295 <br /> MAX: 4,261,295 | AVG: 8,149,361 <br /> MIN: 8,149,361 <br /> MAX: 8,149,361 | AVG: 11,600,821 <br /> MIN: 11,600,821 <br /> MAX: 11,600,821 |
 | ntrulpr761 (100 executions) | clean | AVG: 5,637,569 <br /> MIN: 5,637,569 <br /> MAX: 5,637,569 | AVG: 10,817,077 <br /> MIN: 10,817,077 <br /> MAX: 10,817,077 | AVG: 15,498,054 <br /> MIN: 15,498,054 <br /> MAX: 15,498,054 |
 | ntrulpr761 (100 executions) | m4f | AVG: 736,506 <br /> MIN: 736,506 <br /> MAX: 736,506 | AVG: 1,292,342 <br /> MIN: 1,292,342 <br /> MAX: 1,292,342 | AVG: 1,385,467 <br /> MIN: 1,385,467 <br /> MAX: 1,385,467 |
@@ -130,11 +130,11 @@
 | ntruhps2048509 | clean | 25,532 | 20,644 | 18,996 |
 | ntruhps2048509 | m4f | 21,392 | 14,068 | 14,800 |
 | ntruhps2048677 | clean | 34,296 | 27,756 | 25,548 |
-| ntruhps2048677 | m4f | 28,504 | 9,036 | 19,728 |
+| ntruhps2048677 | m4f | 28,504 | 19,980 | 19,728 |
 | ntruhps4096821 | clean | 40,960 | 33,036 | 30,440 |
-| ntruhps4096821 | m4f | 34,504 | 10,924 | 23,952 |
+| ntruhps4096821 | m4f | 34,504 | 23,140 | 23,952 |
 | ntruhrss701 | clean | 32,920 | 26,140 | 25,948 |
-| ntruhrss701 | m4f | 27,560 | 7,400 | 20,560 |
+| ntruhrss701 | m4f | 27,560 | 18,324 | 20,560 |
 | ntrulpr653 | clean | 11,864 | 12,048 | 13,312 |
 | ntrulpr761 | clean | 10,784 | 12,376 | 13,864 |
 | ntrulpr761 | m4f | 13,168 | 20,000 | 24,032 |
@@ -346,11 +346,11 @@
 | ntruhps2048509 | clean | 64,644 | 0 | 0 | 64,644 |
 | ntruhps2048509 | m4f | 91,704 | 0 | 0 | 91,704 |
 | ntruhps2048677 | clean | 17,304 | 0 | 0 | 17,304 |
-| ntruhps2048677 | m4f | 142,300 | 0 | 12,288 | 154,588 |
+| ntruhps2048677 | m4f | 142,264 | 0 | 0 | 142,264 |
 | ntruhps4096821 | clean | 17,064 | 0 | 0 | 17,064 |
-| ntruhps4096821 | m4f | 167,372 | 0 | 13,824 | 181,196 |
+| ntruhps4096821 | m4f | 167,356 | 0 | 0 | 167,356 |
 | ntruhrss701 | clean | 16,724 | 0 | 0 | 16,724 |
-| ntruhrss701 | m4f | 145,392 | 0 | 12,288 | 157,680 |
+| ntruhrss701 | m4f | 145,352 | 0 | 0 | 145,352 |
 | ntrulpr653 | clean | 7,608 | 0 | 0 | 7,608 |
 | ntrulpr761 | clean | 8,096 | 0 | 0 | 8,096 |
 | ntrulpr761 | m4f | 130,949 | 128 | 0 | 131,077 |
@@ -372,6 +372,7 @@
 ## Signature Schemes
 | Scheme | Implementation | .text [bytes] | .data [bytes] | .bss [bytes] | Total [bytes] |
 | ------ | -------------- | ------------- | ------------- | ------------ | ------------- |
+
 | dilithium2 | clean | 7,944 | 0 | 0 | 7,944 |
 | dilithium2 | m4 | 10,604 | 0 | 0 | 10,604 |
 | dilithium2aes | clean | 14,974 | 0 | 0 | 14,974 |

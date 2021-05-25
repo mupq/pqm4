@@ -14,8 +14,8 @@ extern void __asm_inv_NTT_6layers(int *_NTT_array1, int _MOD, int _Mprime, const
 extern void NTT_9_inv(int *_NTT_array1);
 extern void final_pack(int *_NTT_array1, uint16_t *res_coeffs);
 void mixed_radix_NTT_mul_864(uint16_t *res_coeffs, const uint16_t *small_coeffs, const uint16_t *big_coeffs){
-    static int NTT_array1[9 * 192];
-    static int NTT_array2[9 * 192];
+    int NTT_array1[9 * 192];
+    int NTT_array2[9 * 192];
 
     NTT_9_forward_16(big_coeffs, &NTT_array1[0]);
     NTT_9_forward_small(small_coeffs, &NTT_array2[0]);
