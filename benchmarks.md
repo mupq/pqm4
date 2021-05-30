@@ -372,7 +372,6 @@
 ## Signature Schemes
 | Scheme | Implementation | .text [bytes] | .data [bytes] | .bss [bytes] | Total [bytes] |
 | ------ | -------------- | ------------- | ------------- | ------------ | ------------- |
-
 | dilithium2 | clean | 7,944 | 0 | 0 | 7,944 |
 | dilithium2 | m4 | 10,604 | 0 | 0 | 10,604 |
 | dilithium2aes | clean | 14,974 | 0 | 0 | 14,974 |
