@@ -70,37 +70,42 @@
 | falcon-512-tree (100 executions) | m4-ct | AVG: 182,467,425 <br /> MIN: 117,548,598 <br /> MAX: 545,790,200 | AVG: 17,684,296 <br /> MIN: 17,508,469 <br /> MAX: 17,929,745 | AVG: 474,262 <br /> MIN: 465,075 <br /> MAX: 481,307 |
 | falcon-512-tree (100 executions) | opt-ct | AVG: 186,679,945 <br /> MIN: 117,548,598 <br /> MAX: 346,168,892 | AVG: 17,678,724 <br /> MIN: 17,510,840 <br /> MAX: 17,947,805 | AVG: 473,014 <br /> MIN: 464,746 <br /> MAX: 480,416 |
 | falcon-512-tree (100 executions) | opt-leaktime | AVG: 155,237,015 <br /> MIN: 101,894,150 <br /> MAX: 520,917,834 | AVG: 19,195,813 <br /> MIN: 18,916,665 <br /> MAX: 19,585,312 | AVG: 473,869 <br /> MIN: 464,256 <br /> MAX: 481,504 |
-| sphincs-haraka-128f-robust (1 executions) | clean | AVG: 104,795,658 <br /> MIN: 104,795,658 <br /> MAX: 104,795,658 | AVG: 3,883,182,669 <br /> MIN: 3,883,182,669 <br /> MAX: 3,883,182,669 | AVG: 162,489,529 <br /> MIN: 162,489,529 <br /> MAX: 162,489,529 |
-| sphincs-haraka-128f-simple (1 executions) | clean | AVG: 72,831,224 <br /> MIN: 72,831,224 <br /> MAX: 72,831,224 | AVG: 2,622,953,404 <br /> MIN: 2,622,953,404 <br /> MAX: 2,622,953,404 | AVG: 107,468,816 <br /> MIN: 107,468,816 <br /> MAX: 107,468,816 |
-| sphincs-haraka-128s-robust (1 executions) | clean | AVG: 3,336,358,505 <br /> MIN: 3,336,358,505 <br /> MAX: 3,336,358,505 | AVG: 62,525,107,548 <br /> MIN: 62,525,107,548 <br /> MAX: 62,525,107,548 | AVG: 74,236,481 <br /> MIN: 74,236,481 <br /> MAX: 74,236,481 |
-| sphincs-haraka-128s-simple (1 executions) | clean | AVG: 2,312,526,495 <br /> MIN: 2,312,526,495 <br /> MAX: 2,312,526,495 | AVG: 41,766,982,516 <br /> MIN: 41,766,982,516 <br /> MAX: 41,766,982,516 | AVG: 45,896,556 <br /> MIN: 45,896,556 <br /> MAX: 45,896,556 |
-| sphincs-haraka-192f-simple (1 executions) | clean | AVG: 107,283,123 <br /> MIN: 107,283,123 <br /> MAX: 107,283,123 | AVG: 3,084,533,722 <br /> MIN: 3,084,533,722 <br /> MAX: 3,084,533,722 | AVG: 171,466,727 <br /> MIN: 171,466,727 <br /> MAX: 171,466,727 |
-| sphincs-haraka-192s-robust (1 executions) | clean | AVG: 4,957,480,170 <br /> MIN: 4,957,480,170 <br /> MAX: 4,957,480,170 | AVG: 154,255,437,004 <br /> MIN: 154,255,437,004 <br /> MAX: 154,255,437,004 | AVG: 111,908,490 <br /> MIN: 111,908,490 <br /> MAX: 111,908,490 |
-| sphincs-haraka-256f-robust (1 executions) | clean | AVG: 415,510,566 <br /> MIN: 415,510,566 <br /> MAX: 415,510,566 | AVG: 11,573,807,667 <br /> MIN: 11,573,807,667 <br /> MAX: 11,573,807,667 | AVG: 279,193,509 <br /> MIN: 279,193,509 <br /> MAX: 279,193,509 |
-| sphincs-haraka-256f-simple (1 executions) | clean | AVG: 285,187,749 <br /> MIN: 285,187,749 <br /> MAX: 285,187,749 | AVG: 7,636,702,736 <br /> MIN: 7,636,702,736 <br /> MAX: 7,636,702,736 | AVG: 179,311,694 <br /> MIN: 179,311,694 <br /> MAX: 179,311,694 |
-| sphincs-haraka-256s-simple (1 executions) | clean | AVG: 4,553,902,972 <br /> MIN: 4,553,902,972 <br /> MAX: 4,553,902,972 | AVG: 67,656,693,152 <br /> MIN: 67,656,693,152 <br /> MAX: 67,656,693,152 | AVG: 100,890,231 <br /> MIN: 100,890,231 <br /> MAX: 100,890,231 |
-| sphincs-sha256-128f-robust (1 executions) | clean | AVG: 30,464,014 <br /> MIN: 30,464,014 <br /> MAX: 30,464,014 | AVG: 914,426,746 <br /> MIN: 914,426,746 <br /> MAX: 914,426,746 | AVG: 42,006,086 <br /> MIN: 42,006,086 <br /> MAX: 42,006,086 |
-| sphincs-sha256-128f-simple (1 executions) | clean | AVG: 15,885,662 <br /> MIN: 15,885,662 <br /> MAX: 15,885,662 | AVG: 501,309,954 <br /> MIN: 501,309,954 <br /> MAX: 501,309,954 | AVG: 21,218,308 <br /> MIN: 21,218,308 <br /> MAX: 21,218,308 |
-| sphincs-sha256-128s-robust (1 executions) | clean | AVG: 974,779,202 <br /> MIN: 974,779,202 <br /> MAX: 974,779,202 | AVG: 13,495,840,716 <br /> MIN: 13,495,840,716 <br /> MAX: 13,495,840,716 | AVG: 17,676,349 <br /> MIN: 17,676,349 <br /> MAX: 17,676,349 |
-| sphincs-sha256-128s-simple (1 executions) | clean | AVG: 508,320,830 <br /> MIN: 508,320,830 <br /> MAX: 508,320,830 | AVG: 7,570,183,329 <br /> MIN: 7,570,183,329 <br /> MAX: 7,570,183,329 | AVG: 8,274,451 <br /> MIN: 8,274,451 <br /> MAX: 8,274,451 |
-| sphincs-sha256-192f-robust (1 executions) | clean | AVG: 45,108,263 <br /> MIN: 45,108,263 <br /> MAX: 45,108,263 | AVG: 1,248,705,250 <br /> MIN: 1,248,705,250 <br /> MAX: 1,248,705,250 | AVG: 67,226,291 <br /> MIN: 67,226,291 <br /> MAX: 67,226,291 |
-| sphincs-sha256-192f-simple (1 executions) | clean | AVG: 23,383,420 <br /> MIN: 23,383,420 <br /> MAX: 23,383,420 | AVG: 660,023,178 <br /> MIN: 660,023,178 <br /> MAX: 660,023,178 | AVG: 33,954,777 <br /> MIN: 33,954,777 <br /> MAX: 33,954,777 |
-| sphincs-sha256-192s-robust (1 executions) | clean | AVG: 1,444,147,943 <br /> MIN: 1,444,147,943 <br /> MAX: 1,444,147,943 | AVG: 32,991,540,547 <br /> MIN: 32,991,540,547 <br /> MAX: 32,991,540,547 | AVG: 26,627,461 <br /> MIN: 26,627,461 <br /> MAX: 26,627,461 |
-| sphincs-sha256-192s-simple (1 executions) | clean | AVG: 748,345,791 <br /> MIN: 748,345,791 <br /> MAX: 748,345,791 | AVG: 18,273,807,755 <br /> MIN: 18,273,807,755 <br /> MAX: 18,273,807,755 | AVG: 13,491,632 <br /> MIN: 13,491,632 <br /> MAX: 13,491,632 |
-| sphincs-sha256-256f-robust (1 executions) | clean | AVG: 164,750,583 <br /> MIN: 164,750,583 <br /> MAX: 164,750,583 | AVG: 3,844,604,224 <br /> MIN: 3,844,604,224 <br /> MAX: 3,844,604,224 | AVG: 100,523,021 <br /> MIN: 100,523,021 <br /> MAX: 100,523,021 |
-| sphincs-sha256-256f-simple (1 executions) | clean | AVG: 61,612,267 <br /> MIN: 61,612,267 <br /> MAX: 61,612,267 | AVG: 1,491,694,480 <br /> MIN: 1,491,694,480 <br /> MAX: 1,491,694,480 | AVG: 33,991,289 <br /> MIN: 33,991,289 <br /> MAX: 33,991,289 |
-| sphincs-sha256-256s-robust (1 executions) | clean | AVG: 2,636,534,294 <br /> MIN: 2,636,534,294 <br /> MAX: 2,636,534,294 | AVG: 32,410,362,073 <br /> MIN: 32,410,362,073 <br /> MAX: 32,410,362,073 | AVG: 49,622,387 <br /> MIN: 49,622,387 <br /> MAX: 49,622,387 |
-| sphincs-sha256-256s-simple (1 executions) | clean | AVG: 984,061,394 <br /> MIN: 984,061,394 <br /> MAX: 984,061,394 | AVG: 12,706,959,637 <br /> MIN: 12,706,959,637 <br /> MAX: 12,706,959,637 | AVG: 17,319,181 <br /> MIN: 17,319,181 <br /> MAX: 17,319,181 |
-| sphincs-shake256-128f-robust (1 executions) | clean | AVG: 113,325,128 <br /> MIN: 113,325,128 <br /> MAX: 113,325,128 | AVG: 3,404,326,969 <br /> MIN: 3,404,326,969 <br /> MAX: 3,404,326,969 | AVG: 155,028,536 <br /> MIN: 155,028,536 <br /> MAX: 155,028,536 |
-| sphincs-shake256-128f-simple (1 executions) | clean | AVG: 59,589,749 <br /> MIN: 59,589,749 <br /> MAX: 59,589,749 | AVG: 1,880,325,765 <br /> MIN: 1,880,325,765 <br /> MAX: 1,880,325,765 | AVG: 78,301,963 <br /> MIN: 78,301,963 <br /> MAX: 78,301,963 |
-| sphincs-shake256-128s-robust (1 executions) | clean | AVG: 3,627,174,475 <br /> MIN: 3,627,174,475 <br /> MAX: 3,627,174,475 | AVG: 50,407,754,967 <br /> MIN: 50,407,754,967 <br /> MAX: 50,407,754,967 | AVG: 62,722,529 <br /> MIN: 62,722,529 <br /> MAX: 62,722,529 |
-| sphincs-shake256-128s-simple (1 executions) | clean | AVG: 1,907,247,035 <br /> MIN: 1,907,247,035 <br /> MAX: 1,907,247,035 | AVG: 28,297,736,924 <br /> MIN: 28,297,736,924 <br /> MAX: 28,297,736,924 | AVG: 31,610,914 <br /> MIN: 31,610,914 <br /> MAX: 31,610,914 |
-| sphincs-shake256-192f-simple (1 executions) | clean | AVG: 88,072,016 <br /> MIN: 88,072,016 <br /> MAX: 88,072,016 | AVG: 2,405,837,129 <br /> MIN: 2,405,837,129 <br /> MAX: 2,405,837,129 | AVG: 121,881,005 <br /> MIN: 121,881,005 <br /> MAX: 121,881,005 |
-| sphincs-shake256-192s-simple (1 executions) | clean | AVG: 2,818,671,430 <br /> MIN: 2,818,671,430 <br /> MAX: 2,818,671,430 | AVG: 59,475,243,561 <br /> MIN: 59,475,243,561 <br /> MAX: 59,475,243,561 | AVG: 46,789,843 <br /> MIN: 46,789,843 <br /> MAX: 46,789,843 |
-| sphincs-shake256-256f-robust (1 executions) | clean | AVG: 444,775,129 <br /> MIN: 444,775,129 <br /> MAX: 444,775,129 | AVG: 9,843,897,351 <br /> MIN: 9,843,897,351 <br /> MAX: 9,843,897,351 | AVG: 241,683,545 <br /> MIN: 241,683,545 <br /> MAX: 241,683,545 |
-| sphincs-shake256-256f-simple (1 executions) | clean | AVG: 234,689,106 <br /> MIN: 234,689,106 <br /> MAX: 234,689,106 | AVG: 5,370,233,903 <br /> MIN: 5,370,233,903 <br /> MAX: 5,370,233,903 | AVG: 125,259,197 <br /> MIN: 125,259,197 <br /> MAX: 125,259,197 |
-| sphincs-shake256-256s-robust (1 executions) | clean | AVG: 7,116,770,676 <br /> MIN: 7,116,770,676 <br /> MAX: 7,116,770,676 | AVG: 81,030,278,196 <br /> MIN: 81,030,278,196 <br /> MAX: 81,030,278,196 | AVG: 121,576,965 <br /> MIN: 121,576,965 <br /> MAX: 121,576,965 |
-| sphincs-shake256-256s-simple (1 executions) | clean | AVG: 3,755,095,315 <br /> MIN: 3,755,095,315 <br /> MAX: 3,755,095,315 | AVG: 44,759,824,973 <br /> MIN: 44,759,824,973 <br /> MAX: 44,759,824,973 | AVG: 65,144,191 <br /> MIN: 65,144,191 <br /> MAX: 65,144,191 |
+| sphincs-haraka-128f-robust (1 executions) | clean | AVG: 104,795,932 <br /> MIN: 104,795,932 <br /> MAX: 104,795,932 | AVG: 2,657,356,095 <br /> MIN: 2,657,356,095 <br /> MAX: 2,657,356,095 | AVG: 166,553,988 <br /> MIN: 166,553,988 <br /> MAX: 166,553,988 |
+| sphincs-haraka-128f-simple (1 executions) | clean | AVG: 72,831,235 <br /> MIN: 72,831,235 <br /> MAX: 72,831,235 | AVG: 1,834,889,326 <br /> MIN: 1,834,889,326 <br /> MAX: 1,834,889,326 | AVG: 111,025,777 <br /> MIN: 111,025,777 <br /> MAX: 111,025,777 |
+| sphincs-haraka-128s-robust (1 executions) | clean | AVG: 6,672,190,217 <br /> MIN: 6,672,190,217 <br /> MAX: 6,672,190,217 | AVG: 53,006,056,133 <br /> MIN: 53,006,056,133 <br /> MAX: 53,006,056,133 | AVG: 68,565,855 <br /> MIN: 68,565,855 <br /> MAX: 68,565,855 |
+| sphincs-haraka-128s-simple (1 executions) | clean | AVG: 4,624,469,894 <br /> MIN: 4,624,469,894 <br /> MAX: 4,624,469,894 | AVG: 36,464,034,672 <br /> MIN: 36,464,034,672 <br /> MAX: 36,464,034,672 | AVG: 44,090,703 <br /> MIN: 44,090,703 <br /> MAX: 44,090,703 |
+| sphincs-haraka-192f-robust (1 executions) | clean | AVG: 155,439,171 <br /> MIN: 155,439,171 <br /> MAX: 155,439,171 | AVG: 4,655,294,565 <br /> MIN: 4,655,294,565 <br /> MAX: 4,655,294,565 | AVG: 258,068,313 <br /> MIN: 258,068,313 <br /> MAX: 258,068,313 |
+| sphincs-haraka-192f-simple (1 executions) | clean | AVG: 107,283,123 <br /> MIN: 107,283,123 <br /> MAX: 107,283,123 | AVG: 3,086,461,642 <br /> MIN: 3,086,461,642 <br /> MAX: 3,086,461,642 | AVG: 168,816,032 <br /> MIN: 168,816,032 <br /> MAX: 168,816,032 |
+| sphincs-haraka-192s-robust (1 executions) | clean | AVG: 9,914,325,683 <br /> MIN: 9,914,325,683 <br /> MAX: 9,914,325,683 | AVG: 104,225,035,908 <br /> MIN: 104,225,035,908 <br /> MAX: 104,225,035,908 | AVG: 100,947,225 <br /> MIN: 100,947,225 <br /> MAX: 100,947,225 |
+| sphincs-haraka-192s-simple (1 executions) | clean | AVG: 6,829,364,155 <br /> MIN: 6,829,364,155 <br /> MAX: 6,829,364,155 | AVG: 67,621,949,412 <br /> MIN: 67,621,949,412 <br /> MAX: 67,621,949,412 | AVG: 61,708,757 <br /> MIN: 61,708,757 <br /> MAX: 61,708,757 |
+| sphincs-haraka-256f-robust (1 executions) | clean | AVG: 415,505,369 <br /> MIN: 415,505,369 <br /> MAX: 415,505,369 | AVG: 9,765,744,015 <br /> MIN: 9,765,744,015 <br /> MAX: 9,765,744,015 | AVG: 277,647,238 <br /> MIN: 277,647,238 <br /> MAX: 277,647,238 |
+| sphincs-haraka-256f-simple (1 executions) | clean | AVG: 285,187,731 <br /> MIN: 285,187,731 <br /> MAX: 285,187,731 | AVG: 6,529,531,604 <br /> MIN: 6,529,531,604 <br /> MAX: 6,529,531,604 | AVG: 182,342,158 <br /> MIN: 182,342,158 <br /> MAX: 182,342,158 |
+| sphincs-haraka-256s-robust (1 executions) | clean | AVG: 6,639,632,876 <br /> MIN: 6,639,632,876 <br /> MAX: 6,639,632,876 | AVG: 103,763,215,558 <br /> MIN: 103,763,215,558 <br /> MAX: 103,763,215,558 | AVG: 153,344,139 <br /> MIN: 153,344,139 <br /> MAX: 153,344,139 |
+| sphincs-haraka-256s-simple (1 executions) | clean | AVG: 4,553,902,972 <br /> MIN: 4,553,902,972 <br /> MAX: 4,553,902,972 | AVG: 67,660,292,661 <br /> MIN: 67,660,292,661 <br /> MAX: 67,660,292,661 | AVG: 96,791,657 <br /> MIN: 96,791,657 <br /> MAX: 96,791,657 |
+| sphincs-sha256-128f-robust (1 executions) | clean | AVG: 30,455,632 <br /> MIN: 30,455,632 <br /> MAX: 30,455,632 | AVG: 749,107,686 <br /> MIN: 749,107,686 <br /> MAX: 749,107,686 | AVG: 45,341,508 <br /> MIN: 45,341,508 <br /> MAX: 45,341,508 |
+| sphincs-sha256-128f-simple (1 executions) | clean | AVG: 15,885,660 <br /> MIN: 15,885,660 <br /> MAX: 15,885,660 | AVG: 394,408,142 <br /> MIN: 394,408,142 <br /> MAX: 394,408,142 | AVG: 22,365,541 <br /> MIN: 22,365,541 <br /> MAX: 22,365,541 |
+| sphincs-sha256-128s-robust (1 executions) | clean | AVG: 1,949,772,972 <br /> MIN: 1,949,772,972 <br /> MAX: 1,949,772,972 | AVG: 14,657,190,349 <br /> MIN: 14,657,190,349 <br /> MAX: 14,657,190,349 | AVG: 15,588,902 <br /> MIN: 15,588,902 <br /> MAX: 15,588,902 |
+| sphincs-sha256-128s-simple (1 executions) | clean | AVG: 1,016,649,053 <br /> MIN: 1,016,649,053 <br /> MAX: 1,016,649,053 | AVG: 7,736,952,481 <br /> MIN: 7,736,952,481 <br /> MAX: 7,736,952,481 | AVG: 7,746,442 <br /> MIN: 7,746,442 <br /> MAX: 7,746,442 |
+| sphincs-sha256-192f-robust (1 executions) | clean | AVG: 45,108,263 <br /> MIN: 45,108,263 <br /> MAX: 45,108,263 | AVG: 1,248,628,673 <br /> MIN: 1,248,628,673 <br /> MAX: 1,248,628,673 | AVG: 67,432,707 <br /> MIN: 67,432,707 <br /> MAX: 67,432,707 |
+| sphincs-sha256-192f-simple (1 executions) | clean | AVG: 23,383,420 <br /> MIN: 23,383,420 <br /> MAX: 23,383,420 | AVG: 659,287,175 <br /> MIN: 659,287,175 <br /> MAX: 659,287,175 | AVG: 34,007,351 <br /> MIN: 34,007,351 <br /> MAX: 34,007,351 |
+| sphincs-sha256-192s-robust (1 executions) | clean | AVG: 2,887,623,150 <br /> MIN: 2,887,623,150 <br /> MAX: 2,887,623,150 | AVG: 26,733,264,642 <br /> MIN: 26,733,264,642 <br /> MAX: 26,733,264,642 | AVG: 24,460,598 <br /> MIN: 24,460,598 <br /> MAX: 24,460,598 |
+| sphincs-sha256-192s-simple (1 executions) | clean | AVG: 1,496,610,145 <br /> MIN: 1,496,610,145 <br /> MAX: 1,496,610,145 | AVG: 14,212,310,521 <br /> MIN: 14,212,310,521 <br /> MAX: 14,212,310,521 | AVG: 11,793,023 <br /> MIN: 11,793,023 <br /> MAX: 11,793,023 |
+| sphincs-sha256-256f-robust (1 executions) | clean | AVG: 164,750,575 <br /> MIN: 164,750,575 <br /> MAX: 164,750,575 | AVG: 3,447,899,239 <br /> MIN: 3,447,899,239 <br /> MAX: 3,447,899,239 | AVG: 99,005,566 <br /> MIN: 99,005,566 <br /> MAX: 99,005,566 |
+| sphincs-sha256-256f-simple (1 executions) | clean | AVG: 61,612,313 <br /> MIN: 61,612,313 <br /> MAX: 61,612,313 | AVG: 1,321,101,790 <br /> MIN: 1,321,101,790 <br /> MAX: 1,321,101,790 | AVG: 33,532,045 <br /> MIN: 33,532,045 <br /> MAX: 33,532,045 |
+| sphincs-sha256-256s-robust (1 executions) | clean | AVG: 2,636,534,294 <br /> MIN: 2,636,534,294 <br /> MAX: 2,636,534,294 | AVG: 32,409,783,210 <br /> MIN: 32,409,783,210 <br /> MAX: 32,409,783,210 | AVG: 48,199,784 <br /> MIN: 48,199,784 <br /> MAX: 48,199,784 |
+| sphincs-sha256-256s-simple (1 executions) | clean | AVG: 984,061,394 <br /> MIN: 984,061,394 <br /> MAX: 984,061,394 | AVG: 12,707,641,062 <br /> MIN: 12,707,641,062 <br /> MAX: 12,707,641,062 | AVG: 17,109,709 <br /> MIN: 17,109,709 <br /> MAX: 17,109,709 |
+| sphincs-shake256-128f-robust (1 executions) | clean | AVG: 113,325,126 <br /> MIN: 113,325,126 <br /> MAX: 113,325,126 | AVG: 2,789,948,670 <br /> MIN: 2,789,948,670 <br /> MAX: 2,789,948,670 | AVG: 167,988,469 <br /> MIN: 167,988,469 <br /> MAX: 167,988,469 |
+| sphincs-shake256-128f-simple (1 executions) | clean | AVG: 59,589,744 <br /> MIN: 59,589,744 <br /> MAX: 59,589,744 | AVG: 1,478,270,537 <br /> MIN: 1,478,270,537 <br /> MAX: 1,478,270,537 | AVG: 82,742,917 <br /> MIN: 82,742,917 <br /> MAX: 82,742,917 |
+| sphincs-shake256-128s-robust (1 executions) | clean | AVG: 7,254,373,776 <br /> MIN: 7,254,373,776 <br /> MAX: 7,254,373,776 | AVG: 54,563,700,448 <br /> MIN: 54,563,700,448 <br /> MAX: 54,563,700,448 | AVG: 53,468,761 <br /> MIN: 53,468,761 <br /> MAX: 53,468,761 |
+| sphincs-shake256-128s-simple (1 executions) | clean | AVG: 3,814,505,625 <br /> MIN: 3,814,505,625 <br /> MAX: 3,814,505,625 | AVG: 29,007,108,941 <br /> MIN: 29,007,108,941 <br /> MAX: 29,007,108,941 | AVG: 28,873,135 <br /> MIN: 28,873,135 <br /> MAX: 28,873,135 |
+| sphincs-shake256-192f-robust (1 executions) | clean | AVG: 167,113,468 <br /> MIN: 167,113,468 <br /> MAX: 167,113,468 | AVG: 4,461,487,938 <br /> MIN: 4,461,487,938 <br /> MAX: 4,461,487,938 | AVG: 237,782,483 <br /> MIN: 237,782,483 <br /> MAX: 237,782,483 |
+| sphincs-shake256-192f-simple (1 executions) | clean | AVG: 88,072,016 <br /> MIN: 88,072,016 <br /> MAX: 88,072,016 | AVG: 2,400,637,668 <br /> MIN: 2,400,637,668 <br /> MAX: 2,400,637,668 | AVG: 123,480,570 <br /> MIN: 123,480,570 <br /> MAX: 123,480,570 |
+| sphincs-shake256-192s-robust (1 executions) | clean | AVG: 10,696,820,474 <br /> MIN: 10,696,820,474 <br /> MAX: 10,696,820,474 | AVG: 93,286,183,350 <br /> MIN: 93,286,183,350 <br /> MAX: 93,286,183,350 | AVG: 81,435,112 <br /> MIN: 81,435,112 <br /> MAX: 81,435,112 |
+| sphincs-shake256-192s-simple (1 executions) | clean | AVG: 5,637,354,726 <br /> MIN: 5,637,354,726 <br /> MAX: 5,637,354,726 | AVG: 50,697,868,115 <br /> MIN: 50,697,868,115 <br /> MAX: 50,697,868,115 | AVG: 42,289,987 <br /> MIN: 42,289,987 <br /> MAX: 42,289,987 |
+| sphincs-shake256-256f-robust (1 executions) | clean | AVG: 444,775,128 <br /> MIN: 444,775,128 <br /> MAX: 444,775,128 | AVG: 8,998,980,766 <br /> MIN: 8,998,980,766 <br /> MAX: 8,998,980,766 | AVG: 251,328,534 <br /> MIN: 251,328,534 <br /> MAX: 251,328,534 |
+| sphincs-shake256-256f-simple (1 executions) | clean | AVG: 234,689,105 <br /> MIN: 234,689,105 <br /> MAX: 234,689,105 | AVG: 4,851,167,084 <br /> MIN: 4,851,167,084 <br /> MAX: 4,851,167,084 | AVG: 127,165,080 <br /> MIN: 127,165,080 <br /> MAX: 127,165,080 |
+| sphincs-shake256-256s-robust (1 executions) | clean | AVG: 7,116,770,676 <br /> MIN: 7,116,770,676 <br /> MAX: 7,116,770,676 | AVG: 81,021,983,011 <br /> MIN: 81,021,983,011 <br /> MAX: 81,021,983,011 | AVG: 117,627,109 <br /> MIN: 117,627,109 <br /> MAX: 117,627,109 |
+| sphincs-shake256-256s-simple (1 executions) | clean | AVG: 3,755,095,315 <br /> MIN: 3,755,095,315 <br /> MAX: 3,755,095,315 | AVG: 44,758,207,461 <br /> MIN: 44,758,207,461 <br /> MAX: 44,758,207,461 | AVG: 61,908,552 <br /> MIN: 61,908,552 <br /> MAX: 61,908,552 |
 # Memory Evaluation
 ## Key Encapsulation Schemes
 | Scheme | Implementation | Key Generation [bytes] | Encapsulation [bytes] | Decapsulation [bytes] |
@@ -173,40 +178,40 @@
 | falcon-512-tree | m4-ct | 1,496 | 2,776 | 388 |
 | falcon-512-tree | opt-ct | 1,392 | 2,776 | 388 |
 | falcon-512-tree | opt-leaktime | 1,480 | 2,792 | 388 |
-| sphincs-haraka-128f-robust | clean | 3,612 | 3,704 | 4,068 |
-| sphincs-haraka-128f-simple | clean | 3,604 | 3,696 | 4,060 |
-| sphincs-haraka-128s-robust | clean | 3,824 | 3,872 | 3,380 |
-| sphincs-haraka-128s-simple | clean | 3,816 | 3,864 | 3,372 |
-| sphincs-haraka-192f-robust | clean | 5,048 | 5,080 | 5,396 |
+| sphincs-haraka-128f-robust | clean | 3,612 | 3,696 | 4,172 |
+| sphincs-haraka-128f-simple | clean | 3,604 | 3,688 | 4,164 |
+| sphincs-haraka-128s-robust | clean | 3,896 | 3,888 | 3,476 |
+| sphincs-haraka-128s-simple | clean | 3,848 | 3,880 | 3,468 |
+| sphincs-haraka-192f-robust | clean | 5,048 | 5,160 | 5,396 |
 | sphincs-haraka-192f-simple | clean | 5,012 | 5,072 | 5,388 |
-| sphincs-haraka-192s-robust | clean | 5,392 | 5,296 | 4,732 |
-| sphincs-haraka-192s-simple | clean | 5,304 | 5,288 | 4,752 |
-| sphincs-haraka-256f-robust | clean | 7,040 | 7,008 | 6,660 |
-| sphincs-haraka-256f-simple | clean | 7,032 | 7,080 | 6,652 |
+| sphincs-haraka-192s-robust | clean | 5,360 | 5,320 | 4,732 |
+| sphincs-haraka-192s-simple | clean | 5,352 | 5,312 | 4,724 |
+| sphincs-haraka-256f-robust | clean | 7,012 | 7,088 | 7,004 |
+| sphincs-haraka-256f-simple | clean | 7,032 | 7,000 | 7,024 |
 | sphincs-haraka-256s-robust | clean | 7,320 | 7,232 | 6,624 |
 | sphincs-haraka-256s-simple | clean | 7,384 | 7,224 | 6,588 |
-| sphincs-sha256-128f-robust | clean | 2,256 | 2,320 | 2,712 |
-| sphincs-sha256-128f-simple | clean | 2,096 | 2,160 | 2,552 |
-| sphincs-sha256-128s-robust | clean | 2,440 | 2,520 | 2,024 |
-| sphincs-sha256-128s-simple | clean | 2,280 | 2,360 | 1,864 |
+| sphincs-sha256-128f-robust | clean | 2,256 | 2,312 | 2,816 |
+| sphincs-sha256-128f-simple | clean | 2,096 | 2,152 | 2,656 |
+| sphincs-sha256-128s-robust | clean | 2,512 | 2,536 | 2,232 |
+| sphincs-sha256-128s-simple | clean | 2,352 | 2,376 | 1,960 |
 | sphincs-sha256-192f-robust | clean | 3,672 | 3,816 | 4,048 |
-| sphincs-sha256-192f-simple | clean | 3,504 | 3,536 | 3,880 |
-| sphincs-sha256-192s-robust | clean | 3,976 | 3,952 | 3,384 |
-| sphincs-sha256-192s-simple | clean | 3,768 | 3,784 | 3,216 |
-| sphincs-sha256-256f-robust | clean | 5,712 | 5,751 | 5,432 |
-| sphincs-sha256-256f-simple | clean | 5,496 | 5,576 | 5,144 |
+| sphincs-sha256-192f-simple | clean | 3,504 | 3,648 | 3,880 |
+| sphincs-sha256-192s-robust | clean | 4,024 | 3,976 | 3,384 |
+| sphincs-sha256-192s-simple | clean | 3,856 | 3,808 | 3,216 |
+| sphincs-sha256-256f-robust | clean | 5,672 | 5,752 | 5,664 |
+| sphincs-sha256-256f-simple | clean | 5,496 | 5,576 | 5,488 |
 | sphincs-sha256-256s-robust | clean | 5,984 | 5,896 | 5,256 |
 | sphincs-sha256-256s-simple | clean | 5,808 | 5,720 | 5,080 |
-| sphincs-shake256-128f-robust | clean | 2,004 | 2,168 | 2,452 |
-| sphincs-shake256-128f-simple | clean | 2,004 | 2,060 | 2,452 |
-| sphincs-shake256-128s-robust | clean | 2,188 | 2,256 | 1,792 |
-| sphincs-shake256-128s-simple | clean | 2,224 | 2,256 | 1,764 |
+| sphincs-shake256-128f-robust | clean | 2,004 | 2,160 | 2,556 |
+| sphincs-shake256-128f-simple | clean | 2,004 | 2,160 | 2,556 |
+| sphincs-shake256-128s-robust | clean | 2,256 | 2,272 | 1,860 |
+| sphincs-shake256-128s-simple | clean | 2,256 | 2,272 | 1,860 |
 | sphincs-shake256-192f-robust | clean | 3,420 | 3,552 | 3,788 |
-| sphincs-shake256-192f-simple | clean | 3,420 | 3,552 | 3,788 |
-| sphincs-shake256-192s-robust | clean | 3,720 | 3,688 | 3,124 |
-| sphincs-shake256-192s-simple | clean | 3,720 | 3,688 | 3,124 |
-| sphincs-shake256-256f-robust | clean | 5,456 | 5,488 | 5,060 |
-| sphincs-shake256-256f-simple | clean | 5,420 | 5,488 | 5,060 |
+| sphincs-shake256-192f-simple | clean | 3,420 | 3,444 | 3,788 |
+| sphincs-shake256-192s-robust | clean | 3,768 | 3,712 | 3,232 |
+| sphincs-shake256-192s-simple | clean | 3,768 | 3,712 | 3,124 |
+| sphincs-shake256-256f-robust | clean | 5,456 | 5,488 | 5,404 |
+| sphincs-shake256-256f-simple | clean | 5,420 | 5,488 | 5,404 |
 | sphincs-shake256-256s-robust | clean | 5,728 | 5,632 | 4,996 |
 | sphincs-shake256-256s-simple | clean | 5,728 | 5,632 | 4,996 |
 # Hashing Evaluation
@@ -293,28 +298,28 @@
 | sphincs-haraka-256f-simple | clean | 0.0% | 0.0% | 0.0% |
 | sphincs-haraka-256s-robust | clean | 0.0% | 0.0% | 0.0% |
 | sphincs-haraka-256s-simple | clean | 0.0% | 0.0% | 0.0% |
-| sphincs-sha256-128f-robust | clean | 89.0% | 88.6% | 89.0% |
-| sphincs-sha256-128f-simple | clean | 87.5% | 86.9% | 87.5% |
-| sphincs-sha256-128s-robust | clean | 89.0% | 88.4% | 89.0% |
-| sphincs-sha256-128s-simple | clean | 87.5% | 86.7% | 87.4% |
+| sphincs-sha256-128f-robust | clean | 89.0% | 88.9% | 89.1% |
+| sphincs-sha256-128f-simple | clean | 87.5% | 87.4% | 87.5% |
+| sphincs-sha256-128s-robust | clean | 89.0% | 88.9% | 89.0% |
+| sphincs-sha256-128s-simple | clean | 87.5% | 87.4% | 87.4% |
 | sphincs-sha256-192f-robust | clean | 88.5% | 88.6% | 88.8% |
 | sphincs-sha256-192f-simple | clean | 87.3% | 87.4% | 87.6% |
-| sphincs-sha256-192s-robust | clean | 88.5% | 89.0% | 89.0% |
-| sphincs-sha256-192s-simple | clean | 87.3% | 87.8% | 87.8% |
+| sphincs-sha256-192s-robust | clean | 88.5% | 88.7% | 89.1% |
+| sphincs-sha256-192s-simple | clean | 87.3% | 87.5% | 87.9% |
 | sphincs-sha256-256f-robust | clean | 91.9% | 91.9% | 92.2% |
-| sphincs-sha256-256f-simple | clean | 87.0% | 87.2% | 87.3% |
+| sphincs-sha256-256f-simple | clean | 87.0% | 87.1% | 87.3% |
 | sphincs-sha256-256s-robust | clean | 91.9% | 92.0% | 92.4% |
 | sphincs-sha256-256s-simple | clean | 87.2% | 87.4% | 87.7% |
-| sphincs-shake256-128f-robust | clean | 97.6% | 97.4% | 97.6% |
-| sphincs-shake256-128f-simple | clean | 96.1% | 95.9% | 96.0% |
-| sphincs-shake256-128s-robust | clean | 97.6% | 97.3% | 97.6% |
-| sphincs-shake256-128s-simple | clean | 96.1% | 95.9% | 96.0% |
+| sphincs-shake256-128f-robust | clean | 97.6% | 97.5% | 97.6% |
+| sphincs-shake256-128f-simple | clean | 96.1% | 96.1% | 96.0% |
+| sphincs-shake256-128s-robust | clean | 97.6% | 97.5% | 97.6% |
+| sphincs-shake256-128s-simple | clean | 96.1% | 96.0% | 96.0% |
 | sphincs-shake256-192f-robust | clean | 97.5% | 97.4% | 97.5% |
 | sphincs-shake256-192f-simple | clean | 96.0% | 96.0% | 96.0% |
-| sphincs-shake256-192s-robust | clean | 97.5% | 97.2% | 97.5% |
-| sphincs-shake256-192s-simple | clean | 96.0% | 95.7% | 96.0% |
+| sphincs-shake256-192s-robust | clean | 97.5% | 97.4% | 97.5% |
+| sphincs-shake256-192s-simple | clean | 96.0% | 95.9% | 95.9% |
 | sphincs-shake256-256f-robust | clean | 97.5% | 97.4% | 97.5% |
-| sphincs-shake256-256f-simple | clean | 96.0% | 95.9% | 96.0% |
+| sphincs-shake256-256f-simple | clean | 96.0% | 96.0% | 96.0% |
 | sphincs-shake256-256s-robust | clean | 97.5% | 97.3% | 97.5% |
 | sphincs-shake256-256s-simple | clean | 96.0% | 95.9% | 96.0% |
 # Size Evaluation
@@ -389,39 +394,39 @@
 | falcon-512-tree | m4-ct | 80,953 | 0 | 27,648 | 108,601 |
 | falcon-512-tree | opt-ct | 80,953 | 0 | 27,648 | 108,601 |
 | falcon-512-tree | opt-leaktime | 74,121 | 0 | 27,648 | 101,769 |
-| sphincs-haraka-128f-robust | clean | 16,792 | 0 | 0 | 16,792 |
-| sphincs-haraka-128f-simple | clean | 16,640 | 0 | 0 | 16,640 |
-| sphincs-haraka-128s-robust | clean | 17,104 | 0 | 0 | 17,104 |
-| sphincs-haraka-128s-simple | clean | 16,952 | 0 | 0 | 16,952 |
+| sphincs-haraka-128f-robust | clean | 16,604 | 0 | 0 | 16,604 |
+| sphincs-haraka-128f-simple | clean | 16,452 | 0 | 0 | 16,452 |
+| sphincs-haraka-128s-robust | clean | 16,916 | 0 | 0 | 16,916 |
+| sphincs-haraka-128s-simple | clean | 16,768 | 0 | 0 | 16,768 |
 | sphincs-haraka-192f-robust | clean | 16,660 | 0 | 0 | 16,660 |
 | sphincs-haraka-192f-simple | clean | 16,476 | 0 | 0 | 16,476 |
-| sphincs-haraka-192s-robust | clean | 16,864 | 0 | 0 | 16,864 |
-| sphincs-haraka-192s-simple | clean | 16,680 | 0 | 0 | 16,680 |
-| sphincs-haraka-256f-robust | clean | 17,144 | 0 | 0 | 17,144 |
-| sphincs-haraka-256f-simple | clean | 16,904 | 0 | 0 | 16,904 |
+| sphincs-haraka-192s-robust | clean | 17,176 | 0 | 0 | 17,176 |
+| sphincs-haraka-192s-simple | clean | 16,992 | 0 | 0 | 16,992 |
+| sphincs-haraka-256f-robust | clean | 17,052 | 0 | 0 | 17,052 |
+| sphincs-haraka-256f-simple | clean | 16,808 | 0 | 0 | 16,808 |
 | sphincs-haraka-256s-robust | clean | 17,344 | 0 | 0 | 17,344 |
 | sphincs-haraka-256s-simple | clean | 17,100 | 0 | 0 | 17,100 |
-| sphincs-sha256-128f-robust | clean | 4,948 | 0 | 0 | 4,948 |
-| sphincs-sha256-128f-simple | clean | 4,700 | 0 | 0 | 4,700 |
-| sphincs-sha256-128s-robust | clean | 5,260 | 0 | 0 | 5,260 |
-| sphincs-sha256-128s-simple | clean | 5,012 | 0 | 0 | 5,012 |
+| sphincs-sha256-128f-robust | clean | 4,756 | 0 | 0 | 4,756 |
+| sphincs-sha256-128f-simple | clean | 4,508 | 0 | 0 | 4,508 |
+| sphincs-sha256-128s-robust | clean | 5,068 | 0 | 0 | 5,068 |
+| sphincs-sha256-128s-simple | clean | 4,820 | 0 | 0 | 4,820 |
 | sphincs-sha256-192f-robust | clean | 5,040 | 0 | 0 | 5,040 |
 | sphincs-sha256-192f-simple | clean | 4,672 | 0 | 0 | 4,672 |
-| sphincs-sha256-192s-robust | clean | 5,252 | 0 | 0 | 5,252 |
-| sphincs-sha256-192s-simple | clean | 4,884 | 0 | 0 | 4,884 |
-| sphincs-sha256-256f-robust | clean | 5,620 | 0 | 0 | 5,620 |
-| sphincs-sha256-256f-simple | clean | 5,152 | 0 | 0 | 5,152 |
+| sphincs-sha256-192s-robust | clean | 5,564 | 0 | 0 | 5,564 |
+| sphincs-sha256-192s-simple | clean | 5,192 | 0 | 0 | 5,192 |
+| sphincs-sha256-256f-robust | clean | 5,528 | 0 | 0 | 5,528 |
+| sphincs-sha256-256f-simple | clean | 5,060 | 0 | 0 | 5,060 |
 | sphincs-sha256-256s-robust | clean | 5,816 | 0 | 0 | 5,816 |
 | sphincs-sha256-256s-simple | clean | 5,344 | 0 | 0 | 5,344 |
-| sphincs-shake256-128f-robust | clean | 4,216 | 0 | 0 | 4,216 |
-| sphincs-shake256-128f-simple | clean | 4,076 | 0 | 0 | 4,076 |
-| sphincs-shake256-128s-robust | clean | 4,532 | 0 | 0 | 4,532 |
-| sphincs-shake256-128s-simple | clean | 4,392 | 0 | 0 | 4,392 |
+| sphincs-shake256-128f-robust | clean | 4,028 | 0 | 0 | 4,028 |
+| sphincs-shake256-128f-simple | clean | 3,888 | 0 | 0 | 3,888 |
+| sphincs-shake256-128s-robust | clean | 4,340 | 0 | 0 | 4,340 |
+| sphincs-shake256-128s-simple | clean | 4,196 | 0 | 0 | 4,196 |
 | sphincs-shake256-192f-robust | clean | 4,128 | 0 | 0 | 4,128 |
 | sphincs-shake256-192f-simple | clean | 3,956 | 0 | 0 | 3,956 |
-| sphincs-shake256-192s-robust | clean | 4,336 | 0 | 0 | 4,336 |
-| sphincs-shake256-192s-simple | clean | 4,164 | 0 | 0 | 4,164 |
-| sphincs-shake256-256f-robust | clean | 4,628 | 0 | 0 | 4,628 |
-| sphincs-shake256-256f-simple | clean | 4,416 | 0 | 0 | 4,416 |
+| sphincs-shake256-192s-robust | clean | 4,644 | 0 | 0 | 4,644 |
+| sphincs-shake256-192s-simple | clean | 4,472 | 0 | 0 | 4,472 |
+| sphincs-shake256-256f-robust | clean | 4,532 | 0 | 0 | 4,532 |
+| sphincs-shake256-256f-simple | clean | 4,320 | 0 | 0 | 4,320 |
 | sphincs-shake256-256s-robust | clean | 4,820 | 0 | 0 | 4,820 |
 | sphincs-shake256-256s-simple | clean | 4,612 | 0 | 0 | 4,612 |
