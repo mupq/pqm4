@@ -6,7 +6,9 @@
 | bikel1 (100 executions) | opt | AVG: 65,551,522 <br /> MIN: 65,536,266 <br /> MAX: 65,569,190 | AVG: 4,962,977 <br /> MIN: 4,944,655 <br /> MAX: 4,989,740 | AVG: 116,657,625 <br /> MIN: 116,639,290 <br /> MAX: 116,684,485 |
 | firesaber (100 executions) | clean | AVG: 3,725,054 <br /> MIN: 3,725,018 <br /> MAX: 3,725,082 | AVG: 4,623,783 <br /> MIN: 4,623,773 <br /> MAX: 4,623,821 | AVG: 5,237,480 <br /> MIN: 5,237,439 <br /> MAX: 5,238,455 |
 | firesaber (100 executions) | m4f | AVG: 1,002,347 <br /> MIN: 1,002,345 <br /> MAX: 1,002,379 | AVG: 1,213,957 <br /> MIN: 1,213,954 <br /> MAX: 1,213,990 | AVG: 1,166,787 <br /> MIN: 1,166,785 <br /> MAX: 1,166,820 |
+| frodokem640aes (100 executions) | m4 | AVG: 48,341,743 <br /> MIN: 48,341,710 <br /> MAX: 48,341,749 | AVG: 47,131,691 <br /> MIN: 47,131,687 <br /> MAX: 47,131,697 | AVG: 46,612,335 <br /> MIN: 46,612,315 <br /> MAX: 46,612,355 |
 | frodokem640shake (100 executions) | m4 | AVG: 77,984,424 <br /> MIN: 77,835,411 <br /> MAX: 77,989,050 | AVG: 78,893,964 <br /> MIN: 78,893,939 <br /> MAX: 78,893,977 | AVG: 78,341,812 <br /> MIN: 78,341,788 <br /> MAX: 78,341,829 |
+| frodokem640shake (100 executions) | opt | AVG: 90,654,791 <br /> MIN: 90,654,775 <br /> MAX: 90,654,814 | AVG: 104,138,444 <br /> MIN: 104,138,419 <br /> MAX: 104,138,534 | AVG: 103,834,288 <br /> MIN: 103,834,251 <br /> MAX: 103,834,338 |
 | hqc-rmrs-128 (100 executions) | clean | AVG: 2,967,262 <br /> MIN: 2,924,920 <br /> MAX: 3,153,007 | AVG: 5,415,022 <br /> MIN: 5,325,331 <br /> MAX: 5,590,378 | AVG: 7,845,462 <br /> MIN: 7,713,583 <br /> MAX: 8,205,411 |
 | kyber1024 (100 executions) | clean | AVG: 1,637,602 <br /> MIN: 1,635,186 <br /> MAX: 1,649,476 | AVG: 2,010,657 <br /> MIN: 2,008,239 <br /> MAX: 2,022,536 | AVG: 2,148,861 <br /> MIN: 2,146,442 <br /> MAX: 2,160,739 |
 | kyber1024 (100 executions) | m4 | AVG: 1,190,374 <br /> MIN: 1,185,257 <br /> MAX: 1,212,514 | AVG: 1,373,614 <br /> MIN: 1,368,598 <br /> MAX: 1,395,660 | AVG: 1,295,290 <br /> MIN: 1,290,241 <br /> MAX: 1,317,336 |
@@ -112,7 +114,9 @@
 | bikel1 | opt | 35,852 | 25,868 | 78,548 |
 | firesaber | clean | 19,340 | 19,444 | 20,924 |
 | firesaber | m4f | 7,252 | 7,204 | 7,220 |
+| frodokem640aes | m4 | 31,984 | 62,480 | 83,104 |
 | frodokem640shake | m4 | 26,408 | 51,784 | 72,408 |
+| frodokem640shake | opt | 36,480 | 58,136 | 78,760 |
 | hqc-rmrs-128 | clean | 48,828 | 64,412 | 71,148 |
 | kyber1024 | clean | 15,076 | 18,748 | 20,324 |
 | kyber1024 | m4 | 3,604 | 3,284 | 3,316 |
@@ -218,7 +222,9 @@
 | bikel1 | opt | 0.3% | 10.3% | 0.4% |
 | firesaber | clean | 19.1% | 18.9% | 14.1% |
 | firesaber | m4f | 70.9% | 72.1% | 63.1% |
+| frodokem640aes | m4 | 74.3% | 77.8% | 77.1% |
 | frodokem640shake | m4 | 84.7% | 86.3% | 86.0% |
+| frodokem640shake | opt | 74.3% | 65.4% | 64.9% |
 | hqc-rmrs-128 | clean | 53.7% | 41.4% | 33.3% |
 | kyber1024 | clean | 54.4% | 53.8% | 42.7% |
 | kyber1024 | m4 | 74.8% | 78.7% | 70.8% |
@@ -324,7 +330,9 @@
 | bikel1 | opt | 35,051 | 24 | 1 | 35,076 |
 | firesaber | clean | 10,220 | 0 | 0 | 10,220 |
 | firesaber | m4f | 9,544 | 0 | 0 | 9,544 |
+| frodokem640aes | m4 | 8,568 | 0 | 0 | 8,568 |
 | frodokem640shake | m4 | 8,644 | 0 | 0 | 8,644 |
+| frodokem640shake | opt | 6,796 | 0 | 0 | 6,796 |
 | hqc-rmrs-128 | clean | 18,436 | 0 | 0 | 18,436 |
 | kyber1024 | clean | 6,084 | 0 | 0 | 6,084 |
 | kyber1024 | m4 | 11,640 | 0 | 0 | 11,640 |
