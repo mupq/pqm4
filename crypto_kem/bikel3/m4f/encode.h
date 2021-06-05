@@ -1,3 +1,6 @@
+// Implemented by Ming-Shing Chen, Tung Chou and Markus Krausz.
+// public domain
+
 #ifndef _ENCODE_H_
 #define _ENCODE_H_
 

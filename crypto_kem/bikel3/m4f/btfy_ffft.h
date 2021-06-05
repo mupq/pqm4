@@ -1,3 +1,6 @@
+// Implemented by Ming-Shing Chen, Tung Chou and Markus Krausz.
+// public domain
+
 #ifndef _BTFY_FFFT_H_
 #define _BTFY_FFFT_H_
 

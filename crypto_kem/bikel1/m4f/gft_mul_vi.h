@@ -1,3 +1,6 @@
+// Implemented by Ming-Shing Chen, Tung Chou and Markus Krausz.
+// public domain
+
 #ifndef _GFT_MUL_VI_H_
 #define _GFT_MUL_VI_H_
 

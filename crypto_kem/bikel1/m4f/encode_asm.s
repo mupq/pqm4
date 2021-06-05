@@ -1,3 +1,5 @@
+// Implemented by Ming-Shing Chen, Tung Chou and Markus Krausz.
+// public domain
 
 .syntax unified
 .cpu cortex-m4

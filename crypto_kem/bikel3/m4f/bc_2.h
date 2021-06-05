@@ -1,3 +1,6 @@
+// Implemented by Ming-Shing Chen, Tung Chou and Markus Krausz.
+// public domain
+
 #ifndef _BC_2_H_
 #define _BC_2_H_
 
