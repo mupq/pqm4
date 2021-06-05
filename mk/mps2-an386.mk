@@ -13,11 +13,9 @@ ARCH_FLAGS += -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16
 
 CFLAGS += \
 	$(ARCH_FLAGS) \
-	--specs=nano.specs \
 	--specs=nosys.specs
 
 LDFLAGS += \
-	--specs=nano.specs \
 	--specs=nosys.specs \
 	-Wl,--wrap=_sbrk \
 	-ffreestanding \

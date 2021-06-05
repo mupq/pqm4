@@ -87,7 +87,6 @@ CFLAGS += \
 	$(ARCH_FLAGS) \
 
 LDFLAGS += \
-	--specs=nano.specs \
 	--specs=nosys.specs \
 	-Wl,--wrap=_sbrk \
 	-nostartfiles \
