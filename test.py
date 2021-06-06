@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 from mupq import mupq
-from interface import M4Settings, M4
+from interface import parse_arguments, get_platform
 
 import sys
 
 if __name__ == "__main__":
-    with M4() as m4:
-        test = mupq.SimpleTest(M4Settings(), m4)
-        test.test_all(sys.argv[1:])
+    args, rest = parse_arguments()
+    platform, settings = get_platform(args)
+    with platform:
+        test = mupq.SimpleTest(settings, platform)
+        test.test_all(rest)
