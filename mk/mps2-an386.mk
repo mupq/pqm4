@@ -15,6 +15,9 @@ CFLAGS += \
 	$(ARCH_FLAGS) \
 	--specs=nosys.specs
 
+CPPFLAGS += \
+	-DMPS2_AN386
+
 LDFLAGS += \
 	--specs=nosys.specs \
 	-Wl,--wrap=_sbrk \

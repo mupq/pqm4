@@ -1,6 +1,6 @@
 #include "randombytes.h"
 
-#if defined(STM32F2) || defined(STM32F4)
+#if defined(STM32F2) || defined(STM32F4) && !defined(MPS2_AN386)
 
 #include <libopencm3/stm32/rng.h>
 
