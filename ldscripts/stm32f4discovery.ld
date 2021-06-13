@@ -3,6 +3,7 @@ ENTRY(reset_handler)
 MEMORY
 {
  ram (rwx) : ORIGIN = 0x20000000, LENGTH = 112K
+ ram2 (rwx) : ORIGIN = 0x2001c000, LENGTH = 16K
  rom (rx) : ORIGIN = 0x08000000, LENGTH = 1024K
  ccm (rwx) : ORIGIN = 0x10000000, LENGTH = 64K
 }
@@ -58,6 +59,10 @@ SECTIONS
   . = ALIGN(4);
   _ebss = .;
  } >ram
+ .ram2 : {
+  *(.ram2*)
+  . = ALIGN(4);
+ } >ram2
  .ccm : {
   *(.ccmram*)
   . = ALIGN(4);
