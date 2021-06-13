@@ -11,7 +11,7 @@
 #pragma once
 #include "defs.h"
 
-#if defined(STM32F4)
+#if defined(PQM4) || defined(MUPQ)
 
 #include "aes.h"
 
@@ -36,7 +36,7 @@ typedef ALIGN(16) struct aes256_key_s {
 
 CLEANUP_FUNC(aes256_key, aes256_key_t)
 
-#if defined(STM32F4)
+#if defined(PQM4) || defined(MUPQ)
 
 typedef aes256ctx aes256_ks_t;
 

@@ -46,8 +46,6 @@ $(LDSCRIPT): common/mps2/MPS2.ld
 
 $(LDSCRIPT): CPPFLAGS += -Icommon/mps2
 
-elf/crypto_kem_bike%.elf: CPPFLAGS += -DSTM32F4
-
 LINKDEPS += $(LDSCRIPT) $(LIBDEPS)
 
 ENABLE_QEMU_TESTS = 1
