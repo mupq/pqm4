@@ -4,9 +4,9 @@ import sys
 import platform
 
 if platform.system() == "Darwin":
-    dev = serial.Serial("/dev/tty.usbserial-0001", 115200)
+    dev = serial.Serial("/dev/tty.usbserial-0001", 38400)
 else:
-    dev = serial.Serial("/dev/ttyUSB0", 115200)
+    dev = serial.Serial("/dev/ttyUSB0", 38400)
 
 print("> Returned data:", file=sys.stderr)
 
