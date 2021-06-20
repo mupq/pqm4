@@ -4,9 +4,12 @@ Builds all of the binaries without flashing them.
 """
 import sys
 
-from interface import M4Settings
+from interface import parse_arguments, get_platform
 from mupq import mupq
 
 
 if __name__ == "__main__":
-    mupq.BuildAll(M4Settings()).test_all(sys.argv[1:])
+    args, rest = parse_arguments()
+    platform, settings = get_platform(args)
+    with platform:
+        mupq.BuildAll(settings).test_all(rest)
