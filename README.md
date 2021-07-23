@@ -363,7 +363,7 @@ When referring to this framework in academic literature, please consider using t
 
 ## License
 Different parts of **pqm4** have different licenses. 
-Each subdirectory containing implementations contains a LICENSE file stating 
+Each subdirectory containing implementations contains a LICENSE or COPYING file stating 
 under what license that specific implementation is released. 
 The files in common contain licensing information at the top of the file (and 
 are currently either public domain or MIT). 
