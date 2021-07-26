@@ -82,7 +82,8 @@ int Rq_recip3_jumpdivsteps(int16_t* H, int8_t* G){
 #else
     int jl, jh;
     int *HH = (int *)(void *)H;
-    int *MM = (int *)(void *)(M + 2310);
+    // int *MM = (int *)(void *)(M + 2310);
+    int *MM = (int *)(void *)(M + 2298);
     for(i=760; i>0; i-=2){
       j = *(MM--);
       jl = __SMULBB(k,j);

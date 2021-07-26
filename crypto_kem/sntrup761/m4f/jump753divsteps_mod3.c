@@ -7,11 +7,11 @@ extern void gf_polymul_256x512_mod3(int* h,int* f,int* g);
 extern void gf_polymul_512x256_2x2_x2p2_mod3 (int *V,int *M,int *fh,int *gh);
 extern void gf_polymul_128x128_2x2_x2p2_mod3 (int *V,int *M,int *fh,int *gh);
 extern void gf_polymul_64x64_2x2_x2p2_mod3 (int *V,int *M,int *fh,int *gh);
-extern void gf_polymul_32x32_2x2_x2p2_mod3 (int *V,int *M,int *fh,int *gh);
-extern void gf_polymul_16x16_2x2_x2p2_mod3 (int *V,int *M,int *fh,int *gh);
+extern void __gf_polymul_32x32_2x2_x2p2_mod3 (int *V,int *M,int *fh,int *gh);
+extern void __gf_polymul_16x16_2x2_x2p2_mod3 (int *V,int *M,int *fh,int *gh);
 
-extern void gf_polymul_16x16_2x2_x_2x2_mod3 (int *M, int *M1, int *M2);
-extern void gf_polymul_32x32_2x2_x_2x2_mod3 (int *M, int *M1, int *M2);
+extern void __gf_polymul_16x16_2x2_x_2x2_mod3 (int *M, int *M1, int *M2);
+extern void __gf_polymul_32x32_2x2_x_2x2_mod3 (int *M, int *M1, int *M2);
 extern void gf_polymul_64x64_2x2_x_2x2_mod3 (int *M, int *M1, int *M2);
 extern void gf_polymul_128x128_2x2_x_2x2_mod3 (int *M, int *M1, int *M2);
 extern void gf_polymul_256x512_2x2_x_2x2_mod3 (int *M, int *M1, int *M2);
@@ -76,9 +76,9 @@ int jump753divsteps_mod3(int minusdelta, int *M, int *f, int *g){
   minusdelta = jump64divsteps_mod3(minusdelta,  (int*)M3,  (int*)fg2,  (int*)(fg2+64));
   gf_polymul_64x64_2x2_x2p2_mod3((int*)fg1,(int*)M3, (int*)(fg2+16), (int*)(fg2+80));
   minusdelta = jump32divsteps_mod3(minusdelta,  (int*)M4,  (int*)fg1,  (int*)(fg1+32));
-  gf_polymul_32x32_2x2_x2p2_mod3((int*)fg2, (int*)M4, (int*)(fg1+8), (int*)(fg1+40));
+  __gf_polymul_32x32_2x2_x2p2_mod3((int*)fg2, (int*)M4, (int*)(fg1+8), (int*)(fg1+40));
   minusdelta = jump16divsteps_mod3(minusdelta,  (int*)M5,  (int*)fg2,  (int*)(fg2+16));
-  gf_polymul_16x16_2x2_x2p2_mod3( (int*)fg1, (int*)M5, (int*)(fg2+4), (int*)(fg2+20)); //fg 0~15 f, 16~31 g
+  __gf_polymul_16x16_2x2_x2p2_mod3( (int*)fg1, (int*)M5, (int*)(fg2+4), (int*)(fg2+20)); //fg 0~15 f, 16~31 g
   minusdelta = jump8divsteps_mod3_1(minusdelta,  (int*)M6,  (int*)fg1,  (int*)(fg1+8));
 
 
@@ -99,8 +99,8 @@ int jump753divsteps_mod3(int minusdelta, int *M, int *f, int *g){
   M6[1]=b;
 
 
-  gf_polymul_16x16_2x2_x_2x2_mod3((int*)fg2,(int*)(int*)(M5+8),(int*)(M6+8));
-  gf_polymul_32x32_2x2_x_2x2_mod3((int*)(fg2+32),(int*)(M4+16),(int*)fg2);
+  __gf_polymul_16x16_2x2_x_2x2_mod3((int*)fg2,(int*)(int*)(M5+8),(int*)(M6+8));
+  __gf_polymul_32x32_2x2_x_2x2_mod3((int*)(fg2+32),(int*)(M4+16),(int*)fg2);
   gf_polymul_64x64_2x2_x_2x2_mod3((int*)fg1,(int*)(M3+32),(int*)(fg2+32));
   gf_polymul_128x128_2x2_x_2x2_mod3((int*)(fg1+128),(int*)(M2+64),(int*)fg1);
   gf_polymul_256x512_2x2_x_2x2_onlyuv_mod3((int*)(M+384),(int*)(M1+256),(int*)(fg1+128));

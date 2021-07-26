@@ -1,1 +1,8 @@
-../../sntrup761/m4f/uint64.h
+#ifndef UINT64_H
+#define UINT64_H
+
+#include <stdint.h>
+
+typedef uint64_t uint64;
+
+#endif
