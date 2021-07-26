@@ -1,0 +1,350 @@
+.p2align 2,,3
+.syntax unified
+.text
+wpad:
+	.word 7681
+	.word 559168
+	.word 4294901761
+	.word 221770441
+	.word 4215473341
+	.word 126220411
+	.word 34602481
+	.word 4239328081
+	.word 113310016
+	.word 4256760391
+	.word 4205446486
+	.word 4112517856
+	.word 140179366
+	.word 173602216
+	.word 4155246676
+	.word 6422431
+	.word 156104371
+	.word 160364146
+	.word 21692086
+	.word 4121627221
+	.word 57605266
+	.word 149026591
+	.word 180483391
+	.word 239530426
+	.word 4173989686
+	.word 23985811
+	.word 4137748831
+	.word 4098362296
+	.word 72940456
+	.word 117635326
+	.word 4092333076
+	.word 4210689286
+	.word 4146333916
+	.word 4250731171
+	.word 125106316
+	.word 4116449956
+	.word 158856841
+	.word 4204397926
+	.word 45612361
+	.word 4242604831
+	.word 4172089171
+	.word 4204463461
+	.word 161871451
+	.word 4073458996
+	.word 4249551541
+	.word 112392526
+	.word 4093512706
+	.word 4246995676
+	.word 4067102101
+	.word 201913336
+	.word 13303606
+	.word 15990541
+	.word 4244767486
+	.word 188871871
+	.word 70843336
+	.word 164951596
+	.word 4071427411
+	.word 167245321
+	.word 4256694856
+	.word 108525961
+	.word 4180936396
+	.word 181859626
+	.word 34668016
+	.word 226095751
+	.word 192803971
+	.word 4130605516
+	.word 251523331
+	.word 20971201
+	.word 4268425621
+	.word 189920431
+	.word 4164159436
+	.word 57015451
+	.word 4187948641
+	.word 118028536
+	.word 190117036
+	.word 4159768591
+	.word 4281991366
+	.word 104069581
+	.word 14417701
+	.word 4065529261
+	.word 4086041716
+	.word 57736336
+	.word 75758461
+	.word 148436776
+	.word 201454591
+	.word 4061269486
+	.word 4171368286
+	.word 4126345741
+	.word 80018236
+	.word 4127001091
+	.word 204862411
+	.word 4110224131
+	.word 4046655181
+	.word 4203087226
+	.word 4089121861
+	.word 208466836
+	.word 4278124801
+	.word 96926266
+	.word 4229235691
+	.word 4173530941
+	.word 4095675361
+	.word 186447076
+	.word 4202694016
+	.word 68484076
+	.word 4116581026
+	.word 4229891041
+	.word 4106226496
+	.word 231535156
+	.word 92797561
+	.word 4184737426
+	.word 4093250566
+	.word 4127066626
+	.word 4252500616
+	.word 203158501
+	.word 46398781
+	.word 4099017646
+	.word 4119267961
+	.word 4200727966
+	.word 247787836
+	.word 73792411
+	.word 4267639201
+	.word 4125035041
+	.word 4161013756
+	.word 127989856
+	.word 104331721
+	.word 132970516
+	.word 121174216
+	.word 36109786
+	.word 4214490316
+	.word 4223075401
+	.word 4290904126
+	.word 154662601
+	.word 105183676
+	.word 4062580186
+	.word 127858786
+	.word 74054551
+	.word 4268884366
+	.word 148109101
+	.word 4281794761
+	.word 4057337386
+	.word 129759301
+	.word 188478661
+	.word 4189652551
+	.word 4185720451
+	.word 110360941
+	.word 4165994416
+	.word 4125690391
+	.word 4118743681
+	.word 43908451
+	.word 174912916
+	.word 111737176
+	.word 249033001
+	.word 50068741
+	.word 4267901341
+	.word 4111534831
+	.word 4186441336
+	.word 4282843321
+	.word 242151826
+	.word 21102271
+	.word 4103474026
+	.word 4140435766
+	.word 4069199221
+	.word 201978871
+	.word 6225826
+	.word 4072541506
+	.word 4216784041
+	.word 4098624436
+	.word 4068740476
+	.word 4227138571
+	.word 4220847211
+	.word 4259447326
+	.word 4152559741
+	.word 204534736
+	.word 4211999986
+	.word 94239331
+	.word 46071106
+	.word 4261806586
+	.word 4225172521
+	.word 4108978966
+	.word 4275568936
+	.word 4202825086
+	.word 128448601
+	.word 4152821881
+	.word 155514556
+	.word 235074046
+	.word 4089252931
+	.word 144045931
+	.word 180745531
+	.word 4272292186
+	.word 197063746
+	.word 131921956
+	.word 4214359246
+	.word 4163766226
+	.word 4172023636
+	.word 4280746201
+	.word 4080995521
+	.word 4159506451
+	.word 193459321
+	.word 4238869336
+	.word 7339921
+	.word 4203677041
+	.word 4058058271
+	.word 205648831
+	.word 175109521
+	.word 202306546
+	.word 4199351731
+	.word 4178052856
+	.word 4164290506
+	.word 134412286
+	.word 52034791
+	.word 162657871
+	.word 138344386
+	.word 4196730331
+	.word 108657031
+	.word 4182443701
+	.word 116390161
+	.word 4218291346
+	.word 157021861
+	.word 113113411
+	.word 123599011
+	.word 209318791
+	.word 4135520641
+	.word 4116908701
+	.word 4128115186
+	.word 4257481276
+	.word 4259840536
+	.word 4246602466
+	.word 21626551
+	.word 228323941
+	.word 4273013071
+	.word 4111141621
+	.word 215020336
+	.word 14352166
+	.word 4287234166
+	.word 4170647401
+	.word 4048228021
+	.word 212333401
+	.word 213054286
+	.word 77986651
+	.word 161085031
+	.word 4178904811
+	.word 7470991
+	.word 4147382476
+	.word 4227073036
+	.word 180942136
+	.word 197719096
+	.word 4049145511
+	.word 40762771
+	.word 4110748411
+	.word 35126761
+	.word 4043837176
+	.word 4172285776
+	.word 4215604411
+	.word 186184936
+	.word 4253090431
+	.word 221311696
+	.word 44236126
+	.word 73137061
+// void basemul_x_1024_16bit_2x2 (int *h);
+.global basemul_x_1024_16bit_2x2
+.type basemul_x_1024_16bit_2x2, %function
+basemul_x_1024_16bit_2x2:
+	push {r4-r11, lr}
+	adr.w r10, wpad
+	ldm r10!, {r11-r12}
+	add.w lr, r0, #2048
+start_0:
+	ldr.w r9, [r10], #4
+	ldrsh.w r2, [r0, #2]
+	ldrsh.w r3, [r0, #4]
+	ldrsh.w r4, [r0, #6]
+	ldrsh.w r1, [r0]
+	smulbb r5, r9, r2
+	smultb r6, r9, r4
+	smmulr r7, r5, r12
+	mls r5, r7, r11, r5
+	smmulr r7, r1, r12
+	mls r1, r7, r11, r1
+	pkhbt r5, r5, r1, lsl #16
+	smmulr r7, r6, r12
+	mls r6, r7, r11, r6
+	smmulr r7, r3, r12
+	mls r3, r7, r11, r3
+	pkhbt r6, r6, r3, lsl #16
+	str.w r6, [r0, #4]
+	str.w r5, [r0], #8
+	ldr.w r9, [r10], #4
+	ldrsh.w r2, [r0, #2]
+	ldrsh.w r3, [r0, #4]
+	ldrsh.w r4, [r0, #6]
+	ldrsh.w r1, [r0]
+	smulbb r5, r9, r2
+	smultb r6, r9, r4
+	smmulr r7, r5, r12
+	mls r5, r7, r11, r5
+	smmulr r7, r1, r12
+	mls r1, r7, r11, r1
+	pkhbt r5, r5, r1, lsl #16
+	smmulr r7, r6, r12
+	mls r6, r7, r11, r6
+	smmulr r7, r3, r12
+	mls r3, r7, r11, r3
+	pkhbt r6, r6, r3, lsl #16
+	str.w r6, [r0, #4]
+	str.w r5, [r0], #8
+	ldr.w r9, [r10], #4
+	ldrsh.w r2, [r0, #2]
+	ldrsh.w r3, [r0, #4]
+	ldrsh.w r4, [r0, #6]
+	ldrsh.w r1, [r0]
+	smulbb r5, r9, r2
+	smultb r6, r9, r4
+	smmulr r7, r5, r12
+	mls r5, r7, r11, r5
+	smmulr r7, r1, r12
+	mls r1, r7, r11, r1
+	pkhbt r5, r5, r1, lsl #16
+	smmulr r7, r6, r12
+	mls r6, r7, r11, r6
+	smmulr r7, r3, r12
+	mls r3, r7, r11, r3
+	pkhbt r6, r6, r3, lsl #16
+	str.w r6, [r0, #4]
+	str.w r5, [r0], #8
+	ldr.w r9, [r10], #4
+	ldrsh.w r2, [r0, #2]
+	ldrsh.w r3, [r0, #4]
+	ldrsh.w r4, [r0, #6]
+	ldrsh.w r1, [r0]
+	smulbb r5, r9, r2
+	smultb r6, r9, r4
+	smmulr r7, r5, r12
+	mls r5, r7, r11, r5
+	smmulr r7, r1, r12
+	mls r1, r7, r11, r1
+	pkhbt r5, r5, r1, lsl #16
+	smmulr r7, r6, r12
+	mls r6, r7, r11, r6
+	smmulr r7, r3, r12
+	mls r3, r7, r11, r3
+	pkhbt r6, r6, r3, lsl #16
+	str.w r6, [r0, #4]
+	str.w r5, [r0], #8
+	cmp.w r0, lr
+	bne.w start_0
+	pop {r4-r11, pc}
