@@ -1,13 +1,13 @@
 #include <stdint.h>
 #include "cmsis.h"
 #include "ntt612.h"
-extern void gf_polymul_256x256(void *h, void *f, void *g);
-extern void gf_polymul_256x512(void *h, void *f, void *g); // length f : 256 , g : 512
+// extern void gf_polymul_256x256(void *h, void *f, void *g);
+// extern void gf_polymul_256x512(void *h, void *f, void *g); // length f : 256 , g : 512
 extern int jump256divsteps(int minusdelta, int *M, int *f, int *g);
 extern int jump512divsteps(int minusdelta, int *M, int *f, int *g);
-void gf_polymul_512x256_2x2_x2p2 (int *V,int *M,int *fh,int *gh);
-void gf_polymul_256x512_2x2_x2p2 (int *V,int *M,int *fh,int *gh);
-void gf_polymul_256x512_2x2_x_2x2 (int *M, int *M1, int *M2); // M = M2*M1, length M1 : 512*4   M2 : 256*4 (u,v,r,s)
+// void gf_polymul_512x256_2x2_x2p2 (int *V,int *M,int *fh,int *gh);
+// void gf_polymul_256x512_2x2_x2p2 (int *V,int *M,int *fh,int *gh);
+// void gf_polymul_256x512_2x2_x_2x2 (int *M, int *M1, int *M2); // M = M2*M1, length M1 : 512*4   M2 : 256*4 (u,v,r,s)
 int jump768divsteps(int minusdelta, int *M, int *f, int *g);
 
 extern void ntt918_256(int*, int*);
