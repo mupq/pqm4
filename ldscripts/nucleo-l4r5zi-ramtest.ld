@@ -2,15 +2,16 @@ EXTERN(vector_table)
 ENTRY(reset_handler)
 MEMORY
 {
- ram (rwx) : ORIGIN = 0x20000000, LENGTH = 112K
- ram2 (rwx) : ORIGIN = 0x2001c000, LENGTH = 16K
- rom (rx) : ORIGIN = 0x08000000, LENGTH = 1024K
- ccm (rwx) : ORIGIN = 0x10000000, LENGTH = 64K
+ rom (rx) : ORIGIN = 0x08000000, LENGTH = 2048K
+ ram (rwx) : ORIGIN = 0x20000000, LENGTH = 192K
+ ram2 (rwx) : ORIGIN = 0x20030000, LENGTH = 64K
+ ram3 (rwx) : ORIGIN = 0x20040000, LENGTH = 384K
 }
 SECTIONS
 {
  .text : {
   *(.vectors)
+  . = ALIGN(448);
   *(.text*)
   . = ALIGN(4);
   *(.rodata*)
@@ -59,16 +60,20 @@ SECTIONS
   . = ALIGN(4);
   _ebss = .;
  } >ram
+ .ram1 : {
+ *(.ram1*)
+ . = ALIGN(4);
+ } >ram
+ end = .;
  .ram2 : {
-  *(.ram2*)
-  . = ALIGN(4);
+ *(.ram2*)
+ . = ALIGN(4);
  } >ram2
- .ccm : {
-  *(.ccmram*)
+ .ram3 : {
+  *(.ram3*)
   . = ALIGN(4);
- } >ccm
+ } >ram3
  /DISCARD/ : { *(.eh_frame) }
  . = ALIGN(4);
- end = .;
 }
 PROVIDE(_stack = ORIGIN(ram) + LENGTH(ram));
