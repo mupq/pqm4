@@ -73,21 +73,6 @@ static Fq Fq_freeze(int32 x)
 #define Fq_freeze_short Fq_freeze
 #endif
 
-#ifndef LPR
-
-static Fq Fq_recip(Fq a1)
-{
-  int i = 1;
-  Fq ai = a1;
-
-  while (i < q-2) {
-    ai = Fq_freeze(a1*(int32)ai);
-    i += 1;
-  }
-  return ai;
-}
-
-#endif
 
 /* ----- Top and Right */
 
@@ -132,29 +117,6 @@ extern void reduce_2p_minus1_mod3_F3(small *, small *);
 /* h = f*g in the ring R3 */
 static void R3_mult(small *h,const small *f,const small *g)
 {
-#if 0
-  small fg[p+p-1];
-  small result;
-  int i,j;
-
-  for (i = 0;i < p;++i) {
-    result = 0;
-    for (j = 0;j <= i;++j) result = F3_freeze(result+f[j]*g[i-j]);
-    fg[i] = result;
-  }
-  for (i = p;i < p+p-1;++i) {
-    result = 0;
-    for (j = i-p+1;j < p;++j) result = F3_freeze(result+f[j]*g[i-j]);
-    fg[i] = result;
-  }
-
-  for (i = p+p-2;i >= p;--i) {
-    fg[i-p] = F3_freeze(fg[i-p]+fg[i]);
-    fg[i-p+1] = F3_freeze(fg[i-p+1]+fg[i]);
-  }
-
-  for (i = 0;i < p;++i) h[i] = fg[i];
-#else
   small fg[1920];
   small f_mod3[960];
   small g_mod3[960];
@@ -163,51 +125,6 @@ static void R3_mult(small *h,const small *f,const small *g)
   copy_p_F3_mod3(f, f_mod3, g, g_mod3);
   gf_polymul_960x960_mod3(fg, f_mod3, g_mod3);
   reduce_2p_minus1_mod3_F3(h, fg); 
-#endif
-}
-
-/* returns 0 if recip succeeded; else -1 */
-static int R3_recip(small *out,const small *in)
-{
-  small f[p+1],g[p+1],v[p+1],r[p+1];
-  int i,loop,delta;
-  int sign,swap,t;
-
-  for (i = 0;i < p+1;++i) v[i] = 0;
-  for (i = 0;i < p+1;++i) r[i] = 0;
-  r[0] = 1;
-  for (i = 0;i < p;++i) f[i] = 0;
-  f[0] = 1; f[p-1] = f[p] = -1;
-  for (i = 0;i < p;++i) g[p-1-i] = in[i];
-  g[p] = 0;
-
-  delta = 1;
-
-  for (loop = 0;loop < 2*p-1;++loop) {
-    for (i = p;i > 0;--i) v[i] = v[i-1];
-    v[0] = 0;
-
-    sign = -g[0]*f[0];
-    swap = int16_negative_mask(-delta) & int16_nonzero_mask(g[0]);
-    delta ^= swap&(delta^-delta);
-    delta += 1;
-
-    for (i = 0;i < p+1;++i) {
-      t = swap&(f[i]^g[i]); f[i] ^= t; g[i] ^= t;
-      t = swap&(v[i]^r[i]); v[i] ^= t; r[i] ^= t;
-    }
-
-    for (i = 0;i < p+1;++i) g[i] = F3_freeze(g[i]+sign*f[i]);
-    for (i = 0;i < p+1;++i) r[i] = F3_freeze(r[i]+sign*v[i]);
-
-    for (i = 0;i < p;++i) g[i] = g[i+1];
-    g[p] = 0;
-  }
-
-  sign = f[0];
-  for (i = 0;i < p;++i) out[i] = sign*v[p-1-i];
-
-  return int16_nonzero_mask(delta);
 }
 
 #endif
@@ -218,31 +135,7 @@ extern void polymul_953x953_mod6343(Fq *h,const Fq *f,const small *g);
 /* h = f*g in the ring Rq */
 static void Rq_mult_small(Fq *h,const Fq *f,const small *g)
 {
-  #if 0
-  Fq fg[p+p-1];
-  Fq result;
-  int i,j;
-
-  for (i = 0;i < p;++i) {
-    result = 0;
-    for (j = 0;j <= i;++j) result = Fq_freeze(result+f[j]*(int32)g[i-j]);
-    fg[i] = result;
-  }
-  for (i = p;i < p+p-1;++i) {
-    result = 0;
-    for (j = i-p+1;j < p;++j) result = Fq_freeze(result+f[j]*(int32)g[i-j]);
-    fg[i] = result;
-  }
-
-  for (i = p+p-2;i >= p;--i) {
-    fg[i-p] = Fq_freeze(fg[i-p]+fg[i]);
-    fg[i-p+1] = Fq_freeze(fg[i-p+1]+fg[i]);
-  }
-
-  for (i = 0;i < p;++i) h[i] = fg[i];
-  #else
   polymul_953x953_mod6343(h,f,g);
-  #endif
 }
 
 #ifndef LPR
@@ -255,53 +148,6 @@ static void Rq_mult3(Fq *h,const Fq *f)
   for (i = 0;i < p;++i) h[i] = Fq_freeze(3*f[i]);
 }
 
-/* out = 1/(3*in) in Rq */
-/* returns 0 if recip succeeded; else -1 */
-static int Rq_recip3(Fq *out,const small *in)
-{
-  Fq f[p+1],g[p+1],v[p+1],r[p+1];
-  int i,loop,delta;
-  int swap,t;
-  int32 f0,g0;
-  Fq scale;
-
-  for (i = 0;i < p+1;++i) v[i] = 0;
-  for (i = 0;i < p+1;++i) r[i] = 0;
-  r[0] = Fq_recip(3);
-  for (i = 0;i < p;++i) f[i] = 0;
-  f[0] = 1; f[p-1] = f[p] = -1;
-  for (i = 0;i < p;++i) g[p-1-i] = in[i];
-  g[p] = 0;
-
-  delta = 1;
-
-  for (loop = 0;loop < 2*p-1;++loop) {
-    for (i = p;i > 0;--i) v[i] = v[i-1];
-    v[0] = 0;
-
-    swap = int16_negative_mask(-delta) & int16_nonzero_mask(g[0]);
-    delta ^= swap&(delta^-delta);
-    delta += 1;
-
-    for (i = 0;i < p+1;++i) {
-      t = swap&(f[i]^g[i]); f[i] ^= t; g[i] ^= t;
-      t = swap&(v[i]^r[i]); v[i] ^= t; r[i] ^= t;
-    }
-
-    f0 = f[0];
-    g0 = g[0];
-    for (i = 0;i < p+1;++i) g[i] = Fq_freeze(f0*g[i]-g0*f[i]);
-    for (i = 0;i < p+1;++i) r[i] = Fq_freeze(f0*r[i]-g0*v[i]);
-
-    for (i = 0;i < p;++i) g[i] = g[i+1];
-    g[p] = 0;
-  }
-
-  scale = Fq_recip(f[0]);
-  for (i = 0;i < p;++i) out[i] = Fq_freeze(scale*(int32)v[p-1-i]);
-
-  return int16_nonzero_mask(delta);
-}
 
 #endif
 
@@ -406,7 +252,6 @@ static void KeyGen(Fq *h,small *f,small *ginv)
   }
   Short_random(f);
   Rq_recip3_jumpdivsteps(finv,f); /* always works */
-  // Rq_recip3(finv,f); /* always works */
   Rq_mult_small(h,finv,g);
 }
 
