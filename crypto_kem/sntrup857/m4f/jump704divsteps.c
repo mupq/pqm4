@@ -23,7 +23,7 @@ int jump704divsteps(int minusdelta, int *M, int *f, int *g);
 #define _2P15 (1 << 15)
 
 #if 1
-// result range: +- 2295 (note: 3 loads for _2P15 and the longer qR2inv)
+// result range: +- q/2 (note: 3 loads for _2P15 and the longer qR2inv)
 static inline int barrett_16x2i(int X) {
   int32_t QL = __SMLAWB(qR2inv,X,_2P15);
   int32_t QH = __SMLAWT(qR2inv,X,_2P15);
@@ -67,8 +67,6 @@ void gf_polymul_192x512(int *h, int *f, int *g){
 
 void gf_polymul_192x192_2x2_x2p2_1 (int *V,int *M,int *fh,int *gh){
   int i, T, *X, *Y, *Z, *W;
-
-  //static
   int B753_1[193], B753_2[193];
   int * BB753_1 = (int *)((void *)B753_1 + 2);
   int * BB753_2 = (int *)((void *)B753_2 + 2);
@@ -89,8 +87,6 @@ void gf_polymul_192x192_2x2_x2p2_1 (int *V,int *M,int *fh,int *gh){
 
 void gf_polymul_64x64_2x2_x2p2_1 (int *V,int *M,int *fh,int *gh){
   int i, T, *X, *Y, *Z, *W;
-
-  //static
   int B753_1[65], B753_2[65];
   int * BB753_1 = (int *)((void *)B753_1 + 2);
   int * BB753_2 = (int *)((void *)B753_2 + 2);
@@ -111,8 +107,6 @@ void gf_polymul_64x64_2x2_x2p2_1 (int *V,int *M,int *fh,int *gh){
 
 void gf_polymul_64x128_2x2_x_2x2_onlyuv (int *M, int *M1, int *M2){ // M = M2*M1, length M1 : 512*4   M2 : 32*4
   int i, T, *X, *Y;
-
-  //static
   int B753_1[97];
   int * BB753_1 = (int *)((void *)B753_1 + 2);
 
@@ -134,8 +128,6 @@ void gf_polymul_64x128_2x2_x_2x2_onlyuv (int *M, int *M1, int *M2){ // M = M2*M1
 
 void gf_polymul_192x512_2x2_x_2x2_onlyuv (int *M, int *M1, int *M2){ // M = M2*M1, length M1 : 512*4   M2 : 32*4
   int i, T, *X, *Y;
-
-  //static
   int B753_1[353];
   int * BB753_1 = (int *)((void *)B753_1 + 2);
 

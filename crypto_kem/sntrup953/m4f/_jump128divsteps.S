@@ -1,5 +1,5 @@
 .p2align 2,,3
-.syntax	unified
+.syntax unified
 .text
 __polymul_64x64:
 	push.w {lr}
@@ -4275,42 +4275,34 @@ __polymul_64x64:
 	str.w r10, [r0, #252]
 	pop.w {pc}
 .p2align 2,,3
-.syntax	unified
-.data
-b128_1: .space 260
-b128_2: .space 260
+.syntax unified
 .text
-b1_addr:
-	.word b128_1
-	.word b128_1+2
-b2_addr:
-	.word b128_2
-	.word b128_2+2
-.global	__gf_polymul_64x64_2x2_x2p2
-.type 	__gf_polymul_64x64_2x2_x2p2, %function
+.global __gf_polymul_64x64_2x2_x2p2
+.type  __gf_polymul_64x64_2x2_x2p2, %function
 @ void __gf_polymul_64x64_2x2_x2p2(int *V,int *M,int *fh,int *gh)
 __gf_polymul_64x64_2x2_x2p2:
 	push {r1-r12, lr}
+	sub.w sp, #520
 	vmov.w s0, s1, r0, r1
 	vmov.w s4, s5, r2, r3
 	movw.w r7, #21759
 	movt.w r7, #10
 	vmov.w s2, r7
 	movw.w r11, #0
-	ldr.w r7, b1_addr
-	ldr.w r8, b1_addr+4
-	ldr.w r9, b2_addr
-	ldr.w r0, b2_addr+4
+	mov.w r7, sp
+	add.w r8, sp, #2
+	add.w r9, sp, #260
+	add.w r0, sp, #262
 	str.w r11, [r7]
 	str.w r11, [r9]
 	vmov.w s6, s7, r7, r8
 	vmov.w s8, r9
 	movw.w r7, #256
 	add.w r1, r7
-	bl	__polymul_64x64
+	bl __polymul_64x64
 	vmov.w r0, s7
 	vmov.w r2, s5
-	bl	__polymul_64x64
+	bl __polymul_64x64
 	vmov.w r0, r3, s0, s1
 	vmov.w r1, s6
 	vmov.w r2, s8
@@ -5024,10 +5016,10 @@ __gf_polymul_64x64_2x2_x2p2:
 	vmov.w r2, s4
 	add.w r0, r0, #256
 	add.w r1, r3, #512
-	bl	__polymul_64x64
+	bl __polymul_64x64
 	vmov.w r0, s7
 	vmov.w r2, s5
-	bl	__polymul_64x64
+	bl __polymul_64x64
 	vmov.w r0, s0
 	vmov.w r1, s7
 	vmov.w r2, s1
@@ -5734,11 +5726,12 @@ __gf_polymul_64x64_2x2_x2p2:
 	str.w r7, [r0, #500]
 	str.w r8, [r0, #504]
 	strh.w r9, [r0, #508]
+	add.w sp, #520
 	pop {r1-r12, pc}
 
 
 .p2align 2,,3
-.syntax	unified
+.syntax unified
 .text
 __polyadd_128:
 	push.w {lr}
@@ -6387,26 +6380,22 @@ __polyadd_128:
 	str.w r8, [r0, #252]
 	pop.w {pc}
 .p2align 2,,3
-.syntax	unified
-.data
-b128_1_2x2: .space 260
+.syntax unified
 .text
-b1_addr_2x2:
-	.word b128_1_2x2
-	.word b128_1_2x2+2
-.global	__gf_polymul_64x64_2x2_x_2x2
-.type 	__gf_polymul_64x64_2x2_x_2x2, %function
+.global __gf_polymul_64x64_2x2_x_2x2
+.type  __gf_polymul_64x64_2x2_x_2x2, %function
 @ void __gf_polymul_64x64_2x2_x_2x2(int *M,int *S_M1,int *fh,int *gh)
 __gf_polymul_64x64_2x2_x_2x2:
 	push {r1-r12, lr}
+	sub.w sp, #260
 	vmov.w s0, s1, r0, r1
 	vmov.w s4, r2
 	movw.w r7, #21759
 	movt.w r7, #10
 	vmov.w s2, r7
 	movw.w r11, #0
-	ldr.w r7, b1_addr_2x2
-	ldr.w r0, b1_addr_2x2+4
+	mov.w r7, sp
+	add.w r0, sp, #2
 	str.w r11, [r7]
 	vmov.w s5, s6, r7, r0
 	bl	__polymul_64x64
@@ -6453,4 +6442,5 @@ __gf_polymul_64x64_2x2_x_2x2:
 	bl	__polymul_64x64
 	vmov.w r1, s5
 	bl	__polyadd_128
+	add.w sp, #260
 	pop {r1-r12, pc}

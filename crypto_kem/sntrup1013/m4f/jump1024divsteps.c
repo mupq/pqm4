@@ -15,7 +15,7 @@ int jump1024divsteps_onlyvs(int minusdelta, int *M, int *f, int *g);
 #define _2P15 (1 << 15)
 
 #if 1
-// result range: +- 2295 (note: 3 loads for _2P15 and the longer qR2inv)
+// result range: +- q/2 (note: 3 loads for _2P15 and the longer qR2inv)
 static inline int barrett_16x2i(int X) {
   int32_t QL = __SMLAWB(qR2inv,X,_2P15);
   int32_t QH = __SMLAWT(qR2inv,X,_2P15);
@@ -27,9 +27,6 @@ static inline int barrett_16x2i(int X) {
 #else 
 #define barrett_16x2i(A) (A)
 #endif
-//static
-int B1024_1[513];
-int * BB1024_1 = (int *)((void *)B1024_1 + 2);
 
 void gf_polymul_512x512(int *h, int *f, int *g){
     int fpad[624], gpad[624];
@@ -41,8 +38,10 @@ void gf_polymul_512x512(int *h, int *f, int *g){
 
 void gf_polymul_512x512_2x2_x2p2 (int *V,int *M,int *fh,int *gh){
   int i, T, *X, *Y, *W;
-
+  int B1024_1[513];
+  int * BB1024_1 = (int *)((void *)B1024_1 + 2);
   B1024_1[0] = V[0] = 0;
+
   gf_polymul_512x512(BB1024_1, M+512, fh); 	// x * u * fh
   gf_polymul_512x512((int*)((void*)V+2), M+768, gh);	// x * v * gh
   for (X=V, Y=B1024_1, W=M, i=256; i>0; i--) {// x(u fh+v gh)+f1
@@ -63,7 +62,8 @@ void gf_polymul_512x512_2x2_x2p2 (int *V,int *M,int *fh,int *gh){
 
 void gf_polymul_512x512_2x2_x_2x2 (int *M, int *M1, int *M2) {
   int i, T, *X, *Y;
-
+  int B1024_1[513];
+  int * BB1024_1 = (int *)((void *)B1024_1 + 2);
   B1024_1[0] = 0;
 
   gf_polymul_512x512(BB1024_1, M2, M1+256); 	// x * u2 * v1
@@ -81,7 +81,8 @@ void gf_polymul_512x512_2x2_x_2x2 (int *M, int *M1, int *M2) {
 
 void gf_polymul_512x512_2x2_x_2x2_onlyuv (int *M, int *M1, int *M2) {
   int i, T, *X, *Y;
-
+  int B1024_1[513];
+  int * BB1024_1 = (int *)((void *)B1024_1 + 2);
   B1024_1[0] = 0;
 
   gf_polymul_512x512(BB1024_1, M2, M1); 	// x * u2 * u1

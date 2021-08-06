@@ -12,7 +12,7 @@ int jump256divsteps(int minusdelta, int *M, int *f, int *g);
 #define _2P15 (1 << 15)
 
 #if 1
-// result range: +- 2295 (note: 3 loads for _2P15 and the longer qR2inv)
+// result range: +- q/2 (note: 3 loads for _2P15 and the longer qR2inv)
 static inline int barrett_16x2i(int X) {
   int32_t QL = __SMLAWB(qR2inv,X,_2P15);
   int32_t QH = __SMLAWT(qR2inv,X,_2P15);
@@ -24,13 +24,11 @@ static inline int barrett_16x2i(int X) {
 #else 
 #define barrett_16x2i(A) (A)
 #endif
-//static
-int B256_1[129];
-int * BB256_1 = (int *)((void *)B256_1 + 2);
 
 void gf_polymul_128x128_2x2_x2p2 (int *V,int *M,int *fh,int *gh){
   int i, T, *X, *Y, *W;
-
+  int B256_1[129];
+  int * BB256_1 = (int *)((void *)B256_1 + 2);
   B256_1[0] = V[0] = 0;
   gf_polymul_128x128(BB256_1, M+128, fh); 	// x * u * fh
   gf_polymul_128x128((int*)((void*)V+2), M+192, gh);	// x * v * gh
@@ -52,7 +50,8 @@ void gf_polymul_128x128_2x2_x2p2 (int *V,int *M,int *fh,int *gh){
 
 void gf_polymul_128x128_2x2_x_2x2 (int *M, int *M1, int *M2) {
   int i, T, *X, *Y;
-
+  int B256_1[129];
+  int * BB256_1 = (int *)((void *)B256_1 + 2);
   B256_1[0] = 0;
   gf_polymul_128x128(BB256_1, M2, M1); 	// x * u2 * u1
   gf_polymul_128x128(M, M2+64, M1+128); 	// v2 * r1

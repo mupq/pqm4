@@ -21,7 +21,7 @@ int jump1280divsteps_onlyvs(int minusdelta, int *M, int *f, int *g);
 #define _2P15 (1 << 15)
 
 #if 1
-// result range: +- 2295 (note: 3 loads for _2P15 and the longer qR2inv)
+// result range: +- q/2 (note: 3 loads for _2P15 and the longer qR2inv)
 static inline int barrett_16x2i(int X) {
   int32_t QL = __SMLAWB(qR2inv,X,_2P15);
   int32_t QH = __SMLAWT(qR2inv,X,_2P15);
@@ -56,7 +56,6 @@ void gf_polymul_256x1024(int *h, int *f, int *g){
 
 void gf_polymul_1024x256_2x2_x2p2 (int *V,int *M,int *fh,int *gh){
   int i, T, *X, *Y, *W;
-  //static
   int B1280_1[641];
   int * BB1280_1 = (int *)((void *)B1280_1 + 2);
   B1280_1[0] = V[0] = 0;
@@ -80,7 +79,6 @@ void gf_polymul_1024x256_2x2_x2p2 (int *V,int *M,int *fh,int *gh){
 
 void gf_polymul_256x1024_2x2_x2p2 (int *V,int *M,int *fh,int *gh){
   int i, T, *X, *Y, *W;
-  //static
   int B1280_1[641];
   int * BB1280_1 = (int *)((void *)B1280_1 + 2);
   B1280_1[0] = V[0] = 0;
@@ -104,7 +102,6 @@ void gf_polymul_256x1024_2x2_x2p2 (int *V,int *M,int *fh,int *gh){
 
 void gf_polymul_256x256_2x2_x2p2_1 (int *V,int *M,int *fh,int *gh){
   int i, T, *X, *Y, *W;
-  //static
   int B1280_1[641];
   int * BB1280_1 = (int *)((void *)B1280_1 + 2);
   B1280_1[0] = V[0] = 0;
@@ -122,7 +119,6 @@ void gf_polymul_256x256_2x2_x2p2_1 (int *V,int *M,int *fh,int *gh){
 
 void gf_polymul_256x1024_2x2_x_2x2_onlyuv (int *M, int *M1, int *M2) {
   int i, T, *X, *Y;
-  //static
   int B1280_1[641];
   int * BB1280_1 = (int *)((void *)B1280_1 + 2);
   B1280_1[0] = 0;
@@ -142,7 +138,6 @@ void gf_polymul_256x1024_2x2_x_2x2_onlyuv (int *M, int *M1, int *M2) {
 
 void gf_polymul_256x1024_2x2_x_2x2_onlyvs (int *M, int *M1, int *M2) {
   int i, T, *X, *Y;
-  //static
   int B1280_1[641];
   int * BB1280_1 = (int *)((void *)B1280_1 + 2);
   B1280_1[0] = 0;

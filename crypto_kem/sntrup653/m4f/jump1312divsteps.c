@@ -2,8 +2,6 @@
 
 extern int jump768divsteps(int minusdelta, int *M, int *f, int *g);
 extern int jump544divsteps(int minusdelta, int *M, int *f, int *g);
-extern void gf_polymul_768x768(int *h, int *f, int *g);
-extern void polymul_653x653_mod4621(int*, int*, int*);
 void gf_polymul_656x656_2x2_x_2x2 (int *M, int *M1, int *M2); // M = M2 x M1 
 int jump1312divsteps(int minusdelta, int *M, int *f, int *g);
 
@@ -12,7 +10,6 @@ extern void ntt12(int*);
 extern void polymul_10x10_132(int*, int*);
 extern void intt12(int*);
 extern void intt11_rader_mr(int*, int*);
-
 
 #define q 4621
 #define qR2inv 929445 // round(2^32/q)
@@ -25,23 +22,6 @@ static inline int barrett_16x2i(int X) {
   int SH = __SMULBT(q,QH);
   return(__SSUB16(X,__PKHBT(SL,SH,16)));
 }
-
-// void gf_polymul_656x656(int *h, int *f, int *g){
-//     int16_t *ptr = (int16_t *)h;
-//     for (int i = 0; i < 1312; i++) *ptr++ = 0;
-    
-//     for (int i = 0; i < 656; i++)
-//     {
-//         int16_t *result = (int16_t *)h + i;
-//         int16_t *f_i = (int16_t *)f + i;
-//         for (int j = 0; j < 656; j++)
-//         {
-//             int16_t *g_i = (int16_t *)g + j;
-//             int new_val = (*f_i * *g_i) + *(result);
-//             *(result++) = (int16_t)(new_val % q);
-//         }
-//     }
-// }
 
 void gf_polymul_656x656_2x2_x_2x2 (int *M, int *M1, int *M2){ //only v = g^-1 mod f
     int i;

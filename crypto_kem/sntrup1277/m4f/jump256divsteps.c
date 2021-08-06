@@ -12,7 +12,7 @@ int jump256divsteps(int minusdelta, int *M, int *f, int *g);
 #define _2P15 (1 << 15)
 
 #if 1
-// result range: +- 2295 (note: 3 loads for _2P15 and the longer qR2inv)
+// result range: +- q/2 (note: 3 loads for _2P15 and the longer qR2inv)
 static inline int barrett_16x2i(int X) {
   int32_t QL = __SMLAWB(qR2inv,X,_2P15);
   int32_t QH = __SMLAWT(qR2inv,X,_2P15);
@@ -27,7 +27,6 @@ static inline int barrett_16x2i(int X) {
 
 void gf_polymul_128x128_2x2_x2p2 (int *V,int *M,int *fh,int *gh){
   int i, T, *X, *Y, *W;
-  //static
   int B256_1[129];
   int * BB256_1 = (int *)((void *)B256_1 + 2);
   B256_1[0] = V[0] = 0;
@@ -51,7 +50,6 @@ void gf_polymul_128x128_2x2_x2p2 (int *V,int *M,int *fh,int *gh){
 
 void gf_polymul_128x128_2x2_x_2x2 (int *M, int *M1, int *M2) {
   int i, T, *X, *Y;
-  //static
   int B256_1[129];
   int * BB256_1 = (int *)((void *)B256_1 + 2);
   B256_1[0] = 0;

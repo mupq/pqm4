@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include "cmsis.h"
 #include "ntt42.h"
+
 extern void gf_polymul_128x128(int *h, int *f, int *g);
 extern void gf_polymul_384x384(int *h, int *f, int *g);
 extern int jump512divsteps(int minusdelta, int *M, int *f, int *g);
@@ -8,7 +9,6 @@ extern int jump256divsteps(int minusdelta, int *M, int *f, int *g);
 extern int jump128divsteps(int minusdelta, int *M, int *f, int *g);
 
 void gf_polymul_128x256(int *h, int *f, int *g);
-// void gf_polymul_384x512(int *h, int *f, int *g);
 void gf_polymul_512x512_1(int *h, int *f, int *g);
 void gf_polymul_128x128_2x2_x2p2_1 (int *V,int *M,int *fh,int *gh);
 void gf_polymul_384x384_2x2_x2p2_1 (int *V,int *M,int *fh,int *gh);
@@ -21,7 +21,7 @@ int jump896divsteps(int minusdelta, int *M, int *f, int *g);
 #define _2P15 (1 << 15)
 
 #if 1
-// result range: +- 2295 (note: 3 loads for _2P15 and the longer qR2inv)
+// result range: +- q/2 (note: 3 loads for _2P15 and the longer qR2inv)
 static inline int barrett_16x2i(int X) {
   int32_t QL = __SMLAWB(qR2inv,X,_2P15);
   int32_t QH = __SMLAWT(qR2inv,X,_2P15);
@@ -48,24 +48,6 @@ void gf_polymul_128x256(int *h, int *f, int *g){
   }
 }
 
-// void gf_polymul_384x512(int *h, int *f, int *g){
-//   int i, T, h384_640[128], h512_896[192];
-//   int *p, *pp;
-//   int *p2, *pp2;
-//   gf_polymul_384x384(h,f,g);
-//   gf_polymul_128x128(h384_640,g+192,f);
-//   gf_polymul_128x256(h512_896,g+192,f+64);
-//   for(i=128, p=h384_640, pp=h+192, p2=h512_896, pp2=h+256; i>0; --i){
-//     T = barrett_16x2i(__SADD16(*p++, *pp));
-//     *(pp++) = T;
-//     T = barrett_16x2i(__SADD16(*p2++, *pp2));
-//     *(pp2++) = T;
-//   }
-//   for(i=64; i>0; --i){
-//     *(pp2++) = *(p2++);
-//   }
-// }
-
 void gf_polymul_512x512_1(int *h, int *f, int *g){
   int fpad[588], gpad[588];
   ntt1176_512(fpad, f);
@@ -76,8 +58,6 @@ void gf_polymul_512x512_1(int *h, int *f, int *g){
 
 void gf_polymul_384x384_2x2_x2p2_1 (int *V,int *M,int *fh,int *gh){
   int i, T, *X, *Y, *Z, *W;
-
-  //static
   int B753_1[385], B753_2[385];
   int * BB753_1 = (int *)((void *)B753_1 + 2);
   int * BB753_2 = (int *)((void *)B753_2 + 2);
@@ -98,8 +78,6 @@ void gf_polymul_384x384_2x2_x2p2_1 (int *V,int *M,int *fh,int *gh){
 
 void gf_polymul_128x128_2x2_x2p2_1 (int *V,int *M,int *fh,int *gh){
   int i, T, *X, *Y, *Z, *W;
-
-  //static
   int B753_1[129], B753_2[129];
   int * BB753_1 = (int *)((void *)B753_1 + 2);
   int * BB753_2 = (int *)((void *)B753_2 + 2);
@@ -120,8 +98,6 @@ void gf_polymul_128x128_2x2_x2p2_1 (int *V,int *M,int *fh,int *gh){
 
 void gf_polymul_128x256_2x2_x_2x2_onlyuv (int *M, int *M1, int *M2){ // M = M2*M1, length M1 : 512*4   M2 : 32*4
   int i, T, *X, *Y;
-
-  //static
   int B753_1[193];
   int * BB753_1 = (int *)((void *)B753_1 + 2);
 
