@@ -47,6 +47,9 @@ boards, all featuring an ARM Cortex-M4 chip:
   separate USB serial interface converter.
 * `cw308t-stm32f3`: The ChipWhisperer [CW308-STM32F3 target board](https://rtfm.newae.com/Targets/UFO%20Targets/CW308T-STM32F/)
   (in the F3 configuration) featuring 256KB of Flash and 40KB of RAM.
+* `nucleo-l4r5zi`: The [NUCLEO-L4R5ZI board](https://www.st.com/en/evaluation-tools/nucleo-l4r5zi.html)
+  featuring 2MB of Flash and 640KB of RAM. This board does not require a
+  separate USB serial interface converter.
 * `mps2-an386`: The ARM MPS2(+) FPGA prototyping board when used with the
   ARM-Cortex M4 bitstream (see [ARM AN386](https://developer.arm.com/documentation/dai0386/c))
   featuring two 4MB RAM blocks, one used in lieu of Flash one as RAM. This board
@@ -60,10 +63,15 @@ On most Linux systems, the correct toolchain gets installed when you install the
 On some Linux distributions, you will also have to explicitly install `libnewlib-arm-none-eabi` .
 
 ### Installing stlink
-To flash binaries onto the development board, **pqm4** is using [stlink](https://github.com/texane/stlink). 
+To flash binaries onto most development boards, **pqm4** is using [stlink](https://github.com/texane/stlink). 
 Depending on your operating system, stlink may be available in your package manager -- if not, please
 refer to the stlink Github page for instructions on how to [compile it from source](https://github.com/texane/stlink/blob/master/doc/compiling.md) 
 (in that case, be careful to use libusb-1.0.0-dev, not libusb-0.1).
+
+### Installing OpenOCD
+For the `nucleo-l4r5zi` board [OpenOCD](http://openocd.org) (tested with version 0.11) is used for flashing binaries.
+Depending on your operating system, OpenOCD may be available in your package manager -- if not, please
+refer to the OpenOCD README for instructions on how to [compile it from source](http://openocd.org/doc-release/README).
 
 ### Python3
 The benchmarking scripts used in **pqm4** require Python >= 3.6.
