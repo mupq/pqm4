@@ -22,14 +22,12 @@ static inline int barrett_16x2i(int X) {
 }
 
 void gf_polymul_1024x1024(int *h, int *f, int *g){
-  int fpad[1092], gpad[1092];
-  int* tmp = malloc(1092*4);
+  int fpad[1092], gpad[1092], tmp[1092];
   mask1013(tmp, f);
   ntt13_rader(fpad, tmp);
   ntt24(fpad);
   mask1013(tmp, g);
   ntt13_rader(gpad, tmp);
-  free(tmp);
   ntt24(gpad);
   basemul_7x7_312(fpad, fpad, gpad);
   intt24(fpad);

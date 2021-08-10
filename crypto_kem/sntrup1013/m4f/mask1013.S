@@ -24,7 +24,7 @@ mask1013:
     str.w r2, [r0], #32
 .endr
     mov.w r2, #0
-.rept 736
+.rept 580
     str.w r2, [r0], #4
 .endr
     pop {r4-r9, pc}
@@ -53,7 +53,7 @@ mask1013x:
     str.w r2, [r0], #32
 .endr
     mov.w r2, #0
-.rept 736
+.rept 580
     str.w r2, [r0], #4
 .endr
     pop {r4-r9, pc}
