@@ -30,7 +30,7 @@ bike_static_assert(sizeof(sha384_dgst_t) == SHA384_DGST_BYTES, sha384_dgst_size)
 typedef sha384_dgst_t sha_dgst_t;
 CLEANUP_FUNC(sha_dgst, sha_dgst_t)
 
-#if defined(STM32F4)
+#if defined(PQM4) || defined(MUPQ)
 
 #include "sha2.h"
 
