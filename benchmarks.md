@@ -61,7 +61,7 @@
 | sntrup653 (100 executions) | clean | AVG: 102,879,347 <br /> MIN: 102,506,263 <br /> MAX: 139,813,864 | AVG: 4,060,121 <br /> MIN: 4,060,114 <br /> MAX: 4,060,148 | AVG: 11,723,295 <br /> MIN: 11,723,272 <br /> MAX: 11,723,307 |
 | sntrup653 (100 executions) | m4f | AVG: 6,714,568 <br /> MIN: 6,627,693 <br /> MAX: 7,868,628 | AVG: 631,853 <br /> MIN: 631,851 <br /> MAX: 631,885 | AVG: 486,707 <br /> MIN: 486,706 <br /> MAX: 486,740 |
 | sntrup761 (100 executions) | clean | AVG: 141,913,579 <br /> MIN: 141,913,560 <br /> MAX: 141,913,604 | AVG: 5,395,672 <br /> MIN: 5,395,662 <br /> MAX: 5,395,698 | AVG: 15,828,809 <br /> MIN: 15,828,778 <br /> MAX: 15,828,813 |
-| sntrup761 (100 executions) | m4f | AVG: 7,947,749 <br /> MIN: 7,947,734 <br /> MAX: 7,947,770 | AVG: 683,654 <br /> MIN: 683,653 <br /> MAX: 683,688 | AVG: 538,145 <br /> MIN: 538,144 <br /> MAX: 538,178 |
+| sntrup761 (100 executions) | m4f | AVG: 7,951,328 <br /> MIN: 7,951,312 <br /> MAX: 7,951,347 | AVG: 683,652 <br /> MIN: 683,651 <br /> MAX: 683,685 | AVG: 538,141 <br /> MIN: 538,140 <br /> MAX: 538,175 |
 | sntrup857 (100 executions) | clean | AVG: 179,091,448 <br /> MIN: 179,091,421 <br /> MAX: 179,091,464 | AVG: 6,742,099 <br /> MIN: 6,742,086 <br /> MAX: 6,742,120 | AVG: 20,002,037 <br /> MIN: 20,002,029 <br /> MAX: 20,002,066 |
 | sntrup857 (100 executions) | m4f | AVG: 10,264,255 <br /> MIN: 10,264,235 <br /> MAX: 10,264,271 | AVG: 853,302 <br /> MIN: 853,301 <br /> MAX: 853,335 | AVG: 689,920 <br /> MIN: 689,919 <br /> MAX: 689,952 |
 | sntrup953 (100 executions) | clean | AVG: 222,055,140 <br /> MIN: 222,055,124 <br /> MAX: 222,055,172 | AVG: 8,240,747 <br /> MIN: 8,240,732 <br /> MAX: 8,240,767 | AVG: 24,678,459 <br /> MIN: 24,678,442 <br /> MAX: 24,678,479 |
@@ -433,7 +433,7 @@
 | sntrup653 | clean | 12,488 | 0 | 0 | 12,488 |
 | sntrup653 | m4f | 237,580 | 0 | 0 | 237,580 |
 | sntrup761 | clean | 13,228 | 0 | 0 | 13,228 |
-| sntrup761 | m4f | 350,569 | 0 | 3,678 | 354,247 |
+| sntrup761 | m4f | 350,545 | 0 | 0 | 350,545 |
 | sntrup857 | clean | 13,632 | 0 | 0 | 13,632 |
 | sntrup857 | m4f | 597,996 | 0 | 0 | 597,996 |
 | sntrup953 | clean | 14,388 | 0 | 0 | 14,388 |
