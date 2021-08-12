@@ -700,7 +700,7 @@ static void Small_decode(small *f,const unsigned char *s)
 **************************************************/
 static void Rq_encode(unsigned char *s,const Fq *r)
 {
-  Encode_Rq(s, (int16 *)r);
+  Encode_Rq_asm(s, (int16 *)r);
 }
 
 /*************************************************
@@ -714,7 +714,7 @@ static void Rq_encode(unsigned char *s,const Fq *r)
 **************************************************/
 static void Rq_decode(Fq *r,const unsigned char *s)
 {
-  Decode_Rq((int16 *)r, s);
+  Decode_Rq_asm((int16 *)r, s);
 }
 
 #endif
@@ -730,7 +730,7 @@ static void Rq_decode(Fq *r,const unsigned char *s)
 **************************************************/
 static void Rounded_encode(unsigned char *s,const Fq *r)
 {
-  Encode_Rounded(s, (int16 *)r);
+  Encode_Rounded_asm(s, (int16 *)r);
 }
 
 /*************************************************
@@ -744,7 +744,7 @@ static void Rounded_encode(unsigned char *s,const Fq *r)
 **************************************************/
 static void Rounded_decode(Fq *r,const unsigned char *s)
 {
-  Decode_Rounded((int16 *)r, s);
+  Decode_Rounded_asm((int16 *)r, s);
 }
 
 /* ----- encoding top polynomials */
@@ -1096,6 +1096,7 @@ static void Encap(unsigned char *c,unsigned char *k,const unsigned char *pk)
 **************************************************/
 static int Ciphertexts_diff_mask(const unsigned char *c,const unsigned char *c2)
 {
+  uint16 differentbits = 0;
   int len = Ciphertexts_bytes+Confirm_bytes;
 
   int *cc = (int *)(void *)c;
