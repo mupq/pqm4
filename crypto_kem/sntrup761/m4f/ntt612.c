@@ -15,15 +15,16 @@ void ntt612x(int16_t* fpad, int16_t* f);
 void intt612(int16_t* f, int16_t* fpad);
 void intt612x(int16_t* fpad, int16_t* f);
 void basemul_612(int16_t* hpad, int16_t* fpad, int16_t* gpad);
-int16_t tmp[613];
 
 void ntt612(int16_t* fpad, int16_t* f){
+    int16_t tmp[613];
     mask256(tmp, f);
     Good17x9_Rader17_612(fpad, tmp);
     ntt9_rader_612(fpad);
 }
 
 void ntt612x(int16_t* fpad, int16_t* f){
+    int16_t tmp[613];
     tmp[0]=0;
     mask256x(tmp, f);
     Good17x9_Rader17_612(fpad, tmp);
@@ -35,12 +36,14 @@ void basemul_612(int16_t* hpad, int16_t* fpad, int16_t* gpad){
 }
 
 void intt612(int16_t* h, int16_t* fpad){
+    int16_t tmp[613];
     intt9_rader_612(fpad);
     iRader17_iGood17x9_612(tmp, fpad);
     imask512(h, tmp);
 }
 
 void intt612x(int16_t* h, int16_t* fpad){
+    int16_t tmp[613];
     intt9_rader_612(fpad);
     iRader17_iGood17x9_612(tmp, fpad);
     imask512x(h, tmp);
