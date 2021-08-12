@@ -1,3 +1,4 @@
+
 #ifndef PARAMS_H
 #define PARAMS_H
 
@@ -59,3 +60,5 @@
 #define SABER_BYTES_CCA_DEC (SABER_POLYVECCOMPRESSEDBYTES + SABER_SCALEBYTES_KEM)
 
 #endif
+
+
