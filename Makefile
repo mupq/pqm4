@@ -1,5 +1,5 @@
 .PHONY: all
-all: tests
+all: tests tests-bin
 
 include mupq/mk/config.mk
 include mk/config.mk
