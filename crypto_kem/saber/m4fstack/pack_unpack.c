@@ -222,7 +222,7 @@ void BS2POLVECq(const uint8_t bytes[SABER_POLYVECBYTES], uint16_t data[SABER_L][
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /* This function reduces its input mod 2**4 */
-void POLmu2BS(uint8_t bytes[SABER_POLYSECRETBYTES], const uint16_t data[SABER_N])
+void POLmu2BS(uint8_t bytes[SABER_N / 2], const uint16_t data[SABER_N])
 {
     size_t j;
     const uint16_t *in = data;
