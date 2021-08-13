@@ -5,7 +5,8 @@
 | bikel1 (100 executions) | m4f | AVG: 25,066,749 <br /> MIN: 25,044,123 <br /> MAX: 25,093,265 | AVG: 3,396,189 <br /> MIN: 3,371,978 <br /> MAX: 3,421,250 | AVG: 51,312,929 <br /> MIN: 51,288,697 <br /> MAX: 51,338,076 |
 | bikel1 (100 executions) | opt | AVG: 65,551,522 <br /> MIN: 65,536,266 <br /> MAX: 65,569,190 | AVG: 4,962,977 <br /> MIN: 4,944,655 <br /> MAX: 4,989,740 | AVG: 116,657,625 <br /> MIN: 116,639,290 <br /> MAX: 116,684,485 |
 | firesaber (100 executions) | clean | AVG: 3,725,054 <br /> MIN: 3,725,018 <br /> MAX: 3,725,082 | AVG: 4,623,783 <br /> MIN: 4,623,773 <br /> MAX: 4,623,821 | AVG: 5,237,480 <br /> MIN: 5,237,439 <br /> MAX: 5,238,455 |
-| firesaber (100 executions) | m4f | AVG: 1,002,347 <br /> MIN: 1,002,345 <br /> MAX: 1,002,379 | AVG: 1,213,957 <br /> MIN: 1,213,954 <br /> MAX: 1,213,990 | AVG: 1,166,787 <br /> MIN: 1,166,785 <br /> MAX: 1,166,820 |
+| firesaber (100 executions) | m4fspeed | AVG: 994,446 <br /> MIN: 994,445 <br /> MAX: 994,479 | AVG: 1,204,260 <br /> MIN: 1,204,257 <br /> MAX: 1,204,291 | AVG: 1,151,016 <br /> MIN: 1,151,014 <br /> MAX: 1,151,048 |
+| firesaber (100 executions) | m4fstack | AVG: 1,319,646 <br /> MIN: 1,319,644 <br /> MAX: 1,319,680 | AVG: 1,615,256 <br /> MIN: 1,615,254 <br /> MAX: 1,615,289 | AVG: 1,595,646 <br /> MIN: 1,595,644 <br /> MAX: 1,595,678 |
 | frodokem640aes (100 executions) | m4 | AVG: 48,341,743 <br /> MIN: 48,341,710 <br /> MAX: 48,341,749 | AVG: 47,131,691 <br /> MIN: 47,131,687 <br /> MAX: 47,131,697 | AVG: 46,612,335 <br /> MIN: 46,612,315 <br /> MAX: 46,612,355 |
 | frodokem640shake (100 executions) | m4 | AVG: 77,984,424 <br /> MIN: 77,835,411 <br /> MAX: 77,989,050 | AVG: 78,893,964 <br /> MIN: 78,893,939 <br /> MAX: 78,893,977 | AVG: 78,341,812 <br /> MIN: 78,341,788 <br /> MAX: 78,341,829 |
 | frodokem640shake (100 executions) | opt | AVG: 90,654,791 <br /> MIN: 90,654,775 <br /> MAX: 90,654,814 | AVG: 104,138,444 <br /> MIN: 104,138,419 <br /> MAX: 104,138,534 | AVG: 103,834,288 <br /> MIN: 103,834,251 <br /> MAX: 103,834,338 |
@@ -23,7 +24,8 @@
 | kyber768-90s (100 executions) | clean | AVG: 1,811,726 <br /> MIN: 1,810,670 <br /> MAX: 1,827,045 | AVG: 2,034,922 <br /> MIN: 2,033,865 <br /> MAX: 2,050,240 | AVG: 2,222,406 <br /> MIN: 2,221,348 <br /> MAX: 2,237,723 |
 | kyber768-90s (100 executions) | m4 | AVG: 656,589 <br /> MIN: 652,287 <br /> MAX: 661,063 | AVG: 735,172 <br /> MIN: 730,870 <br /> MAX: 739,646 | AVG: 748,573 <br /> MIN: 744,271 <br /> MAX: 753,047 |
 | lightsaber (100 executions) | clean | AVG: 1,023,162 <br /> MIN: 1,023,162 <br /> MAX: 1,023,163 | AVG: 1,494,462 <br /> MIN: 1,494,456 <br /> MAX: 1,494,495 | AVG: 1,805,694 <br /> MIN: 1,805,691 <br /> MAX: 1,805,725 |
-| lightsaber (100 executions) | m4f | AVG: 354,975 <br /> MIN: 354,974 <br /> MAX: 355,009 | AVG: 485,015 <br /> MIN: 485,013 <br /> MAX: 485,048 | AVG: 460,240 <br /> MIN: 460,240 <br /> MAX: 460,273 |
+| lightsaber (100 executions) | m4fspeed | AVG: 352,196 <br /> MIN: 352,196 <br /> MAX: 352,229 | AVG: 481,006 <br /> MIN: 481,005 <br /> MAX: 481,038 | AVG: 452,654 <br /> MIN: 452,653 <br /> MAX: 452,687 |
+| lightsaber (100 executions) | m4fstack | AVG: 422,434 <br /> MIN: 422,434 <br /> MAX: 422,467 | AVG: 591,556 <br /> MIN: 591,555 <br /> MAX: 591,588 | AVG: 581,073 <br /> MIN: 581,072 <br /> MAX: 581,106 |
 | ntruhps2048509 (100 executions) | clean | AVG: 54,823,343 <br /> MIN: 54,823,152 <br /> MAX: 54,829,202 | AVG: 1,067,060 <br /> MIN: 1,067,057 <br /> MAX: 1,067,094 | AVG: 2,447,633 <br /> MIN: 2,447,627 <br /> MAX: 2,447,663 |
 | ntruhps2048509 (100 executions) | m4f | AVG: 80,183,936 <br /> MIN: 80,183,840 <br /> MAX: 80,183,949 | AVG: 563,396 <br /> MIN: 563,395 <br /> MAX: 563,429 | AVG: 536,377 <br /> MIN: 536,376 <br /> MAX: 536,410 |
 | ntruhps2048677 (100 executions) | clean | AVG: 100,624,357 <br /> MIN: 100,624,352 <br /> MAX: 100,624,361 | AVG: 1,802,130 <br /> MIN: 1,802,127 <br /> MAX: 1,802,161 | AVG: 4,306,200 <br /> MIN: 4,306,192 <br /> MAX: 4,306,227 |
@@ -45,7 +47,8 @@
 | ntrulpr953 (100 executions) | clean | AVG: 8,540,005 <br /> MIN: 8,539,989 <br /> MAX: 8,540,025 | AVG: 16,476,839 <br /> MIN: 16,476,806 <br /> MAX: 16,476,842 | AVG: 23,804,413 <br /> MIN: 23,804,398 <br /> MAX: 23,804,435 |
 | ntrulpr953 (100 executions) | m4f | AVG: 1,245,925 <br /> MIN: 1,245,923 <br /> MAX: 1,245,959 | AVG: 1,916,623 <br /> MIN: 1,916,621 <br /> MAX: 1,916,655 | AVG: 2,033,771 <br /> MIN: 2,033,766 <br /> MAX: 2,033,801 |
 | saber (100 executions) | clean | AVG: 2,136,066 <br /> MIN: 2,136,063 <br /> MAX: 2,136,099 | AVG: 2,808,330 <br /> MIN: 2,808,325 <br /> MAX: 2,808,360 | AVG: 3,279,876 <br /> MIN: 3,279,865 <br /> MAX: 3,280,057 |
-| saber (100 executions) | m4f | AVG: 651,611 <br /> MIN: 651,610 <br /> MAX: 651,643 | AVG: 827,170 <br /> MIN: 827,169 <br /> MAX: 827,203 | AVG: 785,427 <br /> MIN: 785,427 <br /> MAX: 785,460 |
+| saber (100 executions) | m4fspeed | AVG: 645,222 <br /> MIN: 645,221 <br /> MAX: 645,255 | AVG: 820,799 <br /> MIN: 820,798 <br /> MAX: 820,832 | AVG: 774,055 <br /> MIN: 774,054 <br /> MAX: 774,089 |
+| saber (100 executions) | m4fstack | AVG: 820,044 <br /> MIN: 820,043 <br /> MAX: 820,077 | AVG: 1,059,170 <br /> MIN: 1,059,168 <br /> MAX: 1,059,202 | AVG: 1,038,683 <br /> MIN: 1,038,681 <br /> MAX: 1,038,715 |
 | sikep434 (3 executions) | m4 | AVG: 48,264,607 <br /> MIN: 48,264,586 <br /> MAX: 48,264,619 | AVG: 78,910,673 <br /> MIN: 78,910,650 <br /> MAX: 78,910,687 | AVG: 84,275,488 <br /> MIN: 84,275,487 <br /> MAX: 84,275,490 |
 | sikep434 (3 executions) | opt | AVG: 642,929,598 <br /> MIN: 642,929,525 <br /> MAX: 642,929,648 | AVG: 1,053,016,085 <br /> MIN: 1,053,015,970 <br /> MAX: 1,053,016,185 | AVG: 1,123,128,815 <br /> MIN: 1,123,128,701 <br /> MAX: 1,123,129,014 |
 | sikep503 (3 executions) | m4 | AVG: 67,365,114 <br /> MIN: 67,365,114 <br /> MAX: 67,365,114 | AVG: 110,843,233 <br /> MIN: 110,843,213 <br /> MAX: 110,843,246 | AVG: 117,990,911 <br /> MIN: 117,990,909 <br /> MAX: 117,990,915 |
@@ -129,7 +132,8 @@
 | bikel1 | m4f | 44,068 | 32,116 | 91,368 |
 | bikel1 | opt | 35,852 | 25,868 | 78,548 |
 | firesaber | clean | 19,340 | 19,444 | 20,924 |
-| firesaber | m4f | 7,252 | 7,204 | 7,220 |
+| firesaber | m4fspeed | 7,668 | 8,340 | 8,348 |
+| firesaber | m4fstack | 4,300 | 3,316 | 3,324 |
 | frodokem640aes | m4 | 31,984 | 62,480 | 83,104 |
 | frodokem640shake | m4 | 26,408 | 51,784 | 72,408 |
 | frodokem640shake | opt | 36,480 | 58,136 | 78,760 |
@@ -147,7 +151,8 @@
 | kyber768-90s | clean | 10,652 | 13,820 | 14,916 |
 | kyber768-90s | m4 | 3,432 | 3,504 | 3,520 |
 | lightsaber | clean | 9,320 | 9,424 | 10,168 |
-| lightsaber | m4f | 5,196 | 5,148 | 5,164 |
+| lightsaber | m4fspeed | 5,612 | 6,284 | 6,292 |
+| lightsaber | m4fstack | 3,276 | 3,052 | 3,060 |
 | ntruhps2048509 | clean | 25,420 | 20,532 | 18,884 |
 | ntruhps2048509 | m4f | 21,400 | 14,068 | 14,800 |
 | ntruhps2048677 | clean | 34,288 | 27,780 | 25,572 |
@@ -169,7 +174,8 @@
 | ntrulpr953 | clean | 13,456 | 13,736 | 15,592 |
 | ntrulpr953 | m4f | 25,164 | 29,628 | 34,596 |
 | saber | clean | 12,904 | 13,008 | 14,112 |
-| saber | m4f | 6,228 | 6,180 | 6,196 |
+| saber | m4fspeed | 6,644 | 7,316 | 7,324 |
+| saber | m4fstack | 3,788 | 3,180 | 3,188 |
 | sikep434 | m4 | 6,208 | 6,496 | 6,832 |
 | sikep434 | opt | 6,744 | 7,032 | 7,312 |
 | sikep503 | m4 | 6,976 | 7,328 | 7,704 |
@@ -253,7 +259,8 @@
 | bikel1 | m4f | 0.7% | 15.1% | 1.0% |
 | bikel1 | opt | 0.3% | 10.3% | 0.4% |
 | firesaber | clean | 19.1% | 18.9% | 14.1% |
-| firesaber | m4f | 70.9% | 72.1% | 63.1% |
+| firesaber | m4fspeed | 71.4% | 72.7% | 64.0% |
+| firesaber | m4fstack | 53.9% | 54.2% | 46.2% |
 | frodokem640aes | m4 | 74.3% | 77.8% | 77.1% |
 | frodokem640shake | m4 | 84.7% | 86.3% | 86.0% |
 | frodokem640shake | opt | 74.3% | 65.4% | 64.9% |
@@ -271,7 +278,8 @@
 | kyber768-90s | clean | 71.5% | 67.4% | 59.5% |
 | kyber768-90s | m4 | 66.6% | 69.7% | 61.7% |
 | lightsaber | clean | 24.9% | 23.8% | 15.5% |
-| lightsaber | m4f | 71.7% | 73.4% | 60.8% |
+| lightsaber | m4fspeed | 72.3% | 74.0% | 61.9% |
+| lightsaber | m4fstack | 60.3% | 60.2% | 48.2% |
 | ntruhps2048509 | clean | 0.0% | 2.4% | 4.1% |
 | ntruhps2048509 | m4f | 0.0% | 4.5% | 18.9% |
 | ntruhps2048677 | clean | 0.0% | 2.1% | 3.2% |
@@ -293,7 +301,8 @@
 | ntrulpr953 | clean | 6.5% | 6.9% | 4.3% |
 | ntrulpr953 | m4f | 44.3% | 59.1% | 50.9% |
 | saber | clean | 21.9% | 21.4% | 15.1% |
-| saber | m4f | 71.9% | 73.4% | 62.9% |
+| saber | m4fspeed | 72.6% | 74.0% | 63.9% |
+| saber | m4fstack | 57.2% | 57.4% | 47.6% |
 | sikep434 | m4 | 0.0% | 0.1% | 0.1% |
 | sikep434 | opt | 0.0% | 0.0% | 0.0% |
 | sikep503 | m4 | 0.0% | 0.1% | 0.1% |
@@ -377,7 +386,8 @@
 | bikel1 | m4f | 181,560 | 24 | 49 | 181,633 |
 | bikel1 | opt | 35,051 | 24 | 1 | 35,076 |
 | firesaber | clean | 10,220 | 0 | 0 | 10,220 |
-| firesaber | m4f | 9,544 | 0 | 0 | 9,544 |
+| firesaber | m4fspeed | 18,792 | 0 | 0 | 18,792 |
+| firesaber | m4fstack | 19,536 | 0 | 0 | 19,536 |
 | frodokem640aes | m4 | 8,568 | 0 | 0 | 8,568 |
 | frodokem640shake | m4 | 8,644 | 0 | 0 | 8,644 |
 | frodokem640shake | opt | 6,796 | 0 | 0 | 6,796 |
@@ -395,7 +405,8 @@
 | kyber768-90s | clean | 5,176 | 0 | 0 | 5,176 |
 | kyber768-90s | m4 | 10,796 | 0 | 0 | 10,796 |
 | lightsaber | clean | 10,368 | 0 | 0 | 10,368 |
-| lightsaber | m4f | 9,612 | 0 | 0 | 9,612 |
+| lightsaber | m4fspeed | 18,900 | 0 | 0 | 18,900 |
+| lightsaber | m4fstack | 19,712 | 0 | 0 | 19,712 |
 | ntruhps2048509 | clean | 64,644 | 0 | 0 | 64,644 |
 | ntruhps2048509 | m4f | 99,588 | 0 | 0 | 99,588 |
 | ntruhps2048677 | clean | 17,304 | 0 | 0 | 17,304 |
@@ -417,7 +428,8 @@
 | ntrulpr953 | clean | 8,488 | 0 | 0 | 8,488 |
 | ntrulpr953 | m4f | 132,444 | 0 | 0 | 132,444 |
 | saber | clean | 10,128 | 0 | 0 | 10,128 |
-| saber | m4f | 9,400 | 0 | 0 | 9,400 |
+| saber | m4fspeed | 18,708 | 0 | 0 | 18,708 |
+| saber | m4fstack | 19,428 | 0 | 0 | 19,428 |
 | sikep434 | m4 | 29,604 | 0 | 0 | 29,604 |
 | sikep434 | opt | 28,236 | 0 | 0 | 28,236 |
 | sikep503 | m4 | 31,580 | 0 | 0 | 31,580 |
