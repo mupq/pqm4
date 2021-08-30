@@ -154,4 +154,7 @@ skip_list = [
     {'scheme': 'falcon-1024', 'implementation': 'm4-ct', 'estmemory': 90112},
     {'scheme': 'falcon-512-tree', 'implementation': 'm4-ct', 'estmemory': 91136},
     {'scheme': 'falcon-512', 'implementation': 'm4-ct', 'estmemory': 47104},
+    {'scheme': 'rainbowI-circumzenithal', 'implementation': 'm4f', 'estmemory': 308224},
+    {'scheme': 'rainbowI-classic', 'implementation': 'm4f', 'estmemory': 308224},
+    {'scheme': 'rainbowI-compressed', 'implementation': 'm4f', 'estmemory': 308224},
 ]

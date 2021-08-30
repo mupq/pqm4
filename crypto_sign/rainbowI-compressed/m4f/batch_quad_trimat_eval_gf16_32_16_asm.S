@@ -1,0 +1,1 @@
+../../rainbowI-classic/m4f/batch_quad_trimat_eval_gf16_32_16_asm.S
