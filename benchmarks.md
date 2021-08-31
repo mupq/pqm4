@@ -35,17 +35,17 @@
 | ntruhrss701 (100 executions) | clean | AVG: 109,446,895 <br /> MIN: 109,446,874 <br /> MAX: 109,446,914 | AVG: 1,515,007 <br /> MIN: 1,515,004 <br /> MAX: 1,515,038 | AVG: 4,363,878 <br /> MIN: 4,363,870 <br /> MAX: 4,363,905 |
 | ntruhrss701 (100 executions) | m4f | AVG: 149,737,679 <br /> MIN: 149,737,647 <br /> MAX: 149,737,686 | AVG: 375,948 <br /> MIN: 375,947 <br /> MAX: 375,981 | AVG: 867,921 <br /> MIN: 867,920 <br /> MAX: 867,953 |
 | ntrulpr1013 (100 executions) | clean | AVG: 9,052,666 <br /> MIN: 9,052,649 <br /> MAX: 9,052,683 | AVG: 17,456,889 <br /> MIN: 17,456,887 <br /> MAX: 17,456,891 | AVG: 25,211,523 <br /> MIN: 25,211,503 <br /> MAX: 25,211,542 |
-| ntrulpr1013 (100 executions) | m4f | AVG: 1,353,453 <br /> MIN: 1,353,451 <br /> MAX: 1,353,486 | AVG: 2,093,688 <br /> MIN: 2,093,684 <br /> MAX: 2,093,718 | AVG: 2,242,595 <br /> MIN: 2,242,592 <br /> MAX: 2,242,626 |
+| ntrulpr1013 (100 executions) | m4f | AVG: 1,102,228 <br /> MIN: 1,102,226 <br /> MAX: 1,102,262 | AVG: 1,842,328 <br /> MIN: 1,842,325 <br /> MAX: 1,842,359 | AVG: 1,991,243 <br /> MIN: 1,991,240 <br /> MAX: 1,991,274 |
 | ntrulpr1277 (100 executions) | clean | AVG: 13,975,045 <br /> MIN: 13,975,018 <br /> MAX: 13,975,053 | AVG: 27,077,837 <br /> MIN: 27,077,816 <br /> MAX: 27,077,852 | AVG: 39,376,240 <br /> MIN: 39,376,226 <br /> MAX: 39,376,266 |
-| ntrulpr1277 (100 executions) | m4f | AVG: 1,736,066 <br /> MIN: 1,736,063 <br /> MAX: 1,736,103 | AVG: 2,656,632 <br /> MIN: 2,656,627 <br /> MAX: 2,656,663 | AVG: 2,845,761 <br /> MIN: 2,845,756 <br /> MAX: 2,845,790 |
+| ntrulpr1277 (100 executions) | m4f | AVG: 1,420,658 <br /> MIN: 1,420,657 <br /> MAX: 1,420,691 | AVG: 2,341,222 <br /> MIN: 2,341,217 <br /> MAX: 2,341,253 | AVG: 2,530,410 <br /> MIN: 2,530,405 <br /> MAX: 2,530,440 |
 | ntrulpr653 (100 executions) | clean | AVG: 4,262,181 <br /> MIN: 4,262,173 <br /> MAX: 4,262,207 | AVG: 8,152,021 <br /> MIN: 8,152,005 <br /> MAX: 8,152,040 | AVG: 11,603,045 <br /> MIN: 11,603,022 <br /> MAX: 11,603,057 |
-| ntrulpr653 (100 executions) | m4f | AVG: 841,905 <br /> MIN: 841,904 <br /> MAX: 841,938 | AVG: 1,321,915 <br /> MIN: 1,321,913 <br /> MAX: 1,321,947 | AVG: 1,396,984 <br /> MIN: 1,396,982 <br /> MAX: 1,397,016 |
+| ntrulpr653 (100 executions) | m4f | AVG: 677,981 <br /> MIN: 677,980 <br /> MAX: 678,013 | AVG: 1,157,987 <br /> MIN: 1,157,986 <br /> MAX: 1,158,021 | AVG: 1,233,059 <br /> MIN: 1,233,056 <br /> MAX: 1,233,091 |
 | ntrulpr761 (100 executions) | clean | AVG: 5,637,525 <br /> MIN: 5,637,514 <br /> MAX: 5,637,548 | AVG: 10,818,403 <br /> MIN: 10,818,382 <br /> MAX: 10,818,417 | AVG: 15,498,070 <br /> MIN: 15,498,040 <br /> MAX: 15,498,075 |
-| ntrulpr761 (100 executions) | m4f | AVG: 918,486 <br /> MIN: 918,486 <br /> MAX: 918,486 | AVG: 1,504,261 <br /> MIN: 1,504,259 <br /> MAX: 1,504,292 | AVG: 1,585,744 <br /> MIN: 1,585,742 <br /> MAX: 1,585,776 |
+| ntrulpr761 (100 executions) | m4f | AVG: 726,507 <br /> MIN: 726,506 <br /> MAX: 726,540 | AVG: 1,312,278 <br /> MIN: 1,312,276 <br /> MAX: 1,312,311 | AVG: 1,393,675 <br /> MIN: 1,393,672 <br /> MAX: 1,393,708 |
 | ntrulpr857 (100 executions) | clean | AVG: 7,011,303 <br /> MIN: 7,011,290 <br /> MAX: 7,011,325 | AVG: 13,497,170 <br /> MIN: 13,497,143 <br /> MAX: 13,497,178 | AVG: 19,427,758 <br /> MIN: 19,427,750 <br /> MAX: 19,427,787 |
-| ntrulpr857 (100 executions) | m4f | AVG: 1,136,406 <br /> MIN: 1,136,404 <br /> MAX: 1,136,438 | AVG: 1,763,113 <br /> MIN: 1,763,110 <br /> MAX: 1,763,144 | AVG: 1,883,407 <br /> MIN: 1,883,404 <br /> MAX: 1,883,438 |
+| ntrulpr857 (100 executions) | m4f | AVG: 921,143 <br /> MIN: 921,142 <br /> MAX: 921,176 | AVG: 1,547,852 <br /> MIN: 1,547,849 <br /> MAX: 1,547,883 | AVG: 1,668,045 <br /> MIN: 1,668,042 <br /> MAX: 1,668,077 |
 | ntrulpr953 (100 executions) | clean | AVG: 8,540,005 <br /> MIN: 8,539,989 <br /> MAX: 8,540,025 | AVG: 16,476,839 <br /> MIN: 16,476,806 <br /> MAX: 16,476,842 | AVG: 23,804,413 <br /> MIN: 23,804,398 <br /> MAX: 23,804,435 |
-| ntrulpr953 (100 executions) | m4f | AVG: 1,245,925 <br /> MIN: 1,245,923 <br /> MAX: 1,245,959 | AVG: 1,916,623 <br /> MIN: 1,916,621 <br /> MAX: 1,916,655 | AVG: 2,033,771 <br /> MIN: 2,033,766 <br /> MAX: 2,033,801 |
+| ntrulpr953 (100 executions) | m4f | AVG: 1,007,380 <br /> MIN: 1,007,379 <br /> MAX: 1,007,412 | AVG: 1,677,959 <br /> MIN: 1,677,956 <br /> MAX: 1,677,991 | AVG: 1,795,115 <br /> MIN: 1,795,112 <br /> MAX: 1,795,146 |
 | saber (100 executions) | clean | AVG: 2,136,066 <br /> MIN: 2,136,063 <br /> MAX: 2,136,099 | AVG: 2,808,330 <br /> MIN: 2,808,325 <br /> MAX: 2,808,360 | AVG: 3,279,876 <br /> MIN: 3,279,865 <br /> MAX: 3,280,057 |
 | saber (100 executions) | m4fspeed | AVG: 645,222 <br /> MIN: 645,221 <br /> MAX: 645,255 | AVG: 820,799 <br /> MIN: 820,798 <br /> MAX: 820,832 | AVG: 774,055 <br /> MIN: 774,054 <br /> MAX: 774,089 |
 | saber (100 executions) | m4fstack | AVG: 820,044 <br /> MIN: 820,043 <br /> MAX: 820,077 | AVG: 1,059,170 <br /> MIN: 1,059,168 <br /> MAX: 1,059,202 | AVG: 1,038,683 <br /> MIN: 1,038,681 <br /> MAX: 1,038,715 |
@@ -164,7 +164,7 @@
 | ntrulpr1013 | clean | 14,288 | 14,544 | 16,536 |
 | ntrulpr1013 | m4f | 25,716 | 30,420 | 35,692 |
 | ntrulpr1277 | clean | 17,984 | 18,104 | 20,624 |
-| ntrulpr1277 | m4f | 44,560 | 50,204 | 56,796 |
+| ntrulpr1277 | m4f | 44,452 | 50,204 | 56,796 |
 | ntrulpr653 | clean | 11,864 | 12,056 | 13,304 |
 | ntrulpr653 | m4f | 12,680 | 15,952 | 19,424 |
 | ntrulpr761 | clean | 10,768 | 11,064 | 12,552 |
@@ -289,17 +289,17 @@
 | ntruhrss701 | clean | 0.0% | 2.5% | 3.5% |
 | ntruhrss701 | m4f | 0.0% | 10.0% | 17.5% |
 | ntrulpr1013 | clean | 6.5% | 6.9% | 4.3% |
-| ntrulpr1013 | m4f | 43.4% | 57.4% | 48.9% |
+| ntrulpr1013 | m4f | 30.5% | 51.6% | 42.4% |
 | ntrulpr1277 | clean | 5.3% | 5.6% | 3.5% |
-| ntrulpr1277 | m4f | 42.5% | 56.5% | 48.1% |
+| ntrulpr1277 | m4f | 29.7% | 50.7% | 41.7% |
 | ntrulpr653 | clean | 9.0% | 9.8% | 6.2% |
-| ntrulpr653 | m4f | 45.6% | 60.1% | 51.8% |
+| ntrulpr653 | m4f | 32.4% | 54.5% | 45.4% |
 | ntrulpr761 | clean | 7.9% | 8.5% | 5.4% |
-| ntrulpr761 | m4f | 39.7% | 48.5% | 46.0% |
+| ntrulpr761 | m4f | 23.8% | 41.0% | 38.6% |
 | ntrulpr857 | clean | 7.1% | 7.6% | 4.8% |
-| ntrulpr857 | m4f | 43.9% | 58.1% | 49.7% |
+| ntrulpr857 | m4f | 30.8% | 52.3% | 43.2% |
 | ntrulpr953 | clean | 6.5% | 6.9% | 4.3% |
-| ntrulpr953 | m4f | 44.3% | 59.1% | 50.9% |
+| ntrulpr953 | m4f | 31.2% | 53.3% | 44.3% |
 | saber | clean | 21.9% | 21.4% | 15.1% |
 | saber | m4fspeed | 72.6% | 74.0% | 63.9% |
 | saber | m4fstack | 57.2% | 57.4% | 47.6% |
