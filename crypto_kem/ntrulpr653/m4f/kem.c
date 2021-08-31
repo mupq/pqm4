@@ -4,6 +4,7 @@
 #include "sha2.h"
 #ifdef LPR
 #include "aes.h"
+#include "aes-publicinputs.h"
 #endif
 
 #include "int8.h"
@@ -365,6 +366,13 @@ static void Expand(uint32 *L,const unsigned char *k)
   aes256_ctr((unsigned char *) L, 4*p, aes_nonce, &ctx);
 }
 
+static void Expand_publicinputs(uint32 *L,const unsigned char *k)
+{
+  aes256ctx_publicinputs ctx;
+  aes256_ctr_keyexp_publicinputs(&ctx, k);
+  aes256_ctr_publicinputs((unsigned char *) L, 4*p, aes_nonce, &ctx);
+}
+
 #endif
 
 /* ----- Seeds */
@@ -385,12 +393,12 @@ static void Seeds_random(unsigned char *s)
 #ifdef LPR
 
 /* G = Generator(k) */
-static void Generator(Fq *G,const unsigned char *k)
+static void Generator_publicinputs(Fq *G,const unsigned char *k)
 {
   uint32 L[p];
   int i;
 
-  Expand(L,k);
+  Expand_publicinputs(L,k);
   for (i = 0;i < p;++i) G[i] = uint32_mod_uint14(L[i],q)-q12;
 }
 
@@ -419,7 +427,7 @@ static void XKeyGen(unsigned char *S,Fq *A,small *a)
   Fq G[p];
 
   Seeds_random(S);
-  Generator(G,S);
+  Generator_publicinputs(G,S);
   KeyGen(A,a,G);
 }
 
@@ -429,7 +437,7 @@ static void XEncrypt(Fq *B,int8 *T,const int8 *r,const unsigned char *S,const Fq
   Fq G[p];
   small b[p];
 
-  Generator(G,S);
+  Generator_publicinputs(G,S);
   HashShort(b,r);
   Encrypt(B,T,r,G,A,b);
 }
