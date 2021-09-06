@@ -89,6 +89,10 @@
 | falcon-512-tree (100 executions) | m4-ct | AVG: 200,716,259 <br /> MIN: 117,772,104 <br /> MAX: 550,287,458 | AVG: 17,709,471 <br /> MIN: 17,507,110 <br /> MAX: 17,939,069 | AVG: 474,694 <br /> MIN: 464,292 <br /> MAX: 480,687 |
 | falcon-512-tree (100 executions) | opt-ct | AVG: 198,586,636 <br /> MIN: 117,772,108 <br /> MAX: 467,465,996 | AVG: 17,714,893 <br /> MIN: 17,510,506 <br /> MAX: 17,952,496 | AVG: 474,203 <br /> MIN: 464,503 <br /> MAX: 480,655 |
 | falcon-512-tree (100 executions) | opt-leaktime | AVG: 165,284,792 <br /> MIN: 102,064,281 <br /> MAX: 409,882,849 | AVG: 19,254,787 <br /> MIN: 18,900,271 <br /> MAX: 19,544,577 | AVG: 474,008 <br /> MIN: 464,495 <br /> MAX: 480,972 |
+| picnic3l1 (100 executions) | opt | AVG: 60,417 <br /> MIN: 60,417 <br /> MAX: 60,465 | AVG: 303,854,132 <br /> MIN: 303,833,000 <br /> MAX: 303,870,270 | AVG: 203,717,449 <br /> MIN: 203,659,962 <br /> MAX: 203,778,545 |
+| picnic3l1 (100 executions) | opt-mem | AVG: 60,419 <br /> MIN: 60,419 <br /> MAX: 60,466 | AVG: 310,337,761 <br /> MIN: 310,284,407 <br /> MAX: 310,381,893 | AVG: 204,428,518 <br /> MIN: 204,365,229 <br /> MAX: 204,474,589 |
+| picnicl1fs (100 executions) | opt | AVG: 97,504 <br /> MIN: 97,504 <br /> MAX: 97,504 | AVG: 290,644,617 <br /> MIN: 290,643,187 <br /> MAX: 290,645,503 | AVG: 127,240,102 <br /> MIN: 127,230,240 <br /> MAX: 127,250,497 |
+| picnicl1full (100 executions) | opt | AVG: 58,122 <br /> MIN: 58,122 <br /> MAX: 58,145 | AVG: 215,002,162 <br /> MIN: 215,001,045 <br /> MAX: 215,003,020 | AVG: 95,473,666 <br /> MIN: 95,458,092 <br /> MAX: 95,487,616 |
 | sphincs-haraka-128f-robust (3 executions) | clean | AVG: 105,846,270 <br /> MIN: 105,846,258 <br /> MAX: 105,846,293 | AVG: 2,685,388,480 <br /> MIN: 2,682,943,233 <br /> MAX: 2,689,929,636 | AVG: 172,472,494 <br /> MIN: 170,143,524 <br /> MAX: 174,335,672 |
 | sphincs-haraka-128f-simple (3 executions) | clean | AVG: 73,970,415 <br /> MIN: 73,970,405 <br /> MAX: 73,970,435 | AVG: 1,861,103,613 <br /> MIN: 1,860,043,188 <br /> MAX: 1,861,756,199 | AVG: 115,058,935 <br /> MIN: 113,100,792 <br /> MAX: 118,730,462 |
 | sphincs-haraka-128s-robust (3 executions) | clean | AVG: 6,739,168,653 <br /> MIN: 6,739,168,651 <br /> MAX: 6,739,168,658 | AVG: 53,499,410,785 <br /> MIN: 53,497,780,342 <br /> MAX: 53,500,226,027 | AVG: 66,075,544 <br /> MIN: 65,260,377 <br /> MAX: 67,705,852 |
@@ -216,6 +220,10 @@
 | falcon-512-tree | m4-ct | 1,480 | 2,776 | 388 |
 | falcon-512-tree | opt-ct | 1,480 | 2,776 | 388 |
 | falcon-512-tree | opt-leaktime | 1,464 | 2,792 | 388 |
+| picnic3l1 | opt | 800 | 32,244 | 32,236 |
+| picnic3l1 | opt-mem | 808 | 24,656 | 32,444 |
+| picnicl1fs | opt | 684 | 4,052 | 4,052 |
+| picnicl1full | opt | 800 | 4,224 | 3,528 |
 | sphincs-haraka-128f-robust | clean | 3,620 | 3,712 | 4,172 |
 | sphincs-haraka-128f-simple | clean | 3,612 | 3,676 | 4,164 |
 | sphincs-haraka-128s-robust | clean | 3,944 | 3,904 | 3,476 |
@@ -343,6 +351,10 @@
 | falcon-512-tree | m4-ct | 18.0% | 1.1% | 35.8% |
 | falcon-512-tree | opt-ct | 16.5% | 1.1% | 35.9% |
 | falcon-512-tree | opt-leaktime | 19.3% | 1.1% | 35.8% |
+| picnic3l1 | opt | 0.0% | 69.5% | 84.0% |
+| picnic3l1 | opt-mem | 0.0% | 71.0% | 85.5% |
+| picnicl1fs | opt | 0.0% | 28.3% | 29.7% |
+| picnicl1full | opt | 0.0% | 38.0% | 39.4% |
 | sphincs-haraka-128f-robust | clean | 0.0% | 0.0% | 0.0% |
 | sphincs-haraka-128f-simple | clean | 0.0% | 0.0% | 0.0% |
 | sphincs-haraka-128s-robust | clean | 0.0% | 0.0% | 0.0% |
@@ -470,6 +482,10 @@
 | falcon-512-tree | m4-ct | 81,005 | 0 | 27,648 | 108,653 |
 | falcon-512-tree | opt-ct | 81,005 | 0 | 27,648 | 108,653 |
 | falcon-512-tree | opt-leaktime | 74,201 | 0 | 27,648 | 101,849 |
+| picnic3l1 | opt | 80,392 | 1,092 | 13 | 81,497 |
+| picnic3l1 | opt-mem | 92,928 | 1,092 | 13 | 94,033 |
+| picnicl1fs | opt | 54,962 | 1,072 | 0 | 56,034 |
+| picnicl1full | opt | 104,956 | 1,072 | 0 | 106,028 |
 | sphincs-haraka-128f-robust | clean | 16,600 | 0 | 0 | 16,600 |
 | sphincs-haraka-128f-simple | clean | 16,448 | 0 | 0 | 16,448 |
 | sphincs-haraka-128s-robust | clean | 16,912 | 0 | 0 | 16,912 |
