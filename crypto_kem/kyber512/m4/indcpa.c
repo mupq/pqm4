@@ -57,7 +57,7 @@ static void matacc(poly* r, polyvec *b, unsigned char i, const unsigned char *se
         }
       }
 
-      if (val1 < KYBER_Q && ctr < KYBER_Q/4) {
+      if (val1 < KYBER_Q && ctr < KYBER_N/4) {
         c[k++] = (int16_t) val1;
         if (k == 4) {
           doublebasemul_asm_acc(&r->coeffs[4*ctr], &b->vec[j].coeffs[4*ctr], c, zetas[ctr]);
@@ -66,7 +66,7 @@ static void matacc(poly* r, polyvec *b, unsigned char i, const unsigned char *se
         }
       }
 
-      if (pos + 3 > buflen && ctr < KYBER_Q/4) {
+      if (pos + 3 > buflen && ctr < KYBER_N/4) {
         off = buflen % 3;
         for(l = 0; l < off; l++)
           buf[l] = buf[buflen - off + l];
