@@ -1,0 +1,42 @@
+
+# Makefile for building and testing on x64 use `make -f x64-Makefile`
+
+LIBPICNIC=libpicnic3-l1.a
+
+SOURCES=$(wildcard *.c)
+
+WARNINGS=-Wall -Wextra -Wvla -Werror -Wredundant-decls
+FULL_WARNINGS= $(WARNINGS) -Wconversion  -Wpedantic -Wmissing-prototypes
+
+#Debug: build with symbols and without optimizations
+#CFLAGS=-Og -g $(WARNINGS) -std=c99 -I.
+
+
+# Build with optimizations
+CFLAGS=-O3 $(WARNINGS) -std=c99 -I.
+
+# Build with optimizations and more warnings
+#CFLAGS=-O3 $(FULL_WARNINGS) -std=c99 -fvisibility=default -I.
+
+
+all: $(LIBPICNIC) test
+test: all example kats tree_test
+
+.c.o:
+	$(CC) -c $(CFLAGS) $< -o $@
+
+$(LIBPICNIC): $(SOURCES:.c=.o) $(SOURCES:.s=.o)
+	ar rcs $@ $^
+
+kats: all tests/kats_test.c
+	$(CC) $(CFLAGS) -DMASKED_IMPL_DETERMINISTIC -o kats.out tests/kats_test.c ${LIBPICNIC}
+
+tree_test: all tests/tree_test.c 
+	$(CC) $(CFLAGS) -D_GNU_SOURCE -o tree_test.out tests/tree_test.c $(LIBPICNIC)
+
+example: all tests/example.c 
+	$(CC) $(CFLAGS) -D_GNU_SOURCE -o example.out tests/example.c $(LIBPICNIC)
+
+
+clean:
+	rm -f $(wildcard *.o) $(wildcard sha3/*.o) $(LIBPICNIC) kats.out bench.out example.out 
