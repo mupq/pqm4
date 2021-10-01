@@ -157,4 +157,8 @@ skip_list = [
     {'scheme': 'rainbowI-circumzenithal', 'implementation': 'm4f', 'estmemory': 308224},
     {'scheme': 'rainbowI-classic', 'implementation': 'm4f', 'estmemory': 308224},
     {'scheme': 'rainbowI-compressed', 'implementation': 'm4f', 'estmemory': 308224},
+    {'scheme': 'picnicl1full', 'implementation': 'opt', 'estmemory': 40960},
+    {'scheme': 'picnicl1fs', 'implementation': 'opt', 'estmemory': 43008},
+    {'scheme': 'picnic3l1', 'implementation': 'opt-mem', 'estmemory': 51200},
+    {'scheme': 'picnic3l1', 'implementation': 'opt', 'estmemory': 106496},
 ]
