@@ -34,6 +34,9 @@ void poly_Rq_to_S3(poly *r, const poly *a);
 void poly_Rq_inv(poly *r, const poly *a);
 void poly_S3_inv(poly *r, const poly *a);
 
+extern void poly_R2_inv_jumpdivsteps(poly *r, const poly *a);
+extern void poly_S3_inv_jumpdivsteps(poly *r, const poly *a);
+
 void poly_Z3_to_Zq(poly *r);
 void poly_Z3_to_SignedZ3(poly *r);
 void poly_trinary_Zq_to_Z3(poly *r);

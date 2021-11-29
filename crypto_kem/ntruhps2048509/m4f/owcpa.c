@@ -76,7 +76,7 @@ void owcpa_keypair(unsigned char *pk,
 
     sample_fg(f, g, seed);
 
-    poly_S3_inv(invf_mod3, f);
+    poly_S3_inv_jumpdivsteps(invf_mod3, f);
     poly_S3_tobytes(sk, f);
     poly_S3_tobytes(sk + NTRU_PACK_TRINARY_BYTES, invf_mod3);
 
