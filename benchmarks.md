@@ -27,13 +27,13 @@
 | lightsaber (100 executions) | m4fspeed | AVG: 352,196 <br /> MIN: 352,196 <br /> MAX: 352,229 | AVG: 481,006 <br /> MIN: 481,005 <br /> MAX: 481,038 | AVG: 452,654 <br /> MIN: 452,653 <br /> MAX: 452,687 |
 | lightsaber (100 executions) | m4fstack | AVG: 422,434 <br /> MIN: 422,434 <br /> MAX: 422,467 | AVG: 591,556 <br /> MIN: 591,555 <br /> MAX: 591,588 | AVG: 581,073 <br /> MIN: 581,072 <br /> MAX: 581,106 |
 | ntruhps2048509 (100 executions) | clean | AVG: 54,823,343 <br /> MIN: 54,823,152 <br /> MAX: 54,829,202 | AVG: 1,067,060 <br /> MIN: 1,067,057 <br /> MAX: 1,067,094 | AVG: 2,447,633 <br /> MIN: 2,447,627 <br /> MAX: 2,447,663 |
-| ntruhps2048509 (100 executions) | m4f | AVG: 80,183,936 <br /> MIN: 80,183,840 <br /> MAX: 80,183,949 | AVG: 563,396 <br /> MIN: 563,395 <br /> MAX: 563,429 | AVG: 536,377 <br /> MIN: 536,376 <br /> MAX: 536,410 |
+| ntruhps2048509 (100 executions) | m4f | AVG: 2,861,243 <br /> MIN: 2,861,238 <br /> MAX: 2,861,274 | AVG: 563,397 <br /> MIN: 563,396 <br /> MAX: 563,429 | AVG: 536,377 <br /> MIN: 536,376 <br /> MAX: 536,410 |
 | ntruhps2048677 (100 executions) | clean | AVG: 100,624,357 <br /> MIN: 100,624,352 <br /> MAX: 100,624,361 | AVG: 1,802,130 <br /> MIN: 1,802,127 <br /> MAX: 1,802,161 | AVG: 4,306,200 <br /> MIN: 4,306,192 <br /> MAX: 4,306,227 |
-| ntruhps2048677 (100 executions) | m4f | AVG: 143,750,608 <br /> MIN: 143,750,584 <br /> MAX: 143,750,627 | AVG: 820,054 <br /> MIN: 820,053 <br /> MAX: 820,087 | AVG: 812,608 <br /> MIN: 812,607 <br /> MAX: 812,640 |
+| ntruhps2048677 (100 executions) | m4f | AVG: 4,625,197 <br /> MIN: 4,625,191 <br /> MAX: 4,625,225 | AVG: 820,052 <br /> MIN: 820,052 <br /> MAX: 820,052 | AVG: 812,613 <br /> MIN: 812,607 <br /> MAX: 812,641 |
 | ntruhps4096821 (100 executions) | clean | AVG: 151,720,967 <br /> MIN: 151,720,960 <br /> MAX: 151,721,001 | AVG: 2,356,823 <br /> MIN: 2,356,819 <br /> MAX: 2,356,853 | AVG: 5,693,678 <br /> MIN: 5,693,667 <br /> MAX: 5,693,701 |
-| ntruhps4096821 (100 executions) | m4f | AVG: 208,835,960 <br /> MIN: 208,835,935 <br /> MAX: 208,835,983 | AVG: 1,027,338 <br /> MIN: 1,027,337 <br /> MAX: 1,027,370 | AVG: 1,031,141 <br /> MIN: 1,031,141 <br /> MAX: 1,031,141 |
+| ntruhps4096821 (100 executions) | m4f | AVG: 6,116,170 <br /> MIN: 6,116,159 <br /> MAX: 6,116,195 | AVG: 1,027,339 <br /> MIN: 1,027,337 <br /> MAX: 1,027,371 | AVG: 1,031,143 <br /> MIN: 1,031,141 <br /> MAX: 1,031,176 |
 | ntruhrss701 (100 executions) | clean | AVG: 109,446,895 <br /> MIN: 109,446,874 <br /> MAX: 109,446,914 | AVG: 1,515,007 <br /> MIN: 1,515,004 <br /> MAX: 1,515,038 | AVG: 4,363,878 <br /> MIN: 4,363,870 <br /> MAX: 4,363,905 |
-| ntruhrss701 (100 executions) | m4f | AVG: 149,737,679 <br /> MIN: 149,737,647 <br /> MAX: 149,737,686 | AVG: 375,948 <br /> MIN: 375,947 <br /> MAX: 375,981 | AVG: 867,921 <br /> MIN: 867,920 <br /> MAX: 867,953 |
+| ntruhrss701 (100 executions) | m4f | AVG: 4,233,603 <br /> MIN: 4,233,595 <br /> MAX: 4,233,630 | AVG: 375,948 <br /> MIN: 375,947 <br /> MAX: 375,981 | AVG: 867,921 <br /> MIN: 867,920 <br /> MAX: 867,954 |
 | ntrulpr1013 (100 executions) | clean | AVG: 9,052,666 <br /> MIN: 9,052,649 <br /> MAX: 9,052,683 | AVG: 17,456,889 <br /> MIN: 17,456,887 <br /> MAX: 17,456,891 | AVG: 25,211,523 <br /> MIN: 25,211,503 <br /> MAX: 25,211,542 |
 | ntrulpr1013 (100 executions) | m4f | AVG: 1,102,228 <br /> MIN: 1,102,226 <br /> MAX: 1,102,262 | AVG: 1,842,328 <br /> MIN: 1,842,325 <br /> MAX: 1,842,359 | AVG: 1,991,243 <br /> MIN: 1,991,240 <br /> MAX: 1,991,274 |
 | ntrulpr1277 (100 executions) | clean | AVG: 13,975,045 <br /> MIN: 13,975,018 <br /> MAX: 13,975,053 | AVG: 27,077,837 <br /> MIN: 27,077,816 <br /> MAX: 27,077,852 | AVG: 39,376,240 <br /> MIN: 39,376,226 <br /> MAX: 39,376,266 |
@@ -158,13 +158,13 @@
 | lightsaber | m4fspeed | 5,612 | 6,284 | 6,292 |
 | lightsaber | m4fstack | 3,276 | 3,052 | 3,060 |
 | ntruhps2048509 | clean | 25,420 | 20,532 | 18,884 |
-| ntruhps2048509 | m4f | 21,400 | 14,068 | 14,800 |
+| ntruhps2048509 | m4f | 21,344 | 14,068 | 14,800 |
 | ntruhps2048677 | clean | 34,288 | 27,780 | 25,572 |
-| ntruhps2048677 | m4f | 28,504 | 19,980 | 19,728 |
+| ntruhps2048677 | m4f | 28,456 | 19,980 | 19,728 |
 | ntruhps4096821 | clean | 40,984 | 33,060 | 30,460 |
-| ntruhps4096821 | m4f | 34,504 | 23,140 | 23,952 |
+| ntruhps4096821 | m4f | 34,448 | 23,140 | 23,952 |
 | ntruhrss701 | clean | 32,908 | 26,164 | 25,972 |
-| ntruhrss701 | m4f | 27,560 | 18,324 | 20,560 |
+| ntruhrss701 | m4f | 27,512 | 18,324 | 20,560 |
 | ntrulpr1013 | clean | 14,288 | 14,544 | 16,536 |
 | ntrulpr1013 | m4f | 25,716 | 30,420 | 35,692 |
 | ntrulpr1277 | clean | 17,984 | 18,104 | 20,624 |
@@ -420,13 +420,13 @@
 | lightsaber | m4fspeed | 18,900 | 0 | 0 | 18,900 |
 | lightsaber | m4fstack | 19,712 | 0 | 0 | 19,712 |
 | ntruhps2048509 | clean | 64,644 | 0 | 0 | 64,644 |
-| ntruhps2048509 | m4f | 99,588 | 0 | 0 | 99,588 |
+| ntruhps2048509 | m4f | 191,656 | 0 | 0 | 191,656 |
 | ntruhps2048677 | clean | 17,304 | 0 | 0 | 17,304 |
-| ntruhps2048677 | m4f | 149,988 | 0 | 0 | 149,988 |
+| ntruhps2048677 | m4f | 288,328 | 0 | 0 | 288,328 |
 | ntruhps4096821 | clean | 17,064 | 0 | 0 | 17,064 |
-| ntruhps4096821 | m4f | 171,308 | 0 | 0 | 171,308 |
+| ntruhps4096821 | m4f | 363,476 | 0 | 0 | 363,476 |
 | ntruhrss701 | clean | 16,724 | 0 | 0 | 16,724 |
-| ntruhrss701 | m4f | 160,244 | 0 | 0 | 160,244 |
+| ntruhrss701 | m4f | 278,060 | 0 | 0 | 278,060 |
 | ntrulpr1013 | clean | 8,536 | 0 | 0 | 8,536 |
 | ntrulpr1013 | m4f | 36,396 | 0 | 0 | 36,396 |
 | ntrulpr1277 | clean | 7,928 | 0 | 0 | 7,928 |
