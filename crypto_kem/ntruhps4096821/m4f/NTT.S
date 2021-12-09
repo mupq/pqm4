@@ -1,753 +1,409 @@
 
+#include "macros.i"
+#include "butterflies.i"
+
 .syntax unified
 .cpu cortex-m4
 
-.macro montgomery_mul a, b, lower, upper, tmp, M_inv, M
-    smull.w \lower, \upper, \a, \b
-    mul.w \tmp, \lower, \M_inv
-    smlal.w \lower, \upper, \tmp, \M
-.endm
-
-.macro add_sub a0, b0, a1, b1, a2, b2, a3, b3
-    add \a0, \b0
-    add \a1, \b1
-    add \a2, \b2
-    add \a3, \b3
-    sub.w \b0, \a0, \b0, lsl #1
-    sub.w \b1, \a1, \b1, lsl #1
-    sub.w \b2, \a2, \b2, lsl #1
-    sub.w \b3, \a3, \b3, lsl #1
-.endm
-
-.align 8
-.global __asm_forward_NTT_6layers
-.type __asm_forward_NTT_6layers, %function
-__asm_forward_NTT_6layers:
+.align 2
+.global __asm_3x2block_ntt
+.type __asm_3x2block_ntt, %function
+__asm_3x2block_ntt:
     push.w {r4-r12, lr}
+    vpush.w {s16-s22}
 
-    src                          .req r0
-    M                            .req r1
-    Mprime                       .req r2
-    t_a0                         .req r3
-    t_a24                        .req r4
-    t_a48                        .req r5
-    t_a72                        .req r6
-    t_a96                        .req r7
-    t_a120                       .req r8
-    t_a144                       .req r9
-    t_a168                       .req r10
-    temp                         .req r11
-    lower                        .req r12
-    ctemp                        .req r14
+    .equ width, 4
+    .equ base, 3
 
-    s_root_table                 .req s15
-    s_counter                    .req s14
-    s_origin_src                 .req s13
-    s_outer_counter              .req s12
+    ldm.w r1!, {r10-r11}
+    vldm.w r1, {s4-s21}
 
-    vmov.w s_root_table, r3
+#ifdef LOOP
+    add.w r12, r0, #3*width
+    vmov.w s2, r12
+    _3x2_light:
+#else
+.rept 3
+#endif
 
-    add.w temp, src, #6912
-    vmov.w s_outer_counter, temp
+#ifdef LOOP
+    add.w r14, r0, #432*width
+    vmov.w s3, r14
+    _3x2_light_inner:
+#else
+.rept 16
+#endif
 
-    forward_nine_6_5_4_loop:
+    ldr.w r4, [r0, #0*base*width]
+    ldr.w r5, [r0, #1*base*width]
+    ldr.w r6, [r0, #2*base*width]
+    ldr.w r7, [r0, #(432+0*base)*width]
+    ldr.w r8, [r0, #(432+1*base)*width]
+    ldr.w r9, [r0, #(432+2*base)*width]
+    add_sub2 r4, r7, r5, r8
+    add_sub1 r6, r9
+    _3_ntt r4, r5, r6, r10, r11, r2, r3, r1, r14
+    _3_ntt r7, r8, r9, r10, r11, r2, r3, r1, r14
+    str.w r5, [r0, #1*base*width]
+    str.w r6, [r0, #2*base*width]
+    str.w r7, [r0, #(432+0*base)*width]
+    str.w r8, [r0, #(432+1*base)*width]
+    str.w r9, [r0, #(432+2*base)*width]
+    str.w r4, [r0], #9*width
 
-    vmov.w temp, s_root_table
-    vldm.w temp!, {s0-s6}
-    vmov.w s_root_table, temp
+    ldr.w r4, [r0, #0*base*width]
+    ldr.w r5, [r0, #1*base*width]
+    ldr.w r6, [r0, #2*base*width]
+    ldr.w r7, [r0, #(432+0*base)*width]
+    ldr.w r8, [r0, #(432+1*base)*width]
+    ldr.w r9, [r0, #(432+2*base)*width]
+    vmov.w r1, s8
+    montgomery_mul_32 r5, r1, r2, r3, r12, r14
+    montgomery_mul_32 r8, r1, r2, r3, r12, r14
+    vmov.w r1, s9
+    montgomery_mul_32 r6, r1, r2, r3, r12, r14
+    montgomery_mul_32 r9, r1, r2, r3, r12, r14
+    add_sub2 r4, r7, r5, r8
+    add_sub1 r6, r9
+    _3_ntt r4, r5, r6, r10, r11, r2, r3, r1, r14
+    _3_ntt r7, r8, r9, r10, r11, r2, r3, r1, r14
+    str.w r5, [r0, #1*base*width]
+    str.w r6, [r0, #2*base*width]
+    str.w r7, [r0, #(432+0*base)*width]
+    str.w r8, [r0, #(432+1*base)*width]
+    str.w r9, [r0, #(432+2*base)*width]
+    str.w r4, [r0], #9*width
 
-    add.w temp, src, #96
-    vmov.w s_counter, temp
+    ldr.w r4, [r0, #0*base*width]
+    ldr.w r5, [r0, #1*base*width]
+    ldr.w r6, [r0, #2*base*width]
+    ldr.w r7, [r0, #(432+0*base)*width]
+    ldr.w r8, [r0, #(432+1*base)*width]
+    ldr.w r9, [r0, #(432+2*base)*width]
+    vmov.w r1, s11
+    montgomery_mul_32 r5, r1, r2, r3, r12, r14
+    montgomery_mul_32 r8, r1, r2, r3, r12, r14
+    vmov.w r1, s12
+    montgomery_mul_32 r6, r1, r2, r3, r12, r14
+    montgomery_mul_32 r9, r1, r2, r3, r12, r14
+    add_sub2 r4, r7, r5, r8
+    add_sub1 r6, r9
+    _3_ntt r4, r5, r6, r10, r11, r2, r3, r1, r14
+    _3_ntt r7, r8, r9, r10, r11, r2, r3, r1, r14
+    str.w r5, [r0, #1*base*width]
+    str.w r6, [r0, #2*base*width]
+    str.w r7, [r0, #(432+0*base)*width]
+    str.w r8, [r0, #(432+1*base)*width]
+    str.w r9, [r0, #(432+2*base)*width]
+    str.w r4, [r0], #9*width
 
-    forward_6_5_4_loop:
+#ifdef LOOP
+    vmov.w r14, s3
+    cmp.w r0, r14
+    bne.w _3x2_light_inner
+#else
+.endr
+#endif
 
-        ldr.w t_a0, [src, #8]
-        ldr.w t_a24, [src, #104]
-        ldr.w t_a48, [src, #200]
-        ldr.w t_a72, [src, #296]
-        ldr.w t_a96, [src, #392]
-        ldr.w t_a120, [src, #488]
-        ldr.w t_a144, [src, #584]
-        ldr.w t_a168, [src, #680]
+    sub.w r0, r0, #432*width
+    add.w r0, r0, #width
 
-        //level 6
-        vmov.w  ctemp, s0
-        montgomery_mul ctemp, t_a96, lower, t_a96, temp, Mprime, M
-        montgomery_mul ctemp, t_a120, lower, t_a120, temp, Mprime, M
-        montgomery_mul ctemp, t_a144, lower, t_a144, temp, Mprime, M
-        montgomery_mul ctemp, t_a168, lower, t_a168, temp, Mprime, M
-        add_sub t_a0, t_a96, t_a24, t_a120, t_a48, t_a144, t_a72, t_a168
+#ifdef LOOP
+    vmov.w r12, s2
+    cmp.w r0, r12
+    bne.w _3x2_light
+#else
+.endr
+#endif
 
-        //level 5
-        vmov.w ctemp, s1
-        montgomery_mul ctemp, t_a48, lower, t_a48, temp, Mprime, M
-        montgomery_mul ctemp, t_a72, lower, t_a72, temp, Mprime, M
-        vmov.w ctemp, s2
-        montgomery_mul ctemp, t_a144, lower, t_a144, temp, Mprime, M
-        montgomery_mul ctemp, t_a168, lower, t_a168, temp, Mprime, M
-        add_sub t_a0, t_a48, t_a24, t_a72, t_a96, t_a144, t_a120, t_a168
+    sub.w r0, r0, #3*width
+    add.w r0, r0, #864*width
 
-        //level 4
-        vmov.w ctemp, s3
-        montgomery_mul ctemp, t_a24, lower, t_a24, temp, Mprime, M
-        vmov.w ctemp, s4
-        montgomery_mul ctemp, t_a72, lower, t_a72, temp, Mprime, M
-        vmov.w ctemp, s5
-        montgomery_mul ctemp, t_a120, lower, t_a120, temp, Mprime, M
-        vmov.w ctemp, s6
-        montgomery_mul ctemp, t_a168, lower, t_a168, temp, Mprime, M
-        add_sub t_a0, t_a24, t_a48, t_a72, t_a96, t_a120, t_a144, t_a168
+#ifdef LOOP
+    add.w r12, r0, #3*width
+    vmov.w s2, r12
+    _3x2:
+#else
+.rept 3
+#endif
 
-        str.w t_a24, [src, #104]
-        str.w t_a48, [src, #200]
-        str.w t_a72, [src, #296]
-        str.w t_a96, [src, #392]
-        str.w t_a120, [src, #488]
-        str.w t_a144, [src, #584]
-        str.w t_a168, [src, #680]
-        str.w t_a0, [src, #8]
+#ifdef LOOP
+    add.w r14, r0, #432*width
+    vmov.w s3, r14
+    _3x2_inner:
+#else
+.rept 16
+#endif
 
-        ldr.w t_a0, [src, #4]
-        ldr.w t_a24, [src, #100]
-        ldr.w t_a48, [src, #196]
-        ldr.w t_a72, [src, #292]
-        ldr.w t_a96, [src, #388]
-        ldr.w t_a120, [src, #484]
-        ldr.w t_a144, [src, #580]
-        ldr.w t_a168, [src, #676]
+    ldr.w r4, [r0, #0*base*width]
+    ldr.w r5, [r0, #1*base*width]
+    ldr.w r6, [r0, #2*base*width]
+    ldr.w r7, [r0, #(432+0*base)*width]
+    ldr.w r8, [r0, #(432+1*base)*width]
+    ldr.w r9, [r0, #(432+2*base)*width]
+    vmov.w r1, s13
+    montgomery_mul_32 r7, r1, r2, r3, r12, r14
+    vmov.w r1, s14
+    montgomery_mul_32 r8, r1, r2, r3, r12, r14
+    vmov.w r1, s15
+    montgomery_mul_32 r9, r1, r2, r3, r12, r14
+    add_sub2 r4, r7, r5, r8
+    add_sub1 r6, r9
+    _3_ntt r4, r5, r6, r10, r11, r2, r3, r1, r14
+    _3_ntt r7, r8, r9, r10, r11, r2, r3, r1, r14
+    str.w r5, [r0, #1*base*width]
+    str.w r6, [r0, #2*base*width]
+    str.w r7, [r0, #(432+0*base)*width]
+    str.w r8, [r0, #(432+1*base)*width]
+    str.w r9, [r0, #(432+2*base)*width]
+    str.w r4, [r0], #9*width
 
-        //level 6
-        vmov.w  ctemp, s0
-        montgomery_mul ctemp, t_a96, lower, t_a96, temp, Mprime, M
-        montgomery_mul ctemp, t_a120, lower, t_a120, temp, Mprime, M
-        montgomery_mul ctemp, t_a144, lower, t_a144, temp, Mprime, M
-        montgomery_mul ctemp, t_a168, lower, t_a168, temp, Mprime, M
-        add_sub t_a0, t_a96, t_a24, t_a120, t_a48, t_a144, t_a72, t_a168
+    ldr.w r4, [r0, #0*base*width]
+    ldr.w r5, [r0, #1*base*width]
+    ldr.w r6, [r0, #2*base*width]
+    ldr.w r7, [r0, #(432+0*base)*width]
+    ldr.w r8, [r0, #(432+1*base)*width]
+    ldr.w r9, [r0, #(432+2*base)*width]
+    vmov.w r1, s8
+    montgomery_mul_32 r5, r1, r2, r3, r12, r14
+    vmov.w r1, s9
+    montgomery_mul_32 r6, r1, r2, r3, r12, r14
+    vmov.w r1, s16
+    montgomery_mul_32 r7, r1, r2, r3, r12, r14
+    vmov.w r1, s17
+    montgomery_mul_32 r8, r1, r2, r3, r12, r14
+    vmov.w r1, s18
+    montgomery_mul_32 r9, r1, r2, r3, r12, r14
+    add_sub2 r4, r7, r5, r8
+    add_sub1 r6, r9
+    _3_ntt r4, r5, r6, r10, r11, r2, r3, r1, r14
+    _3_ntt r7, r8, r9, r10, r11, r2, r3, r1, r14
+    str.w r5, [r0, #1*base*width]
+    str.w r6, [r0, #2*base*width]
+    str.w r7, [r0, #(432+0*base)*width]
+    str.w r8, [r0, #(432+1*base)*width]
+    str.w r9, [r0, #(432+2*base)*width]
+    str.w r4, [r0], #9*width
 
-        //level 5
-        vmov.w ctemp, s1
-        montgomery_mul ctemp, t_a48, lower, t_a48, temp, Mprime, M
-        montgomery_mul ctemp, t_a72, lower, t_a72, temp, Mprime, M
-        vmov.w ctemp, s2
-        montgomery_mul ctemp, t_a144, lower, t_a144, temp, Mprime, M
-        montgomery_mul ctemp, t_a168, lower, t_a168, temp, Mprime, M
-        add_sub t_a0, t_a48, t_a24, t_a72, t_a96, t_a144, t_a120, t_a168
+    ldr.w r4, [r0, #0*base*width]
+    ldr.w r5, [r0, #1*base*width]
+    ldr.w r6, [r0, #2*base*width]
+    ldr.w r7, [r0, #(432+0*base)*width]
+    ldr.w r8, [r0, #(432+1*base)*width]
+    ldr.w r9, [r0, #(432+2*base)*width]
+    vmov.w r1, s11
+    montgomery_mul_32 r5, r1, r2, r3, r12, r14
+    vmov.w r1, s12
+    montgomery_mul_32 r6, r1, r2, r3, r12, r14
+    vmov.w r1, s19
+    montgomery_mul_32 r7, r1, r2, r3, r12, r14
+    vmov.w r1, s20
+    montgomery_mul_32 r8, r1, r2, r3, r12, r14
+    vmov.w r1, s21
+    montgomery_mul_32 r9, r1, r2, r3, r12, r14
+    add_sub2 r4, r7, r5, r8
+    add_sub1 r6, r9
+    _3_ntt r4, r5, r6, r10, r11, r2, r3, r1, r14
+    _3_ntt r7, r8, r9, r10, r11, r2, r3, r1, r14
+    str.w r5, [r0, #1*base*width]
+    str.w r6, [r0, #2*base*width]
+    str.w r7, [r0, #(432+0*base)*width]
+    str.w r8, [r0, #(432+1*base)*width]
+    str.w r9, [r0, #(432+2*base)*width]
+    str.w r4, [r0], #9*width
 
-        //level 4
-        vmov.w ctemp, s3
-        montgomery_mul ctemp, t_a24, lower, t_a24, temp, Mprime, M
-        vmov.w ctemp, s4
-        montgomery_mul ctemp, t_a72, lower, t_a72, temp, Mprime, M
-        vmov.w ctemp, s5
-        montgomery_mul ctemp, t_a120, lower, t_a120, temp, Mprime, M
-        vmov.w ctemp, s6
-        montgomery_mul ctemp, t_a168, lower, t_a168, temp, Mprime, M
-        add_sub t_a0, t_a24, t_a48, t_a72, t_a96, t_a120, t_a144, t_a168
+#ifdef LOOP
+    vmov.w r14, s3
+    cmp.w r0, r14
+    bne.w _3x2_inner
+#else
+.endr
+#endif
 
-        str.w t_a24, [src, #100]
-        str.w t_a48, [src, #196]
-        str.w t_a72, [src, #292]
-        str.w t_a96, [src, #388]
-        str.w t_a120, [src, #484]
-        str.w t_a144, [src, #580]
-        str.w t_a168, [src, #676]
-        str.w t_a0, [src, #4]
+    sub.w r0, r0, #432*width
+    add.w r0, r0, #width
 
-        ldr.w t_a0, [src, #0]
-        ldr.w t_a24, [src, #96]
-        ldr.w t_a48, [src, #192]
-        ldr.w t_a72, [src, #288]
-        ldr.w t_a96, [src, #384]
-        ldr.w t_a120, [src, #480]
-        ldr.w t_a144, [src, #576]
-        ldr.w t_a168, [src, #672]
+#ifdef LOOP
+    vmov.w r12, s2
+    cmp.w r0, r12
+    bne.w _3x2
+#else
+.endr
+#endif
 
-        //level 6
-        vmov.w  ctemp, s0
-        montgomery_mul ctemp, t_a96, lower, t_a96, temp, Mprime, M
-        montgomery_mul ctemp, t_a120, lower, t_a120, temp, Mprime, M
-        montgomery_mul ctemp, t_a144, lower, t_a144, temp, Mprime, M
-        montgomery_mul ctemp, t_a168, lower, t_a168, temp, Mprime, M
-        add_sub t_a0, t_a96, t_a24, t_a120, t_a48, t_a144, t_a72, t_a168
-
-        //level 5
-        vmov.w ctemp, s1
-        montgomery_mul ctemp, t_a48, lower, t_a48, temp, Mprime, M
-        montgomery_mul ctemp, t_a72, lower, t_a72, temp, Mprime, M
-        vmov.w ctemp, s2
-        montgomery_mul ctemp, t_a144, lower, t_a144, temp, Mprime, M
-        montgomery_mul ctemp, t_a168, lower, t_a168, temp, Mprime, M
-        add_sub t_a0, t_a48, t_a24, t_a72, t_a96, t_a144, t_a120, t_a168
-
-        //level 4
-        vmov.w ctemp, s3
-        montgomery_mul ctemp, t_a24, lower, t_a24, temp, Mprime, M
-        vmov.w ctemp, s4
-        montgomery_mul ctemp, t_a72, lower, t_a72, temp, Mprime, M
-        vmov.w ctemp, s5
-        montgomery_mul ctemp, t_a120, lower, t_a120, temp, Mprime, M
-        vmov.w ctemp, s6
-        montgomery_mul ctemp, t_a168, lower, t_a168, temp, Mprime, M
-        add_sub t_a0, t_a24, t_a48, t_a72, t_a96, t_a120, t_a144, t_a168
-
-        str.w t_a24, [src, #96]
-        str.w t_a48, [src, #192]
-        str.w t_a72, [src, #288]
-        str.w t_a96, [src, #384]
-        str.w t_a120, [src, #480]
-        str.w t_a144, [src, #576]
-        str.w t_a168, [src, #672]
-        str.w t_a0, [src], #12
-
-        vmov.w temp, s_counter
-        cmp.w src, temp
-        bne.w forward_6_5_4_loop
-
-    add.w src, #672
-
-    vmov.w temp, s_outer_counter
-    cmp.w src, temp
-    bne.w forward_nine_6_5_4_loop
-
-    sub.w src, #6912
-
-    //3, 2, 1
-
-    src                          .req r0  @already defined
-    M                            .req r1  @already defined
-    Mprime                       .req r2  @already defined
-    t_a0                         .req r3
-    t_a3                         .req r4
-    t_a6                         .req r5
-    t_a9                         .req r6
-    t_a12                        .req r7
-    t_a15                        .req r8
-    t_a18                        .req r9
-    t_a21                        .req r10
-    temp                         .req r11 @already defined
-    lower                        .req r12 @already defined
-    ctemp                        .req r14 @already defined
-
-    s_root_table                 .req s15 @already defined
-    s_counter                    .req s14 @already defined
-    s_origin_src                 .req s13 @already defined
-
-
-    forward_3_2_1_loop:
-        vmov.w temp, s_root_table
-        vldm.w temp!, {s0-s6}
-        vmov.w s_root_table, temp
-
-        ldr t_a0, [src, #8]
-        ldr t_a3, [src, #20]
-        ldr t_a6, [src, #32]
-        ldr t_a9, [src, #44]
-        ldr.w t_a12, [src, #56]
-        ldr.w t_a15, [src, #68]
-        ldr.w t_a18, [src, #80]
-        ldr.w t_a21, [src, #92]
-
-        //level 3
-        vmov.w  ctemp, s0
-        montgomery_mul ctemp, t_a12, lower, t_a12, temp, Mprime, M
-        montgomery_mul ctemp, t_a15, lower, t_a15, temp, Mprime, M
-        montgomery_mul ctemp, t_a18, lower, t_a18, temp, Mprime, M
-        montgomery_mul ctemp, t_a21, lower, t_a21, temp, Mprime, M
-        add_sub t_a0, t_a12, t_a3, t_a15, t_a6, t_a18, t_a9, t_a21
-
-        //level 2
-        vmov.w  ctemp, s1
-        montgomery_mul ctemp, t_a6, lower, t_a6, temp, Mprime, M
-        montgomery_mul ctemp, t_a9, lower, t_a9, temp, Mprime, M
-        vmov.w ctemp, s2
-        montgomery_mul ctemp, t_a18, lower, t_a18, temp, Mprime, M
-        montgomery_mul ctemp, t_a21, lower, t_a21, temp, Mprime, M
-        add_sub t_a0, t_a6, t_a3, t_a9, t_a12, t_a18, t_a15, t_a21
-
-        //level 1
-        vmov.w ctemp, s3
-        montgomery_mul ctemp, t_a3, lower, t_a3, temp, Mprime, M
-        vmov.w ctemp, s4
-        montgomery_mul ctemp, t_a9, lower, t_a9, temp, Mprime, M
-        vmov.w ctemp, s5
-        montgomery_mul ctemp, t_a15, lower, t_a15, temp, Mprime, M
-        vmov.w ctemp, s6
-        montgomery_mul ctemp, t_a21, lower, t_a21, temp, Mprime, M
-        add_sub t_a0, t_a3, t_a6, t_a9, t_a12, t_a15, t_a18, t_a21
-
-
-        str.w t_a12, [src, #56]
-        str.w t_a15, [src, #68]
-        str.w t_a18, [src, #80]
-        str.w t_a21, [src, #92]
-        str t_a3, [src, #20]
-        str t_a6, [src, #32]
-        str t_a9, [src, #44]
-        str t_a0, [src, #8]
-
-        ldr t_a0, [src, #4]
-        ldr t_a3, [src, #16]
-        ldr t_a6, [src, #28]
-        ldr t_a9, [src, #40]
-        ldr.w t_a12, [src, #52]
-        ldr.w t_a15, [src, #64]
-        ldr.w t_a18, [src, #76]
-        ldr.w t_a21, [src, #88]
-
-        //level 3
-        vmov.w  ctemp, s0
-        montgomery_mul ctemp, t_a12, lower, t_a12, temp, Mprime, M
-        montgomery_mul ctemp, t_a15, lower, t_a15, temp, Mprime, M
-        montgomery_mul ctemp, t_a18, lower, t_a18, temp, Mprime, M
-        montgomery_mul ctemp, t_a21, lower, t_a21, temp, Mprime, M
-        add_sub t_a0, t_a12, t_a3, t_a15, t_a6, t_a18, t_a9, t_a21
-
-        //level 2
-        vmov.w  ctemp, s1
-        montgomery_mul ctemp, t_a6, lower, t_a6, temp, Mprime, M
-        montgomery_mul ctemp, t_a9, lower, t_a9, temp, Mprime, M
-        vmov.w ctemp, s2
-        montgomery_mul ctemp, t_a18, lower, t_a18, temp, Mprime, M
-        montgomery_mul ctemp, t_a21, lower, t_a21, temp, Mprime, M
-        add_sub t_a0, t_a6, t_a3, t_a9, t_a12, t_a18, t_a15, t_a21
-
-        //level 1
-        vmov.w ctemp, s3
-        montgomery_mul ctemp, t_a3, lower, t_a3, temp, Mprime, M
-        vmov.w ctemp, s4
-        montgomery_mul ctemp, t_a9, lower, t_a9, temp, Mprime, M
-        vmov.w ctemp, s5
-        montgomery_mul ctemp, t_a15, lower, t_a15, temp, Mprime, M
-        vmov.w ctemp, s6
-        montgomery_mul ctemp, t_a21, lower, t_a21, temp, Mprime, M
-        add_sub t_a0, t_a3, t_a6, t_a9, t_a12, t_a15, t_a18, t_a21
-
-
-        str.w t_a12, [src, #52]
-        str.w t_a15, [src, #64]
-        str.w t_a18, [src, #76]
-        str.w t_a21, [src, #88]
-        str t_a3, [src, #16]
-        str t_a6, [src, #28]
-        str t_a9, [src, #40]
-        str t_a0, [src, #4]
-
-        ldr t_a0, [src, #0]
-        ldr t_a3, [src, #12]
-        ldr t_a6, [src, #24]
-        ldr t_a9, [src, #36]
-        ldr.w t_a12, [src, #48]
-        ldr.w t_a15, [src, #60]
-        ldr.w t_a18, [src, #72]
-        ldr.w t_a21, [src, #84]
-
-        //level 3
-        vmov.w  ctemp, s0
-        montgomery_mul ctemp, t_a12, lower, t_a12, temp, Mprime, M
-        montgomery_mul ctemp, t_a15, lower, t_a15, temp, Mprime, M
-        montgomery_mul ctemp, t_a18, lower, t_a18, temp, Mprime, M
-        montgomery_mul ctemp, t_a21, lower, t_a21, temp, Mprime, M
-        add_sub t_a0, t_a12, t_a3, t_a15, t_a6, t_a18, t_a9, t_a21
-
-        //level 2
-        vmov.w  ctemp, s1
-        montgomery_mul ctemp, t_a6, lower, t_a6, temp, Mprime, M
-        montgomery_mul ctemp, t_a9, lower, t_a9, temp, Mprime, M
-        vmov.w ctemp, s2
-        montgomery_mul ctemp, t_a18, lower, t_a18, temp, Mprime, M
-        montgomery_mul ctemp, t_a21, lower, t_a21, temp, Mprime, M
-        add_sub t_a0, t_a6, t_a3, t_a9, t_a12, t_a18, t_a15, t_a21
-
-        //level 1
-        vmov.w ctemp, s3
-        montgomery_mul ctemp, t_a3, lower, t_a3, temp, Mprime, M
-        vmov.w ctemp, s4
-        montgomery_mul ctemp, t_a9, lower, t_a9, temp, Mprime, M
-        vmov.w ctemp, s5
-        montgomery_mul ctemp, t_a15, lower, t_a15, temp, Mprime, M
-        vmov.w ctemp, s6
-        montgomery_mul ctemp, t_a21, lower, t_a21, temp, Mprime, M
-        add_sub t_a0, t_a3, t_a6, t_a9, t_a12, t_a15, t_a18, t_a21
-
-
-        str.w t_a12, [src, #48]
-        str.w t_a15, [src, #60]
-        str.w t_a18, [src, #72]
-        str.w t_a21, [src, #84]
-        str.w t_a3, [src, #12]
-        str.w t_a6, [src, #24]
-        str.w t_a9, [src, #36]
-        str.w t_a0, [src], #96
-
-        vmov.w temp, s_outer_counter
-        cmp.w src, temp
-        bne.w forward_3_2_1_loop
-
+    vpop.w {s16-s22}
     pop.w {r4-r12, pc}
 
-.align 8
-.global __asm_inv_NTT_6layers
-.type __asm_inv_NTT_6layers, %function
-__asm_inv_NTT_6layers:
+.align 2
+.global __asm_ntt
+.type __asm_ntt, %function
+__asm_ntt:
     push.w {r4-r12, lr}
-    //1, 2, 3
+    vpush.w {s16-s31}
 
-    src                          .req r0  @already defined
-    M                            .req r1  @already defined
-    Mprime                       .req r2  @already defined
-    t_a0                         .req r3  @already defined
-    t_a3                         .req r4  @already defined
-    t_a6                         .req r5  @already defined
-    t_a9                         .req r6  @already defined
-    t_a12                        .req r7  @already defined
-    t_a15                        .req r8  @already defined
-    t_a18                        .req r9  @already defined
-    t_a21                        .req r10 @already defined
-    temp                         .req r11 @already defined
-    lower                        .req r12 @already defined
-    ctemp                        .req r14 @already defined
+    .equ width, 4
 
-    s_root_table                 .req s15 @already defined
-    s_counter                    .req s14 @already defined
-    s_origin_src                 .req s13 @already defined
+    add.w r1, r1, #3*width
+    vmov.w s1, r1
 
+    vmov.w r1, s1
+    vldm.w r1!, {s4-s18}
+    vmov.w s1, r1
 
-    vmov.w s_root_table, r3
+#ifdef LOOP
+    add.w r12, r0, #27*width
+    vmov.w s2, r12
+    _2_3_4_5_light:
+#else
+.rept 27
+#endif
 
-    add.w temp, src, #6912
-    vmov.w s_outer_counter, temp
+    ldrstr8 ldr.w, r0, r4, r5, r6, r7, r8, r9, r10, r11, #(1*27*width), #(3*27*width), #(5*27*width), #(7*27*width), #(9*27*width), #(11*27*width), #(13*27*width), #(15*27*width)
+    _3_layer_CT_light_32 r4, r5, r6, r7, r8, r9, r10, r11, s4, s5, s6, s7, s8, s9, s10, r1, r2, r3, r12, r14
+    vmov.w r1, s12
+    montgomery_mul_32 r5, r1, r2, r3, r12, r14
+    vmov.w r1, s13
+    montgomery_mul_32 r6, r1, r2, r3, r12, r14
+    vmov.w r1, s14
+    montgomery_mul_32 r7, r1, r2, r3, r12, r14
+    vmov.w r1, s15
+    montgomery_mul_32 r8, r1, r2, r3, r12, r14
+    vmov.w r1, s16
+    montgomery_mul_32 r9, r1, r2, r3, r12, r14
+    vmov.w r1, s17
+    montgomery_mul_32 r10, r1, r2, r3, r12, r14
+    vmov.w r1, s18
+    montgomery_mul_32 r11, r1, r2, r3, r12, r14
 
-    inv_1_2_3_loop:
-        vmov.w temp, s_root_table
-        vldm.w temp!, {s0-s6}
-        vmov.w s_root_table, temp
+    vmov.w s20, s21, r4, r5
+    vmov.w s22, s23, r6, r7
+    vmov.w s24, s25, r8, r9
+    vmov.w s26, s27, r10, r11
 
-        ldr t_a0, [src, #8]
-        ldr t_a3, [src, #20]
-        ldr t_a6, [src, #32]
-        ldr t_a9, [src, #44]
-        ldr.w t_a12, [src, #56]
-        ldr.w t_a15, [src, #68]
-        ldr.w t_a18, [src, #80]
-        ldr.w t_a21, [src, #92]
+    ldrstr8 ldr.w, r0, r4, r5, r6, r7, r8, r9, r10, r11, #(0*27*width), #(2*27*width), #(4*27*width), #(6*27*width), #(8*27*width), #(10*27*width), #(12*27*width), #(14*27*width)
+    _3_layer_CT_light_32 r4, r5, r6, r7, r8, r9, r10, r11, s4, s5, s6, s7, s8, s9, s10, r1, r2, r3, r12, r14
 
-        //level 1
-        add_sub t_a0, t_a3, t_a6, t_a9, t_a12, t_a15, t_a18, t_a21
-        vmov.w ctemp, s3
-        montgomery_mul ctemp, t_a3, lower, t_a3, temp, Mprime, M
-        vmov.w ctemp, s4
-        montgomery_mul ctemp, t_a9, lower, t_a9, temp, Mprime, M
-        vmov.w ctemp, s5
-        montgomery_mul ctemp, t_a15, lower, t_a15, temp, Mprime, M
-        vmov.w ctemp, s6
-        montgomery_mul ctemp, t_a21, lower, t_a21, temp, Mprime, M
+    vmov.w s28, s29, r4, r5
+    vmov.w s30, s31, r6, r7
 
-        //level 2
-        add_sub t_a0, t_a6, t_a3, t_a9, t_a12, t_a18, t_a15, t_a21
-        vmov.w  ctemp, s1
-        montgomery_mul ctemp, t_a6, lower, t_a6, temp, Mprime, M
-        montgomery_mul ctemp, t_a9, lower, t_a9, temp, Mprime, M
-        vmov.w ctemp, s2
-        montgomery_mul ctemp, t_a18, lower, t_a18, temp, Mprime, M
-        montgomery_mul ctemp, t_a21, lower, t_a21, temp, Mprime, M
+    vmov.w r4, r5, s24, s25
+    vmov.w r6, r7, s26, s27
 
-        //level 3
-        add_sub t_a0, t_a12, t_a3, t_a15, t_a6, t_a18, t_a9, t_a21
-        vmov.w  ctemp, s0
-        montgomery_mul ctemp, t_a12, lower, t_a12, temp, Mprime, M
-        montgomery_mul ctemp, t_a15, lower, t_a15, temp, Mprime, M
-        montgomery_mul ctemp, t_a18, lower, t_a18, temp, Mprime, M
-        montgomery_mul ctemp, t_a21, lower, t_a21, temp, Mprime, M
+    add_sub4 r8, r4, r9, r5, r10, r6, r11, r7
 
-        str.w t_a12, [src, #56]
-        str.w t_a15, [src, #68]
-        str.w t_a18, [src, #80]
-        str.w t_a21, [src, #92]
-        str t_a3, [src, #20]
-        str t_a6, [src, #32]
-        str t_a9, [src, #44]
-        str t_a0, [src, #8]
+    ldrstr8 str.w, r0, r8, r4, r9, r5, r10, r6, r11, r7, #(8*27*width), #(9*27*width), #(10*27*width), #(11*27*width), #(12*27*width), #(13*27*width), #(14*27*width), #(15*27*width)
 
-        ldr t_a0, [src, #4]
-        ldr t_a3, [src, #16]
-        ldr t_a6, [src, #28]
-        ldr t_a9, [src, #40]
-        ldr.w t_a12, [src, #52]
-        ldr.w t_a15, [src, #64]
-        ldr.w t_a18, [src, #76]
-        ldr.w t_a21, [src, #88]
+    vmov.w r4, r5, s20, s21
+    vmov.w r6, r7, s22, s23
+    vmov.w r8, r9, s28, s29
+    vmov.w r10, r11, s30, s31
 
-        //level 1
-        add_sub t_a0, t_a3, t_a6, t_a9, t_a12, t_a15, t_a18, t_a21
-        vmov.w ctemp, s3
-        montgomery_mul ctemp, t_a3, lower, t_a3, temp, Mprime, M
-        vmov.w ctemp, s4
-        montgomery_mul ctemp, t_a9, lower, t_a9, temp, Mprime, M
-        vmov.w ctemp, s5
-        montgomery_mul ctemp, t_a15, lower, t_a15, temp, Mprime, M
-        vmov.w ctemp, s6
-        montgomery_mul ctemp, t_a21, lower, t_a21, temp, Mprime, M
+    add_sub4 r8, r4, r9, r5, r10, r6, r11, r7
 
-        //level 2
-        add_sub t_a0, t_a6, t_a3, t_a9, t_a12, t_a18, t_a15, t_a21
-        vmov.w  ctemp, s1
-        montgomery_mul ctemp, t_a6, lower, t_a6, temp, Mprime, M
-        montgomery_mul ctemp, t_a9, lower, t_a9, temp, Mprime, M
-        vmov.w ctemp, s2
-        montgomery_mul ctemp, t_a18, lower, t_a18, temp, Mprime, M
-        montgomery_mul ctemp, t_a21, lower, t_a21, temp, Mprime, M
+    ldrstr8jump str.w, r0, r8, r4, r9, r5, r10, r6, r11, r7, #(1*27*width), #(2*27*width), #(3*27*width), #(4*27*width), #(5*27*width), #(6*27*width), #(7*27*width), #width
 
-        //level 3
-        add_sub t_a0, t_a12, t_a3, t_a15, t_a6, t_a18, t_a9, t_a21
-        vmov.w  ctemp, s0
-        montgomery_mul ctemp, t_a12, lower, t_a12, temp, Mprime, M
-        montgomery_mul ctemp, t_a15, lower, t_a15, temp, Mprime, M
-        montgomery_mul ctemp, t_a18, lower, t_a18, temp, Mprime, M
-        montgomery_mul ctemp, t_a21, lower, t_a21, temp, Mprime, M
+#ifdef LOOP
+    vmov.w r12, s2
+    cmp.w r0, r12
+    bne.w _2_3_4_5_light
+#else
+.endr
+#endif
 
-        str.w t_a12, [src, #52]
-        str.w t_a15, [src, #64]
-        str.w t_a18, [src, #76]
-        str.w t_a21, [src, #88]
-        str t_a3, [src, #16]
-        str t_a6, [src, #28]
-        str t_a9, [src, #40]
-        str t_a0, [src, #4]
+    add.w r0, r0, #405*width
 
-        ldr t_a0, [src, #0]
-        ldr t_a3, [src, #12]
-        ldr t_a6, [src, #24]
-        ldr t_a9, [src, #36]
-        ldr.w t_a12, [src, #48]
-        ldr.w t_a15, [src, #60]
-        ldr.w t_a18, [src, #72]
-        ldr.w t_a21, [src, #84]
+#ifdef LOOP
+    add.w r12, r0, #3*432*width
+    vmov.w s2, r12
+    _2_3_4_5:
+#else
+.rept 3
+#endif
 
-        //level 1
-        add_sub t_a0, t_a3, t_a6, t_a9, t_a12, t_a15, t_a18, t_a21
-        vmov.w ctemp, s3
-        montgomery_mul ctemp, t_a3, lower, t_a3, temp, Mprime, M
-        vmov.w ctemp, s4
-        montgomery_mul ctemp, t_a9, lower, t_a9, temp, Mprime, M
-        vmov.w ctemp, s5
-        montgomery_mul ctemp, t_a15, lower, t_a15, temp, Mprime, M
-        vmov.w ctemp, s6
-        montgomery_mul ctemp, t_a21, lower, t_a21, temp, Mprime, M
+    vmov.w r1, s1
+    vldm.w r1!, {s4-s18}
+    vmov.w s1, r1
 
-        //level 2
-        add_sub t_a0, t_a6, t_a3, t_a9, t_a12, t_a18, t_a15, t_a21
-        vmov.w  ctemp, s1
-        montgomery_mul ctemp, t_a6, lower, t_a6, temp, Mprime, M
-        montgomery_mul ctemp, t_a9, lower, t_a9, temp, Mprime, M
-        vmov.w ctemp, s2
-        montgomery_mul ctemp, t_a18, lower, t_a18, temp, Mprime, M
-        montgomery_mul ctemp, t_a21, lower, t_a21, temp, Mprime, M
+#ifdef LOOP
+    add.w r14, r0, #27*width
+    vmov.w s3, r14
+    _2_3_4_5_inner:
+#else
+.rept 27
+#endif
 
-        //level 3
-        add_sub t_a0, t_a12, t_a3, t_a15, t_a6, t_a18, t_a9, t_a21
-        vmov.w  ctemp, s0
-        montgomery_mul ctemp, t_a12, lower, t_a12, temp, Mprime, M
-        montgomery_mul ctemp, t_a15, lower, t_a15, temp, Mprime, M
-        montgomery_mul ctemp, t_a18, lower, t_a18, temp, Mprime, M
-        montgomery_mul ctemp, t_a21, lower, t_a21, temp, Mprime, M
+    ldrstr8 ldr.w, r0, r4, r5, r6, r7, r8, r9, r10, r11, #(1*27*width), #(3*27*width), #(5*27*width), #(7*27*width), #(9*27*width), #(11*27*width), #(13*27*width), #(15*27*width)
+    _3_layer_CT_32 r4, r5, r6, r7, r8, r9, r10, r11, s4, s5, s6, s7, s8, s9, s10, r1, r2, r3, r12, r14
+    vmov.w r1, s11
+    montgomery_mul_32 r4, r1, r2, r3, r12, r14
+    vmov.w r1, s12
+    montgomery_mul_32 r5, r1, r2, r3, r12, r14
+    vmov.w r1, s13
+    montgomery_mul_32 r6, r1, r2, r3, r12, r14
+    vmov.w r1, s14
+    montgomery_mul_32 r7, r1, r2, r3, r12, r14
+    vmov.w r1, s15
+    montgomery_mul_32 r8, r1, r2, r3, r12, r14
+    vmov.w r1, s16
+    montgomery_mul_32 r9, r1, r2, r3, r12, r14
+    vmov.w r1, s17
+    montgomery_mul_32 r10, r1, r2, r3, r12, r14
+    vmov.w r1, s18
+    montgomery_mul_32 r11, r1, r2, r3, r12, r14
 
-        str.w t_a12, [src, #48]
-        str.w t_a15, [src, #60]
-        str.w t_a18, [src, #72]
-        str.w t_a21, [src, #84]
-        str.w t_a3, [src, #12]
-        str.w t_a6, [src, #24]
-        str.w t_a9, [src, #36]
-        str.w t_a0, [src], #96
+    vmov.w s20, s21, r4, r5
+    vmov.w s22, s23, r6, r7
+    vmov.w s24, s25, r8, r9
+    vmov.w s26, s27, r10, r11
 
-        vmov.w temp, s_outer_counter
-        cmp.w src, temp
-        bne.w inv_1_2_3_loop
+    ldrstr8 ldr.w, r0, r4, r5, r6, r7, r8, r9, r10, r11, #(0*27*width), #(2*27*width), #(4*27*width), #(6*27*width), #(8*27*width), #(10*27*width), #(12*27*width), #(14*27*width)
+    _3_layer_CT_32 r4, r5, r6, r7, r8, r9, r10, r11, s4, s5, s6, s7, s8, s9, s10, r1, r2, r3, r12, r14
 
-        sub.w src, #6912
+    vmov.w s28, s29, r4, r5
+    vmov.w s30, s31, r6, r7
 
-    //4_5_6
+    vmov.w r4, r5, s24, s25
+    vmov.w r6, r7, s26, s27
 
-    src                          .req r0
-    M                            .req r1
-    Mprime                       .req r2
-    t_a0                         .req r3
-    t_a24                        .req r4
-    t_a48                        .req r5
-    t_a72                        .req r6
-    t_a96                        .req r7
-    t_a120                       .req r8
-    t_a144                       .req r9
-    t_a168                       .req r10
-    temp                         .req r11
-    lower                        .req r12
-    ctemp                        .req r14
+    add_sub4 r8, r4, r9, r5, r10, r6, r11, r7
 
-    s_root_table                 .req s15 @already defined
-    s_counter                    .req s14 @already defined
-    s_origin_src                 .req s13 @already defined
+    ldrstr8 str.w, r0, r8, r4, r9, r5, r10, r6, r11, r7, #(8*27*width), #(9*27*width), #(10*27*width), #(11*27*width), #(12*27*width), #(13*27*width), #(14*27*width), #(15*27*width)
 
-    nine_inv_4_5_6_loop:
+    vmov.w r4, r5, s20, s21
+    vmov.w r6, r7, s22, s23
+    vmov.w r8, r9, s28, s29
+    vmov.w r10, r11, s30, s31
 
-    vmov.w temp, s_root_table
-    vldm.w temp!, {s0-s6}
-    vmov.w s_root_table, temp
+    add_sub4 r8, r4, r9, r5, r10, r6, r11, r7
 
-    add.w temp, src, #96
-    vmov.w s_counter, temp
+    ldrstr8jump str.w, r0, r8, r4, r9, r5, r10, r6, r11, r7, #(1*27*width), #(2*27*width), #(3*27*width), #(4*27*width), #(5*27*width), #(6*27*width), #(7*27*width), #width
 
-    inv_4_5_6_loop:
+#ifdef LOOP
+    vmov.w r14, s3
+    cmp.w r0, r14
+    bne.w _2_3_4_5_inner
+#else
+.endr
+#endif
 
-        ldr.w t_a0, [src, #8]
-        ldr.w t_a24, [src, #104]
-        ldr.w t_a48, [src, #200]
-        ldr.w t_a72, [src, #296]
-        ldr.w t_a96, [src, #392]
-        ldr.w t_a120, [src, #488]
-        ldr.w t_a144, [src, #584]
-        ldr.w t_a168, [src, #680]
+    add.w r0, r0, #405*width
 
-        //level 4
-        add_sub t_a0, t_a24, t_a48, t_a72, t_a96, t_a120, t_a144, t_a168
-        vmov.w ctemp, s3
-        montgomery_mul ctemp, t_a24, lower, t_a24, temp, Mprime, M
-        vmov.w ctemp, s4
-        montgomery_mul ctemp, t_a72, lower, t_a72, temp, Mprime, M
-        vmov.w ctemp, s5
-        montgomery_mul ctemp, t_a120, lower, t_a120, temp, Mprime, M
-        vmov.w ctemp, s6
-        montgomery_mul ctemp, t_a168, lower, t_a168, temp, Mprime, M
+#ifdef LOOP
+    vmov.w r12, s2
+    cmp.w r0, r12
+    bne.w _2_3_4_5
+#else
+.endr
+#endif
 
-        //level 5
-        add_sub t_a0, t_a48, t_a24, t_a72, t_a96, t_a144, t_a120, t_a168
-        vmov.w ctemp, s1
-        montgomery_mul ctemp, t_a48, lower, t_a48, temp, Mprime, M
-        montgomery_mul ctemp, t_a72, lower, t_a72, temp, Mprime, M
-        vmov.w ctemp, s2
-        montgomery_mul ctemp, t_a144, lower, t_a144, temp, Mprime, M
-        montgomery_mul ctemp, t_a168, lower, t_a168, temp, Mprime, M
-
-        //level 6
-        add_sub t_a0, t_a96, t_a24, t_a120, t_a48, t_a144, t_a72, t_a168
-        vmov.w  ctemp, s0
-        montgomery_mul ctemp, t_a96, lower, t_a96, temp, Mprime, M
-        montgomery_mul ctemp, t_a120, lower, t_a120, temp, Mprime, M
-        montgomery_mul ctemp, t_a144, lower, t_a144, temp, Mprime, M
-        montgomery_mul ctemp, t_a168, lower, t_a168, temp, Mprime, M
-
-
-        str.w t_a24, [src, #104]
-        str.w t_a48, [src, #200]
-        str.w t_a72, [src, #296]
-        str.w t_a96, [src, #392]
-        str.w t_a120, [src, #488]
-        str.w t_a144, [src, #584]
-        str.w t_a168, [src, #680]
-        str.w t_a0, [src, #8]
-
-        ldr.w t_a0, [src, #4]
-        ldr.w t_a24, [src, #100]
-        ldr.w t_a48, [src, #196]
-        ldr.w t_a72, [src, #292]
-        ldr.w t_a96, [src, #388]
-        ldr.w t_a120, [src, #484]
-        ldr.w t_a144, [src, #580]
-        ldr.w t_a168, [src, #676]
-
-        //level 4
-        add_sub t_a0, t_a24, t_a48, t_a72, t_a96, t_a120, t_a144, t_a168
-        vmov.w ctemp, s3
-        montgomery_mul ctemp, t_a24, lower, t_a24, temp, Mprime, M
-        vmov.w ctemp, s4
-        montgomery_mul ctemp, t_a72, lower, t_a72, temp, Mprime, M
-        vmov.w ctemp, s5
-        montgomery_mul ctemp, t_a120, lower, t_a120, temp, Mprime, M
-        vmov.w ctemp, s6
-        montgomery_mul ctemp, t_a168, lower, t_a168, temp, Mprime, M
-
-        //level 5
-        add_sub t_a0, t_a48, t_a24, t_a72, t_a96, t_a144, t_a120, t_a168
-        vmov.w ctemp, s1
-        montgomery_mul ctemp, t_a48, lower, t_a48, temp, Mprime, M
-        montgomery_mul ctemp, t_a72, lower, t_a72, temp, Mprime, M
-        vmov.w ctemp, s2
-        montgomery_mul ctemp, t_a144, lower, t_a144, temp, Mprime, M
-        montgomery_mul ctemp, t_a168, lower, t_a168, temp, Mprime, M
-
-        //level 6
-        add_sub t_a0, t_a96, t_a24, t_a120, t_a48, t_a144, t_a72, t_a168
-        vmov.w  ctemp, s0
-        montgomery_mul ctemp, t_a96, lower, t_a96, temp, Mprime, M
-        montgomery_mul ctemp, t_a120, lower, t_a120, temp, Mprime, M
-        montgomery_mul ctemp, t_a144, lower, t_a144, temp, Mprime, M
-        montgomery_mul ctemp, t_a168, lower, t_a168, temp, Mprime, M
-
-
-        str.w t_a24, [src, #100]
-        str.w t_a48, [src, #196]
-        str.w t_a72, [src, #292]
-        str.w t_a96, [src, #388]
-        str.w t_a120, [src, #484]
-        str.w t_a144, [src, #580]
-        str.w t_a168, [src, #676]
-        str.w t_a0, [src, #4]
-
-        ldr.w t_a0, [src, #0]
-        ldr.w t_a24, [src, #96]
-        ldr.w t_a48, [src, #192]
-        ldr.w t_a72, [src, #288]
-        ldr.w t_a96, [src, #384]
-        ldr.w t_a120, [src, #480]
-        ldr.w t_a144, [src, #576]
-        ldr.w t_a168, [src, #672]
-
-        //level 4
-        add_sub t_a0, t_a24, t_a48, t_a72, t_a96, t_a120, t_a144, t_a168
-        vmov.w ctemp, s3
-        montgomery_mul ctemp, t_a24, lower, t_a24, temp, Mprime, M
-        vmov.w ctemp, s4
-        montgomery_mul ctemp, t_a72, lower, t_a72, temp, Mprime, M
-        vmov.w ctemp, s5
-        montgomery_mul ctemp, t_a120, lower, t_a120, temp, Mprime, M
-        vmov.w ctemp, s6
-        montgomery_mul ctemp, t_a168, lower, t_a168, temp, Mprime, M
-
-        //level 5
-        add_sub t_a0, t_a48, t_a24, t_a72, t_a96, t_a144, t_a120, t_a168
-        vmov.w ctemp, s1
-        montgomery_mul ctemp, t_a48, lower, t_a48, temp, Mprime, M
-        montgomery_mul ctemp, t_a72, lower, t_a72, temp, Mprime, M
-        vmov.w ctemp, s2
-        montgomery_mul ctemp, t_a144, lower, t_a144, temp, Mprime, M
-        montgomery_mul ctemp, t_a168, lower, t_a168, temp, Mprime, M
-
-        //level 6
-        add_sub t_a0, t_a96, t_a24, t_a120, t_a48, t_a144, t_a72, t_a168
-        vmov.w  ctemp, s0
-        montgomery_mul ctemp, t_a96, lower, t_a96, temp, Mprime, M
-        montgomery_mul ctemp, t_a120, lower, t_a120, temp, Mprime, M
-        montgomery_mul ctemp, t_a144, lower, t_a144, temp, Mprime, M
-        montgomery_mul ctemp, t_a168, lower, t_a168, temp, Mprime, M
-
-
-        str.w t_a24, [src, #96]
-        str.w t_a48, [src, #192]
-        str.w t_a72, [src, #288]
-        str.w t_a96, [src, #384]
-        str.w t_a120, [src, #480]
-        str.w t_a144, [src, #576]
-        str.w t_a168, [src, #672]
-        str.w t_a0, [src], #12
-
-        vmov.w temp, s_counter
-        cmp.w src, temp
-        bne.w inv_4_5_6_loop
-
-        add.w src, #672
-
-    vmov.w temp, s_outer_counter
-    cmp.w src, temp
-    bne.w nine_inv_4_5_6_loop
-
+    vpop.w {s16-s31}
     pop.w {r4-r12, pc}
+
+
+
+
+
+
+
+
 

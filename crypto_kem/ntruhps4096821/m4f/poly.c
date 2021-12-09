@@ -2,6 +2,9 @@
 #include "fips202.h"
 #include "verify.h"
 
+#include "NTT_params.h"
+#include "NTT.h"
+
 uint16_t mod3(uint16_t a) {
     uint16_t r;
     int16_t t, c;
@@ -53,9 +56,21 @@ void poly_Rq_mul(poly *r, const poly *a, const poly *b) {
   r->coeffs[NTRU_N - 1] = MODQ(rtmp[NTRU_N - 1]);
 }
 
-extern void mixed_radix_NTT_mul_864(uint16_t *res_coeffs, const uint16_t *small_coeffs, const uint16_t *big_coeffs);
-void poly_SignedZ3_Rq_mul(poly *r, const poly *a, const poly *b){
-    mixed_radix_NTT_mul_864(r->coeffs, a->coeffs, b->coeffs);
+void poly_SignedZ3_Rq_mul(poly *r, poly *a, poly *b){
+
+    int32_t poly1_NTT[ARRAY_N];
+    int32_t poly2_NTT[ARRAY_N];
+
+    for(int i = NTRU_N; i < POLY_N; i++){
+        b->coeffs[i] = a->coeffs[i] = 0;
+    }
+
+    NTT_forward(poly1_NTT, b->coeffs);
+    NTT_forward_small(poly2_NTT, a->coeffs);
+    NTT_mul(poly1_NTT, poly1_NTT, poly2_NTT);
+    NTT_inv(poly2_NTT, poly1_NTT);
+    NTT_final_map(r->coeffs, poly2_NTT);
+
 }
 
 void poly_Sq_mul(poly *r, const poly *a, const poly *b) {
@@ -66,7 +81,7 @@ void poly_Sq_mul(poly *r, const poly *a, const poly *b) {
     }
 }
 
-void poly_SignedZ3_Sq_mul(poly *r, const poly *a, const poly *b) {
+void poly_SignedZ3_Sq_mul(poly *r, poly *a, poly *b) {
     int i;
     poly_SignedZ3_Rq_mul(r, a, b);
     for (i = 0; i < NTRU_N; i++) {

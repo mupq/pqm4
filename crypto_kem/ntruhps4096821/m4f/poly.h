@@ -9,7 +9,7 @@
 uint16_t mod3(uint16_t a);
 
 typedef struct {
-    uint16_t coeffs[NTRU_N];
+    uint16_t coeffs[POLY_N];
 } poly;
 
 
@@ -23,9 +23,9 @@ void poly_S3_tobytes(unsigned char msg[NTRU_PACK_TRINARY_BYTES], const poly *a);
 void poly_S3_frombytes(poly *r, const unsigned char msg[NTRU_PACK_TRINARY_BYTES]);
 
 void poly_Sq_mul(poly *r, const poly *a, const poly *b);
-void poly_SignedZ3_Sq_mul(poly *r, const poly *a, const poly *b);
+void poly_SignedZ3_Sq_mul(poly *r, poly *a, poly *b);
 void poly_Rq_mul(poly *r, const poly *a, const poly *b);
-void poly_SignedZ3_Rq_mul(poly *r, const poly *a, const poly *b);
+void poly_SignedZ3_Rq_mul(poly *r, poly *a, poly *b);
 void poly_Rq_mul_x_minus_1(poly *r, const poly *a);
 void poly_S3_mul(poly *r, const poly *a, const poly *b);
 void poly_lift(poly *r, const poly *a);

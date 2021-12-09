@@ -5,6 +5,8 @@
 #define NTRU_N 821
 #define NTRU_LOGQ 12
 
+#define POLY_N 864
+
 /* Do not modify below this line */
 
 #define NTRU_Q (1 << NTRU_LOGQ)
