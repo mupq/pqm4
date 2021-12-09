@@ -2,6 +2,9 @@
 #include "fips202.h"
 #include "verify.h"
 
+#include "NTT_params.h"
+#include "NTT.h"
+
 uint16_t mod3(uint16_t a) {
     uint16_t r;
     int16_t t, c;
@@ -53,9 +56,17 @@ void poly_Rq_mul(poly *r, const poly *a, const poly *b) {
   r->coeffs[NTRU_N - 1] = MODQ(rtmp[NTRU_N - 1]);
 }
 
-extern void mul_509(uint16_t *res_coeffs, const uint16_t *small_coeffs, const uint16_t *big_coeffs);
 void poly_SignedZ3_Rq_mul(poly *r, const poly *a, const poly *b){
-    mul_509(r->coeffs, a->coeffs, b->coeffs);
+
+    int32_t poly1_NTT[ARRAY_N];
+    int32_t poly2_NTT[ARRAY_N];
+
+    NTT_forward(poly1_NTT, b->coeffs);
+    NTT_forward_small(poly2_NTT, a->coeffs);
+    NTT_mul(poly1_NTT, poly1_NTT, poly2_NTT);
+    NTT_inv(poly1_NTT);
+    NTT_final_map(r->coeffs, poly1_NTT);
+
 }
 
 void poly_Sq_mul(poly *r, const poly *a, const poly *b) {
