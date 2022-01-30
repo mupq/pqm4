@@ -12,17 +12,23 @@
 | frodokem640shake (100 executions) | opt | AVG: 90,654,791 <br /> MIN: 90,654,775 <br /> MAX: 90,654,814 | AVG: 104,138,444 <br /> MIN: 104,138,419 <br /> MAX: 104,138,534 | AVG: 103,834,288 <br /> MIN: 103,834,251 <br /> MAX: 103,834,338 |
 | hqc-rmrs-128 (100 executions) | clean | AVG: 2,967,262 <br /> MIN: 2,924,920 <br /> MAX: 3,153,007 | AVG: 5,415,022 <br /> MIN: 5,325,331 <br /> MAX: 5,590,378 | AVG: 7,845,462 <br /> MIN: 7,713,583 <br /> MAX: 8,205,411 |
 | kyber1024 (100 executions) | clean | AVG: 1,637,602 <br /> MIN: 1,635,186 <br /> MAX: 1,649,476 | AVG: 2,010,657 <br /> MIN: 2,008,239 <br /> MAX: 2,022,536 | AVG: 2,148,861 <br /> MIN: 2,146,442 <br /> MAX: 2,160,739 |
-| kyber1024 (100 executions) | m4 | AVG: 1,190,374 <br /> MIN: 1,185,257 <br /> MAX: 1,212,514 | AVG: 1,373,614 <br /> MIN: 1,368,598 <br /> MAX: 1,395,660 | AVG: 1,295,290 <br /> MIN: 1,290,241 <br /> MAX: 1,317,336 |
+| kyber1024 (100 executions) | m4fspeed | AVG: 1,146,506 <br /> MIN: 1,144,173 <br /> MAX: 1,170,735 | AVG: 1,334,375 <br /> MIN: 1,332,046 <br /> MAX: 1,358,608 | AVG: 1,237,498 <br /> MIN: 1,235,169 <br /> MAX: 1,261,731 |
+| kyber1024 (100 executions) | m4fstack | AVG: 1,154,566 <br /> MIN: 1,152,611 <br /> MAX: 1,166,824 | AVG: 1,346,343 <br /> MIN: 1,344,384 <br /> MAX: 1,358,597 | AVG: 1,251,026 <br /> MIN: 1,249,067 <br /> MAX: 1,263,280 |
 | kyber1024-90s (100 executions) | clean | AVG: 3,002,358 <br /> MIN: 3,000,594 <br /> MAX: 3,017,386 | AVG: 3,278,118 <br /> MIN: 3,276,347 <br /> MAX: 3,293,172 | AVG: 3,511,420 <br /> MIN: 3,509,649 <br /> MAX: 3,526,441 |
-| kyber1024-90s (100 executions) | m4 | AVG: 1,033,049 <br /> MIN: 1,025,556 <br /> MAX: 1,042,122 | AVG: 1,130,066 <br /> MIN: 1,122,527 <br /> MAX: 1,139,198 | AVG: 1,146,844 <br /> MIN: 1,139,305 <br /> MAX: 1,155,976 |
+| kyber1024-90s (100 executions) | m4fspeed | AVG: 995,987 <br /> MIN: 988,645 <br /> MAX: 1,000,850 | AVG: 1,088,634 <br /> MIN: 1,081,292 <br /> MAX: 1,093,497 | AVG: 1,086,861 <br /> MIN: 1,079,552 <br /> MAX: 1,091,724 |
+| kyber1024-90s (100 executions) | m4fstack | AVG: 1,006,908 <br /> MIN: 999,573 <br /> MAX: 1,009,607 | AVG: 1,103,436 <br /> MIN: 1,096,101 <br /> MAX: 1,106,135 | AVG: 1,103,215 <br /> MIN: 1,095,880 <br /> MAX: 1,105,914 |
 | kyber512 (100 executions) | clean | AVG: 631,058 <br /> MIN: 630,445 <br /> MAX: 643,862 | AVG: 842,478 <br /> MIN: 841,864 <br /> MAX: 855,281 | AVG: 936,458 <br /> MIN: 935,844 <br /> MAX: 949,261 |
-| kyber512 (100 executions) | m4 | AVG: 457,126 <br /> MIN: 456,044 <br /> MAX: 469,630 | AVG: 551,681 <br /> MIN: 550,598 <br /> MAX: 564,182 | AVG: 511,970 <br /> MIN: 510,889 <br /> MAX: 524,473 |
+| kyber512 (100 executions) | m4fspeed | AVG: 441,489 <br /> MIN: 440,447 <br /> MAX: 454,135 | AVG: 540,354 <br /> MIN: 539,311 <br /> MAX: 553,000 | AVG: 491,034 <br /> MIN: 489,992 <br /> MAX: 503,681 |
+| kyber512 (100 executions) | m4fstack | AVG: 441,712 <br /> MIN: 441,068 <br /> MAX: 454,552 | AVG: 542,251 <br /> MIN: 541,606 <br /> MAX: 555,090 | AVG: 493,434 <br /> MIN: 492,790 <br /> MAX: 506,274 |
 | kyber512-90s (100 executions) | clean | AVG: 944,546 <br /> MIN: 944,075 <br /> MAX: 944,961 | AVG: 1,114,167 <br /> MIN: 1,113,662 <br /> MAX: 1,114,581 | AVG: 1,259,241 <br /> MIN: 1,258,736 <br /> MAX: 1,259,655 |
-| kyber512-90s (100 executions) | m4 | AVG: 392,855 <br /> MIN: 388,644 <br /> MAX: 397,231 | AVG: 445,609 <br /> MIN: 441,398 <br /> MAX: 449,985 | AVG: 456,990 <br /> MIN: 452,778 <br /> MAX: 461,365 |
+| kyber512-90s (100 executions) | m4fspeed | AVG: 376,946 <br /> MIN: 372,781 <br /> MAX: 381,569 | AVG: 434,013 <br /> MIN: 429,848 <br /> MAX: 438,636 | AVG: 435,784 <br /> MIN: 431,618 <br /> MAX: 440,406 |
+| kyber512-90s (100 executions) | m4fstack | AVG: 377,943 <br /> MIN: 370,186 <br /> MAX: 378,865 | AVG: 436,682 <br /> MIN: 428,925 <br /> MAX: 437,604 | AVG: 438,958 <br /> MIN: 431,201 <br /> MAX: 439,880 |
 | kyber768 (100 executions) | clean | AVG: 1,051,021 <br /> MIN: 1,049,570 <br /> MAX: 1,063,275 | AVG: 1,349,400 <br /> MIN: 1,347,982 <br /> MAX: 1,361,620 | AVG: 1,463,791 <br /> MIN: 1,462,338 <br /> MAX: 1,476,010 |
-| kyber768 (100 executions) | m4 | AVG: 744,136 <br /> MIN: 742,205 <br /> MAX: 768,666 | AVG: 898,630 <br /> MIN: 896,676 <br /> MAX: 923,151 | AVG: 838,939 <br /> MIN: 836,985 <br /> MAX: 863,460 |
+| kyber768 (100 executions) | m4fspeed | AVG: 723,575 <br /> MIN: 722,237 <br /> MAX: 736,565 | AVG: 877,501 <br /> MIN: 876,197 <br /> MAX: 890,491 | AVG: 803,740 <br /> MIN: 802,401 <br /> MAX: 816,729 |
+| kyber768 (100 executions) | m4fstack | AVG: 728,304 <br /> MIN: 725,897 <br /> MAX: 740,275 | AVG: 884,925 <br /> MIN: 882,518 <br /> MAX: 896,896 | AVG: 812,180 <br /> MIN: 809,773 <br /> MAX: 824,151 |
 | kyber768-90s (100 executions) | clean | AVG: 1,811,726 <br /> MIN: 1,810,670 <br /> MAX: 1,827,045 | AVG: 2,034,922 <br /> MIN: 2,033,865 <br /> MAX: 2,050,240 | AVG: 2,222,406 <br /> MIN: 2,221,348 <br /> MAX: 2,237,723 |
-| kyber768-90s (100 executions) | m4 | AVG: 656,589 <br /> MIN: 652,287 <br /> MAX: 661,063 | AVG: 735,172 <br /> MIN: 730,870 <br /> MAX: 739,646 | AVG: 748,573 <br /> MIN: 744,271 <br /> MAX: 753,047 |
+| kyber768-90s (100 executions) | m4fspeed | AVG: 632,398 <br /> MIN: 621,252 <br /> MAX: 638,272 | AVG: 711,096 <br /> MIN: 699,950 <br /> MAX: 717,003 | AVG: 710,430 <br /> MIN: 699,284 <br /> MAX: 716,304 |
+| kyber768-90s (100 executions) | m4fstack | AVG: 638,129 <br /> MIN: 630,786 <br /> MAX: 643,556 | AVG: 719,513 <br /> MIN: 712,171 <br /> MAX: 724,940 | AVG: 719,862 <br /> MIN: 712,520 <br /> MAX: 725,289 |
 | lightsaber (100 executions) | clean | AVG: 1,023,162 <br /> MIN: 1,023,162 <br /> MAX: 1,023,163 | AVG: 1,494,462 <br /> MIN: 1,494,456 <br /> MAX: 1,494,495 | AVG: 1,805,694 <br /> MIN: 1,805,691 <br /> MAX: 1,805,725 |
 | lightsaber (100 executions) | m4fspeed | AVG: 352,196 <br /> MIN: 352,196 <br /> MAX: 352,229 | AVG: 481,006 <br /> MIN: 481,005 <br /> MAX: 481,038 | AVG: 452,654 <br /> MIN: 452,653 <br /> MAX: 452,687 |
 | lightsaber (100 executions) | m4fstack | AVG: 422,434 <br /> MIN: 422,434 <br /> MAX: 422,467 | AVG: 591,556 <br /> MIN: 591,555 <br /> MAX: 591,588 | AVG: 581,073 <br /> MIN: 581,072 <br /> MAX: 581,106 |
@@ -73,11 +79,12 @@
 | scheme | implementation | key generation [cycles] | sign [cycles] | verify [cycles] |
 | ------ | -------------- | ----------------------- | ------------- | --------------- |
 | dilithium2 (100 executions) | clean | AVG: 1,976,311 <br /> MIN: 1,934,124 <br /> MAX: 2,022,613 | AVG: 7,465,108 <br /> MIN: 3,241,343 <br /> MAX: 29,601,126 | AVG: 2,109,292 <br /> MIN: 2,108,823 <br /> MAX: 2,109,692 |
-| dilithium2 (100 executions) | m4 | AVG: 1,600,049 <br /> MIN: 1,559,631 <br /> MAX: 1,635,473 | AVG: 3,911,523 <br /> MIN: 2,029,960 <br /> MAX: 10,277,114 | AVG: 1,578,382 <br /> MIN: 1,577,841 <br /> MAX: 1,578,755 |
+| dilithium2 (100 executions) | m4f | AVG: 1,600,781 <br /> MIN: 1,555,877 <br /> MAX: 1,631,793 | AVG: 3,903,553 <br /> MIN: 1,983,107 <br /> MAX: 16,048,759 | AVG: 1,572,348 <br /> MIN: 1,571,885 <br /> MAX: 1,572,818 |
 | dilithium2aes (100 executions) | clean | AVG: 5,153,665 <br /> MIN: 5,109,045 <br /> MAX: 5,227,715 | AVG: 12,016,668 <br /> MIN: 6,375,642 <br /> MAX: 28,738,015 | AVG: 4,824,282 <br /> MIN: 4,779,372 <br /> MAX: 4,898,600 |
 | dilithium3 (100 executions) | clean | AVG: 3,414,513 <br /> MIN: 3,413,395 <br /> MAX: 3,416,061 | AVG: 11,722,059 <br /> MIN: 5,037,981 <br /> MAX: 36,169,675 | AVG: 3,499,388 <br /> MIN: 3,498,955 <br /> MAX: 3,499,805 |
-| dilithium3 (100 executions) | m4 | AVG: 2,834,440 <br /> MIN: 2,833,207 <br /> MAX: 2,835,702 | AVG: 7,081,175 <br /> MIN: 3,285,236 <br /> MAX: 25,164,695 | AVG: 2,699,909 <br /> MIN: 2,699,582 <br /> MAX: 2,700,229 |
+| dilithium3 (100 executions) | m4f | AVG: 2,829,272 <br /> MIN: 2,828,349 <br /> MAX: 2,830,462 | AVG: 6,934,153 <br /> MIN: 3,235,459 <br /> MAX: 20,639,117 | AVG: 2,691,474 <br /> MIN: 2,691,179 <br /> MAX: 2,691,889 |
 | dilithium3aes (100 executions) | clean | AVG: 9,258,325 <br /> MIN: 9,166,749 <br /> MAX: 9,369,734 | AVG: 19,417,325 <br /> MIN: 10,745,071 <br /> MAX: 60,023,085 | AVG: 8,581,938 <br /> MIN: 8,491,758 <br /> MAX: 8,694,807 |
+| dilithium5 (100 executions) | m4f | AVG: 4,831,643 <br /> MIN: 4,762,554 <br /> MAX: 4,876,527 | AVG: 8,752,674 <br /> MIN: 5,433,491 <br /> MAX: 27,295,380 | AVG: 4,705,990 <br /> MIN: 4,705,467 <br /> MAX: 4,706,391 |
 | falcon-1024 (100 executions) | clean | AVG: 582,455,197 <br /> MIN: 338,850,289 <br /> MAX: 1,754,663,445 | AVG: 133,655,078 <br /> MIN: 133,335,905 <br /> MAX: 133,985,773 | AVG: 1,526,901 <br /> MIN: 1,526,233 <br /> MAX: 1,527,648 |
 | falcon-1024 (100 executions) | m4-ct | AVG: 458,300,837 <br /> MIN: 273,960,881 <br /> MAX: 1,558,842,038 | AVG: 85,160,712 <br /> MIN: 84,941,964 <br /> MAX: 85,410,952 | AVG: 977,811 <br /> MIN: 966,969 <br /> MAX: 985,555 |
 | falcon-1024 (100 executions) | opt-ct | AVG: 445,577,914 <br /> MIN: 273,960,881 <br /> MAX: 1,180,316,927 | AVG: 85,152,483 <br /> MIN: 84,871,257 <br /> MAX: 85,396,462 | AVG: 978,443 <br /> MIN: 966,990 <br /> MAX: 985,220 |
@@ -143,17 +150,23 @@
 | frodokem640shake | opt | 36,480 | 58,136 | 78,760 |
 | hqc-rmrs-128 | clean | 48,828 | 64,412 | 71,148 |
 | kyber1024 | clean | 15,076 | 18,748 | 20,324 |
-| kyber1024 | m4 | 3,604 | 3,284 | 3,316 |
+| kyber1024 | m4fspeed | 6,336 | 7,432 | 7,448 |
+| kyber1024 | m4fstack | 3,256 | 3,328 | 3,352 |
 | kyber1024-90s | clean | 15,340 | 19,020 | 20,596 |
-| kyber1024-90s | m4 | 4,636 | 4,000 | 4,032 |
+| kyber1024-90s | m4fspeed | 7,076 | 8,172 | 8,188 |
+| kyber1024-90s | m4fstack | 4,004 | 4,076 | 4,100 |
 | kyber512 | clean | 6,100 | 8,764 | 9,540 |
-| kyber512 | m4 | 2,212 | 2,300 | 2,316 |
+| kyber512 | m4fspeed | 4,272 | 5,376 | 5,384 |
+| kyber512 | m4fstack | 2,212 | 2,300 | 2,316 |
 | kyber512-90s | clean | 6,548 | 9,212 | 9,988 |
-| kyber512-90s | m4 | 2,904 | 2,992 | 3,008 |
+| kyber512-90s | m4fspeed | 5,012 | 6,116 | 6,124 |
+| kyber512-90s | m4fstack | 2,956 | 3,044 | 3,060 |
 | kyber768 | clean | 10,196 | 13,364 | 14,460 |
-| kyber768 | m4 | 3,092 | 2,772 | 2,796 |
+| kyber768 | m4fspeed | 5,312 | 6,424 | 6,440 |
+| kyber768 | m4fstack | 2,736 | 2,808 | 2,824 |
 | kyber768-90s | clean | 10,652 | 13,820 | 14,916 |
-| kyber768-90s | m4 | 3,432 | 3,504 | 3,520 |
+| kyber768-90s | m4fspeed | 6,052 | 7,164 | 7,180 |
+| kyber768-90s | m4fstack | 3,476 | 3,548 | 3,564 |
 | lightsaber | clean | 9,320 | 9,424 | 10,168 |
 | lightsaber | m4fspeed | 5,612 | 6,284 | 6,292 |
 | lightsaber | m4fstack | 3,276 | 3,052 | 3,060 |
@@ -204,11 +217,12 @@
 | Scheme | Implementation | Key Generation [bytes] | Sign [bytes] | Verify [bytes] |
 | ------ | -------------- | ---------------------- | ------------ | -------------- |
 | dilithium2 | clean | 38,284 | 51,908 | 36,196 |
-| dilithium2 | m4 | 38,276 | 51,900 | 36,188 |
+| dilithium2 | m4f | 38,276 | 49,356 | 36,296 |
 | dilithium2aes | clean | 39,764 | 53,388 | 37,676 |
 | dilithium3 | clean | 60,812 | 79,664 | 57,700 |
-| dilithium3 | m4 | 60,804 | 79,548 | 57,692 |
+| dilithium3 | m4f | 60,804 | 68,804 | 57,692 |
 | dilithium3aes | clean | 62,292 | 81,036 | 59,180 |
+| dilithium5 | m4f | 97,668 | 116,016 | 92,872 |
 | falcon-1024 | clean | 36,264 | 82,428 | 8,796 |
 | falcon-1024 | m4-ct | 1,488 | 2,568 | 496 |
 | falcon-1024 | opt-ct | 1,448 | 2,568 | 388 |
@@ -274,17 +288,23 @@
 | frodokem640shake | opt | 74.3% | 65.4% | 64.9% |
 | hqc-rmrs-128 | clean | 53.7% | 41.4% | 33.3% |
 | kyber1024 | clean | 54.4% | 53.8% | 42.7% |
-| kyber1024 | m4 | 74.8% | 78.7% | 70.8% |
+| kyber1024 | m4fspeed | 77.5% | 80.8% | 73.9% |
+| kyber1024 | m4fstack | 76.9% | 80.1% | 73.1% |
 | kyber1024-90s | clean | 73.8% | 70.5% | 64.0% |
-| kyber1024-90s | m4 | 67.0% | 69.5% | 62.8% |
+| kyber1024-90s | m4fspeed | 69.3% | 71.9% | 66.0% |
+| kyber1024-90s | m4fstack | 68.6% | 71.0% | 65.1% |
 | kyber512 | clean | 54.7% | 51.7% | 37.1% |
-| kyber512 | m4 | 75.4% | 78.9% | 67.7% |
+| kyber512 | m4fspeed | 78.1% | 80.5% | 70.6% |
+| kyber512 | m4fstack | 78.0% | 80.2% | 70.2% |
 | kyber512-90s | clean | 68.8% | 62.8% | 52.7% |
-| kyber512-90s | m4 | 68.3% | 71.0% | 61.3% |
+| kyber512-90s | m4fspeed | 71.0% | 72.8% | 64.2% |
+| kyber512-90s | m4fstack | 70.8% | 72.3% | 63.7% |
 | kyber768 | clean | 52.8% | 52.4% | 39.7% |
-| kyber768 | m4 | 74.5% | 78.5% | 69.1% |
+| kyber768 | m4fspeed | 76.5% | 80.3% | 72.0% |
+| kyber768 | m4fstack | 76.1% | 79.8% | 71.4% |
 | kyber768-90s | clean | 71.5% | 67.4% | 59.5% |
-| kyber768-90s | m4 | 66.6% | 69.7% | 61.7% |
+| kyber768-90s | m4fspeed | 68.8% | 71.8% | 64.8% |
+| kyber768-90s | m4fstack | 68.3% | 71.1% | 64.0% |
 | lightsaber | clean | 24.9% | 23.8% | 15.5% |
 | lightsaber | m4fspeed | 72.3% | 74.0% | 61.9% |
 | lightsaber | m4fstack | 60.3% | 60.2% | 48.2% |
@@ -335,11 +355,12 @@
 | Scheme | Implementation | Key Generation [%] | Sign [%] | Verify [%] |
 | ------ | -------------- | ------------------ | -------- | ---------- |
 | dilithium2 | clean | 67.1% | 37.3% | 60.1% |
-| dilithium2 | m4 | 82.6% | 64.0% | 80.1% |
+| dilithium2 | m4f | 82.8% | 65.4% | 80.4% |
 | dilithium2aes | clean | 2.7% | 3.3% | 5.0% |
 | dilithium3 | clean | 70.5% | 37.0% | 63.6% |
-| dilithium3 | m4 | 84.9% | 63.8% | 82.3% |
+| dilithium3 | m4f | 85.0% | 64.0% | 82.6% |
 | dilithium3aes | clean | 2.2% | 2.5% | 3.5% |
+| dilithium5 | m4f | 86.0% | 69.3% | 84.5% |
 | falcon-1024 | clean | 8.4% | 0.3% | 26.9% |
 | falcon-1024 | m4-ct | 10.6% | 0.5% | 34.2% |
 | falcon-1024 | opt-ct | 11.1% | 0.5% | 34.3% |
@@ -405,17 +426,23 @@
 | frodokem640shake | opt | 6,796 | 0 | 0 | 6,796 |
 | hqc-rmrs-128 | clean | 18,436 | 0 | 0 | 18,436 |
 | kyber1024 | clean | 6,084 | 0 | 0 | 6,084 |
-| kyber1024 | m4 | 11,640 | 0 | 0 | 11,640 |
+| kyber1024 | m4fspeed | 18,324 | 0 | 0 | 18,324 |
+| kyber1024 | m4fstack | 15,452 | 0 | 0 | 15,452 |
 | kyber1024-90s | clean | 6,468 | 0 | 0 | 6,468 |
-| kyber1024-90s | m4 | 11,920 | 0 | 0 | 11,920 |
+| kyber1024-90s | m4fspeed | 18,832 | 0 | 0 | 18,832 |
+| kyber1024-90s | m4fstack | 15,744 | 0 | 0 | 15,744 |
 | kyber512 | clean | 4,900 | 0 | 0 | 4,900 |
-| kyber512 | m4 | 10,700 | 0 | 0 | 10,700 |
+| kyber512 | m4fspeed | 17,220 | 0 | 0 | 17,220 |
+| kyber512 | m4fstack | 14,624 | 0 | 0 | 14,624 |
 | kyber512-90s | clean | 5,144 | 0 | 0 | 5,144 |
-| kyber512-90s | m4 | 10,912 | 0 | 0 | 10,912 |
+| kyber512-90s | m4fspeed | 17,728 | 0 | 0 | 17,728 |
+| kyber512-90s | m4fstack | 14,900 | 0 | 0 | 14,900 |
 | kyber768 | clean | 4,912 | 0 | 0 | 4,912 |
-| kyber768 | m4 | 10,816 | 0 | 0 | 10,816 |
+| kyber768 | m4fspeed | 17,532 | 0 | 0 | 17,532 |
+| kyber768 | m4fstack | 14,528 | 0 | 0 | 14,528 |
 | kyber768-90s | clean | 5,176 | 0 | 0 | 5,176 |
-| kyber768-90s | m4 | 10,796 | 0 | 0 | 10,796 |
+| kyber768-90s | m4fspeed | 18,064 | 0 | 0 | 18,064 |
+| kyber768-90s | m4fstack | 14,784 | 0 | 0 | 14,784 |
 | lightsaber | clean | 10,368 | 0 | 0 | 10,368 |
 | lightsaber | m4fspeed | 18,900 | 0 | 0 | 18,900 |
 | lightsaber | m4fstack | 19,712 | 0 | 0 | 19,712 |
@@ -466,11 +493,12 @@
 | Scheme | Implementation | .text [bytes] | .data [bytes] | .bss [bytes] | Total [bytes] |
 | ------ | -------------- | ------------- | ------------- | ------------ | ------------- |
 | dilithium2 | clean | 7,948 | 0 | 0 | 7,948 |
-| dilithium2 | m4 | 10,556 | 0 | 0 | 10,556 |
+| dilithium2 | m4f | 18,440 | 0 | 0 | 18,440 |
 | dilithium2aes | clean | 14,982 | 0 | 0 | 14,982 |
 | dilithium3 | clean | 7,444 | 0 | 0 | 7,444 |
-| dilithium3 | m4 | 10,076 | 0 | 0 | 10,076 |
+| dilithium3 | m4f | 19,912 | 0 | 0 | 19,912 |
 | dilithium3aes | clean | 14,470 | 0 | 0 | 14,470 |
+| dilithium5 | m4f | 18,236 | 0 | 0 | 18,236 |
 | falcon-1024 | clean | 82,285 | 0 | 0 | 82,285 |
 | falcon-1024 | m4-ct | 81,265 | 0 | 79,872 | 161,137 |
 | falcon-1024 | opt-ct | 81,265 | 0 | 79,872 | 161,137 |
