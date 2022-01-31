@@ -79,12 +79,12 @@
 | scheme | implementation | key generation [cycles] | sign [cycles] | verify [cycles] |
 | ------ | -------------- | ----------------------- | ------------- | --------------- |
 | dilithium2 (100 executions) | clean | AVG: 1,976,311 <br /> MIN: 1,934,124 <br /> MAX: 2,022,613 | AVG: 7,465,108 <br /> MIN: 3,241,343 <br /> MAX: 29,601,126 | AVG: 2,109,292 <br /> MIN: 2,108,823 <br /> MAX: 2,109,692 |
-| dilithium2 (100 executions) | m4f | AVG: 1,600,781 <br /> MIN: 1,555,877 <br /> MAX: 1,631,793 | AVG: 3,903,553 <br /> MIN: 1,983,107 <br /> MAX: 16,048,759 | AVG: 1,572,348 <br /> MIN: 1,571,885 <br /> MAX: 1,572,818 |
+| dilithium2 (10000 executions) | m4f | AVG: 1,597,282 <br /> MIN: 1,543,011 <br /> MAX: 1,644,501 | AVG: 4,119,336 <br /> MIN: 1,983,077 <br /> MAX: 34,081,046 | AVG: 1,572,328 <br /> MIN: 1,571,561 <br /> MAX: 1,572,863 |
 | dilithium2aes (100 executions) | clean | AVG: 5,153,665 <br /> MIN: 5,109,045 <br /> MAX: 5,227,715 | AVG: 12,016,668 <br /> MIN: 6,375,642 <br /> MAX: 28,738,015 | AVG: 4,824,282 <br /> MIN: 4,779,372 <br /> MAX: 4,898,600 |
 | dilithium3 (100 executions) | clean | AVG: 3,414,513 <br /> MIN: 3,413,395 <br /> MAX: 3,416,061 | AVG: 11,722,059 <br /> MIN: 5,037,981 <br /> MAX: 36,169,675 | AVG: 3,499,388 <br /> MIN: 3,498,955 <br /> MAX: 3,499,805 |
-| dilithium3 (100 executions) | m4f | AVG: 2,829,272 <br /> MIN: 2,828,349 <br /> MAX: 2,830,462 | AVG: 6,934,153 <br /> MIN: 3,235,459 <br /> MAX: 20,639,117 | AVG: 2,691,474 <br /> MIN: 2,691,179 <br /> MAX: 2,691,889 |
+| dilithium3 (10000 executions) | m4f | AVG: 2,829,260 <br /> MIN: 2,827,405 <br /> MAX: 2,842,880 | AVG: 6,652,990 <br /> MIN: 3,235,358 <br /> MAX: 42,043,815 | AVG: 2,691,471 <br /> MIN: 2,690,861 <br /> MAX: 2,691,949 |
 | dilithium3aes (100 executions) | clean | AVG: 9,258,325 <br /> MIN: 9,166,749 <br /> MAX: 9,369,734 | AVG: 19,417,325 <br /> MIN: 10,745,071 <br /> MAX: 60,023,085 | AVG: 8,581,938 <br /> MIN: 8,491,758 <br /> MAX: 8,694,807 |
-| dilithium5 (100 executions) | m4f | AVG: 4,831,643 <br /> MIN: 4,762,554 <br /> MAX: 4,876,527 | AVG: 8,752,674 <br /> MIN: 5,433,491 <br /> MAX: 27,295,380 | AVG: 4,705,990 <br /> MIN: 4,705,467 <br /> MAX: 4,706,391 |
+| dilithium5 (10000 executions) | m4f | AVG: 4,826,132 <br /> MIN: 4,737,167 <br /> MAX: 4,901,952 | AVG: 8,817,385 <br /> MIN: 5,433,369 <br /> MAX: 40,315,104 | AVG: 4,705,982 <br /> MIN: 4,705,308 <br /> MAX: 4,706,614 |
 | falcon-1024 (100 executions) | clean | AVG: 582,455,197 <br /> MIN: 338,850,289 <br /> MAX: 1,754,663,445 | AVG: 133,655,078 <br /> MIN: 133,335,905 <br /> MAX: 133,985,773 | AVG: 1,526,901 <br /> MIN: 1,526,233 <br /> MAX: 1,527,648 |
 | falcon-1024 (100 executions) | m4-ct | AVG: 458,300,837 <br /> MIN: 273,960,881 <br /> MAX: 1,558,842,038 | AVG: 85,160,712 <br /> MIN: 84,941,964 <br /> MAX: 85,410,952 | AVG: 977,811 <br /> MIN: 966,969 <br /> MAX: 985,555 |
 | falcon-1024 (100 executions) | opt-ct | AVG: 445,577,914 <br /> MIN: 273,960,881 <br /> MAX: 1,180,316,927 | AVG: 85,152,483 <br /> MIN: 84,871,257 <br /> MAX: 85,396,462 | AVG: 978,443 <br /> MIN: 966,990 <br /> MAX: 985,220 |
@@ -222,7 +222,7 @@
 | dilithium3 | clean | 60,812 | 79,664 | 57,700 |
 | dilithium3 | m4f | 60,804 | 68,804 | 57,692 |
 | dilithium3aes | clean | 62,292 | 81,036 | 59,180 |
-| dilithium5 | m4f | 97,668 | 116,016 | 92,872 |
+| dilithium5 | m4f | 97,776 | 116,016 | 92,872 |
 | falcon-1024 | clean | 36,264 | 82,428 | 8,796 |
 | falcon-1024 | m4-ct | 1,488 | 2,568 | 496 |
 | falcon-1024 | opt-ct | 1,448 | 2,568 | 388 |
@@ -355,12 +355,12 @@
 | Scheme | Implementation | Key Generation [%] | Sign [%] | Verify [%] |
 | ------ | -------------- | ------------------ | -------- | ---------- |
 | dilithium2 | clean | 67.1% | 37.3% | 60.1% |
-| dilithium2 | m4f | 82.8% | 65.4% | 80.4% |
+| dilithium2 | m4f | 82.8% | 65.2% | 80.4% |
 | dilithium2aes | clean | 2.7% | 3.3% | 5.0% |
 | dilithium3 | clean | 70.5% | 37.0% | 63.6% |
-| dilithium3 | m4f | 85.0% | 64.0% | 82.6% |
+| dilithium3 | m4f | 85.0% | 64.4% | 82.6% |
 | dilithium3aes | clean | 2.2% | 2.5% | 3.5% |
-| dilithium5 | m4f | 86.0% | 69.3% | 84.5% |
+| dilithium5 | m4f | 86.0% | 69.1% | 84.5% |
 | falcon-1024 | clean | 8.4% | 0.3% | 26.9% |
 | falcon-1024 | m4-ct | 10.6% | 0.5% | 34.2% |
 | falcon-1024 | opt-ct | 11.1% | 0.5% | 34.3% |
