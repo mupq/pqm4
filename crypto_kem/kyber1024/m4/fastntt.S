@@ -1,1 +1,0 @@
-../../kyber768/m4/fastntt.S
