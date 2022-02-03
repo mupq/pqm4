@@ -21,10 +21,11 @@
 * Returns 0 (success)
 **************************************************/
 int crypto_sign_keypair(uint8_t *pk, uint8_t *sk) {
+  unsigned int i, j;
   uint8_t seedbuf[2*SEEDBYTES + CRHBYTES];
   uint8_t tr[SEEDBYTES];
   const uint8_t *rho, *rhoprime, *key;
-  polyvecl mat[K];
+  polyvecl mat_part;
   polyvecl s1, s1hat;
   polyveck s2, t1, t0;
 
@@ -35,9 +36,6 @@ int crypto_sign_keypair(uint8_t *pk, uint8_t *sk) {
   rhoprime = rho + SEEDBYTES;
   key = rhoprime + CRHBYTES;
 
-  /* Expand matrix */
-  polyvec_matrix_expand(mat, rho);
-
   /* Sample short vectors s1 and s2 */
   polyvecl_uniform_eta(&s1, rhoprime, 0);
   polyveck_uniform_eta(&s2, rhoprime, L);
@@ -45,7 +43,17 @@ int crypto_sign_keypair(uint8_t *pk, uint8_t *sk) {
   /* Matrix-vector multiplication */
   s1hat = s1;
   polyvecl_ntt(&s1hat);
-  polyvec_matrix_pointwise_montgomery(&t1, mat, &s1hat);
+  for (i = 0; i < K; i++)
+  {
+    // expand part of the matrix
+    for(j = 0; j < L; ++j)
+    {
+      poly_uniform(&mat_part.vec[j], rho, (i << 8) + j);
+    }
+    // partial matrix-vector multiplication
+    polyvecl_pointwise_acc_montgomery(&t1.vec[i], &mat_part, &s1hat);
+  }
+  
   polyveck_reduce(&t1);
   polyveck_invntt_tomont(&t1);
 
@@ -245,14 +253,14 @@ int crypto_sign_verify(const uint8_t *sig,
                        size_t mlen,
                        const uint8_t *pk)
 {
-  unsigned int i;
+  unsigned int i, j;
   uint8_t buf[K*POLYW1_PACKEDBYTES];
   uint8_t rho[SEEDBYTES];
   uint8_t mu[CRHBYTES];
   uint8_t c[SEEDBYTES];
   uint8_t c2[SEEDBYTES];
   poly cp;
-  polyvecl mat[K], z;
+  polyvecl mat_part, z;
   polyveck t1, w1, h;
   shake256incctx state;
 
@@ -275,10 +283,18 @@ int crypto_sign_verify(const uint8_t *sig,
 
   /* Matrix-vector multiplication; compute Az - c2^dt1 */
   poly_challenge(&cp, c);
-  polyvec_matrix_expand(mat, rho);
 
   polyvecl_ntt(&z);
-  polyvec_matrix_pointwise_montgomery(&w1, mat, &z);
+  for(i = 0; i < K; ++i)
+  {
+    // expand part of the matrix
+    for(j = 0; j < L; ++j)
+    {
+      poly_uniform(&mat_part.vec[j], rho, (i << 8) + j);
+    }
+    // partial matrix-vector multiplication
+    polyvecl_pointwise_acc_montgomery(&w1.vec[i], &mat_part, &z);
+  }
 
   poly_ntt(&cp);
   polyveck_shiftl(&t1);
