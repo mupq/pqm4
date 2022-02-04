@@ -217,12 +217,12 @@
 | Scheme | Implementation | Key Generation [bytes] | Sign [bytes] | Verify [bytes] |
 | ------ | -------------- | ---------------------- | ------------ | -------------- |
 | dilithium2 | clean | 38,284 | 51,908 | 36,196 |
-| dilithium2 | m4f | 38,276 | 49,356 | 36,296 |
+| dilithium2 | m4f | 25,988 | 49,356 | 23,992 |
 | dilithium2aes | clean | 39,764 | 53,388 | 37,676 |
 | dilithium3 | clean | 60,812 | 79,664 | 57,700 |
-| dilithium3 | m4f | 60,804 | 68,804 | 57,692 |
+| dilithium3 | m4f | 35,196 | 68,804 | 32,076 |
 | dilithium3aes | clean | 62,292 | 81,036 | 59,180 |
-| dilithium5 | m4f | 97,776 | 116,016 | 92,872 |
+| dilithium5 | m4f | 47,484 | 116,016 | 42,680 |
 | falcon-1024 | clean | 36,264 | 82,428 | 8,796 |
 | falcon-1024 | m4-ct | 1,488 | 2,568 | 496 |
 | falcon-1024 | opt-ct | 1,448 | 2,568 | 388 |
@@ -493,12 +493,12 @@
 | Scheme | Implementation | .text [bytes] | .data [bytes] | .bss [bytes] | Total [bytes] |
 | ------ | -------------- | ------------- | ------------- | ------------ | ------------- |
 | dilithium2 | clean | 7,948 | 0 | 0 | 7,948 |
-| dilithium2 | m4f | 18,440 | 0 | 0 | 18,440 |
+| dilithium2 | m4f | 18,552 | 0 | 0 | 18,552 |
 | dilithium2aes | clean | 14,982 | 0 | 0 | 14,982 |
 | dilithium3 | clean | 7,444 | 0 | 0 | 7,444 |
-| dilithium3 | m4f | 19,912 | 0 | 0 | 19,912 |
+| dilithium3 | m4f | 19,980 | 0 | 0 | 19,980 |
 | dilithium3aes | clean | 14,470 | 0 | 0 | 14,470 |
-| dilithium5 | m4f | 18,236 | 0 | 0 | 18,236 |
+| dilithium5 | m4f | 18,300 | 0 | 0 | 18,300 |
 | falcon-1024 | clean | 82,285 | 0 | 0 | 82,285 |
 | falcon-1024 | m4-ct | 81,265 | 0 | 79,872 | 161,137 |
 | falcon-1024 | opt-ct | 81,265 | 0 | 79,872 | 161,137 |
