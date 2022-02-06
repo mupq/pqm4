@@ -79,12 +79,12 @@
 | scheme | implementation | key generation [cycles] | sign [cycles] | verify [cycles] |
 | ------ | -------------- | ----------------------- | ------------- | --------------- |
 | dilithium2 (100 executions) | clean | AVG: 1,976,311 <br /> MIN: 1,934,124 <br /> MAX: 2,022,613 | AVG: 7,465,108 <br /> MIN: 3,241,343 <br /> MAX: 29,601,126 | AVG: 2,109,292 <br /> MIN: 2,108,823 <br /> MAX: 2,109,692 |
-| dilithium2 (10000 executions) | m4f | AVG: 1,597,282 <br /> MIN: 1,543,011 <br /> MAX: 1,644,501 | AVG: 4,119,336 <br /> MIN: 1,983,077 <br /> MAX: 34,081,046 | AVG: 1,572,328 <br /> MIN: 1,571,561 <br /> MAX: 1,572,863 |
+| dilithium2 (10000 executions) | m4f | AVG: 1,598,273 <br /> MIN: 1,543,984 <br /> MAX: 1,645,520 | AVG: 4,088,281 <br /> MIN: 1,983,092 <br /> MAX: 23,248,321 | AVG: 1,572,681 <br /> MIN: 1,571,953 <br /> MAX: 1,573,212 |
 | dilithium2aes (100 executions) | clean | AVG: 5,153,665 <br /> MIN: 5,109,045 <br /> MAX: 5,227,715 | AVG: 12,016,668 <br /> MIN: 6,375,642 <br /> MAX: 28,738,015 | AVG: 4,824,282 <br /> MIN: 4,779,372 <br /> MAX: 4,898,600 |
 | dilithium3 (100 executions) | clean | AVG: 3,414,513 <br /> MIN: 3,413,395 <br /> MAX: 3,416,061 | AVG: 11,722,059 <br /> MIN: 5,037,981 <br /> MAX: 36,169,675 | AVG: 3,499,388 <br /> MIN: 3,498,955 <br /> MAX: 3,499,805 |
-| dilithium3 (10000 executions) | m4f | AVG: 2,829,260 <br /> MIN: 2,827,405 <br /> MAX: 2,842,880 | AVG: 6,652,990 <br /> MIN: 3,235,358 <br /> MAX: 42,043,815 | AVG: 2,691,471 <br /> MIN: 2,690,861 <br /> MAX: 2,691,949 |
+| dilithium3 (10000 executions) | m4f | AVG: 2,829,137 <br /> MIN: 2,827,129 <br /> MAX: 2,831,465 | AVG: 6,644,258 <br /> MIN: 3,235,339 <br /> MAX: 40,269,792 | AVG: 2,691,982 <br /> MIN: 2,691,456 <br /> MAX: 2,692,439 |
 | dilithium3aes (100 executions) | clean | AVG: 9,258,325 <br /> MIN: 9,166,749 <br /> MAX: 9,369,734 | AVG: 19,417,325 <br /> MIN: 10,745,071 <br /> MAX: 60,023,085 | AVG: 8,581,938 <br /> MIN: 8,491,758 <br /> MAX: 8,694,807 |
-| dilithium5 (10000 executions) | m4f | AVG: 4,826,132 <br /> MIN: 4,737,167 <br /> MAX: 4,901,952 | AVG: 8,817,385 <br /> MIN: 5,433,369 <br /> MAX: 40,315,104 | AVG: 4,705,982 <br /> MIN: 4,705,308 <br /> MAX: 4,706,614 |
+| dilithium5 (10000 executions) | m4f | AVG: 4,825,973 <br /> MIN: 4,749,351 <br /> MAX: 4,913,802 | AVG: 8,773,020 <br /> MIN: 5,433,389 <br /> MAX: 44,507,501 | AVG: 4,705,852 <br /> MIN: 4,705,213 <br /> MAX: 4,706,521 |
 | falcon-1024 (100 executions) | clean | AVG: 582,455,197 <br /> MIN: 338,850,289 <br /> MAX: 1,754,663,445 | AVG: 133,655,078 <br /> MIN: 133,335,905 <br /> MAX: 133,985,773 | AVG: 1,526,901 <br /> MIN: 1,526,233 <br /> MAX: 1,527,648 |
 | falcon-1024 (100 executions) | m4-ct | AVG: 458,300,837 <br /> MIN: 273,960,881 <br /> MAX: 1,558,842,038 | AVG: 85,160,712 <br /> MIN: 84,941,964 <br /> MAX: 85,410,952 | AVG: 977,811 <br /> MIN: 966,969 <br /> MAX: 985,555 |
 | falcon-1024 (100 executions) | opt-ct | AVG: 445,577,914 <br /> MIN: 273,960,881 <br /> MAX: 1,180,316,927 | AVG: 85,152,483 <br /> MIN: 84,871,257 <br /> MAX: 85,396,462 | AVG: 978,443 <br /> MIN: 966,990 <br /> MAX: 985,220 |
