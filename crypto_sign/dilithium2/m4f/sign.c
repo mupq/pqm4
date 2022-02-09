@@ -25,9 +25,8 @@ int crypto_sign_keypair(uint8_t *pk, uint8_t *sk) {
   uint8_t seedbuf[2*SEEDBYTES + CRHBYTES];
   uint8_t tr[SEEDBYTES];
   const uint8_t *rho, *rhoprime, *key;
-  polyvecl mat_part;
-  polyvecl s1, s1hat;
-  polyveck s2, t1, t0;
+  uint16_t nonce = 0;
+  polyvecl s1;
 
   /* Get randomness for rho, rhoprime and key */
   randombytes(seedbuf, SEEDBYTES);
@@ -36,38 +35,60 @@ int crypto_sign_keypair(uint8_t *pk, uint8_t *sk) {
   rhoprime = rho + SEEDBYTES;
   key = rhoprime + CRHBYTES;
 
-  /* Sample short vectors s1 and s2 */
-  polyvecl_uniform_eta(&s1, rhoprime, 0);
-  polyveck_uniform_eta(&s2, rhoprime, L);
+  pack_sk_rho(sk, rho);
+  pack_sk_key(sk, key);
+  pack_pk_rho(pk, rho);
+
+  /* Sample short vector s1 and immediately store its time-domain version */
+  for (i = 0; i < L; i++)
+  {
+    poly_uniform_eta(&s1.vec[i], rhoprime, nonce++);
+    pack_sk_s1(sk, &s1.vec[i], i);
+    /* Move s1 to NTT domain */
+    poly_ntt(&s1.vec[i]);
+  }
 
   /* Matrix-vector multiplication */
-  s1hat = s1;
-  polyvecl_ntt(&s1hat);
   for (i = 0; i < K; i++)
   {
-    // expand part of the matrix
-    for(j = 0; j < L; ++j)
+    poly t;
     {
-      poly_uniform(&mat_part.vec[j], rho, (i << 8) + j);
+      poly tmp_elem;
+      /* expand part of the matrix */
+      poly_uniform(&tmp_elem, rho, (i << 8) + 0);
+      /* partial matrix-vector multiplication */
+      poly_pointwise_montgomery(&t, &tmp_elem, &s1.vec[0]);
+      for(j = 1; j < L; j++)
+      {
+        poly_uniform(&tmp_elem, rho, (i << 8) + j);
+        poly_pointwise_acc_montgomery(&t, &tmp_elem, &s1.vec[j]);
+      }
     }
-    // partial matrix-vector multiplication
-    polyvecl_pointwise_acc_montgomery(&t1.vec[i], &mat_part, &s1hat);
+    poly_reduce(&t);
+    poly_invntt_tomont(&t);
+
+    /* Add error vector s2 */
+    {
+      poly s2;
+      /* Sample short vector s2 */
+      poly_uniform_eta(&s2, rhoprime, nonce++);
+      pack_sk_s2(sk, &s2, i);
+      poly_add(&t, &t, &s2);
+    }
+
+    /* Compute t{0,1} */
+    {
+      poly t1, t0;
+      poly_caddq(&t);
+      poly_power2round(&t1, &t0, &t);
+      pack_sk_t0(sk, &t0, i);
+      pack_pk_t1(pk, &t1, i);
+    }
   }
-  
-  polyveck_reduce(&t1);
-  polyveck_invntt_tomont(&t1);
-
-  /* Add error vector s2 */
-  polyveck_add(&t1, &t1, &s2);
-
-  /* Extract t1 and write public key */
-  polyveck_caddq(&t1);
-  polyveck_power2round(&t1, &t0, &t1);
-  pack_pk(pk, rho, &t1);
 
   /* Compute H(rho, t1) and write secret key */
   shake256(tr, SEEDBYTES, pk, CRYPTO_PUBLICKEYBYTES);
-  pack_sk(sk, rho, tr, key, &t0, &s1, &s2);
+  pack_sk_tr(sk, tr);
 
   return 0;
 }
@@ -287,12 +308,12 @@ int crypto_sign_verify(const uint8_t *sig,
   polyvecl_ntt(&z);
   for(i = 0; i < K; ++i)
   {
-    // expand part of the matrix
+    /* expand part of the matrix */
     for(j = 0; j < L; ++j)
     {
       poly_uniform(&mat_part.vec[j], rho, (i << 8) + j);
     }
-    // partial matrix-vector multiplication
+    /* partial matrix-vector multiplication */
     polyvecl_pointwise_acc_montgomery(&w1.vec[i], &mat_part, &z);
   }
 
