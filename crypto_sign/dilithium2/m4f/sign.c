@@ -165,7 +165,6 @@ rej:
   unsigned int hints_written = 0;
   /* Check that subtracting cs2 does not change high bits of w and low bits
    * do not reveal secret information */
-  pack_sig_z(sig, &z);
   for(unsigned int i = 0; i < K; ++i) {
     poly *tmp = &z.vec[0];
     poly_small_basemul_invntt(tmp, &cp_small, &cp_small_prime, &s2_prime[i]);
