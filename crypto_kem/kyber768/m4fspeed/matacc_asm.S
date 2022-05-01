@@ -24,8 +24,10 @@
 
       mov \rptr, \bufptr
       movw \bptr, #1
-      vmov \cptr, s20 // load state
+      vmov \cptr, s10 // load state
+
       bl kyber_shake128_squeezeblocks
+
       vmov \rptr, s2
       vmov \bptr, s3
       vmov \cptr, s4
@@ -60,10 +62,10 @@ matacc_asm_cache_16_32:
   
   ldr.w zetaptr, [sp, #13*4] // load zetaptr from stack
   ldr.w tmp, [sp, #14*4] // load state from stack
-  vmov s20, tmp
+  vmov s10, tmp
 
   ldr.w tmp, [sp, #15*4] // load aprimeptr from stack
-  vmov s21, tmp
+  vmov s11, tmp
 
   movw q, #3329
   movw k, #0
@@ -113,10 +115,10 @@ matacc_asm_cache_32_32:
   
   ldr.w zetaptr, [sp, #13*4] // load zetaptr from stack
   ldr.w tmp, [sp, #14*4] // load state from stack
-  vmov s20, tmp
+  vmov s10, tmp
 
   ldr.w tmp, [sp, #15*4] // load aprimeptr from stack
-  vmov s21, tmp
+  vmov s11, tmp
 
   movw q, #3329
   movw k, #0
@@ -167,13 +169,13 @@ matacc_asm_cache_32_16:
   ldr.w zetaptr, [sp, #13*4] // load zetaptr from stack
 
   ldr.w tmp, [sp, #14*4] // load state from stack
-  vmov s20, tmp
+  vmov s10, tmp
 
   ldr.w tmp, [sp, #15*4] // load aprimeptr from stack
-  vmov s21, tmp
+  vmov s11, tmp
 
-  vmov s22, rptr // store "real" destinaton in FP
-  vmov s23, rptr // backup
+  vmov s12, rptr // store "real" destinaton in FP
+  vmov s13, rptr // backup
   ldr.w rptr, [sp, #16*4]
   
   movw q, #3329
@@ -194,7 +196,7 @@ matacc_asm_cache_32_16:
     cmp ctr, #256/4
     blt.w 1b
 
-  vmov rptr, s23
+  vmov rptr, s13
 
   pop {r0-r11, pc}
 .size matacc_asm_cache_32_16, . - matacc_asm_cache_32_16
@@ -229,10 +231,10 @@ matacc_asm_opt_16_32:
   movt qqinv, #3327
   
   ldr.w tmp, [sp, #13*4] // load state from stack
-  vmov s20, tmp
+  vmov s10, tmp
 
   ldr.w tmp, [sp, #14*4] // load aprimeptr from stack
-  vmov s21, tmp
+  vmov s11, tmp
 
   movw q, #3329
   movw k, #0
@@ -287,10 +289,10 @@ matacc_asm_opt_32_32:
   movt qqinv, #3327
   
   ldr.w tmp, [sp, #13*4] // load state from stack
-  vmov s20, tmp
+  vmov s10, tmp
 
   ldr.w tmp, [sp, #14*4] // load aprimeptr from stack
-  vmov s21, tmp
+  vmov s11, tmp
 
   movw q, #3329
   movw k, #0
@@ -343,13 +345,13 @@ matacc_asm_opt_32_16:
   movt qqinv, #3327
   
   ldr.w tmp, [sp, #13*4] // load state from stack
-  vmov s20, tmp
+  vmov s10, tmp
 
   ldr.w tmp, [sp, #14*4] // load aprimeptr from stack
-  vmov s21, tmp
+  vmov s11, tmp
 
-  vmov s22, rptr // store "real" destinaton in FP
-  vmov s23, rptr // backup
+  vmov s12, rptr // store "real" destinaton in FP
+  vmov s13, rptr // backup
   ldr.w rptr, [sp, #15*4]
   
   movw q, #3329
@@ -371,7 +373,7 @@ matacc_asm_opt_32_16:
     cmp ctr, #256/4
     blt.w 1b
 
-  vmov rptr, s23
+  vmov rptr, s13
 
   pop {r0-r11, pc}
 .size matacc_asm_opt_32_16, . - matacc_asm_opt_32_16

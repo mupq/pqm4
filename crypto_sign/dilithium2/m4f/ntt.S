@@ -54,7 +54,7 @@ pqcrystals_dilithium_ntt:
   vmov s0, ptr_zeta
   
   add.w temp_l, ptr_p, #32*strincr // 32 iterations
-  vmov s25, temp_l
+  vmov s9, temp_l
   1:
     .rept 2
     ldr.w pol0, [ptr_p]
@@ -77,7 +77,7 @@ pqcrystals_dilithium_ntt:
     str.w pol7, [ptr_p, #7*distance/4]
     str.w pol0, [ptr_p], #strincr
     .endr
-    vmov temp_l, s25
+    vmov temp_l, s9
     cmp.w ptr_p, temp_l
     bne 1b
   
@@ -86,10 +86,10 @@ pqcrystals_dilithium_ntt:
   // stage 4 - 6  
   .equ distance, 64
   add.w temp_l, ptr_p, #8*112+8*4*4 // 8 iterations
-  vmov s25, temp_l
+  vmov s9, temp_l
   1:
     add.w temp_l, ptr_p, #4*strincr // 4 iterations
-    vmov s26, temp_l
+    vmov s10, temp_l
     vmov ptr_zeta, s0
     vldm ptr_zeta!, {s2-s8}
     vmov s0, ptr_zeta
@@ -115,12 +115,12 @@ pqcrystals_dilithium_ntt:
       str.w pol7, [ptr_p, #7*distance/4]
       str.w pol0, [ptr_p], #4
       .endr
-      vmov temp_l, s26
+      vmov temp_l, s10
       cmp.w ptr_p, temp_l
       bne 2b
 
     add.w ptr_p, #112
-    vmov temp_l, s25
+    vmov temp_l, s9
     cmp.w ptr_p, temp_l
     bne 1b
   
@@ -213,7 +213,7 @@ pqcrystals_dilithium_invntt_tomont:
   vmov s0, ptr_zeta
   
   add.w temp_l, ptr_p, #32*strincr // 32 iterations
-  vmov s25, temp_l
+  vmov s9, temp_l
   1:
     ldr.w pol4, [ptr_p, #4*distance/4]
     ldr.w pol1, [ptr_p, #5*distance/4]
@@ -235,7 +235,7 @@ pqcrystals_dilithium_invntt_tomont:
     str.w pol6, [ptr_p, #6*distance/4]
     str.w pol7, [ptr_p, #7*distance/4]
     str.w pol0, [ptr_p], #strincr
-    vmov temp_l, s25
+    vmov temp_l, s9
     cmp.w ptr_p, temp_l
   bne.w 1b
   
@@ -248,7 +248,7 @@ pqcrystals_dilithium_invntt_tomont:
   // iteration 0
   movw temp_l, #4
   add.w temp_l, ptr_p, #4*256 // 4 iterations
-  vmov s26, temp_l
+  vmov s10, temp_l
 	
   vmov ptr_zeta, s0
   vldm ptr_zeta!, {s2-s8}
@@ -277,7 +277,7 @@ pqcrystals_dilithium_invntt_tomont:
     str.w pol0, [ptr_p]
     add.w ptr_p, #strincr
 
-    vmov temp_l, s26
+    vmov temp_l, s10
     cmp.w temp_l, ptr_p
   bne.w 2b
 
@@ -285,10 +285,10 @@ pqcrystals_dilithium_invntt_tomont:
 
   // iteration 1-7
   add.w temp_l, ptr_p, #7*4 // 7 iterations
-  vmov s25, temp_l
+  vmov s9, temp_l
   1:
     add.w temp_l, ptr_p, #4*strincr // 4 iterations
-    vmov s26, temp_l
+    vmov s10, temp_l
 
 	  vmov ptr_zeta, s0
     vldm ptr_zeta!, {s2-s8}
@@ -315,12 +315,12 @@ pqcrystals_dilithium_invntt_tomont:
 	    str.w pol0, [ptr_p]
 	    add.w ptr_p, #strincr
 
-      vmov temp_l, s26
+      vmov temp_l, s10
       cmp.w ptr_p, temp_l
     bne 2b
     sub.w ptr_p, #4*strincr-4
 
-    vmov temp_l, s25
+    vmov temp_l, s9
     cmp.w temp_l, ptr_p
   bne 1b
   
@@ -331,7 +331,7 @@ pqcrystals_dilithium_invntt_tomont:
   .equ strincr, 4
 
   add.w cntr, ptr_p, #64*strincr // 64 iterations 
-  vmov s25, cntr
+  vmov s9, cntr
   1:
     ldr.w zeta1, [ptr_zeta, #4]
     ldr.w zeta2, [ptr_zeta, #8]
@@ -357,7 +357,7 @@ pqcrystals_dilithium_invntt_tomont:
     str.w pol3, [ptr_p, #768]
     str pol0, [ptr_p], #strincr
 
-    vmov cntr, s25
+    vmov cntr, s9
     cmp.w cntr, ptr_p
     bne.w 1b
 

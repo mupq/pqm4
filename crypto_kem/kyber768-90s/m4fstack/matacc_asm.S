@@ -40,7 +40,7 @@
     
     mov r0, \tmp // buf + off implicitly after copying loop
     mov r1, #1
-    vmov r2, s20 // get state ptr
+    vmov r2, s10 // get state ptr
     bl aes256xof_squeezeblocks
     
     vmov r0, s2
@@ -82,10 +82,10 @@ matacc_asm:
   
   ldr.w zetaptr, [sp, #13*4] // load zetaptr from stack
   ldr.w tmp, [sp, #14*4] // load state from stack
-  vmov s20, tmp
+  vmov s10, tmp
 
   movw tmp2, #64 // XOF_BLOCKBYTES
-  vmov s21, tmp2
+  vmov s11, tmp2
 
   movw q, #3329
   movw k, #0
@@ -101,7 +101,7 @@ matacc_asm:
     
     second_if doublebasemul_asm, tmp, tmp2, tmp3, val0, val1, rptr, bptr, cptr, bufptr, zetaptr, k, q, qqinv, ctr
 
-    update_buf_loop_finish tmp, tmp2, tmp3, val0, val1, bufptr, ctr, s21
+    update_buf_loop_finish tmp, tmp2, tmp3, val0, val1, bufptr, ctr, s11
   pop {r0-r11, pc}
 .size matacc_asm, . - matacc_asm
 
@@ -131,10 +131,10 @@ matacc_asm_acc:
   
   ldr.w zetaptr, [sp, #13*4] // load zetaptr from stack
   ldr.w tmp, [sp, #14*4] // load state from stack
-  vmov s20, tmp
+  vmov s10, tmp
   
   movw tmp2, #64 // XOF_BLOCKBYTES
-  vmov s21, tmp2
+  vmov s11, tmp2
   
   movw q, #3329
   movw k, #0
@@ -150,7 +150,7 @@ matacc_asm_acc:
     
     second_if doublebasemul_asm_acc, tmp, tmp2, tmp3, val0, val1, rptr, bptr, cptr, bufptr, zetaptr, k, q, qqinv, ctr
 
-    update_buf_loop_finish tmp, tmp2, tmp3, val0, val1, bufptr, ctr, s21
+    update_buf_loop_finish tmp, tmp2, tmp3, val0, val1, bufptr, ctr, s11
 
   pop {r0-r11, pc}
 .size matacc_asm_acc, . - matacc_asm_acc

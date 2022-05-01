@@ -150,15 +150,6 @@ invntt_fast:
 
   movw q, #3329
   movt qinv, #3327
-  
-  // barrettconst = -(2^(32)/KYBER_Q)
-  movw barrettconst, #0x5049
-  movt barrettconst, #0xffec
-  vmov s10, barrettconst
-
-  // barrettconst2 = 2^(15)
-  movw barrettconst, #32768
-  vmov s11, barrettconst
 
   ### LAYER 7+6+5+4
   .equ distance, 16
@@ -166,32 +157,32 @@ invntt_fast:
   .equ strincr, 64
 
   // pre-load twiddle factors to FPU registers
-  vldm twiddle_ptr!, {s20-s27}
+  vldm twiddle_ptr!, {s8-s15}
 
   add.w tmp, poly, #8*strincr
-  vmov s12, tmp
+  vmov s8, tmp
   1:
     // load a1, a3, ..., a15
     load poly, poly0, poly1, poly2, poly3, #offset, #distance/4+offset, #2*distance/4+offset, #3*distance/4+offset
     load poly, poly4, poly5, poly6, poly7, #distance+offset, #5*distance/4+offset, #6*distance/4+offset, #7*distance/4+offset
     
     // NTT on a1, a3, ..., a15   
-    _3_layer_double_inv_CT_16_light poly0, poly1, poly2, poly3, poly4, poly5, poly6, poly7, s20, s21, s22, s23, twiddle, q, qinv, tmp, tmp2
+    _3_layer_double_inv_CT_16_light poly0, poly1, poly2, poly3, poly4, poly5, poly6, poly7, s8, s9, s10, s11, twiddle, q, qinv, tmp, tmp2
 
     // multiply coeffs by layer 4 twiddles for later use
-    vmov twiddle, s24 
+    vmov twiddle, s12 
     mul_twiddle b, poly0, twiddle, tmp, tmp2, q, qinv // could be omitted but kept for reduction only
     mul_twiddle t, poly1, twiddle, tmp, tmp2, q, qinv
 
-    vmov twiddle, s25
+    vmov twiddle, s13
     mul_twiddle b, poly2, twiddle, tmp, tmp2, q, qinv
     mul_twiddle t, poly3, twiddle, tmp, tmp2, q, qinv
 
-    vmov twiddle, s26
+    vmov twiddle, s14
     mul_twiddle b, poly4, twiddle, tmp, tmp2, q, qinv
     mul_twiddle t, poly5, twiddle, tmp, tmp2, q, qinv
 
-    vmov twiddle, s27
+    vmov twiddle, s15
     mul_twiddle b, poly6, twiddle, tmp, tmp2, q, qinv
     mul_twiddle t, poly7, twiddle, tmp, tmp2, q, qinv
 
@@ -211,7 +202,7 @@ invntt_fast:
     load poly, poly4, poly5, poly6, poly7, #distance, #5*distance/4, #6*distance/4, #7*distance/4
     
     // NTT on a0, a2, ..., a14
-    _3_layer_double_inv_CT_16_light poly0, poly1, poly2, poly3, poly4, poly5, poly6, poly7, s20, s21, s22, s23, twiddle, q, qinv, tmp, tmp2
+    _3_layer_double_inv_CT_16_light poly0, poly1, poly2, poly3, poly4, poly5, poly6, poly7, s8, s9, s10, s11, twiddle, q, qinv, tmp, tmp2
 
     // layer 4 - 1
     // addsub: (a2, a6, a10, a14), (a3, a7, a11, a15)
@@ -265,13 +256,23 @@ invntt_fast:
     str.w tmp2, [poly, #offset]    
     str.w tmp, [poly], #strincr // increase 2*8*4 = 64 (2 * 8 loads of 4 bytes each)
 
-    vmov tmp, s12
+    vmov tmp, s8
     cmp.w poly, tmp
   bne.w 1b
 
   sub.w poly, #8*strincr  
 
   ### LAYER 3+2+1
+
+  // barrettconst = -(2^(32)/KYBER_Q)
+  movw barrettconst, #0x5049
+  movt barrettconst, #0xffec
+  vmov s10, barrettconst
+
+  // barrettconst2 = 2^(15)
+  movw barrettconst, #32768
+  vmov s11, barrettconst
+
   .equ distance, distance*16
   .equ strincr, 4
 
@@ -280,14 +281,14 @@ invntt_fast:
   load poly, poly4, poly5, poly6, poly7, #distance, #5*distance/4, #6*distance/4, #7*distance/4
 
   vmov barrettconst, s10
-  vmov s2, poly
+  vmov s15, poly
   vmov poly, s11
   half_barrett poly0, poly1, poly2, poly3, barrettconst, poly, tmp, tmp2, q
   half_barrett poly4, poly5, poly6, poly7, barrettconst, poly, tmp, tmp2, q
-  vmov poly, s2
-  vldm twiddle_ptr!, {s21-s23}
+  vmov poly, s15
+  vldm twiddle_ptr!, {s0-s2}
 
-  _3_layer_double_inv_CT_16_light poly0, poly1, poly2, poly3, poly4, poly5, poly6, poly7, s20, s21, s22, s23, twiddle, q, qinv, tmp, tmp2
+  _3_layer_double_inv_CT_16_light poly0, poly1, poly2, poly3, poly4, poly5, poly6, poly7, s0, s0, s1, s2, twiddle, q, qinv, tmp, tmp2
 
   // twisting
   _3_layer_double_inv_twist_16 poly0, poly1, poly2, poly3, poly4, poly5, poly6, poly7, twiddle, twiddle_ptr, qinv, q, tmp, tmp2
@@ -330,10 +331,10 @@ invntt_fast:
     load poly, poly4, poly5, poly6, poly7, #distance, #5*distance/4, #6*distance/4, #7*distance/4
     
     vmov barrettconst, s10
-    vmov s2, poly
+    vmov s15, poly
     vmov poly, s11
     half_barrett poly0, poly2, poly4, poly6, barrettconst, poly, tmp, tmp2, q
-    vmov poly, s2
+    vmov poly, s15
 
    _3_layer_double_inv_CT_16 poly0, poly1, poly2, poly3, poly4, poly5, poly6, poly7, twiddle, twiddle_ptr, qinv, q, tmp, tmp2
 

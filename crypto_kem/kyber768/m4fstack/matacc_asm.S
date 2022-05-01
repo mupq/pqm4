@@ -31,7 +31,7 @@ matacc_asm:
   
   ldr.w zetaptr, [sp, #13*4] // load zetaptr from stack
   ldr.w tmp, [sp, #14*4] // load state from stack
-  vmov s20, tmp
+  vmov s10, tmp
 
   movw q, #3329
   movw k, #0
@@ -86,7 +86,7 @@ matacc_asm_acc:
   
   ldr.w zetaptr, [sp, #13*4] // load zetaptr from stack
   ldr.w tmp, [sp, #14*4] // load state from stack
-  vmov s20, tmp
+  vmov s10, tmp
 
   movw q, #3329
   movw k, #0
