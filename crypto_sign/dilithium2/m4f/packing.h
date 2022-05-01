@@ -13,6 +13,9 @@ void pack_pk(uint8_t pk[CRYPTO_PUBLICKEYBYTES], const uint8_t rho[SEEDBYTES], co
 void pack_pk_rho(unsigned char pk[CRYPTO_PUBLICKEYBYTES],
                  const unsigned char rho[SEEDBYTES]);
 
+#define getoffset_pk_rho DILITHIUM_NAMESPACE(getoffset_pk_rho)
+const unsigned char *getoffset_pk_rho(const unsigned char pk[CRYPTO_PUBLICKEYBYTES]);
+
 #define pack_pk_t1 DILITHIUM_NAMESPACE(pack_pk_t1)         
 void pack_pk_t1(unsigned char pk[CRYPTO_PUBLICKEYBYTES],
              const poly *t1,
@@ -71,6 +74,15 @@ void unpack_sk(uint8_t rho[SEEDBYTES],
 
 #define unpack_sig DILITHIUM_NAMESPACE(unpack_sig)
 int unpack_sig(uint8_t c[SEEDBYTES], polyvecl *z, polyveck *h, const uint8_t sig[CRYPTO_BYTES]);
+
+#define unpack_sig_z DILITHIUM_NAMESPACE(unpack_sig_z)
+int unpack_sig_z(polyvecl *z, const unsigned char sig[CRYPTO_BYTES]);
+
+#define unpack_sig_h DILITHIUM_NAMESPACE(unpack_sig_h)
+int unpack_sig_h(poly *h, unsigned int idx, const unsigned char sig[CRYPTO_BYTES]);
+
+#define unpack_pk_t1 DILITHIUM_NAMESPACE(unpack_pk_t1)
+void unpack_pk_t1(poly *t1, unsigned int idx, const unsigned char pk[CRYPTO_PUBLICKEYBYTES]);
 
 #define pack_sig_c DILITHIUM_NAMESPACE(pack_sig_c)
 void pack_sig_c(uint8_t sig[CRYPTO_BYTES], const uint8_t c[SEEDBYTES]);
