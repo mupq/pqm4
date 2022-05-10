@@ -82,7 +82,7 @@
 
       mov \rptr, \bufptr
       movw \bptr, #1
-      vmov \cptr, s20 // load state
+      vmov \cptr, s10 // load state
       bl kyber_shake128_squeezeblocks
       
       vmov \rptr, s2

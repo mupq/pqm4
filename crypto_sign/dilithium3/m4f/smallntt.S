@@ -111,6 +111,7 @@
 .align 2
 small_ntt_asm:
   push {r4-r11, r14}
+  vpush.w {s16}
 
   poly        .req r0
   twiddle_ptr .req r1
@@ -136,33 +137,33 @@ small_ntt_asm:
   .equ offset, 32
   .equ strincr, 4
   // pre-load twiddle factors to FPU registers
-  vldm twiddle_ptr!, {s20-s27}
+  vldm twiddle_ptr!, {s8-s15}
 
 
   add tmp, poly, #strincr*8
-  vmov s12, tmp
+  vmov s16, tmp
   1:
     // load a1, a3, ..., a15
     load poly, poly0, poly1, poly2, poly3, #offset, #distance/4+offset, #2*distance/4+offset, #3*distance/4+offset
     load poly, poly4, poly5, poly6, poly7, #distance+offset, #5*distance/4+offset, #6*distance/4+offset, #7*distance/4+offset
 
     // 8-NTT on a1, a3, ..., a15
-    _3_layer_double_CT_16_fp poly0, poly1, poly2, poly3, poly4, poly5, poly6, poly7, s20, s21, s22, s23, twiddle, qinv, q, tmp, tmp2
+    _3_layer_double_CT_16_fp poly0, poly1, poly2, poly3, poly4, poly5, poly6, poly7, s8, s9, s10, s11, twiddle, qinv, q, tmp, tmp2
 
     // multiply coeffs by layer 4 twiddles for later use
-    vmov twiddle, s24
+    vmov twiddle, s12
     mul_twiddle b, poly0, twiddle, tmp, tmp2, q, qinv
     mul_twiddle t, poly1, twiddle, tmp, tmp2, q, qinv
 
-    vmov twiddle, s25
+    vmov twiddle, s13
     mul_twiddle b, poly2, twiddle, tmp, tmp2, q, qinv
     mul_twiddle t, poly3, twiddle, tmp, tmp2, q, qinv
 
-    vmov twiddle, s26
+    vmov twiddle, s14
     mul_twiddle b, poly4, twiddle, tmp, tmp2, q, qinv
     mul_twiddle t, poly5, twiddle, tmp, tmp2, q, qinv
 
-    vmov twiddle, s27
+    vmov twiddle, s15
     mul_twiddle b, poly6, twiddle, tmp, tmp2, q, qinv
     mul_twiddle t, poly7, twiddle, tmp, tmp2, q, qinv
 
@@ -182,7 +183,7 @@ small_ntt_asm:
     load poly, poly4, poly5, poly6, poly7, #distance, #5*distance/4, #6*distance/4, #7*distance/4
 
     // 8-NTT on a0, a2, ..., a14
-    _3_layer_double_CT_16_fp poly0, poly1, poly2, poly3, poly4, poly5, poly6, poly7, s20, s21, s22, s23, twiddle, qinv, q, tmp, tmp2
+    _3_layer_double_CT_16_fp poly0, poly1, poly2, poly3, poly4, poly5, poly6, poly7, s8, s9, s10, s11, twiddle, qinv, q, tmp, tmp2
 
     // layer 4 - 1
     // addsub: (a2, a6, a10, a14), (a3, a7, a11, a15)
@@ -246,7 +247,7 @@ small_ntt_asm:
     str.w poly7, [poly, #6*distance/4+offset]
     str.w poly0, [poly], #4
 
-    vmov tmp, s12
+    vmov tmp, s16
     cmp.w poly, tmp
   bne.w 1b
 
@@ -276,6 +277,7 @@ small_ntt_asm:
     cmp.w poly, tmp
   bne.w 2b
 
+  vpop.w {s16}
   pop {r4-r11, pc}
 
 
@@ -493,32 +495,32 @@ small_invntt_tomont_asm:
   .equ strincr, 64
 
   // pre-load twiddle factors to FPU registers
-  vldm twiddle_ptr!, {s20-s27}
+  vldm twiddle_ptr!, {s8-s15}
 
   add.w tmp, poly, #8*strincr
-  vmov s12, tmp
+  vmov s8, tmp
   1:
     // load a1, a3, ..., a15
     load poly, poly0, poly1, poly2, poly3, #offset, #distance/4+offset, #2*distance/4+offset, #3*distance/4+offset
     load poly, poly4, poly5, poly6, poly7, #distance+offset, #5*distance/4+offset, #6*distance/4+offset, #7*distance/4+offset
 
     // NTT on a1, a3, ..., a15
-    _3_layer_double_inv_CT_16_light poly0, poly1, poly2, poly3, poly4, poly5, poly6, poly7, s20, s21, s22, s23, twiddle, q, qinv, tmp, tmp2
+    _3_layer_double_inv_CT_16_light poly0, poly1, poly2, poly3, poly4, poly5, poly6, poly7, s8, s9, s10, s11, twiddle, q, qinv, tmp, tmp2
 
     // multiply coeffs by layer 4 twiddles for later use
-    vmov twiddle, s24
+    vmov twiddle, s12
     mul_twiddle b, poly0, twiddle, tmp, tmp2, q, qinv // could be omitted but kept for reduction only
     mul_twiddle t, poly1, twiddle, tmp, tmp2, q, qinv
 
-    vmov twiddle, s25
+    vmov twiddle, s13
     mul_twiddle b, poly2, twiddle, tmp, tmp2, q, qinv
     mul_twiddle t, poly3, twiddle, tmp, tmp2, q, qinv
 
-    vmov twiddle, s26
+    vmov twiddle, s14
     mul_twiddle b, poly4, twiddle, tmp, tmp2, q, qinv
     mul_twiddle t, poly5, twiddle, tmp, tmp2, q, qinv
 
-    vmov twiddle, s27
+    vmov twiddle, s15
     mul_twiddle b, poly6, twiddle, tmp, tmp2, q, qinv
     mul_twiddle t, poly7, twiddle, tmp, tmp2, q, qinv
 
@@ -538,7 +540,7 @@ small_invntt_tomont_asm:
     load poly, poly4, poly5, poly6, poly7, #distance, #5*distance/4, #6*distance/4, #7*distance/4
 
     // NTT on a0, a2, ..., a14
-    _3_layer_double_inv_CT_16_light poly0, poly1, poly2, poly3, poly4, poly5, poly6, poly7, s20, s21, s22, s23, twiddle, q, qinv, tmp, tmp2
+    _3_layer_double_inv_CT_16_light poly0, poly1, poly2, poly3, poly4, poly5, poly6, poly7, s8, s9, s10, s11, twiddle, q, qinv, tmp, tmp2
 
     // layer 4 - 1
     // addsub: (a2, a6, a10, a14), (a3, a7, a11, a15)
@@ -602,7 +604,7 @@ small_invntt_tomont_asm:
     str.w poly7, [poly, #6*distance/4+offset]
     str.w poly0, [poly], #strincr // increase 2*8*4 = 64 (2 * 8 loads of 4 bytes each)
 
-    vmov tmp, s12
+    vmov tmp, s8
     cmp.w poly, tmp
   bne.w 1b
 
@@ -616,9 +618,9 @@ small_invntt_tomont_asm:
   load poly, poly0, poly1, poly2, poly3, #0, #distance/4, #2*distance/4, #3*distance/4
   load poly, poly4, poly5, poly6, poly7, #distance, #5*distance/4, #6*distance/4, #7*distance/4
 
-  vldm twiddle_ptr!, {s21-s23}
+  vldm twiddle_ptr!, {s5-s7}
 
-  _3_layer_double_inv_CT_16_light_reduce poly0, poly1, poly2, poly3, poly4, poly5, poly6, poly7, s20, s21, s22, s23, twiddle, q, qinv, tmp, tmp2
+  _3_layer_double_inv_CT_16_light_reduce poly0, poly1, poly2, poly3, poly4, poly5, poly6, poly7, s5, s5, s6, s7, twiddle, q, qinv, tmp, tmp2
 
   vmov.w s2, poly
   movw poly, #:lower16:5585133

@@ -41,7 +41,7 @@
     
     mov.w r0, \tmp // buf + off implicitly after copying loop
     mov r1, #1
-    vmov r2, s20 // get state ptr
+    vmov r2, s10 // get state ptr
     bl aes256xof_squeezeblocks
     
     vmov r0, s2
@@ -83,13 +83,13 @@ matacc_asm_cache_16_32:
   
   ldr.w zetaptr, [sp, #13*4] // load zetaptr from stack
   ldr.w tmp, [sp, #14*4] // load state from stack
-  vmov s20, tmp
+  vmov s10, tmp
 
   ldr.w tmp, [sp, #15*4] // load aprimeptr from stack
-  vmov s21, tmp
+  vmov s11, tmp
 
   movw tmp2, #64 // XOF_BLOCKBYTES
-  vmov s23, tmp2
+  vmov s13, tmp2
 
   movw q, #3329
   movw k, #0
@@ -105,7 +105,7 @@ matacc_asm_cache_16_32:
     
     second_if doublebasemul_asm_cache_16_32, tmp, tmp2, tmp3, val0, val1, rptr, bptr, cptr, bufptr, zetaptr, k, q, qqinv, ctr
 
-    update_buf_loop_finish tmp, tmp2, tmp3, val0, val1, bufptr, ctr, s23
+    update_buf_loop_finish tmp, tmp2, tmp3, val0, val1, bufptr, ctr, s13
 
   pop {r0-r11, pc}
 .size matacc_asm_cache_16_32, . - matacc_asm_cache_16_32
@@ -136,13 +136,13 @@ matacc_asm_cache_32_32:
   
   ldr.w zetaptr, [sp, #13*4] // load zetaptr from stack
   ldr.w tmp, [sp, #14*4] // load state from stack
-  vmov s20, tmp
+  vmov s10, tmp
 
   ldr.w tmp, [sp, #15*4] // load aprimeptr from stack
-  vmov s21, tmp
+  vmov s11, tmp
 
   movw tmp2, #64 // XOF_BLOCKBYTES
-  vmov s23, tmp2
+  vmov s13, tmp2
 
   movw q, #3329
   movw k, #0
@@ -158,7 +158,7 @@ matacc_asm_cache_32_32:
     
     second_if doublebasemul_asm_acc_cache_32_32, tmp, tmp2, tmp3, val0, val1, rptr, bptr, cptr, bufptr, zetaptr, k, q, qqinv, ctr
 
-    update_buf_loop_finish tmp, tmp2, tmp3, val0, val1, bufptr, ctr, s23
+    update_buf_loop_finish tmp, tmp2, tmp3, val0, val1, bufptr, ctr, s13
 
   pop {r0-r11, pc}
 .size matacc_asm_cache_32_32, . - matacc_asm_cache_32_32
@@ -190,17 +190,17 @@ matacc_asm_cache_32_16:
   ldr.w zetaptr, [sp, #13*4] // load zetaptr from stack
 
   ldr.w tmp, [sp, #14*4] // load state from stack
-  vmov s20, tmp
+  vmov s10, tmp
 
   ldr.w tmp, [sp, #15*4] // load aprimeptr from stack
-  vmov s21, tmp
+  vmov s11, tmp
 
-  vmov s22, rptr // store "real" destinaton in FP
-  vmov s23, rptr // backup
+  vmov s12, rptr // store "real" destinaton in FP
+  vmov s13, rptr // backup
   ldr.w rptr, [sp, #16*4] 
   
   movw tmp2, #64 // XOF_BLOCKBYTES
-  vmov s25, tmp2
+  vmov s15, tmp2
 
   movw q, #3329
   movw k, #0
@@ -216,9 +216,9 @@ matacc_asm_cache_32_16:
 
     second_if doublebasemul_asm_acc_cache_32_16, tmp, tmp2, tmp3, val0, val1, rptr, bptr, cptr, bufptr, zetaptr, k, q, qqinv, ctr
 
-    update_buf_loop_finish tmp, tmp2, tmp3, val0, val1, bufptr, ctr, s25
+    update_buf_loop_finish tmp, tmp2, tmp3, val0, val1, bufptr, ctr, s15
 
-  vmov rptr, s23
+  vmov rptr, s13
 
   pop {r0-r11, pc}
 .size matacc_asm_cache_32_16, . - matacc_asm_cache_32_16
@@ -253,13 +253,13 @@ matacc_asm_opt_16_32:
   movt qqinv, #3327
   
   ldr.w tmp, [sp, #13*4] // load state from stack
-  vmov s20, tmp
+  vmov s10, tmp
 
   ldr.w tmp, [sp, #14*4] // load aprimeptr from stack
-  vmov s21, tmp
+  vmov s11, tmp
 
   movw tmp2, #64 // XOF_BLOCKBYTES
-  vmov s23, tmp2
+  vmov s13, tmp2
 
   movw q, #3329
   movw k, #0
@@ -275,7 +275,7 @@ matacc_asm_opt_16_32:
 
     second_if doublebasemul_asm_opt_16_32, tmp, tmp2, tmp3, val0, val1, rptr, bptr, cptr, bufptr, tmp4, k, q, qqinv, ctr
 
-    update_buf_loop_finish tmp, tmp2, tmp3, val0, val1, bufptr, ctr, s23
+    update_buf_loop_finish tmp, tmp2, tmp3, val0, val1, bufptr, ctr, s13
 
   pop {r0-r11, pc}
 .size matacc_asm_opt_16_32, . - matacc_asm_opt_16_32
@@ -309,13 +309,13 @@ matacc_asm_opt_32_32:
   movt qqinv, #3327
   
   ldr.w tmp, [sp, #13*4] // load state from stack
-  vmov s20, tmp
+  vmov s10, tmp
 
   ldr.w tmp, [sp, #14*4] // load aprimeptr from stack
-  vmov s21, tmp
+  vmov s11, tmp
 
   movw tmp2, #64 // XOF_BLOCKBYTES
-  vmov s23, tmp2
+  vmov s13, tmp2
 
   movw q, #3329
   movw k, #0
@@ -331,7 +331,7 @@ matacc_asm_opt_32_32:
     
     second_if doublebasemul_asm_acc_opt_32_32, tmp, tmp2, tmp3, val0, val1, rptr, bptr, cptr, bufptr, tmp4, k, q, qqinv, ctr
 
-    update_buf_loop_finish tmp, tmp2, tmp3, val0, val1, bufptr, ctr, s23
+    update_buf_loop_finish tmp, tmp2, tmp3, val0, val1, bufptr, ctr, s13
 
   pop {r0-r11, pc}
 .size matacc_asm_opt_32_32, . - matacc_asm_opt_32_32
@@ -365,17 +365,17 @@ matacc_asm_opt_32_16:
   movt qqinv, #3327
   
   ldr.w tmp, [sp, #13*4] // load state from stack
-  vmov s20, tmp
+  vmov s10, tmp
 
   ldr.w tmp, [sp, #14*4] // load aprimeptr from stack
-  vmov s21, tmp
+  vmov s11, tmp
 
-  vmov s22, rptr // store "real" destinaton in FP
-  vmov s23, rptr // backup
+  vmov s12, rptr // store "real" destinaton in FP
+  vmov s13, rptr // backup
   ldr.w rptr, [sp, #15*4] 
   
   movw tmp2, #64 // XOF_BLOCKBYTES
-  vmov s25, tmp2
+  vmov s15, tmp2
 
   movw q, #3329
   movw k, #0
@@ -391,9 +391,9 @@ matacc_asm_opt_32_16:
     
     second_if doublebasemul_asm_acc_opt_32_16, tmp, tmp2, tmp3, val0, val1, rptr, bptr, cptr, bufptr, tmp4, k, q, qqinv, ctr
 
-    update_buf_loop_finish tmp, tmp2, tmp3, val0, val1, bufptr, ctr, s25
+    update_buf_loop_finish tmp, tmp2, tmp3, val0, val1, bufptr, ctr, s15
 
-  vmov rptr, s23
+  vmov rptr, s13
 
   pop {r0-r11, pc}
 .size matacc_asm_opt_32_16, . - matacc_asm_opt_32_16
