@@ -9,3 +9,4 @@ __pycache__/
 bin/
 bin-host/
 compile_commands.json
+.vscode
