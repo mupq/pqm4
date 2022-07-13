@@ -1,1 +1,0 @@
-../../rainbowI-classic/m4f/sign.c
