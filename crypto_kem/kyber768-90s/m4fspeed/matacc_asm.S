@@ -200,7 +200,7 @@ matacc_asm_cache_32_16:
   ldr.w rptr, [sp, #16*4] 
   
   movw tmp2, #64 // XOF_BLOCKBYTES
-  vmov s31, tmp2
+  vmov s16, tmp2
 
   movw q, #3329
   movw k, #0
@@ -216,7 +216,7 @@ matacc_asm_cache_32_16:
 
     second_if doublebasemul_asm_acc_cache_32_16, tmp, tmp2, tmp3, val0, val1, rptr, bptr, cptr, bufptr, zetaptr, k, q, qqinv, ctr
 
-    update_buf_loop_finish tmp, tmp2, tmp3, val0, val1, bufptr, ctr, s31
+    update_buf_loop_finish tmp, tmp2, tmp3, val0, val1, bufptr, ctr, s16
 
   vmov rptr, s29
 
@@ -375,7 +375,7 @@ matacc_asm_opt_32_16:
   ldr.w rptr, [sp, #15*4] 
   
   movw tmp2, #64 // XOF_BLOCKBYTES
-  vmov s31, tmp2
+  vmov s16, tmp2
 
   movw q, #3329
   movw k, #0
@@ -391,7 +391,7 @@ matacc_asm_opt_32_16:
     
     second_if doublebasemul_asm_acc_opt_32_16, tmp, tmp2, tmp3, val0, val1, rptr, bptr, cptr, bufptr, tmp4, k, q, qqinv, ctr
 
-    update_buf_loop_finish tmp, tmp2, tmp3, val0, val1, bufptr, ctr, s31
+    update_buf_loop_finish tmp, tmp2, tmp3, val0, val1, bufptr, ctr, s16
 
   vmov rptr, s29
 
