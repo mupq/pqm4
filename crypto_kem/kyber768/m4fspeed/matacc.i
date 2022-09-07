@@ -9,15 +9,15 @@
     cmp.w \k, #4
     bne.w 2f
         sub \cptr, #4*2
-        vmov s2, \bufptr
-        vmov s3, \q
-        vmov s4, \ctr
-        vmov s5, \val1
+        vmov s18, \bufptr
+        vmov s19, \q
+        vmov s20, \ctr
+        vmov s21, \val1
         \func \rptr, \bptr, \cptr, \zetaptr, \bufptr, \k, \q, \val0, \qqinv, \qqinv, \tmp, \tmp2, \tmp3, \val1, \ctr
-        vmov \bufptr, s2
-        vmov \q, s3
-        vmov \ctr, s4
-        vmov \val1, s5
+        vmov \bufptr, s18
+        vmov \q, s19
+        vmov \ctr, s20
+        vmov \val1, s21
 
         add ctr, #1
         
@@ -37,13 +37,13 @@
       cmp.w \k, #4
       bne.w 2f
         sub \cptr, #4*2
-        vmov s2, \bufptr
-        vmov s3, \q
-        vmov s4, \ctr
+        vmov s18, \bufptr
+        vmov s19, \q
+        vmov s20, \ctr
         \func \rptr, \bptr, \cptr, \zetaptr, \bufptr, \k, \q, \val0, \qqinv, \qqinv, \tmp, \tmp2, \tmp3, \val1, \ctr
-        vmov \bufptr, s2
-        vmov \q, s3
-        vmov \ctr, s4
+        vmov \bufptr, s18
+        vmov \q, s19
+        vmov \ctr, s20
 
         add \ctr, #1
         
@@ -57,7 +57,7 @@
 .endm
 
 .macro doublebasemul_asm_cache_16_32 rptr_tmp, aptr, bptr, zetaptr, poly0, poly1, poly2, poly3, q, qinv, tmp, tmp2, res, aprimeptr, zeta
-  vmov \aprimeptr, s11
+  vmov \aprimeptr, s27
   ldr \poly0, [\aptr], #4
   ldr \poly1, [\bptr]
   ldr \poly2, [\aptr], #4
@@ -89,11 +89,11 @@
   smuadx \tmp, \poly2, \poly3
   str.w \tmp, [\rptr_tmp, #4]
   str \tmp2, [\rptr_tmp], #8
-  vmov s11, \aprimeptr
+  vmov s27, \aprimeptr
 .endm 
 
 .macro doublebasemul_asm_acc_cache_32_32 rptr_tmp, aptr, bptr, zetaptr, poly0, poly1, poly2, poly3, q, qinv, tmp, tmp2, res, aprimeptr, zeta
-  vmov \aprimeptr, s11
+  vmov \aprimeptr, s27
   ldr \poly0, [\aptr], #4
   ldr \poly1, [\bptr]
   ldr \poly2, [\aptr], #4
@@ -129,11 +129,11 @@
   smladx \res, \poly2, \poly3, \res
 
   str \res, [\rptr_tmp], #4
-  vmov s11, \aprimeptr
+  vmov s27, \aprimeptr
 .endm
 
 .macro doublebasemul_asm_acc_cache_32_16 rptr_tmp, aptr, bptr, zetaptr, poly0, poly1, poly2, poly3, q, qinv, tmp, tmp2, res, aprimeptr, zeta
-  vmov \aprimeptr, s11
+  vmov \aprimeptr, s27
   ldr \poly0, [\aptr], #4
   ldr \poly1, [\bptr]
   ldr \poly2, [\aptr], #4
@@ -155,7 +155,7 @@
   montgomery \q, \qinv, \tmp, \poly0
   
   pkhtb \res, \poly0, \tmp2, asr#16
-  vmov \poly0, s12
+  vmov \poly0, s28
   str \res, [\poly0], #4
   
   neg \zeta, \zeta
@@ -177,8 +177,8 @@
 
   pkhtb \res, \tmp, \tmp2, asr#16
   str \res, [\poly0], #4
-  vmov s12, \poly0
-  vmov s11, \aprimeptr
+  vmov s28, \poly0
+  vmov s27, \aprimeptr
 .endm
 
 .macro load_vals val0, val1, bufptr, tmp
@@ -191,7 +191,7 @@
 .endm
 
 .macro doublebasemul_asm_opt_16_32 rptr_tmp, aptr, bptr, tmp3, poly0, poly1, poly2, poly3, q, qinv, tmp, tmp2, res, aprimeptr, tmp4
-  vmov \aprimeptr, s11
+  vmov \aprimeptr, s27
   ldr \poly0, [\aptr], #4
   ldr \poly1, [\bptr]
   ldr \poly2, [\aptr], #4
@@ -215,11 +215,11 @@
 
   str.w \tmp2, [\rptr_tmp], #4
   str.w \tmp3, [\rptr_tmp], #4
-  vmov s11, \aprimeptr
+  vmov s27, \aprimeptr
 .endm 
 
 .macro doublebasemul_asm_acc_opt_32_32 rptr_tmp, aptr, bptr, tmp3, poly0, poly1, poly2, poly3, q, qinv, tmp, tmp2, res, aprimeptr, tmp4
-  vmov \aprimeptr, s11
+  vmov \aprimeptr, s27
   ldr.w \poly0, [\aptr], #4
   ldr.w \poly1, [\bptr]
   ldr.w \poly2, [\aptr], #4
@@ -249,11 +249,11 @@
   str.w \tmp, [\rptr_tmp, #4]
   str \tmp4, [\rptr_tmp], #8
   
-  vmov s11, \aprimeptr
+  vmov s27, \aprimeptr
 .endm 
 
 .macro doublebasemul_asm_acc_opt_32_16 rptr_tmp, aptr, bptr, tmp3, poly0, poly1, poly2, poly3, q, qinv, tmp, tmp2, res, aprimeptr, tmp4
-  vmov \aprimeptr, s11
+  vmov \aprimeptr, s27
 
   ldr \poly0, [\aptr], #4
   ldr \poly1, [\bptr]
@@ -274,7 +274,7 @@
   montgomery \q, \qinv, \tmp, \tmp3
 
   pkhtb \res, \tmp3, \res, asr#16
-  vmov \poly0, s12
+  vmov \poly0, s28
   str \res, [\poly0], #4
     
   ldr \tmp2, [\aprimeptr], #4 // load cached value
@@ -291,6 +291,6 @@
 
   pkhtb \res, \tmp3, \res, asr#16
   str \res, [\poly0], #4
-  vmov s12, \poly0
-  vmov s11, \aprimeptr
+  vmov s28, \poly0
+  vmov s27, \aprimeptr
 .endm 

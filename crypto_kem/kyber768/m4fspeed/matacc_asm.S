@@ -8,31 +8,31 @@
 // kyber_shake128_squeezeblocks into buffer if all bytes have been used
 .macro third_if tmp, tmp2, rptr, bptr, cptr, bufptr, ctr
 // if (pos + 3 > buflen && ctr < KYBER_N/4)
-  vmov \tmp, s1
+  vmov \tmp, s17
   add \tmp, #168 // XOF_BLOCKBYTES=168
   add \tmp2, \bufptr, #3
   cmp.w \tmp2, \tmp  // pos + 3 > buflen
   ble.w 2f
     cmp.w \ctr, #256/4
     bge.w 2f
-      vmov \bufptr, s1
+      vmov \bufptr, s17
 
-      vmov s2, \rptr
-      vmov s3, \bptr
-      vmov s4, \cptr
-      vmov s5, \ctr
+      vmov s18, \rptr
+      vmov s19, \bptr
+      vmov s20, \cptr
+      vmov s21, \ctr
 
       mov \rptr, \bufptr
       movw \bptr, #1
-      vmov \cptr, s10 // load state
+      vmov \cptr, s26 // load state
 
       bl kyber_shake128_squeezeblocks
 
-      vmov \rptr, s2
-      vmov \bptr, s3
-      vmov \cptr, s4
-      vmov \ctr, s5
-      vmov \bufptr, s1
+      vmov \rptr, s18
+      vmov \bptr, s19
+      vmov \cptr, s20
+      vmov \ctr, s21
+      vmov \bufptr, s17
     2:
 .endm
 
@@ -62,17 +62,17 @@ matacc_asm_cache_16_32:
   
   ldr.w zetaptr, [sp, #13*4] // load zetaptr from stack
   ldr.w tmp, [sp, #14*4] // load state from stack
-  vmov s10, tmp
+  vmov s26, tmp
 
   ldr.w tmp, [sp, #15*4] // load aprimeptr from stack
-  vmov s11, tmp
+  vmov s27, tmp
 
   movw q, #3329
   movw k, #0
 
   // outer while loop
   movw ctr, #0
-  vmov s1, bufptr // save bufptr to check later
+  vmov s17, bufptr // save bufptr to check later
   1:
 
     load_vals val0, val1, bufptr, tmp
@@ -115,17 +115,17 @@ matacc_asm_cache_32_32:
   
   ldr.w zetaptr, [sp, #13*4] // load zetaptr from stack
   ldr.w tmp, [sp, #14*4] // load state from stack
-  vmov s10, tmp
+  vmov s26, tmp
 
   ldr.w tmp, [sp, #15*4] // load aprimeptr from stack
-  vmov s11, tmp
+  vmov s27, tmp
 
   movw q, #3329
   movw k, #0
 
   // outer while loop
   movw ctr, #0
-  vmov s1, bufptr // save bufptr to check later
+  vmov s17, bufptr // save bufptr to check later
   1:
 
     load_vals val0, val1, bufptr, tmp
@@ -169,13 +169,13 @@ matacc_asm_cache_32_16:
   ldr.w zetaptr, [sp, #13*4] // load zetaptr from stack
 
   ldr.w tmp, [sp, #14*4] // load state from stack
-  vmov s10, tmp
+  vmov s26, tmp
 
   ldr.w tmp, [sp, #15*4] // load aprimeptr from stack
-  vmov s11, tmp
+  vmov s27, tmp
 
-  vmov s12, rptr // store "real" destinaton in FP
-  vmov s13, rptr // backup
+  vmov s28, rptr // store "real" destinaton in FP
+  vmov s29, rptr // backup
   ldr.w rptr, [sp, #16*4]
   
   movw q, #3329
@@ -183,7 +183,7 @@ matacc_asm_cache_32_16:
 
   // outer while loop
   movw ctr, #0
-  vmov s1, bufptr // save bufptr to check later
+  vmov s17, bufptr // save bufptr to check later
   1:
     load_vals val0, val1, bufptr, tmp
 
@@ -196,7 +196,7 @@ matacc_asm_cache_32_16:
     cmp ctr, #256/4
     blt.w 1b
 
-  vmov rptr, s13
+  vmov rptr, s29
 
   pop {r0-r11, pc}
 .size matacc_asm_cache_32_16, . - matacc_asm_cache_32_16
@@ -231,17 +231,17 @@ matacc_asm_opt_16_32:
   movt qqinv, #3327
   
   ldr.w tmp, [sp, #13*4] // load state from stack
-  vmov s10, tmp
+  vmov s26, tmp
 
   ldr.w tmp, [sp, #14*4] // load aprimeptr from stack
-  vmov s11, tmp
+  vmov s27, tmp
 
   movw q, #3329
   movw k, #0
 
   // outer while loop
   movw ctr, #0
-  vmov s1, bufptr // save bufptr to check later
+  vmov s17, bufptr // save bufptr to check later
   1:
 
     load_vals val0, val1, bufptr, tmp
@@ -289,17 +289,17 @@ matacc_asm_opt_32_32:
   movt qqinv, #3327
   
   ldr.w tmp, [sp, #13*4] // load state from stack
-  vmov s10, tmp
+  vmov s26, tmp
 
   ldr.w tmp, [sp, #14*4] // load aprimeptr from stack
-  vmov s11, tmp
+  vmov s27, tmp
 
   movw q, #3329
   movw k, #0
 
   // outer while loop
   movw ctr, #0
-  vmov s1, bufptr // save bufptr to check later
+  vmov s17, bufptr // save bufptr to check later
   1:
 
     load_vals val0, val1, bufptr, tmp
@@ -345,13 +345,13 @@ matacc_asm_opt_32_16:
   movt qqinv, #3327
   
   ldr.w tmp, [sp, #13*4] // load state from stack
-  vmov s10, tmp
+  vmov s26, tmp
 
   ldr.w tmp, [sp, #14*4] // load aprimeptr from stack
-  vmov s11, tmp
+  vmov s27, tmp
 
-  vmov s12, rptr // store "real" destinaton in FP
-  vmov s13, rptr // backup
+  vmov s28, rptr // store "real" destinaton in FP
+  vmov s29, rptr // backup
   ldr.w rptr, [sp, #15*4]
   
   movw q, #3329
@@ -359,7 +359,7 @@ matacc_asm_opt_32_16:
 
   // outer while loop
   movw ctr, #0
-  vmov s1, bufptr // save bufptr to check later
+  vmov s17, bufptr // save bufptr to check later
   1:
 
     load_vals val0, val1, bufptr, tmp
@@ -373,7 +373,7 @@ matacc_asm_opt_32_16:
     cmp ctr, #256/4
     blt.w 1b
 
-  vmov rptr, s13
+  vmov rptr, s29
 
   pop {r0-r11, pc}
 .size matacc_asm_opt_32_16, . - matacc_asm_opt_32_16

@@ -8,7 +8,7 @@
 .macro update_buf_loop_finish tmp, tmp2, tmp3, val0, val1, bufptr, ctr, buflenval
   // if (pos + 3 > buflen 
   vmov \tmp2, \buflenval // get buflen value
-  vmov \tmp, s1
+  vmov \tmp, s17
   sub \tmp3, \bufptr, \tmp // compute pos
   add \tmp3, #3 // pos + 3
   cmp.w \tmp3, \tmp2
@@ -27,29 +27,29 @@
     add \tmp, \tmp, \tmp3
     
     // compute buflen
-    vmov \val0, s1 // get buf addr
+    vmov \val0, s17 // get buf addr
     sub \val0, tmp, \val0
     add.w \val0, #64 // XOF_BLOCKBYTES=64
     vmov \buflenval, \val0
     
-    vmov s2, r0
-    vmov s3, r1
-    vmov s4, r2
-    vmov s6, r12
-    vmov s7, lr
+    vmov s18, r0
+    vmov s19, r1
+    vmov s20, r2
+    vmov s22, r12
+    vmov s23, lr
     
     mov r0, \tmp // buf + off implicitly after copying loop
     mov r1, #1
-    vmov r2, s10 // get state ptr
+    vmov r2, s26 // get state ptr
     bl aes256xof_squeezeblocks
     
-    vmov r0, s2
-    vmov r1, s3
-    vmov r2, s4
-    vmov r12, s6
-    vmov lr, s7
+    vmov r0, s18
+    vmov r1, s19
+    vmov r2, s20
+    vmov r12, s22
+    vmov lr, s23
     // pos = 0;
-    vmov \bufptr, s1 // reset buffer pointer to start -> only after squeezeblocks
+    vmov \bufptr, s17 // reset buffer pointer to start -> only after squeezeblocks
   3:
 
   cmp \ctr, #256/4
@@ -82,17 +82,17 @@ matacc_asm:
   
   ldr.w zetaptr, [sp, #13*4] // load zetaptr from stack
   ldr.w tmp, [sp, #14*4] // load state from stack
-  vmov s10, tmp
+  vmov s26, tmp
 
   movw tmp2, #64 // XOF_BLOCKBYTES
-  vmov s11, tmp2
+  vmov s27, tmp2
 
   movw q, #3329
   movw k, #0
 
   // outer while loop
   movw ctr, #0
-  vmov s1, bufptr // save bufptr to check later
+  vmov s17, bufptr // save bufptr to check later
   1:
 
     load_vals val0, val1, bufptr, tmp
@@ -101,7 +101,7 @@ matacc_asm:
     
     second_if doublebasemul_asm, tmp, tmp2, tmp3, val0, val1, rptr, bptr, cptr, bufptr, zetaptr, k, q, qqinv, ctr
 
-    update_buf_loop_finish tmp, tmp2, tmp3, val0, val1, bufptr, ctr, s11
+    update_buf_loop_finish tmp, tmp2, tmp3, val0, val1, bufptr, ctr, s27
   pop {r0-r11, pc}
 .size matacc_asm, . - matacc_asm
 
@@ -131,17 +131,17 @@ matacc_asm_acc:
   
   ldr.w zetaptr, [sp, #13*4] // load zetaptr from stack
   ldr.w tmp, [sp, #14*4] // load state from stack
-  vmov s10, tmp
+  vmov s26, tmp
   
   movw tmp2, #64 // XOF_BLOCKBYTES
-  vmov s11, tmp2
+  vmov s27, tmp2
   
   movw q, #3329
   movw k, #0
 
   // outer while loop
   movw ctr, #0
-  vmov s1, bufptr // save bufptr to check later
+  vmov s17, bufptr // save bufptr to check later
   1:
 
     load_vals val0, val1, bufptr, tmp
@@ -150,7 +150,7 @@ matacc_asm_acc:
     
     second_if doublebasemul_asm_acc, tmp, tmp2, tmp3, val0, val1, rptr, bptr, cptr, bufptr, zetaptr, k, q, qqinv, ctr
 
-    update_buf_loop_finish tmp, tmp2, tmp3, val0, val1, bufptr, ctr, s11
+    update_buf_loop_finish tmp, tmp2, tmp3, val0, val1, bufptr, ctr, s27
 
   pop {r0-r11, pc}
 .size matacc_asm_acc, . - matacc_asm_acc
