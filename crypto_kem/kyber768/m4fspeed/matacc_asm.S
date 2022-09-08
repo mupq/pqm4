@@ -17,7 +17,7 @@
     bge.w 2f
       vmov \bufptr, s17
 
-      vmov s0, r12
+      vmov s16, r12
       vmov s18, \rptr
       vmov s19, \bptr
       vmov s20, \cptr
@@ -29,7 +29,7 @@
 
       bl kyber_shake128_squeezeblocks
 
-      vmov r12, s0
+      vmov r12, s16
       vmov \rptr, s18
       vmov \bptr, s19
       vmov \cptr, s20
