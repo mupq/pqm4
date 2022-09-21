@@ -364,7 +364,7 @@ When referring to this framework in academic literature, please consider using t
 ```
 @misc{PQM4,
   title = {{PQM4}: Post-quantum crypto library for the {ARM} {Cortex-M4}},
-  author = {Matthias J. Kannwischer and Joost Rijneveld and Peter Schwabe and Ko Stoffelen},
+  author = {Matthias J. Kannwischer and Richard Petri and Joost Rijneveld and Peter Schwabe and Ko Stoffelen},
   note = {\url{https://github.com/mupq/pqm4}}
 }
 ```
