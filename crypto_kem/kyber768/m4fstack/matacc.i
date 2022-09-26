@@ -22,15 +22,15 @@
         cmp.w \k, #4
         bne.w 2f
             sub \cptr, #4*2
-            vmov s2, \bufptr
-            vmov s3, \q
-            vmov s4, \ctr
-            vmov s5, \val1
+            vmov s18, \bufptr
+            vmov s19, \q
+            vmov s20, \ctr
+            vmov s21, \val1
             \func \rptr, \bptr, \cptr, \zetaptr, \bufptr, \k, \q, \val0, \qqinv, \qqinv, \tmp, \tmp2, \tmp3, \val1, \ctr
-            vmov \bufptr, s2
-            vmov \q, s3
-            vmov \ctr, s4
-            vmov \val1, s5
+            vmov \bufptr, s18
+            vmov \q, s19
+            vmov \ctr, s20
+            vmov \val1, s21
 
             add ctr, #1
             
@@ -50,13 +50,13 @@
             cmp.w \k, #4
             bne.w 2f
                 sub \cptr, #4*2
-                vmov s2, \bufptr
-                vmov s3, \q
-                vmov s4, \ctr
+                vmov s18, \bufptr
+                vmov s19, \q
+                vmov s20, \ctr
                 \func \rptr, \bptr, \cptr, \zetaptr, \bufptr, \k, \q, \val0, \qqinv, \qqinv, \tmp, \tmp2, \tmp3, \val1, \ctr
-                vmov \bufptr, s2
-                vmov \q, s3
-                vmov \ctr, s4
+                vmov \bufptr, s18
+                vmov \q, s19
+                vmov \ctr, s20
 
                 add \ctr, #1
                 
@@ -66,30 +66,32 @@
 
 .macro third_if tmp, tmp2, rptr, bptr, cptr, bufptr, ctr
 // if (pos + 3 > buflen && ctr < KYBER_N/4)
-  vmov \tmp, s1
+  vmov \tmp, s17
   add \tmp, #168 // XOF_BLOCKBYTES=168
   add \tmp2, \bufptr, #3
   cmp.w \tmp2, \tmp  // pos + 3 > buflen
   ble.w 2f
     cmp.w \ctr, #256/4
     bge.w 2f
-      vmov \bufptr, s1
+      vmov \bufptr, s17
 
-      vmov s2, \rptr
-      vmov s3, \bptr
-      vmov s4, \cptr
-      vmov s5, \ctr
+      vmov s16, r12
+      vmov s18, \rptr
+      vmov s19, \bptr
+      vmov s20, \cptr
+      vmov s21, \ctr
 
       mov \rptr, \bufptr
       movw \bptr, #1
-      vmov \cptr, s10 // load state
+      vmov \cptr, s26 // load state
       bl kyber_shake128_squeezeblocks
       
-      vmov \rptr, s2
-      vmov \bptr, s3
-      vmov \cptr, s4
-      vmov \ctr, s5
-      vmov \bufptr, s1
+      vmov r12, s16
+      vmov \rptr, s18
+      vmov \bptr, s19
+      vmov \cptr, s20
+      vmov \ctr, s21
+      vmov \bufptr, s17
     2:
 .endm
 
