@@ -140,7 +140,7 @@ static void bench(void)
     t0 = hal_get_time();
     aes128_ecb(ct, pt, blocks, &ctx128_ecb);
     t1 = hal_get_time();
-    sprintf(str, "aes128_ecb: %llu cycles (%.2f cycles/byte) -- w/o key expansion", t1-t0, (double)(t1-t0)/(blocks*AES_BLOCKBYTES));
+    sprintf(str, "aes128_ecb: %llu cycles for %u bytes (%.2f cycles/byte) -- w/o key expansion", t1-t0, blocks*AES_BLOCKBYTES, (double)(t1-t0)/(blocks*AES_BLOCKBYTES));
     hal_send_str(str);
   }
   hal_send_str("-");
@@ -148,7 +148,7 @@ static void bench(void)
     t0 = hal_get_time();
     aes256_ecb(ct, pt, blocks, &ctx256_ecb);
     t1 = hal_get_time();
-    sprintf(str, "aes256_ecb: %llu cycles (%.2f cycles/byte) -- w/o key expansion", t1-t0, (double)(t1-t0)/(blocks*AES_BLOCKBYTES));
+    sprintf(str, "aes256_ecb: %llu cycles for %u bytes (%.2f cycles/byte) -- w/o key expansion", t1-t0, blocks*AES_BLOCKBYTES, (double)(t1-t0)/(blocks*AES_BLOCKBYTES));
     hal_send_str(str);
   }
   hal_send_str("-");
@@ -156,7 +156,7 @@ static void bench(void)
     t0 = hal_get_time();
     aes128_ctr(ct, blocks*AES_BLOCKBYTES, nonce, &ctx128_ctr);
     t1 = hal_get_time();
-    sprintf(str, "aes128_ctr: %llu cycles (%.2f cycles/byte) -- w/o key expansion", t1-t0, (double)(t1-t0)/(blocks*AES_BLOCKBYTES));
+    sprintf(str, "aes128_ctr: %llu cycles for %u bytes (%.2f cycles/byte) -- w/o key expansion", t1-t0, blocks*AES_BLOCKBYTES, (double)(t1-t0)/(blocks*AES_BLOCKBYTES));
     hal_send_str(str);
   }
   hal_send_str("-");
@@ -164,7 +164,7 @@ static void bench(void)
     t0 = hal_get_time();
     aes256_ctr(ct, blocks*AES_BLOCKBYTES, nonce, &ctx256_ctr);
     t1 = hal_get_time();
-    sprintf(str, "aes256_ctr: %llu cycles (%.2f cycles/byte) -- w/o key expansion", t1-t0, (double)(t1-t0)/(blocks*AES_BLOCKBYTES));
+    sprintf(str, "aes256_ctr: %llu cycles for %u bytes (%.2f cycles/byte) -- w/o key expansion", t1-t0, blocks*AES_BLOCKBYTES, (double)(t1-t0)/(blocks*AES_BLOCKBYTES));
     hal_send_str(str);
   }
 }
