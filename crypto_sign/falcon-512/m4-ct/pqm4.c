@@ -3,6 +3,7 @@
 
 #include "api.h"
 #include "inner.h"
+#include "randombytes.h"
 
 /* ==================================================================== */
 
@@ -60,7 +61,6 @@ static union {
 	fpr dummy_fp;
 } tmp;
 
-int randombytes(unsigned char *dst, size_t len);
 
 int
 crypto_sign_keypair(unsigned char *pk, unsigned char *sk)
