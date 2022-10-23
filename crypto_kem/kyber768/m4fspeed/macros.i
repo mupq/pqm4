@@ -1,3 +1,16 @@
+/******************************************************************************
+ * Integrating the improved Plantard arithmetic into Kyber.
+ *
+ * Efficient Plantard arithmetic enables a faster Kyber implementation with the
+ * same stack usage.
+ *
+ * See the paper at https://eprint.iacr.org/2022/956.pdf for more details.
+ *
+ * @author   Junhao Huang, BNU-HKBU United International College, Zhuhai, China
+ *           jhhuang_nuaa@126.com
+ *
+ * @date     September 2022
+ ******************************************************************************/
 #ifndef MACROS_I
 #define MACROS_I
 
@@ -15,6 +28,14 @@
   str.w \a3, [\a, \mem3]
 .endm
 
+.macro doubleplant a, tmp, q, qa, plantconst
+	smulwb \tmp, \plantconst, \a
+	smulwt \a, \plantconst, \a
+	smlabt \tmp, \tmp, \q, \qa
+	smlabt \a, \a, \q, \qa
+	pkhtb \a, \a, \tmp, asr#16
+.endm
+
 .macro doublebarrett a, tmp, tmp2, q, barrettconst
   smulbb \tmp, \a, \barrettconst
   smultb \tmp2, \a, \barrettconst
@@ -26,31 +47,14 @@
   usub16 \a, \a, \tmp
 .endm
 
-.macro doublebarrett_fast a, tmp, tmp2, q, barrettconst1, barrettconst2
- smlawb \tmp, \barrettconst1, \a, \barrettconst2
- smlabt \tmp, \q, \tmp, \a
- smlawt \tmp2, \barrettconst1, \a, \barrettconst2
- smulbt \tmp2, \q, \tmp2
- add    \tmp2, \a, \tmp2, lsl#16
- pkhbt  \a, \tmp, \tmp2
+// q locate in the top half of the register
+.macro plant_red q, qa, qinv, tmp
+	mul \tmp, \tmp, \qinv     
+	//tmp*qinv mod 2^2n/ 2^n; in high half
+	smlatt \tmp, \tmp, \q, \qa
+	// result in high half
 .endm
 
-.macro montgomery q, qinv, a, tmp
-  smulbt \tmp, \a, \qinv
-  smlabb \tmp, \q, \tmp, \a
-.endm
 
-.macro montgomery_inplace q, qinv, a, tmp
-  smulbt \tmp, \a, \qinv
-  smlabb \a, \q, \tmp, \a
-.endm
-
-.macro doublemontgomery a, tmp, tmp2, q, qinv, montconst
-  smulbb \tmp2, \a, \montconst
-  montgomery \q, \qinv, \tmp2, \tmp
-  smultb \a, \a, \montconst
-  montgomery \q, \qinv, \a, \tmp2
-  pkhtb \a, \tmp2, \tmp, asr#16
-.endm
 
 #endif /* MACROS_I */

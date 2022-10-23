@@ -1,6 +1,14 @@
 
+// q locates in the bottom half of the register
+.macro plant_red_b q, qa, qinv, tmp
+	mul \tmp, \tmp, \qinv     
+	//tmp*qinv mod 2^2n/ 2^n; in high half
+	smlatb \tmp, \tmp, \q, \qa
+	// result in high half
+.endm
+
 // Checks if val0 is suitable and multiplies with values from bptr using func 
-.macro first_if func, tmp, tmp2, tmp3, val0, val1, rptr, bptr, cptr, bufptr, zetaptr, k, q, qqinv, ctr
+.macro first_if func, tmp, tmp2, val0, val1, rptr, bptr, cptr, bufptr, zetaptr, k, q, qa, qinv, ctr
   // if (val0 < KYBER_Q)
   cmp.w \val0, \q
   bhs.w 2f
@@ -10,23 +18,21 @@
     bne.w 2f
         sub \cptr, #4*2
         vmov s18, \bufptr
-        vmov s19, \q
-        vmov s20, \ctr
-        vmov s21, \val1
-        \func \rptr, \bptr, \cptr, \zetaptr, \bufptr, \k, \q, \val0, \qqinv, \qqinv, \tmp, \tmp2, \tmp3, \val1, \ctr
+        vmov s19, \ctr
+        vmov s20, \val1
+        \func \rptr, \bptr, \cptr, \zetaptr, \bufptr, \k, \val0, \val1, \q, \qa, \qinv, \tmp, \tmp2, \ctr
         vmov \bufptr, s18
-        vmov \q, s19
-        vmov \ctr, s20
-        vmov \val1, s21
+        vmov \ctr, s19
+        vmov \val1, s20
 
-        add ctr, #1
+        add \ctr, #1
         
-        movw k, #0
+        movw \k, #0
     2:
 .endm
 
 // Checks if val1 is suitable and multiplies with values from bptr using func 
-.macro second_if func, tmp, tmp2, tmp3, val0, val1, rptr, bptr, cptr, bufptr, zetaptr, k, q, qqinv, ctr
+.macro second_if func, tmp, tmp2, val0, val1, rptr, bptr, cptr, bufptr, zetaptr, k, q, qa, qinv, ctr
 // if (val1 < KYBER_Q && ctr < KYBER_N/4)
   cmp.w \val1, \q
   bhs.w 2f
@@ -38,12 +44,10 @@
       bne.w 2f
         sub \cptr, #4*2
         vmov s18, \bufptr
-        vmov s19, \q
-        vmov s20, \ctr
-        \func \rptr, \bptr, \cptr, \zetaptr, \bufptr, \k, \q, \val0, \qqinv, \qqinv, \tmp, \tmp2, \tmp3, \val1, \ctr
+        vmov s19, \ctr
+        \func \rptr, \bptr, \cptr, \zetaptr, \bufptr, \k, \val0, \val1, \q, \qa, \qinv, \tmp, \tmp2, \ctr
         vmov \bufptr, s18
-        vmov \q, s19
-        vmov \ctr, s20
+        vmov \ctr, s19
 
         add \ctr, #1
         
@@ -51,21 +55,14 @@
     2:
 .endm
 
-.macro montgomery q, qinv, a, tmp
-  smulbt \tmp, \a, \qinv
-  smlabb \tmp, \q, \tmp, \a
-.endm
-
-.macro doublebasemul_asm_cache_16_32 rptr_tmp, aptr, bptr, zetaptr, poly0, poly1, poly2, poly3, q, qinv, tmp, tmp2, res, aprimeptr, zeta
+.macro doublebasemul_asm_cache_16_32 rptr_tmp, aptr, bptr, zetaptr, poly0, poly1, tmp, tmp2, q, qa, qinv, res, aprimeptr, zeta
   vmov \aprimeptr, s27
   ldr \poly0, [\aptr], #4
   ldr \poly1, [\bptr]
-  ldr \poly2, [\aptr], #4
-  ldr.w \poly3, [\bptr, #4]
-  ldrh \zeta, [\zetaptr], #2
+  ldr \zeta, [\zetaptr], #4
 
-  smultb \tmp2, \poly0, \zeta
-  montgomery \q, \qinv, \tmp2, \tmp
+  smulwt \tmp, \zeta, \poly0
+  smlabb \tmp, \tmp, \q, \qa
   pkhbt \tmp, \poly0, \tmp
   str \tmp, [\aprimeptr], #4 // store (poly0_t*zeta || poly0_b) for later re-use
   smultt \tmp2, \tmp, \poly1
@@ -78,35 +75,36 @@
 
   neg \zeta, \zeta
 
-  smultb \tmp, \poly2, \zeta
-  montgomery \q, \qinv, \tmp, \tmp2
-  pkhbt \tmp2, \poly2, \tmp2
-  str \tmp2, [\aprimeptr], #4 // store (poly2_t*zeta || poly2_b) for later re-use
-  
-  smultt \tmp2, \tmp2, \poly3
-  smlabb \tmp2, \poly2, \poly3, \tmp2
+  ldr \poly0, [\aptr], #4
+  ldr.w \poly1, [\bptr, #4]
 
-  smuadx \tmp, \poly2, \poly3
+  smulwt \tmp, \zeta, \poly0
+  smlabb \tmp, \tmp, \q, \qa
+  pkhbt \tmp, \poly0, \tmp
+  str \tmp, [\aprimeptr], #4 // store (poly2_t*zeta || poly2_b) for later re-use
+  smultt \tmp2, \tmp, \poly1
+  smlabb \tmp2, \poly0, \poly1, \tmp2
+
+  smuadx \tmp, \poly0, \poly1
   str.w \tmp, [\rptr_tmp, #4]
   str \tmp2, [\rptr_tmp], #8
   vmov s27, \aprimeptr
 .endm 
 
-.macro doublebasemul_asm_acc_cache_32_32 rptr_tmp, aptr, bptr, zetaptr, poly0, poly1, poly2, poly3, q, qinv, tmp, tmp2, res, aprimeptr, zeta
+.macro doublebasemul_asm_acc_cache_32_32 rptr_tmp, aptr, bptr, zetaptr, poly0, poly1, tmp, tmp2, q, qa, qinv, res, aprimeptr, zeta
   vmov \aprimeptr, s27
   ldr \poly0, [\aptr], #4
   ldr \poly1, [\bptr]
-  ldr \poly2, [\aptr], #4
-  ldr.w \poly3, [\bptr, #4]
+  
   ldr \res, [\rptr_tmp]
-  ldrh \zeta, [\zetaptr], #2
+  ldr \zeta, [\zetaptr], #4
 
-  smultb \tmp, \poly0, \zeta
-  montgomery \q, \qinv, \tmp, \tmp2
-  pkhbt \tmp2, \poly0, \tmp2
-  str \tmp2, [\aprimeptr], #4 // store (poly0_t*zeta || poly0_b) for later re-use
-  smlatt \tmp2, \tmp2, \poly1, \res
-  smlabb \res, \poly0, \poly1, \tmp2
+  smulwt \tmp, \zeta, \poly0
+  smlabb \tmp, \tmp, \q, \qa
+  pkhbt \tmp, \poly0, \tmp
+  str \tmp, [\aprimeptr], #4 // store (poly0_t*zeta || poly0_b) for later re-use
+  smlatt \tmp, \tmp, \poly1, \res
+  smlabb \res, \poly0, \poly1, \tmp
   str \res, [\rptr_tmp], #4
 
   ldr.w \res, [\rptr_tmp]
@@ -116,68 +114,73 @@
   
   neg \zeta, \zeta
 
+  ldr \poly0, [\aptr], #4
+  ldr.w \poly1, [\bptr, #4]
   ldr \res, [\rptr_tmp]
-  smultb \tmp, \poly2, \zeta
-  montgomery \q, \qinv, \tmp, \tmp2
-  pkhbt \tmp2, \poly2, \tmp2
-  str \tmp2, [\aprimeptr], #4 // store (poly2_t*zeta || poly2_b) for later re-use
-  smlatt \tmp2, \tmp2, \poly3, \res
-  smlabb \res, \poly2, \poly3, \tmp2
+  smulwt \tmp, \zeta, \poly0
+  smlabb \tmp, \tmp, \q, \qa
+  pkhbt \tmp, \poly0, \tmp
+  str \tmp, [\aprimeptr], #4 // store (poly2_t*zeta || poly2_b) for later re-use
+  smlatt \tmp, \tmp, \poly1, \res
+  smlabb \res, \poly0, \poly1, \tmp
   str.w \res, [\rptr_tmp], #4
 
   ldr.w \res, [\rptr_tmp]
-  smladx \res, \poly2, \poly3, \res
+  smladx \res, \poly0, \poly1, \res
 
   str \res, [\rptr_tmp], #4
   vmov s27, \aprimeptr
 .endm
 
-.macro doublebasemul_asm_acc_cache_32_16 rptr_tmp, aptr, bptr, zetaptr, poly0, poly1, poly2, poly3, q, qinv, tmp, tmp2, res, aprimeptr, zeta
+.macro doublebasemul_asm_acc_cache_32_16 rptr_tmp, aptr, bptr, zetaptr, poly0, poly1, tmp, tmp2, q, qa, qinv, res, aprimeptr, zeta
   vmov \aprimeptr, s27
   ldr \poly0, [\aptr], #4
   ldr \poly1, [\bptr]
-  ldr \poly2, [\aptr], #4
-  ldr.w \poly3, [\bptr, #4]
-  ldr \res, [\rptr_tmp], #4
-  ldrh \zeta, [\zetaptr], #2
   
-  smultb \tmp, \poly0, \zeta
-  montgomery \q, \qinv, \tmp, \tmp2
-  pkhbt \tmp2, \poly0, \tmp2
-  str \tmp2, [\aprimeptr], #4 // store (poly0_t*zeta || poly0_b) for later re-use
-  smlatt \tmp2, \tmp2, \poly1, \res
-  smlabb \tmp, \poly0, \poly1, \tmp2
+  ldr \res, [\rptr_tmp], #4
+  ldr \zeta, [\zetaptr], #4
+  
+  smulwt \tmp, \zeta, \poly0
+  smlabb \tmp, \tmp, \q, \qa
+  pkhbt \tmp, \poly0, \tmp
+  str \tmp, [\aprimeptr], #4 // store (poly0_t*zeta || poly0_b) for later re-use
+  smlatt \tmp, \tmp, \poly1, \res
+  smlabb \tmp2, \poly0, \poly1, \tmp
 
-  montgomery \q, \qinv, \tmp, \tmp2
+  plant_red_b \q, \qa, \qinv, \tmp2
   ldr.w \tmp, [\rptr_tmp], #4
   smladx \tmp, \poly0, \poly1, \tmp
 
-  montgomery \q, \qinv, \tmp, \poly0
+  plant_red_b \q, \qa, \qinv, \tmp
   
-  pkhtb \res, \poly0, \tmp2, asr#16
-  vmov \poly0, s28
-  str \res, [\poly0], #4
+  pkhtb \res, \tmp, \tmp2, asr#16
+  vmov \tmp2, s28
+  str \res, [\tmp2], #4
   
   neg \zeta, \zeta
 
-  smultb \tmp, \poly2, \zeta
-  montgomery \q, \qinv, \tmp, \tmp2
-  pkhbt \tmp2, \poly2, \tmp2
+  ldr \poly0, [\aptr], #4
+  ldr.w \poly1, [\bptr, #4]
+
+  smulwt \tmp, \zeta, \poly0
+  smlabb \tmp, \tmp, \q, \qa
+  pkhbt \tmp, \poly0, \tmp
   ldr \res, [\rptr_tmp], #4
-  str \tmp2, [\aprimeptr], #4 // store (poly2_t*zeta || poly2_b) for later re-use
-  smlatt \tmp2, \tmp2, \poly3, \res
-  smlabb \tmp, \poly2, \poly3, \tmp2
+  str \tmp, [\aprimeptr], #4 // store (poly2_t*zeta || poly2_b) for later re-use
+  smlatt \tmp, \tmp, \poly1, \res
+  smlabb \tmp, \poly0, \poly1, \tmp
   
-  montgomery \q, \qinv, \tmp, \tmp2
+  plant_red_b \q, \qa, \qinv, \tmp
 
   ldr \res, [\rptr_tmp], #4
-  smladx \res, \poly2, \poly3, \res
+  smladx \res, \poly0, \poly1, \res
 
-  montgomery \q, \qinv, \res, \tmp
+  plant_red_b \q, \qa, \qinv, \res
 
-  pkhtb \res, \tmp, \tmp2, asr#16
-  str \res, [\poly0], #4
-  vmov s28, \poly0
+  pkhtb \res, \res, \tmp, asr#16
+
+  str \res, [\tmp2], #4
+  vmov s28, \tmp2
   vmov s27, \aprimeptr
 .endm
 
@@ -190,7 +193,7 @@
   ubfx \val1, \val1, #0, #12
 .endm
 
-.macro doublebasemul_asm_opt_16_32 rptr_tmp, aptr, bptr, tmp3, poly0, poly1, poly2, poly3, q, qinv, tmp, tmp2, res, aprimeptr, tmp4
+.macro doublebasemul_asm_opt_16_32 rptr_tmp, aptr, bptr, tmp3, poly0, poly1, poly2, poly3, q, qa, qinv, tmp, aprimeptr, tmp2
   vmov \aprimeptr, s27
   ldr \poly0, [\aptr], #4
   ldr \poly1, [\bptr]
@@ -199,17 +202,18 @@
 
   ldr.w \tmp2, [\aprimeptr], #4 // load cached value
   
-  // (poly0_t * zeta) * poly1_t + poly0_b * poly0_t
+  // (poly0_t * zeta) * poly1_t + poly0_b * poly1_b
   smuad \tmp, \tmp2, \poly1
 
   // poly1_t * poly0_b + poly1_b * poly0_t
   smuadx \tmp3, \poly0, \poly1
     
-  ldr \tmp4, [\aprimeptr], #4 // load cached value
   str \tmp, [\rptr_tmp], #4
   str \tmp3, [\rptr_tmp], #4
 
-  smuad \tmp2, \tmp4, \poly3
+  ldr \tmp, [\aprimeptr], #4 // load cached value
+
+  smuad \tmp2, \tmp, \poly3
 
   smuadx \tmp3, \poly2, \poly3
 
@@ -218,7 +222,7 @@
   vmov s27, \aprimeptr
 .endm 
 
-.macro doublebasemul_asm_acc_opt_32_32 rptr_tmp, aptr, bptr, tmp3, poly0, poly1, poly2, poly3, q, qinv, tmp, tmp2, res, aprimeptr, tmp4
+.macro doublebasemul_asm_acc_opt_32_32 rptr_tmp, aptr, bptr, tmp2, poly0, poly1, poly2, poly3, q, qa, qinv, res, aprimeptr, tmp
   vmov \aprimeptr, s27
   ldr.w \poly0, [\aptr], #4
   ldr.w \poly1, [\bptr]
@@ -226,7 +230,7 @@
   ldr.w \poly3, [\bptr, #4]
 
   ldr.w \res, [\rptr_tmp]
-  ldr.w \tmp3, [\rptr_tmp, #4]
+  ldr.w \tmp, [\rptr_tmp, #4]
 
   ldr \tmp2, [\aprimeptr], #4 // load cached value
 
@@ -234,25 +238,26 @@
   smlad \res, \tmp2, \poly1, \res
 
   // poly1_t * poly0_b + poly1_b * poly0_t + res
-  smladx \tmp3, \poly0, \poly1, \tmp3
+  smladx \tmp, \poly0, \poly1, \tmp
+
+  str.w \tmp, [\rptr_tmp, #4]
+  str.w \res, [\rptr_tmp], #8
 
   ldr \tmp2, [\aprimeptr], #4 // load cached value
-  ldr \tmp4, [\rptr_tmp, #8]
-  ldr \tmp, [\rptr_tmp, #12]
-  str.w \tmp3, [\rptr_tmp, #4]
-  str.w \res, [\rptr_tmp], #8
+  ldr \res, [\rptr_tmp]
+  ldr \tmp, [\rptr_tmp, #4] 
     
-  smlad \tmp4, \tmp2, \poly3, \tmp4
+  smlad \res, \tmp2, \poly3, \res
 
   smladx \tmp, \poly2, \poly3, \tmp
 
   str.w \tmp, [\rptr_tmp, #4]
-  str \tmp4, [\rptr_tmp], #8
+  str \res, [\rptr_tmp], #8
   
   vmov s27, \aprimeptr
 .endm 
 
-.macro doublebasemul_asm_acc_opt_32_16 rptr_tmp, aptr, bptr, tmp3, poly0, poly1, poly2, poly3, q, qinv, tmp, tmp2, res, aprimeptr, tmp4
+.macro doublebasemul_asm_acc_opt_32_16 rptr_tmp, aptr, bptr, tmp2, poly0, poly1, poly2, poly3, q, qa, qinv, res, aprimeptr, tmp
   vmov \aprimeptr, s27
 
   ldr \poly0, [\aptr], #4
@@ -260,36 +265,36 @@
   ldr \poly2, [\aptr], #4
   ldr.w \poly3, [\bptr, #4]
 
-  ldr.w \tmp3, [\rptr_tmp, #4]
+  ldr.w \tmp, [\rptr_tmp, #4]
   ldr \res, [\rptr_tmp], #8
 
   ldr \tmp2, [\aprimeptr], #4 // load cached value
 
   // (poly0_t * zeta) * poly1_t + poly0_b * poly0_t + res
-  smlad \tmp, \tmp2, \poly1, \res
-  montgomery \q, \qinv, \tmp, \res
+  smlad \res, \tmp2, \poly1, \res
+  plant_red_b \q, \qa, \qinv, \res
 
   // poly1_t * poly0_b + poly1_b * poly0_t + res
-  smladx \tmp, \poly0, \poly1, \tmp3
-  montgomery \q, \qinv, \tmp, \tmp3
+  smladx \tmp, \poly0, \poly1, \tmp
+  plant_red_b \q, \qa, \qinv, \tmp
 
-  pkhtb \res, \tmp3, \res, asr#16
+  pkhtb \res, \tmp, \res, asr#16
   vmov \poly0, s28
   str \res, [\poly0], #4
     
   ldr \tmp2, [\aprimeptr], #4 // load cached value
-  ldr.w \tmp3, [\rptr_tmp, #4]
+  ldr.w \tmp, [\rptr_tmp, #4]
   ldr \res, [\rptr_tmp], #8
 
-  smlad \tmp2, \tmp2, \poly3, \res
+  smlad \res, \tmp2, \poly3, \res
 
-  montgomery \q, \qinv, \tmp2, \res
+  plant_red_b \q, \qa, \qinv, \res
 
-  smladx \tmp, \poly2, \poly3, \tmp3
+  smladx \tmp, \poly2, \poly3, \tmp
 
-  montgomery \q, \qinv, \tmp, \tmp3
+  plant_red_b \q, \qa, \qinv, \tmp
 
-  pkhtb \res, \tmp3, \res, asr#16
+  pkhtb \res, \tmp, \res, asr#16
   str \res, [\poly0], #4
   vmov s28, \poly0
   vmov s27, \aprimeptr

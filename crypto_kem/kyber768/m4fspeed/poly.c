@@ -329,7 +329,7 @@ void poly_frombytes(poly *r, const unsigned char *a) {
 *              - int32_t *r_tmp:         array for accumulating unreduced results
 *              - const unsigned char *a: pointer to input byte array (of KYBER_POLYBYTES bytes)
 **************************************************/
-extern void frombytes_mul_asm_16_32(int32_t *r_tmp, const int16_t *b, const unsigned char *c, const int16_t zetas[64]);
+extern void frombytes_mul_asm_16_32(int32_t *r_tmp, const int16_t *b, const unsigned char *c, const int32_t zetas[64]);
 void poly_frombytes_mul_16_32(int32_t *r_tmp, const poly *b, const unsigned char *a) {
     frombytes_mul_asm_16_32(r_tmp, b->coeffs, a, zetas);
 }
@@ -343,7 +343,7 @@ void poly_frombytes_mul_16_32(int32_t *r_tmp, const poly *b, const unsigned char
 *              - int32_t *r_tmp:         array for accumulating unreduced results
 *              - const unsigned char *a: pointer to input byte array (of KYBER_POLYBYTES bytes)
 **************************************************/
-extern void frombytes_mul_asm_acc_32_32(int32_t *r_tmp, const int16_t *b, const unsigned char *c, const int16_t zetas[64]);
+extern void frombytes_mul_asm_acc_32_32(int32_t *r_tmp, const int16_t *b, const unsigned char *c, const int32_t zetas[64]);
 void poly_frombytes_mul_32_32(int32_t *r_tmp, const poly *b, const unsigned char *a) {
     frombytes_mul_asm_acc_32_32(r_tmp, b->coeffs, a, zetas);
 }
@@ -358,7 +358,7 @@ void poly_frombytes_mul_32_32(int32_t *r_tmp, const poly *b, const unsigned char
 *              - const int32_t *r_tmp:   array containing unreduced results
 *              - const unsigned char *a: pointer to input byte array (of KYBER_POLYBYTES bytes)
 **************************************************/
-extern void frombytes_mul_asm_acc_32_16(int16_t *r, const int16_t *b, const unsigned char *c, const int16_t zetas[64], const int32_t *r_tmp);
+extern void frombytes_mul_asm_acc_32_16(int16_t *r, const int16_t *b, const unsigned char *c, const int32_t zetas[64], const int32_t *r_tmp);
 void poly_frombytes_mul_32_16(poly *r, const poly* b, const unsigned char *a, const int32_t *r_tmp) {
     frombytes_mul_asm_acc_32_16(r->coeffs, b->coeffs, a, zetas, r_tmp);
 }
@@ -457,17 +457,17 @@ void poly_invntt(poly *r) {
     invntt(r->coeffs);
 }
 
-extern void asm_frommont(int16_t *r);
+extern void asm_fromplant(int16_t *r);
 /*************************************************
-* Name:        poly_frommont
+* Name:        poly_fromplant
 *
 * Description: Inplace conversion of all coefficients of a polynomial
-*              from Montgomery domain to normal domain
+*              from Plantard domain to normal domain
 *
 * Arguments:   - poly *r:       pointer to input/output polynomial
 **************************************************/
-void poly_frommont(poly *r) {
-  asm_frommont(r->coeffs);
+void poly_fromplant(poly *r) {
+  asm_fromplant(r->coeffs);
 }
 
 extern void asm_barrett_reduce(int16_t *r);

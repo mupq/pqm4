@@ -38,7 +38,7 @@
     2:
 .endm
 
-// void matacc_asm_cache_16_32(int32_t *r_tmp, const int16_t *b, int16_t c[4], unsigned char buf[XOF_BLOCKBYTES+2], const int16_t zetas[64], xof_state *state, int16_t *aprimeptr)
+// void matacc_asm_cache_16_32(int32_t *r_tmp, const int16_t *b, int16_t c[4], unsigned char buf[XOF_BLOCKBYTES+2], const int32_t zetas[64], xof_state *state, int16_t *aprimeptr)
 .global matacc_asm_cache_16_32
 .type matacc_asm_cache_16_32, %function
 .align 2
@@ -53,14 +53,18 @@ matacc_asm_cache_16_32:
   val1    .req r6
   tmp     .req r7
   tmp2    .req r8
-  tmp3    .req r9
-  k       .req r10
-  q       .req r11
-  qqinv   .req r12
-  ctr     .req r14
+  k       .req r9
+	q       .req r10
+	qa      .req r11
+	qinv    .req r12
+	ctr     .req r14
 
-  movw  qqinv, #3329
-  movt qqinv, #3327
+  movw qa, #26632
+	movw q, #3329
+	### qinv=0x6ba8f301
+	movw qinv, #62209
+	movt qinv, #27560
+  movw k, #0
   
   ldr.w zetaptr, [sp, #13*4] // load zetaptr from stack
   ldr.w tmp, [sp, #14*4] // load state from stack
@@ -69,9 +73,6 @@ matacc_asm_cache_16_32:
   ldr.w tmp, [sp, #15*4] // load aprimeptr from stack
   vmov s27, tmp
 
-  movw q, #3329
-  movw k, #0
-
   // outer while loop
   movw ctr, #0
   vmov s17, bufptr // save bufptr to check later
@@ -79,9 +80,9 @@ matacc_asm_cache_16_32:
 
     load_vals val0, val1, bufptr, tmp
 
-    first_if doublebasemul_asm_cache_16_32, tmp, tmp2, tmp3, val0, val1, rptr, bptr, cptr, bufptr, zetaptr, k, q, qqinv, ctr
+    first_if doublebasemul_asm_cache_16_32, tmp, tmp2, val0, val1, rptr, bptr, cptr, bufptr, zetaptr, k, q, qa, qinv, ctr
     
-    second_if doublebasemul_asm_cache_16_32, tmp, tmp2, tmp3, val0, val1, rptr, bptr, cptr, bufptr, zetaptr, k, q, qqinv, ctr
+    second_if doublebasemul_asm_cache_16_32, tmp, tmp2, val0, val1, rptr, bptr, cptr, bufptr, zetaptr, k, q, qa, qinv, ctr
 
     third_if tmp, tmp2, rptr, bptr, cptr, bufptr, ctr
 
@@ -91,7 +92,7 @@ matacc_asm_cache_16_32:
   pop {r0-r11, pc}
 .size matacc_asm_cache_16_32, . - matacc_asm_cache_16_32
 
-// void matacc_asm_cache_32_32(int32_t *r_tmp, const int16_t *b, int16_t c[4], unsigned char buf[XOF_BLOCKBYTES+2], const int16_t zetas[64], xof_state *state, int16_t *aprimeptr)
+// void matacc_asm_cache_32_32(int32_t *r_tmp, const int16_t *b, int16_t c[4], unsigned char buf[XOF_BLOCKBYTES+2], const int32_t zetas[64], xof_state *state, int16_t *aprimeptr)
 .global matacc_asm_cache_32_32
 .type matacc_asm_cache_32_32, %function
 .align 2
@@ -106,24 +107,25 @@ matacc_asm_cache_32_32:
   val1    .req r6
   tmp     .req r7
   tmp2    .req r8
-  tmp3    .req r9
-  k       .req r10
-  q       .req r11
-  qqinv   .req r12
-  ctr     .req r14
+  k       .req r9
+	q       .req r10
+	qa      .req r11
+	qinv    .req r12
+	ctr     .req r14
 
-  movw  qqinv, #3329
-  movt qqinv, #3327
-  
+  movw qa, #26632
+	movw q, #3329
+	### qinv=0x6ba8f301
+	movw qinv, #62209
+	movt qinv, #27560
+  movw k, #0
+
   ldr.w zetaptr, [sp, #13*4] // load zetaptr from stack
   ldr.w tmp, [sp, #14*4] // load state from stack
   vmov s26, tmp
 
   ldr.w tmp, [sp, #15*4] // load aprimeptr from stack
   vmov s27, tmp
-
-  movw q, #3329
-  movw k, #0
 
   // outer while loop
   movw ctr, #0
@@ -132,9 +134,9 @@ matacc_asm_cache_32_32:
 
     load_vals val0, val1, bufptr, tmp
 
-    first_if doublebasemul_asm_acc_cache_32_32, tmp, tmp2, tmp3, val0, val1, rptr, bptr, cptr, bufptr, zetaptr, k, q, qqinv, ctr
+    first_if doublebasemul_asm_acc_cache_32_32, tmp, tmp2, val0, val1, rptr, bptr, cptr, bufptr, zetaptr, k, q, qa, qinv, ctr
     
-    second_if doublebasemul_asm_acc_cache_32_32, tmp, tmp2, tmp3, val0, val1, rptr, bptr, cptr, bufptr, zetaptr, k, q, qqinv, ctr
+    second_if doublebasemul_asm_acc_cache_32_32, tmp, tmp2, val0, val1, rptr, bptr, cptr, bufptr, zetaptr, k, q, qa, qinv, ctr
 
     third_if tmp, tmp2, rptr, bptr, cptr, bufptr, ctr
 
@@ -144,7 +146,7 @@ matacc_asm_cache_32_32:
   pop {r0-r11, pc}
 .size matacc_asm_cache_32_32, . - matacc_asm_cache_32_32
 
-// void matacc_asm_cache_32_16(int16_t *r, const int16_t *b, int16_t c[4], unsigned char buf[XOF_BLOCKBYTES+2], const int16_t zetas[64], xof_state *state, int16_t *aprimeptr, const int32_t *r_tmp)
+// void matacc_asm_cache_32_16(int16_t *r, const int16_t *b, int16_t c[4], unsigned char buf[XOF_BLOCKBYTES+2], const int32_t zetas[64], xof_state *state, int16_t *aprimeptr, const int32_t *r_tmp)
 .global matacc_asm_cache_32_16
 .type matacc_asm_cache_32_16, %function
 .align 2
@@ -159,14 +161,18 @@ matacc_asm_cache_32_16:
   val1    .req r6
   tmp     .req r7
   tmp2    .req r8
-  tmp3    .req r9
-  k       .req r10
-  q       .req r11
-  qqinv   .req r12
-  ctr     .req r14
+  k       .req r9
+	q       .req r10
+	qa      .req r11
+	qinv    .req r12
+	ctr     .req r14
 
-  movw  qqinv, #3329
-  movt qqinv, #3327
+  movw qa, #26632
+	movw q, #3329
+	### qinv=0x6ba8f301
+	movw qinv, #62209
+	movt qinv, #27560
+  movw k, #0
   
   ldr.w zetaptr, [sp, #13*4] // load zetaptr from stack
 
@@ -179,9 +185,6 @@ matacc_asm_cache_32_16:
   vmov s28, rptr // store "real" destinaton in FP
   vmov s29, rptr // backup
   ldr.w rptr, [sp, #16*4]
-  
-  movw q, #3329
-  movw k, #0
 
   // outer while loop
   movw ctr, #0
@@ -189,9 +192,9 @@ matacc_asm_cache_32_16:
   1:
     load_vals val0, val1, bufptr, tmp
 
-    first_if doublebasemul_asm_acc_cache_32_16, tmp, tmp2, tmp3, val0, val1, rptr, bptr, cptr, bufptr, zetaptr, k, q, qqinv, ctr
+    first_if doublebasemul_asm_acc_cache_32_16, tmp, tmp2, val0, val1, rptr, bptr, cptr, bufptr, zetaptr, k, q, qa, qinv, ctr
     
-    second_if doublebasemul_asm_acc_cache_32_16, tmp, tmp2, tmp3, val0, val1, rptr, bptr, cptr, bufptr, zetaptr, k, q, qqinv, ctr
+    second_if doublebasemul_asm_acc_cache_32_16, tmp, tmp2, val0, val1, rptr, bptr, cptr, bufptr, zetaptr, k, q, qa, qinv, ctr
 
     third_if tmp, tmp2, rptr, bptr, cptr, bufptr, ctr
 
@@ -205,9 +208,6 @@ matacc_asm_cache_32_16:
 
 .unreq zetaptr
 
-.unreq ctr
-.unreq tmp
-.unreq tmp2
 // void matacc_asm_opt_16_32(int32_t *r_tmp, const int16_t *b, int16_t c[4], unsigned char buf[XOF_BLOCKBYTES+2], xof_state *state, const int16_t *aprimeptr)
 .global matacc_asm_opt_16_32
 .type matacc_asm_opt_16_32, %function
@@ -218,28 +218,29 @@ matacc_asm_opt_16_32:
   bptr   .req r1
   cptr   .req r2
   bufptr .req r3
-  tmp4   .req r4
+  tmp3   .req r4
   val0   .req r5
   val1   .req r6
-  tmp2   .req r7
-  ctr    .req r8
-  tmp3   .req r9
-  k      .req r10
-  q      .req r11
-  qqinv  .req r12
-  tmp    .req r14
+  tmp    .req r7
+  tmp2   .req r8
+  k      .req r9
+  q      .req r10
+  qa     .req r11
+  qinv   .req r12
+  ctr    .req r14
 
-  movw  qqinv, #3329
-  movt qqinv, #3327
+  movw qa, #26632
+	movw q, #3329
+	### qinv=0x6ba8f301
+	movw qinv, #62209
+	movt qinv, #27560
+  movw k, #0
   
   ldr.w tmp, [sp, #13*4] // load state from stack
   vmov s26, tmp
 
   ldr.w tmp, [sp, #14*4] // load aprimeptr from stack
   vmov s27, tmp
-
-  movw q, #3329
-  movw k, #0
 
   // outer while loop
   movw ctr, #0
@@ -248,9 +249,9 @@ matacc_asm_opt_16_32:
 
     load_vals val0, val1, bufptr, tmp
 
-    first_if doublebasemul_asm_opt_16_32, tmp, tmp2, tmp3, val0, val1, rptr, bptr, cptr, bufptr, tmp4, k, q, qqinv, ctr
+    first_if doublebasemul_asm_opt_16_32, tmp, tmp2, val0, val1, rptr, bptr, cptr, bufptr, tmp3, k, q, qa, qinv, ctr
     
-    second_if doublebasemul_asm_opt_16_32, tmp, tmp2, tmp3, val0, val1, rptr, bptr, cptr, bufptr, tmp4, k, q, qqinv, ctr
+    second_if doublebasemul_asm_opt_16_32, tmp, tmp2, val0, val1, rptr, bptr, cptr, bufptr, tmp3, k, q, qa, qinv, ctr
 
     third_if tmp, tmp2, rptr, bptr, cptr, bufptr, ctr
 
@@ -260,44 +261,39 @@ matacc_asm_opt_16_32:
   pop {r0-r11, pc}
 .size matacc_asm_opt_16_32, . - matacc_asm_opt_16_32
 
-
-
-.unreq ctr
-.unreq tmp
-.unreq tmp2
-
 // void matacc_asm_opt_32_32(int32_t *r_tmp, const int16_t *b, int16_t c[4], unsigned char buf[XOF_BLOCKBYTES+2], xof_state *state, const int16_t *aprimeptr)
 .global matacc_asm_opt_32_32
 .type matacc_asm_opt_32_32, %function
 .align 2
 matacc_asm_opt_32_32:
   push {r0-r11, r14}
-  rptr   .req r0
+  rptr   .req r0 
   bptr   .req r1
   cptr   .req r2
   bufptr .req r3
-  tmp4   .req r4
+  tmp3   .req r4
   val0   .req r5
   val1   .req r6
-  tmp2   .req r7
-  ctr    .req r8
-  tmp3   .req r9
-  k      .req r10
-  q      .req r11
-  qqinv  .req r12
-  tmp    .req r14
+  tmp    .req r7
+  tmp2   .req r8
+  k      .req r9
+  q      .req r10
+  qa     .req r11
+  qinv   .req r12
+  ctr    .req r14
 
-  movw qqinv, #3329
-  movt qqinv, #3327
+  movw qa, #26632
+	movw q, #3329
+	### qinv=0x6ba8f301
+	movw qinv, #62209
+	movt qinv, #27560
+  movw k, #0
   
   ldr.w tmp, [sp, #13*4] // load state from stack
   vmov s26, tmp
 
   ldr.w tmp, [sp, #14*4] // load aprimeptr from stack
   vmov s27, tmp
-
-  movw q, #3329
-  movw k, #0
 
   // outer while loop
   movw ctr, #0
@@ -306,9 +302,9 @@ matacc_asm_opt_32_32:
 
     load_vals val0, val1, bufptr, tmp
 
-    first_if doublebasemul_asm_acc_opt_32_32, tmp, tmp2, tmp3, val0, val1, rptr, bptr, cptr, bufptr, tmp4, k, q, qqinv, ctr
+    first_if doublebasemul_asm_acc_opt_32_32, tmp, tmp2, val0, val1, rptr, bptr, cptr, bufptr, tmp3, k, q, qa, qinv, ctr
     
-    second_if doublebasemul_asm_acc_opt_32_32, tmp, tmp2, tmp3, val0, val1, rptr, bptr, cptr, bufptr, tmp4, k, q, qqinv, ctr
+    second_if doublebasemul_asm_acc_opt_32_32, tmp, tmp2, val0, val1, rptr, bptr, cptr, bufptr, tmp3, k, q, qa, qinv, ctr
 
     third_if tmp, tmp2, rptr, bptr, cptr, bufptr, ctr
 
@@ -318,9 +314,8 @@ matacc_asm_opt_32_32:
   pop {r0-r11, pc}
 .size matacc_asm_opt_32_32, . - matacc_asm_opt_32_32
 
-.unreq ctr
-.unreq tmp
-.unreq tmp2
+.unreq tmp3
+
 
 // void matacc_asm_opt_32_16(int16_t *r, const int16_t *b, int16_t c[4], unsigned char buf[XOF_BLOCKBYTES+2], xof_state *state, const int16_t *aprimeptr, const int32_t *r_tmp)
 .global matacc_asm_opt_32_16
@@ -332,19 +327,23 @@ matacc_asm_opt_32_16:
   bptr    .req r1
   cptr    .req r2
   bufptr  .req r3
-  zetaptr .req r4
+  tmp3    .req r4
   val0    .req r5
   val1    .req r6
   tmp     .req r7
   tmp2    .req r8
-  tmp3    .req r9
-  k       .req r10
-  q       .req r11
-  qqinv   .req r12
+  k       .req r9
+  q       .req r10
+  qa      .req r11
+  qinv    .req r12
   ctr     .req r14
 
-  movw  qqinv, #3329
-  movt qqinv, #3327
+  movw qa, #26632
+	movw q, #3329
+	### qinv=0x6ba8f301
+	movw qinv, #62209
+	movt qinv, #27560
+  movw k, #0
   
   ldr.w tmp, [sp, #13*4] // load state from stack
   vmov s26, tmp
@@ -355,9 +354,6 @@ matacc_asm_opt_32_16:
   vmov s28, rptr // store "real" destinaton in FP
   vmov s29, rptr // backup
   ldr.w rptr, [sp, #15*4]
-  
-  movw q, #3329
-  movw k, #0
 
   // outer while loop
   movw ctr, #0
@@ -366,9 +362,9 @@ matacc_asm_opt_32_16:
 
     load_vals val0, val1, bufptr, tmp
 
-    first_if doublebasemul_asm_acc_opt_32_16, tmp, tmp2, tmp3, val0, val1, rptr, bptr, cptr, bufptr, tmp4, k, q, qqinv, ctr
+    first_if doublebasemul_asm_acc_opt_32_16, tmp, tmp2, val0, val1, rptr, bptr, cptr, bufptr, tmp3, k, q, qa, qinv, ctr
     
-    second_if doublebasemul_asm_acc_opt_32_16, tmp, tmp2, tmp3, val0, val1, rptr, bptr, cptr, bufptr, tmp4, k, q, qqinv, ctr
+    second_if doublebasemul_asm_acc_opt_32_16, tmp, tmp2, val0, val1, rptr, bptr, cptr, bufptr, tmp3, k, q, qa, qinv, ctr
 
     third_if tmp, tmp2, rptr, bptr, cptr, bufptr, ctr
 

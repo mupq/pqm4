@@ -4,8 +4,8 @@
 #include "polyvec.h"
 #include "symmetric.h"
 
-extern void matacc_asm_cache_16_32(int32_t *r_tmp, const int16_t *b, int16_t c[4], unsigned char buf[XOF_BLOCKBYTES+2], const int16_t zetas[64], xof_state *state, int16_t *aprimeptr, unsigned int *buflen);
-static inline void _matacc_asm_cache_16_32(int32_t *r_tmp, const int16_t *b, int16_t c[4], unsigned char buf[XOF_BLOCKBYTES+2], const int16_t _zetas[64], xof_state *state, int16_t *aprimeptr, unsigned int *buflen)
+extern void matacc_asm_cache_16_32(int32_t *r_tmp, const int16_t *b, int16_t c[4], unsigned char buf[XOF_BLOCKBYTES+2], const int32_t zetas[64], xof_state *state, int16_t *aprimeptr, unsigned int *buflen);
+static inline void _matacc_asm_cache_16_32(int32_t *r_tmp, const int16_t *b, int16_t c[4], unsigned char buf[XOF_BLOCKBYTES+2], const int32_t _zetas[64], xof_state *state, int16_t *aprimeptr, unsigned int *buflen)
 {
   // floating point registers clobbered by assembly function
   asm volatile("" : : : "s16", "s17", "s18", "s19", "s20", "s21", "s22", "s23", "s26", "s27", "s28", "s29");
@@ -13,8 +13,8 @@ static inline void _matacc_asm_cache_16_32(int32_t *r_tmp, const int16_t *b, int
 }
 #define matacc_asm_cache_16_32 _matacc_asm_cache_16_32
 
-extern void matacc_asm_cache_32_32(int32_t *r_tmp, const int16_t *b, int16_t c[4], unsigned char buf[XOF_BLOCKBYTES+2], const int16_t zetas[64], xof_state *state, int16_t *aprimeptr, unsigned int *buflen);
-static inline void _matacc_asm_cache_32_32(int32_t *r_tmp, const int16_t *b, int16_t c[4], unsigned char buf[XOF_BLOCKBYTES+2], const int16_t _zetas[64], xof_state *state, int16_t *aprimeptr, unsigned int *buflen)
+extern void matacc_asm_cache_32_32(int32_t *r_tmp, const int16_t *b, int16_t c[4], unsigned char buf[XOF_BLOCKBYTES+2], const int32_t zetas[64], xof_state *state, int16_t *aprimeptr, unsigned int *buflen);
+static inline void _matacc_asm_cache_32_32(int32_t *r_tmp, const int16_t *b, int16_t c[4], unsigned char buf[XOF_BLOCKBYTES+2], const int32_t _zetas[64], xof_state *state, int16_t *aprimeptr, unsigned int *buflen)
 {
   // floating point registers clobbered by assembly function
   asm volatile("" : : : "s16", "s17", "s18", "s19", "s20", "s21", "s22", "s23", "s26", "s27", "s28", "s29");
@@ -22,8 +22,8 @@ static inline void _matacc_asm_cache_32_32(int32_t *r_tmp, const int16_t *b, int
 }
 #define matacc_asm_cache_32_32 _matacc_asm_cache_32_32
 
-extern void matacc_asm_cache_32_16(int16_t *r, const int16_t *b, int16_t c[4], unsigned char buf[XOF_BLOCKBYTES+2], const int16_t zetas[64], xof_state *state, int16_t *aprimeptr, int32_t *r_tmp, unsigned int *buflen);
-static inline void _matacc_asm_cache_32_16(int16_t *r, const int16_t *b, int16_t c[4], unsigned char buf[XOF_BLOCKBYTES+2], const int16_t _zetas[64], xof_state *state, int16_t *aprimeptr, int32_t *r_tmp, unsigned int *buflen)
+extern void matacc_asm_cache_32_16(int16_t *r, const int16_t *b, int16_t c[4], unsigned char buf[XOF_BLOCKBYTES+2], const int32_t zetas[64], xof_state *state, int16_t *aprimeptr, int32_t *r_tmp, unsigned int *buflen);
+static inline void _matacc_asm_cache_32_16(int16_t *r, const int16_t *b, int16_t c[4], unsigned char buf[XOF_BLOCKBYTES+2], const int32_t _zetas[64], xof_state *state, int16_t *aprimeptr, int32_t *r_tmp, unsigned int *buflen)
 {
   // floating point registers clobbered by assembly function
   asm volatile("" : : : "s16", "s17", "s18", "s19", "s20", "s21", "s22", "s23", "s26", "s27", "s28", "s29");
