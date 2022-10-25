@@ -4,7 +4,6 @@
 #include "symmetric.h"
 #include "matacc.h"
 
-
 /*************************************************
 * Name:        matacc
 *
@@ -24,12 +23,13 @@ void matacc(poly* r, const polyvec *b, unsigned char i, const unsigned char *see
   int j = 0;
   
   if (transposed)
-      xof_absorb(&state, seed, i, j);
-    else
-      xof_absorb(&state, seed, j, i);
+    xof_absorb(&state, seed, i, j);
+  else
+    xof_absorb(&state, seed, j, i);
 
-    xof_squeezeblocks(buf, 1, &state);
-    matacc_asm(r->coeffs, b->vec[j].coeffs, c, buf, zetas, &state);
+  xof_squeezeblocks(buf, 1, &state);
+
+  matacc_asm(r->coeffs, b->vec[j].coeffs, c, buf, zetas, &state);
   for(j=1;j<KYBER_K;j++) {
 
     if (transposed)
@@ -38,7 +38,6 @@ void matacc(poly* r, const polyvec *b, unsigned char i, const unsigned char *see
       xof_absorb(&state, seed, j, i);
 
     xof_squeezeblocks(buf, 1, &state);
-
     matacc_asm_acc(r->coeffs, b->vec[j].coeffs, c, buf, zetas, &state);
-  } 
+  }
 }

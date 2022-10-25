@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-extern const int16_t zetas[64];
+extern const int32_t zetas[64];
 
 void ntt(int16_t *poly);
 void invntt(int16_t *poly);

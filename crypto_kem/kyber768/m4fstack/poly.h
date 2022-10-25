@@ -39,7 +39,7 @@ void poly_ntt(poly *r);
 void poly_invntt(poly *r);
 void poly_basemul(poly *r, const poly *a, const poly *b);
 void poly_basemul_acc(poly *r, const poly *a, const poly *b);
-void poly_frommont(poly *r);
+void poly_fromplant(poly *r);
 
 void poly_reduce(poly *r);
 

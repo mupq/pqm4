@@ -44,7 +44,7 @@ void poly_invntt(poly *r);
 void poly_basemul_opt_16_32(int32_t *r, const poly *a, const poly *b, const poly *a_prime);
 void poly_basemul_acc_opt_32_32(int32_t *r, const poly *a, const poly *b, const poly *a_prime);
 void poly_basemul_acc_opt_32_16(poly *r, const poly *a, const poly *b, const poly *a_prime, const int32_t * r_tmp);
-void poly_frommont(poly *r);
+void poly_fromplantt(poly *r);
 
 void poly_reduce(poly *r);
 

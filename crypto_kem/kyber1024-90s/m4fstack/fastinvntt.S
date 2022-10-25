@@ -1,1 +1,1 @@
-../../kyber768/m4fstack/fastinvntt.S
+../../kyber1024/m4fstack/fastinvntt.S

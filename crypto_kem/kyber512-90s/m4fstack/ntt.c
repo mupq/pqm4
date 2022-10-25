@@ -1,1 +1,1 @@
-../../kyber768/m4fspeed/ntt.c
+../../kyber768-90s/m4fspeed/ntt.c

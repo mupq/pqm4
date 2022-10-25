@@ -37,6 +37,7 @@ void indcpa_keypair(unsigned char *pk, unsigned char *sk) {
 
     for (i = 0; i < KYBER_K; i++) {
         matacc(&pkp, &skpv, i, publicseed, 0);
+        
         poly_invntt(&pkp);
 
         poly_addnoise(&pkp, noiseseed, nonce++);

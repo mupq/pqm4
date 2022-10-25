@@ -6,7 +6,8 @@
 .thumb
 
 .macro update_buf_loop_finish tmp, tmp2, tmp3, val0, val1, bufptr, ctr, buflenval
-  // if (pos + 3 > buflen 
+  // if (pos + 3 > buflen
+  vmov s23, \tmp3
   vmov \tmp2, \buflenval // get buflen value
   vmov \tmp, s17
   sub \tmp3, \bufptr, \tmp // compute pos
@@ -35,8 +36,8 @@
     vmov s18, r0
     vmov s19, r1
     vmov s20, r2
-    vmov s22, r12
-    vmov s23, lr
+    vmov s21, r12
+    vmov s22, lr
     
     mov r0, \tmp // buf + off implicitly after copying loop
     mov r1, #1
@@ -46,49 +47,50 @@
     vmov r0, s18
     vmov r1, s19
     vmov r2, s20
-    vmov r12, s22
-    vmov lr, s23
+    vmov r12, s21
+    vmov lr, s22
     // pos = 0;
     vmov \bufptr, s17 // reset buffer pointer to start -> only after squeezeblocks
   3:
-
+  vmov \tmp3, s23
   cmp \ctr, #256/4
   blt.w 1b
 .endm
 
-// void matacc_asm(int16_t *r, const int16_t *b, int16_t c[4], unsigned char buf[XOF_BLOCKBYTES+2], const int16_t zetas[64], xof_state *state)
+// void matacc_asm(int16_t *r, const int16_t *b, int16_t c[4], unsigned char buf[XOF_BLOCKBYTES+2], const int32_t zetas[64], xof_state *state)
 .global matacc_asm
 .type matacc_asm, %function
 .align 2
 matacc_asm:
   push {r0-r11, r14}
-  rptr .req r0 
-  bptr .req r1
-  cptr .req r2
-  bufptr .req r3
-  zetaptr .req r4
-  val0 .req r5
-  val1 .req r6
-  tmp .req r7
-  tmp2 .req r8
-  tmp3 .req r9
-  k .req r10
-  q .req r11
-  qqinv .req r12
-  ctr .req r14
+  rptr    .req r0
+	bptr    .req r1
+	cptr    .req r2
+	bufptr  .req r3
+	zetaptr .req r4
+	val0    .req r5
+	val1    .req r6
+	tmp     .req r7
+	tmp2    .req r8
+	k       .req r9
+	q       .req r10
+	qa      .req r11
+	qinv    .req r12
+	ctr     .req r14
 
-  movw  qqinv, #3329
-  movt qqinv, #3327
-  
   ldr.w zetaptr, [sp, #13*4] // load zetaptr from stack
-  ldr.w tmp, [sp, #14*4] // load state from stack
-  vmov s26, tmp
+	ldr.w tmp, [sp, #14*4] // load state from stack
+	vmov s26, tmp
+	
+	movw qa, #26632
+	movw q, #3329
+	### qinv=0x6ba8f301
+	movw qinv, #62209
+	movt qinv, #27560
+	movw k, #0
 
   movw tmp2, #64 // XOF_BLOCKBYTES
   vmov s27, tmp2
-
-  movw q, #3329
-  movw k, #0
 
   // outer while loop
   movw ctr, #0
@@ -97,47 +99,49 @@ matacc_asm:
 
     load_vals val0, val1, bufptr, tmp
 
-    first_if doublebasemul_asm, tmp, tmp2, tmp3, val0, val1, rptr, bptr, cptr, bufptr, zetaptr, k, q, qqinv, ctr
-    
-    second_if doublebasemul_asm, tmp, tmp2, tmp3, val0, val1, rptr, bptr, cptr, bufptr, zetaptr, k, q, qqinv, ctr
+    first_if doublebasemul_asm, tmp, tmp2, val0, val1, rptr, bptr, cptr, bufptr, zetaptr, k, q, qa, qinv, ctr
+		
+		second_if doublebasemul_asm, tmp, tmp2, val0, val1, rptr, bptr, cptr, bufptr, zetaptr, k, q, qa, qinv, ctr
 
-    update_buf_loop_finish tmp, tmp2, tmp3, val0, val1, bufptr, ctr, s27
+    update_buf_loop_finish tmp, tmp2, k, val0, val1, bufptr, ctr, s27
+    
   pop {r0-r11, pc}
 .size matacc_asm, . - matacc_asm
 
-// void matacc_asm(int16_t *r, const int16_t *b, int16_t c[4], unsigned char buf[XOF_BLOCKBYTES+2], const int16_t zetas[64], xof_state *state)
+// void matacc_asm(int16_t *r, const int16_t *b, int16_t c[4], unsigned char buf[XOF_BLOCKBYTES+2], const int32_t zetas[64], xof_state *state)
 .global matacc_asm_acc
 .type matacc_asm_acc, %function
 .align 2
 matacc_asm_acc:
   push {r0-r11, r14}
-  rptr .req r0 
-  bptr .req r1
-  cptr .req r2
-  bufptr .req r3
-  zetaptr .req r4
-  val0 .req r5
-  val1 .req r6
-  tmp .req r7
-  tmp2 .req r8
-  tmp3 .req r9
-  k .req r10
-  q .req r11
-  qqinv .req r12
-  ctr .req r14
+  rptr    .req r0
+	bptr    .req r1
+	cptr    .req r2
+	bufptr  .req r3
+	zetaptr .req r4
+	val0    .req r5
+	val1    .req r6
+	tmp     .req r7
+	tmp2    .req r8
+	k       .req r9
+	q       .req r10
+	qa      .req r11
+	qinv    .req r12
+	ctr     .req r14
 
-  movw  qqinv, #3329
-  movt qqinv, #3327
-  
   ldr.w zetaptr, [sp, #13*4] // load zetaptr from stack
-  ldr.w tmp, [sp, #14*4] // load state from stack
-  vmov s26, tmp
-  
+	ldr.w tmp, [sp, #14*4] // load state from stack
+	vmov s26, tmp
+	
+	movw qa, #26632
+	movw q, #3329
+	### qinv=0x6ba8f301
+	movw qinv, #62209
+	movt qinv, #27560
+	movw k, #0
+
   movw tmp2, #64 // XOF_BLOCKBYTES
   vmov s27, tmp2
-  
-  movw q, #3329
-  movw k, #0
 
   // outer while loop
   movw ctr, #0
@@ -146,11 +150,10 @@ matacc_asm_acc:
 
     load_vals val0, val1, bufptr, tmp
 
-    first_if doublebasemul_asm_acc, tmp, tmp2, tmp3, val0, val1, rptr, bptr, cptr, bufptr, zetaptr, k, q, qqinv, ctr
-    
-    second_if doublebasemul_asm_acc, tmp, tmp2, tmp3, val0, val1, rptr, bptr, cptr, bufptr, zetaptr, k, q, qqinv, ctr
+    first_if doublebasemul_asm_acc, tmp, tmp2, val0, val1, rptr, bptr, cptr, bufptr, zetaptr, k, q, qa, qinv, ctr
+		
+		second_if doublebasemul_asm_acc, tmp, tmp2, val0, val1, rptr, bptr, cptr, bufptr, zetaptr, k, q, qa, qinv, ctr
 
-    update_buf_loop_finish tmp, tmp2, tmp3, val0, val1, bufptr, ctr, s27
-
+    update_buf_loop_finish tmp, tmp2, k, val0, val1, bufptr, ctr, s27
   pop {r0-r11, pc}
 .size matacc_asm_acc, . - matacc_asm_acc

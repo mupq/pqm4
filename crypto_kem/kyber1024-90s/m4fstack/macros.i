@@ -1,1 +1,1 @@
-../../kyber768/m4fspeed/macros.i
+../m4fspeed/macros.i

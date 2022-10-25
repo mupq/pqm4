@@ -1,1 +1,1 @@
-../m4fspeed/fastntt.S
+../../kyber768/m4fspeed/fastntt.S

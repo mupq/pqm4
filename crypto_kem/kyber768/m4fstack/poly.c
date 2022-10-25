@@ -329,7 +329,7 @@ void poly_frombytes(poly *r, const unsigned char *a) {
 *              - const poly *b:          pointer to input polynomial
 *              - const unsigned char *a: pointer to input byte array (of KYBER_POLYBYTES bytes)
 **************************************************/
-extern void frombytes_mul_asm(int16_t *r, const int16_t *b, const unsigned char *c, const int16_t zetas[64]);
+extern void frombytes_mul_asm(int16_t *r, const int16_t *b, const unsigned char *c, const int32_t zetas[64]);
 void poly_frombytes_mul(poly *r, const poly *b, const unsigned char *a) {
     frombytes_mul_asm(r->coeffs, b->coeffs, a, zetas);
 }
@@ -344,7 +344,7 @@ void poly_frombytes_mul(poly *r, const poly *b, const unsigned char *a) {
 *              - const poly *b:          pointer to input polynomial
 *              - const unsigned char *a: pointer to input byte array (of KYBER_POLYBYTES bytes)
 **************************************************/
-extern void frombytes_mul_asm_acc(int16_t *r, const int16_t *b, const unsigned char *c, const int16_t zetas[64]);
+extern void frombytes_mul_asm_acc(int16_t *r, const int16_t *b, const unsigned char *c, const int32_t zetas[64]);
 void poly_frombytes_mul_acc(poly *r, const poly *b, const unsigned char *a) {
     frombytes_mul_asm_acc(r->coeffs, b->coeffs, a, zetas);
 }
@@ -394,7 +394,7 @@ void poly_invntt(poly *r) {
     invntt(r->coeffs);
 }
 
-extern void basemul_asm(int16_t *, const int16_t *, const int16_t *, const int16_t *);
+extern void basemul_asm(int16_t *, const int16_t *, const int16_t *, const int32_t *);
 /*************************************************
 * Name:        poly_basemul
 *
@@ -408,7 +408,7 @@ void poly_basemul(poly *r, const poly *a, const poly *b) {
     basemul_asm(r->coeffs, a->coeffs, b->coeffs, zetas);
 }
 
-extern void basemul_asm_acc(int16_t *, const int16_t *, const int16_t *, const int16_t *);
+extern void basemul_asm_acc(int16_t *, const int16_t *, const int16_t *, const int32_t *);
 /*************************************************
 * Name:        poly_basemul_acc
 *
@@ -422,17 +422,17 @@ void poly_basemul_acc(poly *r, const poly *a, const poly *b) {
     basemul_asm_acc(r->coeffs, a->coeffs, b->coeffs, zetas);
 }
 
-extern void asm_frommont(int16_t *r);
+extern void asm_fromplant(int16_t *r);
 /*************************************************
-* Name:        poly_frommont
+* Name:        poly_fromplant
 *
 * Description: Inplace conversion of all coefficients of a polynomial
 *              from Montgomery domain to normal domain
 *
 * Arguments:   - poly *r:       pointer to input/output polynomial
 **************************************************/
-void poly_frommont(poly *r) {
-  asm_frommont(r->coeffs);
+void poly_fromplant(poly *r) {
+  asm_fromplant(r->coeffs);
 }
 
 extern void asm_barrett_reduce(int16_t *r);
