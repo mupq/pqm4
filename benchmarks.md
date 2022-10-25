@@ -11,24 +11,24 @@
 | frodokem640shake (100 executions) | m4 | AVG: 77,984,424 <br /> MIN: 77,835,411 <br /> MAX: 77,989,050 | AVG: 78,893,964 <br /> MIN: 78,893,939 <br /> MAX: 78,893,977 | AVG: 78,341,812 <br /> MIN: 78,341,788 <br /> MAX: 78,341,829 |
 | frodokem640shake (100 executions) | opt | AVG: 90,654,791 <br /> MIN: 90,654,775 <br /> MAX: 90,654,814 | AVG: 104,138,444 <br /> MIN: 104,138,419 <br /> MAX: 104,138,534 | AVG: 103,834,288 <br /> MIN: 103,834,251 <br /> MAX: 103,834,338 |
 | hqc-rmrs-128 (100 executions) | clean | AVG: 2,967,262 <br /> MIN: 2,924,920 <br /> MAX: 3,153,007 | AVG: 5,415,022 <br /> MIN: 5,325,331 <br /> MAX: 5,590,378 | AVG: 7,845,462 <br /> MIN: 7,713,583 <br /> MAX: 8,205,411 |
-| kyber1024 (100 executions) | clean | AVG: 1,649,712 <br /> MIN: 1,646,360 <br /> MAX: 1,673,568 | AVG: 2,016,475 <br /> MIN: 2,013,121 <br /> MAX: 2,040,336 | AVG: 2,160,015 <br /> MIN: 2,156,660 <br /> MAX: 2,183,875 |
-| kyber1024 (100 executions) | m4fspeed | AVG: 1,137,745 <br /> MIN: 1,134,932 <br /> MAX: 1,161,614 | AVG: 1,325,333 <br /> MIN: 1,322,554 <br /> MAX: 1,349,201 | AVG: 1,226,040 <br /> MIN: 1,223,231 <br /> MAX: 1,249,911 |
-| kyber1024 (100 executions) | m4fstack | AVG: 1,148,600 <br /> MIN: 1,146,482 <br /> MAX: 1,161,401 | AVG: 1,340,875 <br /> MIN: 1,338,757 <br /> MAX: 1,353,676 | AVG: 1,243,943 <br /> MIN: 1,241,817 <br /> MAX: 1,256,736 |
-| kyber1024-90s (100 executions) | clean | AVG: 3,008,550 <br /> MIN: 3,007,397 <br /> MAX: 3,024,123 | AVG: 3,275,440 <br /> MIN: 3,274,268 <br /> MAX: 3,291,010 | AVG: 3,516,401 <br /> MIN: 3,515,229 <br /> MAX: 3,531,971 |
-| kyber1024-90s (100 executions) | m4fspeed | AVG: 982,177 <br /> MIN: 974,439 <br /> MAX: 987,520 | AVG: 1,071,952 <br /> MIN: 1,064,213 <br /> MAX: 1,077,296 | AVG: 1,070,086 <br /> MIN: 1,062,347 <br /> MAX: 1,075,430 |
-| kyber1024-90s (100 executions) | m4fstack | AVG: 996,164 <br /> MIN: 989,039 <br /> MAX: 1,001,846 | AVG: 1,090,637 <br /> MIN: 1,083,512 <br /> MAX: 1,096,319 | AVG: 1,091,120 <br /> MIN: 1,083,996 <br /> MAX: 1,096,803 |
-| kyber512 (100 executions) | clean | AVG: 636,286 <br /> MIN: 635,652 <br /> MAX: 649,190 | AVG: 844,050 <br /> MIN: 843,415 <br /> MAX: 856,953 | AVG: 940,425 <br /> MIN: 939,790 <br /> MAX: 953,328 |
-| kyber512 (100 executions) | m4fspeed | AVG: 441,920 <br /> MIN: 441,399 <br /> MAX: 454,702 | AVG: 535,756 <br /> MIN: 535,235 <br /> MAX: 548,504 | AVG: 485,782 <br /> MIN: 485,267 <br /> MAX: 498,530 |
-| kyber512 (100 executions) | m4fstack | AVG: 444,318 <br /> MIN: 443,355 <br /> MAX: 456,809 | AVG: 540,617 <br /> MIN: 539,653 <br /> MAX: 553,107 | AVG: 491,939 <br /> MIN: 490,975 <br /> MAX: 504,429 |
-| kyber512-90s (100 executions) | clean | AVG: 948,421 <br /> MIN: 947,843 <br /> MAX: 963,803 | AVG: 1,112,828 <br /> MIN: 1,112,249 <br /> MAX: 1,128,209 | AVG: 1,261,606 <br /> MIN: 1,261,027 <br /> MAX: 1,276,987 |
-| kyber512-90s (100 executions) | m4fspeed | AVG: 375,843 <br /> MIN: 371,845 <br /> MAX: 376,857 | AVG: 426,325 <br /> MIN: 422,326 <br /> MAX: 427,339 | AVG: 428,758 <br /> MIN: 424,757 <br /> MAX: 429,770 |
-| kyber512-90s (100 executions) | m4fstack | AVG: 378,936 <br /> MIN: 374,760 <br /> MAX: 379,474 | AVG: 431,884 <br /> MIN: 427,708 <br /> MAX: 432,423 | AVG: 435,612 <br /> MIN: 431,469 <br /> MAX: 436,151 |
-| kyber768 (100 executions) | clean | AVG: 1,059,335 <br /> MIN: 1,057,824 <br /> MAX: 1,071,489 | AVG: 1,352,393 <br /> MIN: 1,350,881 <br /> MAX: 1,364,546 | AVG: 1,470,514 <br /> MIN: 1,469,002 <br /> MAX: 1,482,692 |
-| kyber768 (100 executions) | m4fspeed | AVG: 716,866 <br /> MIN: 715,114 <br /> MAX: 729,404 | AVG: 869,974 <br /> MIN: 868,221 <br /> MAX: 882,513 | AVG: 795,161 <br /> MIN: 793,407 <br /> MAX: 807,699 |
-| kyber768 (100 executions) | m4fstack | AVG: 723,350 <br /> MIN: 721,313 <br /> MAX: 735,592 | AVG: 879,971 <br /> MIN: 877,933 <br /> MAX: 892,180 | AVG: 806,966 <br /> MIN: 804,928 <br /> MAX: 819,175 |
-| kyber768-90s (100 executions) | clean | AVG: 1,816,821 <br /> MIN: 1,815,926 <br /> MAX: 1,832,116 | AVG: 2,032,734 <br /> MIN: 2,031,838 <br /> MAX: 2,048,028 | AVG: 2,225,769 <br /> MIN: 2,224,873 <br /> MAX: 2,241,063 |
-| kyber768-90s (100 executions) | m4fspeed | AVG: 623,011 <br /> MIN: 615,472 <br /> MAX: 624,582 | AVG: 698,921 <br /> MIN: 691,382 <br /> MAX: 700,491 | AVG: 699,021 <br /> MIN: 691,482 <br /> MAX: 700,591 |
-| kyber768-90s (100 executions) | m4fstack | AVG: 630,305 <br /> MIN: 622,328 <br /> MAX: 635,898 | AVG: 709,729 <br /> MIN: 701,752 <br /> MAX: 715,322 | AVG: 711,642 <br /> MIN: 703,664 <br /> MAX: 717,234 |
+| kyber1024 (100 executions) | clean | AVG: 1,649,604 <br /> MIN: 1,646,417 <br /> MAX: 1,686,328 | AVG: 2,016,366 <br /> MIN: 2,013,177 <br /> MAX: 2,053,070 | AVG: 2,159,906 <br /> MIN: 2,156,716 <br /> MAX: 2,196,609 |
+| kyber1024 (100 executions) | m4fspeed | AVG: 1,122,936 <br /> MIN: 1,120,610 <br /> MAX: 1,147,966 | AVG: 1,315,737 <br /> MIN: 1,313,449 <br /> MAX: 1,340,766 | AVG: 1,209,901 <br /> MIN: 1,207,648 <br /> MAX: 1,234,899 |
+| kyber1024 (100 executions) | m4fstack | AVG: 1,126,561 <br /> MIN: 1,124,115 <br /> MAX: 1,138,795 | AVG: 1,323,943 <br /> MIN: 1,321,497 <br /> MAX: 1,336,212 | AVG: 1,219,060 <br /> MIN: 1,216,614 <br /> MAX: 1,231,295 |
+| kyber1024-90s (100 executions) | clean | AVG: 3,008,837 <br /> MIN: 3,007,295 <br /> MAX: 3,024,024 | AVG: 3,275,730 <br /> MIN: 3,274,235 <br /> MAX: 3,290,907 | AVG: 3,516,691 <br /> MIN: 3,515,163 <br /> MAX: 3,531,901 |
+| kyber1024-90s (100 executions) | m4fspeed | AVG: 973,196 <br /> MIN: 961,657 <br /> MAX: 978,853 | AVG: 1,068,184 <br /> MIN: 1,056,648 <br /> MAX: 1,073,886 | AVG: 1,059,775 <br /> MIN: 1,048,239 <br /> MAX: 1,065,477 |
+| kyber1024-90s (100 executions) | m4fstack | AVG: 979,692 <br /> MIN: 972,492 <br /> MAX: 985,031 | AVG: 1,079,272 <br /> MIN: 1,072,072 <br /> MAX: 1,084,611 | AVG: 1,071,817 <br /> MIN: 1,064,616 <br /> MAX: 1,077,155 |
+| kyber512 (100 executions) | clean | AVG: 636,181 <br /> MIN: 635,670 <br /> MAX: 648,917 | AVG: 843,945 <br /> MIN: 843,433 <br /> MAX: 856,680 | AVG: 940,320 <br /> MIN: 939,808 <br /> MAX: 953,055 |
+| kyber512 (100 executions) | m4fspeed | AVG: 434,438 <br /> MIN: 433,217 <br /> MAX: 446,786 | AVG: 530,469 <br /> MIN: 529,247 <br /> MAX: 542,816 | AVG: 476,712 <br /> MIN: 475,491 <br /> MAX: 489,060 |
+| kyber512 (100 executions) | m4fstack | AVG: 433,718 <br /> MIN: 433,191 <br /> MAX: 446,122 | AVG: 531,676 <br /> MIN: 531,150 <br /> MAX: 544,080 | AVG: 478,166 <br /> MIN: 477,640 <br /> MAX: 490,570 |
+| kyber512-90s (100 executions) | clean | AVG: 948,446 <br /> MIN: 947,802 <br /> MAX: 964,084 | AVG: 1,112,852 <br /> MIN: 1,112,208 <br /> MAX: 1,128,491 | AVG: 1,261,630 <br /> MIN: 1,260,986 <br /> MAX: 1,277,269 |
+| kyber512-90s (100 executions) | m4fspeed | AVG: 369,011 <br /> MIN: 364,769 <br /> MAX: 373,816 | AVG: 421,685 <br /> MIN: 417,443 <br /> MAX: 426,490 | AVG: 420,333 <br /> MIN: 416,092 <br /> MAX: 425,139 |
+| kyber512-90s (100 executions) | m4fstack | AVG: 369,736 <br /> MIN: 361,461 <br /> MAX: 370,708 | AVG: 424,339 <br /> MIN: 416,065 <br /> MAX: 425,312 | AVG: 423,234 <br /> MIN: 414,960 <br /> MAX: 424,207 |
+| kyber768 (100 executions) | clean | AVG: 1,059,876 <br /> MIN: 1,057,827 <br /> MAX: 1,071,809 | AVG: 1,352,934 <br /> MIN: 1,350,884 <br /> MAX: 1,364,866 | AVG: 1,471,055 <br /> MIN: 1,469,005 <br /> MAX: 1,482,987 |
+| kyber768 (100 executions) | m4fspeed | AVG: 706,531 <br /> MIN: 703,969 <br /> MAX: 718,271 | AVG: 863,343 <br /> MIN: 860,765 <br /> MAX: 875,091 | AVG: 783,369 <br /> MIN: 780,788 <br /> MAX: 795,114 |
+| kyber768 (100 executions) | m4fstack | AVG: 707,275 <br /> MIN: 705,435 <br /> MAX: 719,983 | AVG: 867,363 <br /> MIN: 865,520 <br /> MAX: 880,070 | AVG: 788,053 <br /> MIN: 786,210 <br /> MAX: 800,760 |
+| kyber768-90s (100 executions) | clean | AVG: 1,816,649 <br /> MIN: 1,815,810 <br /> MAX: 1,831,510 | AVG: 2,032,562 <br /> MIN: 2,031,722 <br /> MAX: 2,047,390 | AVG: 2,225,597 <br /> MIN: 2,224,757 <br /> MAX: 2,240,425 |
+| kyber768-90s (100 executions) | m4fspeed | AVG: 614,455 <br /> MIN: 610,716 <br /> MAX: 619,096 | AVG: 694,064 <br /> MIN: 690,330 <br /> MAX: 698,723 | AVG: 688,999 <br /> MIN: 685,265 <br /> MAX: 693,658 |
+| kyber768-90s (100 executions) | m4fstack | AVG: 617,709 <br /> MIN: 613,688 <br /> MAX: 622,666 | AVG: 700,599 <br /> MIN: 696,577 <br /> MAX: 705,555 | AVG: 696,202 <br /> MIN: 692,181 <br /> MAX: 701,159 |
 | lightsaber (100 executions) | clean | AVG: 1,023,162 <br /> MIN: 1,023,162 <br /> MAX: 1,023,163 | AVG: 1,494,462 <br /> MIN: 1,494,456 <br /> MAX: 1,494,495 | AVG: 1,805,694 <br /> MIN: 1,805,691 <br /> MAX: 1,805,725 |
 | lightsaber (100 executions) | m4fspeed | AVG: 352,196 <br /> MIN: 352,196 <br /> MAX: 352,229 | AVG: 481,006 <br /> MIN: 481,005 <br /> MAX: 481,038 | AVG: 452,654 <br /> MIN: 452,653 <br /> MAX: 452,687 |
 | lightsaber (100 executions) | m4fstack | AVG: 422,434 <br /> MIN: 422,434 <br /> MAX: 422,467 | AVG: 591,556 <br /> MIN: 591,555 <br /> MAX: 591,588 | AVG: 581,073 <br /> MIN: 581,072 <br /> MAX: 581,106 |
@@ -288,23 +288,23 @@
 | frodokem640shake | opt | 74.3% | 65.4% | 64.9% |
 | hqc-rmrs-128 | clean | 53.7% | 41.4% | 33.3% |
 | kyber1024 | clean | 54.0% | 53.6% | 42.5% |
-| kyber1024 | m4fspeed | 78.1% | 81.4% | 74.6% |
-| kyber1024 | m4fstack | 77.3% | 80.4% | 73.5% |
+| kyber1024 | m4fspeed | 79.1% | 81.9% | 75.6% |
+| kyber1024 | m4fstack | 78.8% | 81.4% | 75.0% |
 | kyber1024-90s | clean | 73.6% | 70.4% | 63.8% |
-| kyber1024-90s | m4fspeed | 70.1% | 72.6% | 66.9% |
-| kyber1024-90s | m4fstack | 69.1% | 71.4% | 65.6% |
-| kyber512 | clean | 54.2% | 51.6% | 36.9% |
-| kyber512 | m4fspeed | 77.9% | 81.1% | 71.3% |
-| kyber512 | m4fstack | 77.6% | 80.4% | 70.4% |
+| kyber1024-90s | m4fspeed | 70.7% | 72.9% | 67.5% |
+| kyber1024-90s | m4fstack | 70.2% | 72.2% | 66.8% |
+| kyber512 | clean | 54.3% | 51.6% | 36.9% |
+| kyber512 | m4fspeed | 79.4% | 82.0% | 72.7% |
+| kyber512 | m4fstack | 79.4% | 81.7% | 72.4% |
 | kyber512-90s | clean | 68.4% | 62.6% | 52.5% |
-| kyber512-90s | m4fspeed | 71.0% | 73.4% | 64.9% |
-| kyber512-90s | m4fstack | 70.5% | 72.6% | 64.0% |
+| kyber512-90s | m4fspeed | 72.2% | 74.2% | 66.2% |
+| kyber512-90s | m4fstack | 72.1% | 73.8% | 65.7% |
 | kyber768 | clean | 52.4% | 52.3% | 39.5% |
-| kyber768 | m4fspeed | 77.2% | 81.0% | 72.8% |
-| kyber768 | m4fstack | 76.6% | 80.2% | 71.8% |
+| kyber768 | m4fspeed | 78.4% | 81.8% | 74.0% |
+| kyber768 | m4fstack | 78.3% | 81.3% | 73.5% |
 | kyber768-90s | clean | 71.2% | 67.3% | 59.3% |
-| kyber768-90s | m4fspeed | 69.7% | 72.6% | 65.6% |
-| kyber768-90s | m4fstack | 68.9% | 71.6% | 64.5% |
+| kyber768-90s | m4fspeed | 70.6% | 73.1% | 66.5% |
+| kyber768-90s | m4fstack | 70.3% | 72.5% | 65.9% |
 | lightsaber | clean | 24.9% | 23.8% | 15.5% |
 | lightsaber | m4fspeed | 72.3% | 74.0% | 61.9% |
 | lightsaber | m4fstack | 60.3% | 60.2% | 48.2% |
@@ -426,23 +426,23 @@
 | frodokem640shake | opt | 6,796 | 0 | 0 | 6,796 |
 | hqc-rmrs-128 | clean | 18,436 | 0 | 0 | 18,436 |
 | kyber1024 | clean | 6,068 | 0 | 0 | 6,068 |
-| kyber1024 | m4fspeed | 18,376 | 0 | 0 | 18,376 |
-| kyber1024 | m4fstack | 15,856 | 0 | 0 | 15,856 |
+| kyber1024 | m4fspeed | 16,496 | 0 | 0 | 16,496 |
+| kyber1024 | m4fstack | 13,752 | 0 | 0 | 13,752 |
 | kyber1024-90s | clean | 6,424 | 0 | 0 | 6,424 |
-| kyber1024-90s | m4fspeed | 18,780 | 0 | 0 | 18,780 |
-| kyber1024-90s | m4fstack | 16,084 | 0 | 0 | 16,084 |
+| kyber1024-90s | m4fspeed | 16,948 | 0 | 0 | 16,948 |
+| kyber1024-90s | m4fstack | 13,996 | 0 | 0 | 13,996 |
 | kyber512 | clean | 4,872 | 0 | 0 | 4,872 |
-| kyber512 | m4fspeed | 17,212 | 0 | 0 | 17,212 |
-| kyber512 | m4fstack | 15,032 | 0 | 0 | 15,032 |
+| kyber512 | m4fspeed | 15,332 | 0 | 0 | 15,332 |
+| kyber512 | m4fstack | 12,820 | 0 | 0 | 12,820 |
 | kyber512-90s | clean | 5,088 | 0 | 0 | 5,088 |
-| kyber512-90s | m4fspeed | 17,616 | 0 | 0 | 17,616 |
-| kyber512-90s | m4fstack | 15,248 | 0 | 0 | 15,248 |
+| kyber512-90s | m4fspeed | 15,784 | 0 | 0 | 15,784 |
+| kyber512-90s | m4fstack | 13,052 | 0 | 0 | 13,052 |
 | kyber768 | clean | 4,888 | 0 | 0 | 4,888 |
-| kyber768 | m4fspeed | 17,420 | 0 | 0 | 17,420 |
-| kyber768 | m4fstack | 14,940 | 0 | 0 | 14,940 |
+| kyber768 | m4fspeed | 15,540 | 0 | 0 | 15,540 |
+| kyber768 | m4fstack | 12,836 | 0 | 0 | 12,836 |
 | kyber768-90s | clean | 5,120 | 0 | 0 | 5,120 |
-| kyber768-90s | m4fspeed | 17,832 | 0 | 0 | 17,832 |
-| kyber768-90s | m4fstack | 15,156 | 0 | 0 | 15,156 |
+| kyber768-90s | m4fspeed | 16,000 | 0 | 0 | 16,000 |
+| kyber768-90s | m4fstack | 13,068 | 0 | 0 | 13,068 |
 | lightsaber | clean | 10,368 | 0 | 0 | 10,368 |
 | lightsaber | m4fspeed | 18,900 | 0 | 0 | 18,900 |
 | lightsaber | m4fstack | 19,712 | 0 | 0 | 19,712 |
