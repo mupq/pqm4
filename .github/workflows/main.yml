@@ -1,0 +1,13 @@
+on: [push]
+jobs:
+  build-all:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Toolchain
+        uses: carlosperate/arm-none-eabi-gcc-action@v1.5.2
+        with:
+          release: 11.3.Rel1
+      - name: Build All
+        run: make PLATFORM=mps2-an386
