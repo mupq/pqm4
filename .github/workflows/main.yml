@@ -5,6 +5,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          submodules: recursive
       - name: Install Toolchain
         uses: carlosperate/arm-none-eabi-gcc-action@v1.5.2
         with:
