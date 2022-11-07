@@ -16,6 +16,14 @@ The design goals of the library are to offer
 * integration of clean implementations from [PQClean](https://github.com/PQClean/PQClean); and
 * easy integration of new schemes and implementations into the framework.
 
+## Previous NIST PQC
+
+The master branch of **pqm4** contains schemes that either [selected for standardization by NIST](https://csrc.nist.gov/Projects/post-quantum-cryptography/selected-algorithms-2022) or part of the [4th round of the NIST PQC competition](https://csrc.nist.gov/Projects/post-quantum-cryptography/round-4-submissions).
+
+Implementations for previous NIST PQC rounds are available here:
+- Round 3: https://github.com/mupq/pqm4/releases/tag/Round3
+- Round 2: https://github.com/mupq/pqm4/releases/tag/Round2
+- Round 1: https://github.com/mupq/pqm4/releases/tag/Round1
 
 ## Changes in Round 2
 For the second round of the NIST PQC, **pqm4** was extended (see [#78](https://github.com/mupq/pqm4/pull/78)) with the following features:
@@ -33,6 +41,7 @@ The naming scheme for these implementations is as follows:
 * `ref`: the reference implementation submitted to NIST (will be replaced by `clean` in the long term),
 * `opt`: an optimized implementation in plain C (e.g., the optimized implementation submitted to NIST),
 * `m4`: an implementation with Cortex-M4 specific optimizations (typically in assembly).
+* `m4f`: an implementation with Cortex-M4F specific optimizations (typically assembly using floating-point registers).
 
 ## Setup/Installation
 The testing and benchmarking framework of **pqm4** targets several development
@@ -57,7 +66,7 @@ boards, all featuring an ARM Cortex-M4 chip:
   however, meaningless in this case).
 
 ### Installing the ARM toolchain
-The **pqm4** build system assumes that you have the [arm-none-eabi toolchain](https://launchpad.net/gcc-arm-embedded)
+The **pqm4** build system assumes that you have the [arm-none-eabi toolchain](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads)
 toolchain installed.
 On most Linux systems, the correct toolchain gets installed when you install the `arm-none-eabi-gcc` (or `gcc-arm-none-eabi`) package.  
 On some Linux distributions, you will also have to explicitly install `libnewlib-arm-none-eabi` .
@@ -190,7 +199,7 @@ For most schemes we report minimum, maximum, and average cycle counts of 100 exe
 For some particularly slow schemes we reduce the number of executions; the number of
 executions is reported in parentheses.
 
-The numbers were obtained with `arm-none-eabi-gcc 10.1.0`. 
+The numbers were obtained with `arm-none-eabi-gcc (Arm GNU Toolchain 11.3.Rel1) 11.3.1 20220712` from [Arm](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads).
 
 The code-size measurements only include the code that is provided by the scheme implementation, i.e., exclude common code like hashing or C standard library functions.
 The measurements are performed with `arm-none-eabi-size`.
