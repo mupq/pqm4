@@ -16,6 +16,14 @@ The design goals of the library are to offer
 * integration of clean implementations from [PQClean](https://github.com/PQClean/PQClean); and
 * easy integration of new schemes and implementations into the framework.
 
+## Previous NIST PQC
+
+The master branch of **pqm4** contains schemes that either [selected for standardization by NIST](https://csrc.nist.gov/Projects/post-quantum-cryptography/selected-algorithms-2022) or part of the [4th round of the NIST PQC competition](https://csrc.nist.gov/Projects/post-quantum-cryptography/round-4-submissions).
+
+Implementations for previous NIST PQC rounds are available here:
+- Round 3: https://github.com/mupq/pqm4/releases/tag/Round3
+- Round 2: https://github.com/mupq/pqm4/releases/tag/Round2
+- Round 1: https://github.com/mupq/pqm4/releases/tag/Round1
 
 ## Changes in Round 2
 For the second round of the NIST PQC, **pqm4** was extended (see [#78](https://github.com/mupq/pqm4/pull/78)) with the following features:
