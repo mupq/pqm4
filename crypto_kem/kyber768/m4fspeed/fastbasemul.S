@@ -64,7 +64,7 @@ basemul_asm_opt_16_32:
 .type basemul_asm_acc_opt_32_32, %function
 .align 2
 basemul_asm_acc_opt_32_32:
-  push {r4-r10, lr}
+  push {r4-r11, lr}
 
   rptr_tmp  .req r0
   aptr      .req r1
@@ -118,7 +118,7 @@ basemul_asm_acc_opt_32_32:
     subs.w loop, #1
   bne.w 1b
 
-  pop {r4-r10, pc}
+  pop {r4-r11, pc}
 
 .unreq rptr_tmp
 
