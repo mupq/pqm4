@@ -23,6 +23,6 @@ LIBDEPS += $(SYMCRYPTO_SRC)
 CPPFLAGS+=$(if $(PROFILE_HASHING),-DPROFILE_HASHING)
 else
 LDLIBS += -lsymcrypto$(if $(PROFILE_HASHING),-hashprof)
-LIBDEPS += obj/libsymcrypto$$(if $$(PROFILE_HASHING),-hashprof).a
+LIBDEPS += obj/libsymcrypto$(if $(PROFILE_HASHING),-hashprof).a
 endif
 

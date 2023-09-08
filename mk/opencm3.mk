@@ -7,10 +7,10 @@ obj/libpqm4hal-nornd.a: $(call objs,$(filter-out common/randombytes.c,$(LIBHAL_S
 
 ifeq ($(AIO),1)
 LDLIBS +=
-LIBDEPS += $$(if $$(NO_RANDOMBYTES),$(filter-out common/randombytes.c,$(LIBHAL_SRC)),$(LIBHAL_SRC))
+LIBDEPS += $(if $(NO_RANDOMBYTES),$(filter-out common/randombytes.c,$(LIBHAL_SRC)),$(LIBHAL_SRC))
 else
 LDLIBS += -lpqm4hal$(if $(NO_RANDOMBYTES),-nornd)
-LIBDEPS += obj/libpqm4hal$$(if $$(NO_RANDOMBYTES),-nornd).a
+LIBDEPS += obj/libpqm4hal$(if $(NO_RANDOMBYTES),-nornd).a
 endif
 
 LDLIBS += -lc -lgcc
