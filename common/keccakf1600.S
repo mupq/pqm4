@@ -2,6 +2,7 @@
 @ Implementation by the Keccak, Keyak and Ketje Teams, namely, Guido Bertoni,
 @ Joan Daemen, Michaël Peeters, Gilles Van Assche and Ronny Van Keer, hereby
 @ denoted as "the implementer".
+@ Additional optimizations by Alexandre Adomnicai.
 @
 @ For more information, feedback or questions, please refer to our websites:
 @ http://keccak.noekeon.org/
@@ -183,288 +184,685 @@
 .equ mRC	, 5*4
 .equ mSize, 6*4
 
+/******************************************************************************
+ * Bitwise exclusive-OR where both operands are misaligned (i.e. src1 and src2 
+ * are rotated by rot1 and rot2, respectively).
+ * The output result is also misaligned (i.e. dst is rotated by rot1-rot2).
+ *  - dst           destination register
+ *  - src1-src2     source registers
+ *  - rot1-rot2     rotation values
+ *****************************************************************************/
+.macro eorror   dst, src1, src2, rot1, rot2
+.if \rot1 >= \rot2
+    eor  \dst, \src1, \src2, ror \rot1-\rot2
+.else
+    eor  \dst, \src1, \src2, ror 32+\rot1-\rot2
+.endif
+.endm
 
-.macro	xor5		result,b,g,k,m,s
 
-	ldr			\result, [r0, #\b]
-	ldr			r1, [r0, #\g]
-	eors		\result, \result, r1
-	ldr			r1, [r0, #\k]
-	eors		\result, \result, r1
-	ldr			r1, [r0, #\m]
-	eors		\result, \result, r1
-	ldr			r1, [r0, #\s]
-	eors		\result, \result, r1
-	.endm
+/******************************************************************************
+ * Bit clear instruction where both operands are misaligned (i.e. src1 and src2 
+ * are rotated by rot1 and rot2, respectively).
+ * The output result is also misaligned (i.e. dst is rotated by rot1-rot2).
+ *  - dst           destination register
+ *  - src1-src2     source registers
+ *  - rot1-rot2     rotation values
+ *****************************************************************************/
+.macro bicror   dst, src1, src2, rot1, rot2
+.if \rot1 >= \rot2
+    bic  \dst, \src1, \src2, ror \rot1-\rot2
+.else
+    bic  \dst, \src1, \src2, ror 32+\rot1-\rot2
+.endif
+.endm
 
-.macro	xorrol 		result, aa, bb
 
-	eor			\result, \aa, \bb, ROR #31
-	.endm
+/******************************************************************************
+ * Load 5 words from memory and XOR them all together. It is used to compute
+ * the parity columns for the Theta step.
+ * Note that all operands may be misaligned (i.e. rotated by a certain amount
+ * of bits), as well as the result.
+ *  - dst           destination register
+ *  - src1-src5     source registers
+ *  - rot1-rot5     rotation values
+ *****************************************************************************/
+.macro xor5   dst, src1, src2, src3, src4, src5, rot1, rot2, rot3, rot4, rot5
+    ldr.w   \dst, [r0, #\src1]
+    ldr.w     r1, [r0, #\src2]
+    ldr.w     r5, [r0, #\src3]
+    ldr      r11, [r0, #\src4]
+    ldr      r12, [r0, #\src5]
+    eorror  \dst, \dst,  r1, \rot1, \rot2
+    eorror  \dst, \dst,  r5, \rot1, \rot3
+    eorror  \dst, \dst, r11, \rot1, \rot4
+    eorror  \dst, \dst, r12, \rot1, \rot5
+.endm
 
-.macro	xandnot 	resofs, aa, bb, cc
 
-	bic			r1, \cc, \bb
-	eors		r1, r1, \aa
-	str			r1, [r0, #\resofs]
-	.endm
+/******************************************************************************
+ * Same as xor5, except that a previous result is stored on the stack after the
+ * loads from memory. This allows to have the str instruction for free.
+ *  - dst           destination register
+ *  - src1-src5     source registers
+ *  - rot1-rot5     rotation values
+ *  - strreg        register from previous calculations to be stored in memory
+ *  - stradr        register holding the address to store `prev`
+ *  - strofs        stack pointer memory offset for the str instruction
+ *****************************************************************************/
+.macro xor5str   dst, src1, src2, src3, src4, src5, rot1, rot2, rot3, rot4, rot5, strreg, stradr, strofs
+    ldr.w    \dst, [r0, #\src1]
+    ldr.w      r1, [r0, #\src2]
+    ldr.w      r5, [r0, #\src3]
+    ldr       r11, [r0, #\src4]
+    ldr       r12, [r0, #\src5]
+    str.w \strreg, [\stradr, #\strofs]
+    eorror   \dst, \dst,  r1, \rot1, \rot2
+    eorror   \dst, \dst,  r5, \rot1, \rot3
+    eorror   \dst, \dst, r11, \rot1, \rot4
+    eorror   \dst, \dst, r12, \rot1, \rot5
+.endm
 
-.macro	KeccakThetaRhoPiChiIota aA1, aDax, aA2, aDex, rot2, aA3, aDix, rot3, aA4, aDox, rot4, aA5, aDux, rot5, offset, last
-	ldr		r3, [r0, #\aA1]
-	ldr		r4, [r0, #\aA2]
-	ldr		r5, [r0, #\aA3]
-	ldr		r6, [r0, #\aA4]
-	ldr		r7, [r0, #\aA5]
-	eors	r3, r3, \aDax
-	eors	r5, r5, \aDix
-	eors	r4, r4, \aDex
-	eors	r6, r6, \aDox
-	eors	r7, r7, \aDux
-	rors	r4, #32-\rot2
-	rors	r5, #32-\rot3
-	rors	r6, #32-\rot4
-	rors	r7, #32-\rot5
-    xandnot \aA2, r4, r5, r6
-    xandnot \aA3, r5, r6, r7
-    xandnot \aA4, r6, r7, r3
-    xandnot \aA5, r7, r3, r4
-	ldr		r1, [sp, #mRC]
-	bics	r5, r5, r4
-	ldr		r4, [r1, #\offset]
-	eors	r3, r3, r5
-	eors	r3, r3, r4
-	.if	\last == 1
-	ldr		r4, [r1, #32]!
-	str		r1, [sp, #mRC]
-	cmp		r4, #0xFF
-	.endif
-	str		r3, [r0, #\aA1]
-	.endm
 
-.macro	KeccakThetaRhoPiChi aB1, aA1, aDax, rot1, aB2, aA2, aDex, rot2, aB3, aA3, aDix, rot3, aB4, aA4, aDox, rot4, aB5, aA5, aDux, rot5
-	ldr		\aB1, [r0, #\aA1]
-	ldr		\aB2, [r0, #\aA2]
-	ldr		\aB3, [r0, #\aA3]
-	ldr		\aB4, [r0, #\aA4]
-	ldr		\aB5, [r0, #\aA5]
-	eors	\aB1, \aB1, \aDax
-	eors	\aB3, \aB3, \aDix
-	eors	\aB2, \aB2, \aDex
-	eors	\aB4, \aB4, \aDox
-	eors	\aB5, \aB5, \aDux
-	rors	\aB1, #32-\rot1
-	.if	\rot2 > 0
-	rors	\aB2, #32-\rot2
-	.endif
-	rors	\aB3, #32-\rot3
-	rors	\aB4, #32-\rot4
-	rors	\aB5, #32-\rot5
-	xandnot \aA1, r3, r4, r5
-    xandnot \aA2, r4, r5, r6
-    xandnot \aA3, r5, r6, r7
-    xandnot \aA4, r6, r7, r3
-    xandnot \aA5, r7, r3, r4
-	.endm
+/******************************************************************************
+ * Exclusive-OR where the 2nd operand is rotated by 1 bit to the left.
+ *  - dst           destination register
+ *  - src1-src2     source registers
+ *  - rot           differential rotation btw src1 & src2 (i.e. rot=rot1-rot2)
+ *****************************************************************************/
+.macro xorrol   dst, src1, src2, rot
+    eor  \dst, \src1, \src2, ror \rot-1
+.endm
 
-.macro	KeccakRound0
 
-	xor5        r3,  Abu0, Agu0, Aku0, Amu0, Asu0
-	xor5        r7, Abe1, Age1, Ake1, Ame1, Ase1
-	xorrol      r6, r3, r7
-	str			r6, [sp, #mDa0]
-	xor5        r6,  Abu1, Agu1, Aku1, Amu1, Asu1
-	xor5        lr, Abe0, Age0, Ake0, Ame0, Ase0
-	eors        r8, r6, lr
-	str			r8, [sp, #mDa1]
+/******************************************************************************
+ * Bitslice implementation of the Chi step with misaligned operands.
+ *  - resofs        memory offset within the internal state to store the result
+ *  - src1-src3     source registers
+ *  - rot1-rot3     rotation values
+ *****************************************************************************/
+.macro xandnotlazystr   resofs, src1, src2, src3, rot1, rot2, rot3
+    bicror  r1, \src3, \src2, \rot3, \rot2
+    eorror  r1, r1, \src1, \rot3, \rot1
+    str.w   r1, [r0, #\resofs]
+.endm
 
-	xor5        r5,  Abi0, Agi0, Aki0, Ami0, Asi0
-	xorrol      r9, r5, r6
-	str			r9, [sp, #mDo0]
-	xor5        r4,  Abi1, Agi1, Aki1, Ami1, Asi1
-	eors		r3, r3, r4
-	str			r3, [sp, #mDo1]
 
-	xor5        r3,  Aba0, Aga0, Aka0, Ama0, Asa0
-	xorrol      r10, r3, r4
-	xor5        r6,  Aba1, Aga1, Aka1, Ama1, Asa1
-	eors        r11, r6, r5
+/******************************************************************************
+ * Same as xandnotlazystr but without the str instruction which will be carried
+ * out later in order to take advantage of future ldr instructions.
+ *  - src1-src3     source registers
+ *  - rot1-rot3     rotation values
+ *****************************************************************************/
+.macro xandnotlazy  src1, src2, src3, rot1, rot2, rot3
+    bicror  r1, \src3, \src2, \rot3, \rot2
+    eorror  r1, r1, \src1, \rot3, \rot1
+.endm
 
-	xor5        r4,  Abo1, Ago1, Ako1, Amo1, Aso1
-	xorrol      r5, lr, r4
-	str			r5, [sp, #mDi0]
-	xor5        r5,  Abo0, Ago0, Ako0, Amo0, Aso0
-	eors        r2, r7, r5
 
-	xorrol      r12, r5, r6
-	eors        lr, r4, r3
+/******************************************************************************
+ * Same as xandnotlazystr with an additional rotation in order to explictly
+ * compute the Rho step. It is useful in KeccakRound3 in order to return to the
+ * classical representation every 4 rounds.
+ *  - resofs        memory offset within the internal state to store the result
+ *  - src1-src3     source registers
+ *  - rot1-rot3     rotation values
+ *****************************************************************************/
+.macro xandnotstr  resofs, src1, src2, src3, rot1, rot2, rot3
+    bicror  r1, \src3, \src2, \rot3, \rot2
+    eorror  r1,    r1, \src1, \rot3, \rot1
+.if \rot3 > 0
+    ror     r1, r1, #32-\rot3
+.endif
+    str.w   r1, [r0, #\resofs]
+.endm
 
-	KeccakThetaRhoPiChi r5, Aka1, r8,  2, r6, Ame1, r11, 23, r7, Asi1, r2, 31, r3, Abo0, r9, 14, r4, Agu0, r12, 10
-	KeccakThetaRhoPiChi r7, Asa1, r8,  9, r3, Abe0, r10,  0, r4, Agi1, r2,  3, r5, Ako0, r9, 12, r6, Amu1, lr,  4
-	ldr			r8, [sp, #mDa0]
-	KeccakThetaRhoPiChi r4, Aga0, r8, 18, r5, Ake0, r10,  5, r6, Ami1, r2,  8, r7, Aso0, r9, 28, r3, Abu1, lr, 14
-	KeccakThetaRhoPiChi r6, Ama0, r8, 20, r7, Ase1, r11,  1, r3, Abi1, r2, 31, r4, Ago0, r9, 27, r5, Aku0, r12, 19
-	ldr			r9, [sp, #mDo1]
-	KeccakThetaRhoPiChiIota  Aba0, r8,          Age0, r10, 22,      Aki1, r2, 22,      Amo1, r9, 11,      Asu0, r12,  7, 0, 0
 
-	ldr			r2, [sp, #mDi0]
-	KeccakThetaRhoPiChi r5, Aka0, r8,  1, r6, Ame0, r10, 22, r7, Asi0, r2, 30, r3, Abo1, r9, 14, r4, Agu1, lr, 10
-	KeccakThetaRhoPiChi r7, Asa0, r8,  9, r3, Abe1, r11,  1, r4, Agi0, r2,  3, r5, Ako1, r9, 13, r6, Amu0, r12,  4
-	ldr			r8, [sp, #mDa1]
-	KeccakThetaRhoPiChi r4, Aga1, r8, 18, r5, Ake1, r11,  5, r6, Ami0, r2,  7, r7, Aso1, r9, 28, r3, Abu0, r12, 13
-	KeccakThetaRhoPiChi r6, Ama1, r8, 21, r7, Ase0, r10,  1, r3, Abi0, r2, 31, r4, Ago1, r9, 28, r5, Aku1, lr, 20
-	ldr			r9, [sp, #mDo0]
-	KeccakThetaRhoPiChiIota  Aba1, r8,          Age1, r11, 22,      Aki0, r2, 21,      Amo0, r9, 10,      Asu1, lr,  7, 4, 0
-	.endm
+/******************************************************************************
+ * Same as xandnotstr but without the str instruction which will be carried
+ * out later in order to take advantage of future ldr instructions.
+ *  - src1-src3     source registers
+ *  - rot1-rot3     rotation values
+ *****************************************************************************/
+.macro xandnot  src1, src2, src3, rot1, rot2, rot3
+    bicror  r1, \src3, \src2, \rot3, \rot2
+    eorror  r1,    r1, \src1, \rot3, \rot1
+.if \rot3 > 0
+    ror     r1, r1, #32-\rot3
+.endif
+.endm
 
-.macro	KeccakRound1
 
-	xor5        r3,  Asu0, Agu0, Amu0, Abu1, Aku1
-	xor5        r7, Age1, Ame0, Abe0, Ake1, Ase1
-	xorrol      r6, r3, r7
-	str			r6, [sp, #mDa0]
-	xor5        r6,  Asu1, Agu1, Amu1, Abu0, Aku0
-	xor5        lr, Age0, Ame1, Abe1, Ake0, Ase0
-	eors        r8, r6, lr
-	str			r8, [sp, #mDa1]
+/******************************************************************************
+ * Same as xandnot followed by the Iota step. Note that the source registers 
+ * are not specified since they are always r3, r4 and r5.
+ *  - out           output reg (useful to store the result in the next round)
+ *  - rot2-rot3     rotation values
+ *  - rcofs         memory offset to load the round constant
+ *  - last          Boolean to indicate whether its the last round of the
+ *                  quadruple round routine
+ *****************************************************************************/
+.macro xandnotiota    out, rot3, rot2, rcofs, last
+    bicror  r5, r5, r4, \rot3, \rot2
+    ldr     r1, [sp, #mRC]
+    ldr     r4, [r1, #\rcofs]
+.if  \last == 1
+    ldr     r7, [r1, #32]!
+    str     r1, [sp, #mRC]
+    cmp     r7, #0xFF
+.endif
+.if \rot3 > 0
+    eor    r3, r3, r5, ror 32-\rot3
+.else
+    eor.w  r3, r3, r5
+.endif
+    eor.w  \out, r4, r3
+.endm
 
-	xor5        r5,  Aki1, Asi1, Agi0, Ami1, Abi0
-	xorrol      r9, r5, r6
-	str			r9, [sp, #mDo0]
-	xor5        r4,  Aki0, Asi0, Agi1, Ami0, Abi1
-	eors		r3, r3, r4
-	str			r3, [sp, #mDo1]
 
-	xor5        r3,  Aba0, Aka1, Asa0, Aga0, Ama1
-	xorrol      r10, r3, r4
-	xor5        r6,  Aba1, Aka0, Asa1, Aga1, Ama0
-	eors        r11, r6, r5
+/******************************************************************************
+ * Add the parity bits to the state registers r3-r7. If the state registers are
+ * not properly aligned due to previous lazy rotations, use the barrel shifter
+ * to fix the misalignment when adding the parity bits.
+ *  - par1-par5     registers containing the parity bits
+ *  - dly1-dly5     rotation values to compute the (delayed) Rho step
+ *****************************************************************************/
+.macro addparity par1, dly1, par2, dly2, par3, dly3, par4, dly4, par5, dly5
+.if \dly1 > 0
+    eor    r3, \par1, r3, ror 32-\dly1
+.else
+    eor.w  r3, \par1, r3
+.endif
+.if \dly2 > 0
+    eor    r4, \par2, r4, ror 32-\dly2
+.else
+    eor.w  r4, \par2, r4
+.endif
+.if \dly3 > 0
+    eor    r5, \par3, r5, ror 32-\dly3
+.else
+    eor.w  r5, \par3, r5
+.endif
+.if \dly4 > 0
+    eor    r6, \par4, r6, ror 32-\dly4
+.else
+    eor.w  r6, \par4, r6
+.endif
+.if \dly5 > 0
+    eor    r7, \par5, r7, ror 32-\dly5
+.else
+    eor.w  r7, \par5, r7
+.endif
+.endm
 
-	xor5        r4,  Amo0, Abo1, Ako0, Aso1, Ago0
-	xorrol      r5, lr, r4
-	str			r5, [sp, #mDi0]
-	xor5        r5,  Amo1, Abo0, Ako1, Aso0, Ago1
-	eors        r2, r7, r5
 
-	xorrol      r12, r5, r6
-	eors        lr, r4, r3
+/******************************************************************************
+ * Apply Theta, Pi, Chi and Iota steps to half a plane (i.e. 5 32-bit words) of
+ * the internal state.
+ * Note that the Rho step is calculated if and only if \lazy == 0, otherwise it
+ * is delayed until the next round using ''lazy reductions'' thanks to the 
+ * inline barrel shifter.
+ *  - src1-src5     source registers
+ *  - par1-par5     registers containing the parity bits
+ *  - rot2-rot5     rotation values to compute the current Rho step
+ *  - dly1-dly5     rotation values to compute the delayed Rho step
+ *  - prev          register from previous calculations to be stored in memory
+ *  - strofs        stack pointer memory offset for the str instruction
+ *  - reg           output reg related to the Iota step (to be stored later)
+ *****************************************************************************/
+.macro    KeccakThetaRhoPiChiIota   src1, par1,       dly1, \
+                                    src2, par2, rot2, dly2, \
+                                    src3, par3, rot3, dly3, \
+                                    src4, par4, rot4, dly4, \
+                                    src5, par5, rot5, dly5, \
+                                    ofs,  last, lazy, strofs, reg
+    ldr.w       r3, [r0, #\src1]
+    ldr       r4, [r0, #\src2]
+    ldr       r5, [r0, #\src3]
+    ldr       r6, [r0, #\src4]
+    ldr       r7, [r0, #\src5]
+    str.w       r1, [r0, #\strofs]
+    addparity   \par1, \dly1, \par2, \dly2, \par3, \dly3, \par4, \dly4, \par5, \dly5
+.if \lazy == 1
+    xandnotlazystr  \src2, r4, r5, r6, \rot2, \rot3, \rot4
+    xandnotlazystr  \src3, r5, r6, r7, \rot3, \rot4, \rot5
+    xandnotlazystr  \src4, r6, r7, r3, \rot4, \rot5,     0
+    xandnotlazystr  \src5, r7, r3, r4, \rot5,     0, \rot2
+.else
+    xandnotstr     \src2, r4, r5, r6, \rot2, \rot3, \rot4
+    xandnotstr     \src3, r5, r6, r7, \rot3, \rot4, \rot5
+    xandnotstr     \src4, r6, r7, r3, \rot4, \rot5,     0
+    xandnotstr     \src5, r7, r3, r4, \rot5,     0, \rot2
+.endif
+    xandnotiota    \reg, \rot3, \rot2, \ofs, \last
+.endm
 
-	KeccakThetaRhoPiChi r5, Asa1, r8,  2, r6, Ake1, r11, 23, r7, Abi1, r2, 31, r3, Amo1, r9, 14, r4, Agu0, r12, 10
-	KeccakThetaRhoPiChi r7, Ama0, r8,  9, r3, Age0, r10,  0, r4, Asi0, r2,  3, r5, Ako1, r9, 12, r6, Abu0, lr,  4
-	ldr			r8, [sp, #mDa0]
-	KeccakThetaRhoPiChi r4, Aka1, r8, 18, r5, Abe1, r10,  5, r6, Ami0, r2,  8, r7, Ago1, r9, 28, r3, Asu1, lr, 14
-	KeccakThetaRhoPiChi r6, Aga0, r8, 20, r7, Ase1, r11,  1, r3, Aki0, r2, 31, r4, Abo0, r9, 27, r5, Amu0, r12, 19
-	ldr			r9, [sp, #mDo1]
-	KeccakThetaRhoPiChiIota  Aba0, r8,          Ame1, r10, 22,      Agi1, r2, 22,      Aso1, r9, 11,      Aku1, r12,  7, 8, 0
 
-	ldr			r2, [sp, #mDi0]
-	KeccakThetaRhoPiChi r5, Asa0, r8,  1, r6, Ake0, r10, 22, r7, Abi0, r2, 30, r3, Amo0, r9, 14, r4, Agu1, lr, 10
-	KeccakThetaRhoPiChi r7, Ama1, r8,  9, r3, Age1, r11,  1, r4, Asi1, r2,  3, r5, Ako0, r9, 13, r6, Abu1, r12,  4
-	ldr			r8, [sp, #mDa1]
-	KeccakThetaRhoPiChi r4, Aka0, r8, 18, r5, Abe0, r11,  5, r6, Ami1, r2,  7, r7, Ago0, r9, 28, r3, Asu0, r12, 13
-	KeccakThetaRhoPiChi r6, Aga1, r8, 21, r7, Ase0, r10,  1, r3, Aki1, r2, 31, r4, Abo1, r9, 28, r5, Amu1, lr, 20
-	ldr			r9, [sp, #mDo0]
-	KeccakThetaRhoPiChiIota  Aba1, r8,          Ame0, r11, 22,      Agi0, r2, 21,      Aso0, r9, 10,      Aku0, lr,  7, 12, 0
-	.endm
+/******************************************************************************
+ * Apply Theta, Pi, and Chi steps to half a plane (i.e. 5 32-bit words) of the
+ * internal state.
+ * Note that the Rho step is calculated if and only if \lazy == 0, otherwise it
+ * is delayed until the next round using ''lazy reductions'' thanks to the 
+ * inline barrel shifter.
+ *  - src1-src5     source registers
+ *  - dst1-dst5     memory offsets to store the output registers
+ *  - par1-par5     registers containing the parity bits
+ *  - rot2-rot5     rotation values to compute the current Rho step
+ *  - dly1-dly5     rotation values to compute the delayed Rho step
+ *  - lazy          Boolean to indicate whether lazy rotations are used or not
+ *  - strofs        stack pointer memory offset to store the last output of the 
+ *                  previous round.
+ *****************************************************************************/
+.macro    KeccakThetaRhoPiChi   src1, dst1, par1, rot1, dly1, \
+                                src2, dst2, par2, rot2, dly2, \
+                                src3, dst3, par3, rot3, dly3, \
+                                src4, dst4, par4, rot4, dly4, \
+                                src5, dst5, par5, rot5, dly5, \
+                                lazy, strofs
+    ldr.w       r3, [r0, #\src1]
+    ldr.w       r4, [r0, #\src2]
+    ldr.w       r5, [r0, #\src3]
+    ldr.w       r6, [r0, #\src4]
+    ldr.w       r7, [r0, #\src5]
+    str.w       r1, [r0, #\strofs]
+    addparity   \par1, \dly1, \par2, \dly2, \par3, \dly3, \par4, \dly4, \par5, \dly5
+.if \lazy == 1
+    xandnotlazystr  \dst1, r3, r4, r5, \rot1, \rot2, \rot3
+    xandnotlazystr  \dst2, r4, r5, r6, \rot2, \rot3, \rot4
+    xandnotlazystr  \dst3, r5, r6, r7, \rot3, \rot4, \rot5
+    xandnotlazystr  \dst4, r6, r7, r3, \rot4, \rot5, \rot1
+    xandnotlazy            r7, r3, r4, \rot5, \rot1, \rot2
+.else
+    xandnotstr      \dst1, r3, r4, r5, \rot1, \rot2, \rot3
+    xandnotstr      \dst2, r4, r5, r6, \rot2, \rot3, \rot4
+    xandnotstr      \dst3, r5, r6, r7, \rot3, \rot4, \rot5
+    xandnotstr      \dst4, r6, r7, r3, \rot4, \rot5, \rot1
+    xandnot                r7, r3, r4, \rot5, \rot1, \rot2
+.endif
+.endm
 
-.macro	KeccakRound2
 
-	xor5        r3, Aku1, Agu0, Abu1, Asu1, Amu1
-	xor5        r7, Ame0, Ake0, Age0, Abe0, Ase1
-	xorrol      r6, r3, r7
-	str			r6, [sp, #mDa0]
-	xor5        r6,  Aku0, Agu1, Abu0, Asu0, Amu0
-	xor5        lr, Ame1, Ake1, Age1, Abe1, Ase0
-	eors        r8, r6, lr
-	str			r8, [sp, #mDa1]
+/******************************************************************************
+ * 1st round of the 4 unrolled rounds routine due to in-place processing.
+ * At the beginning of such rounds, the internal state is expected to match the
+ * classical representation (i.e. without transition and no delayed Rho step).
+ *****************************************************************************/
+.macro    KeccakRound0
+    xor5      r3, Abu0, Agu0, Aku0, Amu0, Asu0, 0, 0, 0, 0, 0
+    xor5      r7, Abe1, Age1, Ake1, Ame1, Ase1, 0, 0, 0, 0, 0
+    xorrol    r6, r3, r7, 32
+    xor5str   r4, Abi1, Agi1, Aki1, Ami1, Asi1, 0, 0, 0, 0, 0, r6, sp, mDa0
+    eor.w     r6, r3, r4
+    xor5str   r3, Abo0, Ago0, Ako0, Amo0, Aso0, 0, 0, 0, 0, 0, r6, sp, mDo1
+    eor.w     r2, r7, r3
+    xor5      r7, Aba0, Aga0, Aka0, Ama0, Asa0, 0, 0, 0, 0, 0
+    xorrol   r10, r7, r4, 32
+    xor5      r4, Abo1, Ago1, Ako1, Amo1, Aso1, 0, 0, 0, 0, 0
+    eor      r14, r4, r7
+    xor5      r7, Abe0, Age0, Ake0, Ame0, Ase0, 0, 0, 0, 0, 0
+    xorrol    r6, r7, r4, 32
+    xor5str   r4, Abu1, Agu1, Aku1, Amu1, Asu1, 0, 0, 0, 0, 0, r6, sp, mDi0
+    eor.w     r8, r4, r7
+    xor5str   r7, Abi0, Agi0, Aki0, Ami0, Asi0, 0, 0, 0, 0, 0, r8, sp, mDa1
+    xorrol    r9, r7, r4, 32
+    xor5str   r4, Aba1, Aga1, Aka1, Ama1, Asa1, 0, 0, 0, 0, 0, r9, sp, mDo0
+    eor      r11, r4, r7
+    xorrol   r12, r3, r4, 32
+    KeccakThetaRhoPiChi Abo0, Aka1,  r9, 14, 0, \
+                        Agu0, Ame1, r12, 10, 0, \
+                        Aka1, Asi1,  r8,  2, 0, \
+                        Ame1, Abo0, r11, 23, 0, \
+                        Asi1, Agu0,  r2, 31, 0, \
+                        1, Aka1
+    KeccakThetaRhoPiChi Abe0, Asa1, r10,  0, 0, \
+                        Agi1, Abe0,  r2,  3, 0, \
+                        Ako0, Agi1,  r9, 12, 0, \
+                        Amu1, Ako0, r14,  4, 0, \
+                        Asa1, Amu1,  r8,  9, 0, \
+                        1, Agu0
+    ldr         r8, [sp, #mDa0]
+    KeccakThetaRhoPiChi Abu1, Aga0, r14, 14, 0, \
+                        Aga0, Ake0,  r8, 18, 0, \
+                        Ake0, Ami1, r10,  5, 0, \
+                        Ami1, Aso0,  r2,  8, 0, \
+                        Aso0, Abu1,  r9, 28, 0, \
+                        1, Amu1
+    KeccakThetaRhoPiChi Abi1, Ama0,  r2, 31, 0, \
+                        Ago0, Ase1,  r9, 27, 0, \
+                        Aku0, Abi1, r12, 19, 0, \
+                        Ama0, Ago0,  r8, 20, 0, \
+                        Ase1, Aku0, r11,  1, 0, \
+                        1, Abu1
+    ldr         r9, [sp, #mDo1]
+    KeccakThetaRhoPiChiIota Aba0,  r8,  0,    \
+                            Age0, r10, 22, 0, \
+                            Aki1,  r2, 22, 0, \
+                            Amo1,  r9, 11, 0, \
+                            Asu0, r12,  7, 0, \
+                            0, 0, 1, Aku0, r1
+    ldr.w       r2, [sp, #mDi0]
+    KeccakThetaRhoPiChi Abo1, Aka0,  r9, 14, 0, \
+                        Agu1, Ame0, r14, 10, 0, \
+                        Aka0, Asi0,  r8,  1, 0, \
+                        Ame0, Abo1, r10, 22, 0, \
+                        Asi0, Agu1,  r2, 30, 0, \
+                        1, Aba0
+    KeccakThetaRhoPiChi Abe1, Asa0, r11,  1, 0, \
+                        Agi0, Abe1,  r2,  3, 0, \
+                        Ako1, Agi0,  r9, 13, 0, \
+                        Amu0, Ako1, r12,  4, 0, \
+                        Asa0, Amu0,  r8,  9, 0, \
+                        1, Agu1
+    ldr         r8, [sp, #mDa1]
+    KeccakThetaRhoPiChi Abu0, Aga1, r12, 13, 0, \
+                        Aga1, Ake1,  r8, 18, 0, \
+                        Ake1, Ami0, r11,  5, 0, \
+                        Ami0, Aso1,  r2,  7, 0, \
+                        Aso1, Abu0,  r9, 28, 0, \
+                        1, Amu0
+    KeccakThetaRhoPiChi Abi0, Ama1,  r2, 31, 0, \
+                        Ago1, Ase0,  r9, 28, 0, \
+                        Aku1, Abi0, r14, 20, 0, \
+                        Ama1, Ago1,  r8, 21, 0, \
+                        Ase0, Aku1, r10,  1, 0, \
+                        1, Abu0
+    ldr         r9, [sp, #mDo0]
+    KeccakThetaRhoPiChiIota Aba1,  r8,  0,    \
+                            Age1, r11, 22, 0, \
+                            Aki0,  r2, 21, 0, \
+                            Amo0,  r9, 10, 0, \
+                            Asu1, r14,  7, 0, \
+                            4, 0, 1, Aku1, r14
+.endm
 
-	xor5        r5,  Agi1, Abi1, Asi1, Ami0, Aki1
-	xorrol      r9, r5, r6
-	str			r9, [sp, #mDo0]
-	xor5        r4,  Agi0, Abi0, Asi0, Ami1, Aki0
-	eors		r3, r3, r4
-	str			r3, [sp, #mDo1]
 
-	xor5        r3,  Aba0, Asa1, Ama1, Aka1, Aga1
-	xorrol      r10, r3, r4
-	xor5        r6,  Aba1, Asa0, Ama0, Aka0, Aga0
-	eors        r11, r6, r5
 
-	xor5        r4,  Aso0, Amo0, Ako1, Ago0, Abo0
-	xorrol      r5, lr, r4
-	str			r5, [sp, #mDi0]
-	xor5        r5,  Aso1, Amo1, Ako0, Ago1, Abo1
-	eors        r2, r7, r5
+/******************************************************************************
+ * 2nd round of the 4 unrolled rounds routine due to in-place processing.
+ *****************************************************************************/
+.macro    KeccakRound1
+    xor5str     r3, Asu0, Agu0, Amu0, Abu1, Aku1, 22, 10,  3, 18, 28, r14, r0, Aba1
+    xor5        r7, Age1, Ame0, Abe0, Ake1, Ase1, 10, 22,  4,  7, 20
+    ror         r3, 32-22
+    xorrol      r6, r3, r7, 32-10
+    xor5str     r4, Aki0, Asi0, Agi1, Ami0, Abi1,  7, 30,  9, 28,  1, r6, sp, mDa0
+    eor         r6, r3, r4, ror 32-7
+    xor5str     r3, Amo1, Abo0, Ako1, Aso0, Ago1,  0, 14,  1, 14, 31, r6, sp, mDo1
+    eor         r2, r3, r7, ror 32-10
+    xor5        r7, Aba0, Aka1, Asa0, Aga0, Ama1,  0,  2, 13,  5, 20
+    xorrol     r10, r7, r4, 32-7
+    xor5        r4, Amo0, Abo1, Ako0, Aso1, Ago0,  0, 14,  0, 13, 31
+    eor        r14, r4, r7
+    xor5        r7, Age0, Ame1, Abe1, Ake0, Ase0, 11, 23,  4,  8, 21
+    ror         r7, 32-11
+    xorrol      r6, r7, r4, 32
+    xor5str     r4, Asu1, Agu1, Amu1, Abu0, Aku0, 22, 10,  3, 18, 27, r6, sp, mDi0
+    eor         r8, r7, r4, ror 32-22
+    xor5str     r7, Aki1, Asi1, Agi0, Ami1, Abi0,  7, 31,  9, 28,  1, r8, sp, mDa1
+    ror         r7, 32-7
+    xorrol      r9, r7, r4, 32-22
+    xor5str     r4, Aba1, Aka0, Asa1, Aga1, Ama0,  0,  1, 12,  5, 19, r9, sp, mDo0
+    eor        r11, r4, r7
+    xorrol     r12, r3, r4, 32
+    KeccakThetaRhoPiChi Amo1, Asa1,  r9, 14,  0, \
+                        Agu0, Ake1, r12, 10, 10, \
+                        Asa1, Abi1,  r8,  2, 12, \
+                        Ake1, Amo1, r11, 23,  7, \
+                        Abi1, Agu0,  r2, 31,  1, \
+                        1, Asa1
+    KeccakThetaRhoPiChi Age0, Ama0, r10,  0, 11, \
+                        Asi0, Age0,  r2,  3, 30, \
+                        Ako1, Asi0,  r9, 12,  1, \
+                        Abu0, Ako1, r14,  4, 18, \
+                        Ama0, Abu0,  r8,  9, 19, \
+                        1, Agu0
+    ldr         r8, [sp, #mDa0]
+    KeccakThetaRhoPiChi Asu1, Aka1, r14, 14, 22, \
+                        Aka1, Abe1,  r8, 18,  2, \
+                        Abe1, Ami0, r10,  5,  4, \
+                        Ami0, Ago1,  r2,  8, 28, \
+                        Ago1, Asu1,  r9, 28, 31, \
+                        1, Abu0
+    KeccakThetaRhoPiChi Aki0, Aga0,  r2, 31,  7, \
+                        Abo0, Ase1,  r9, 27, 14, \
+                        Amu0, Aki0, r12, 19,  3, \
+                        Aga0, Abo0,  r8, 20,  5, \
+                        Ase1, Amu0, r11,  1, 20, \
+                        1, Asu1
+    ldr         r9, [sp, #mDo1]
+    KeccakThetaRhoPiChiIota Aba0,  r8,  0,     \
+                            Ame1, r10, 22, 23, \
+                            Agi1,  r2, 22,  9, \
+                            Aso1,  r9, 11, 13, \
+                            Aku1, r12,  7, 28, \
+                            8, 0, 1, Amu0, r1
+    ldr.w         r2, [sp, #mDi0]
+    KeccakThetaRhoPiChi Amo0, Asa0,  r9, 14,  0, \
+                        Agu1, Ake0, r14, 10, 10, \
+                        Asa0, Abi0,  r8,  1, 13, \
+                        Ake0, Amo0, r10, 22,  8, \
+                        Abi0, Agu1,  r2, 30,  1, \
+                        1, Aba0
+    KeccakThetaRhoPiChi Age1, Ama1, r11,  1, 10, \
+                        Asi1, Age1,  r2,  3, 31, \
+                        Ako0, Asi1,  r9, 13,  0, \
+                        Abu1, Ako0, r12,  4, 18, \
+                        Ama1, Abu1,  r8,  9, 20, \
+                        1, Agu1
+    ldr         r8, [sp, #mDa1]
+    KeccakThetaRhoPiChi Asu0, Aka0, r12, 13, 22, \
+                        Aka0, Abe0,  r8, 18,  1, \
+                        Abe0, Ami1, r11,  5,  4, \
+                        Ami1, Ago0,  r2,  7, 28, \
+                        Ago0, Asu0,  r9, 28, 31, \
+                        1, Abu1
+    KeccakThetaRhoPiChi Aki1, Aga1,  r2, 31,  7, \
+                        Abo1, Ase0,  r9, 28, 14, \
+                        Amu1, Aki1, r14, 20,  3, \
+                        Aga1, Abo1,  r8, 21,  5, \
+                        Ase0, Amu1, r10,  1, 21, \
+                        1, Asu0
+    ldr         r9, [sp, #mDo0]
+    KeccakThetaRhoPiChiIota Aba1,  r8,  0,     \
+                            Ame0, r11, 22, 22, \
+                            Agi0,  r2, 21,  9, \
+                            Aso0,  r9, 10, 14, \
+                            Aku0, r14,  7, 27, \
+                            12, 0, 1, Amu1, r14
+.endm
 
-	xorrol      r12, r5, r6
-	eors        lr, r4, r3
+/******************************************************************************
+ * 3rd round of the 4 unrolled rounds routine due to in-place processing.
+ *****************************************************************************/
+.macro    KeccakRound2
+    xor5str     r3, Aku1, Agu0, Abu1, Asu1, Amu1, 22, 10,  3, 18, 28, r14, r0, Aba1
+    xor5        r7, Ame0, Ake0, Age0, Abe0, Ase1, 10, 22,  4,  7, 20
+    ror         r3, 32-22
+    xorrol      r6, r3, r7, 32-10
+    xor5str     r4, Agi0, Abi0, Asi0, Ami1, Aki0,  7, 30,  9, 28,  1, r6, sp, mDa0
+    eor         r6, r3, r4, ror 32-7
+    xor5str     r3, Aso1, Amo1, Ako0, Ago1, Abo1,  0, 14,  1, 14, 31, r6, sp, mDo1
+    eor         r2, r3, r7, ror 32-10
+    xor5        r7, Aba0, Asa1, Ama1, Aka1, Aga1,  0,  2, 13,  5, 20
+    xorrol     r10, r7, r4, 32-7
+    xor5        r4, Aso0, Amo0, Ako1, Ago0, Abo0,  0, 14,  0, 13, 31
+    eor        r14, r4, r7
+    xor5        r7, Ame1, Ake1, Age1, Abe1, Ase0, 11, 23,  4,  8, 21
+    ror         r7, 32-11
+    xorrol      r6, r7, r4, 32
+    xor5str     r4, Aku0, Agu1, Abu0, Asu0, Amu0, 22, 10,  3, 18, 27, r6, sp, mDi0
+    eor         r8, r7, r4, ror 32-22
+    xor5str     r7, Agi1, Abi1, Asi1, Ami0, Aki1,  7, 31,  9, 28,  1, r8, sp, mDa1
+    ror         r7, 32-7
+    xorrol      r9, r7, r4, 32-22
+    xor5str     r4, Aba1, Asa0, Ama0, Aka0, Aga0,  0,  1, 12,  5, 19, r9, sp, mDo0
+    eor        r11, r4, r7
+    xorrol     r12, r3, r4, 32
+    KeccakThetaRhoPiChi Aso1, Ama0,  r9, 14,  0, \
+                        Agu0, Abe0, r12, 10, 10, \
+                        Ama0, Aki0,  r8,  2, 12, \
+                        Abe0, Aso1, r11, 23,  7, \
+                        Aki0, Agu0,  r2, 31,  1, \
+                        1, Ama0
+    KeccakThetaRhoPiChi Ame1, Aga0, r10,  0, 11, \
+                        Abi0, Ame1,  r2,  3, 30, \
+                        Ako0, Abi0,  r9, 12,  1, \
+                        Asu0, Ako0, r14,  4, 18, \
+                        Aga0, Asu0,  r8,  9, 19, \
+                        1, Agu0
+    ldr     r8, [sp, #mDa0]
+    KeccakThetaRhoPiChi Aku0, Asa1, r14, 14, 22, \
+                        Asa1, Age1,  r8, 18,  2, \
+                        Age1, Ami1, r10,  5,  4, \
+                        Ami1, Abo1,  r2,  8, 28, \
+                        Abo1, Aku0,  r9, 28, 31, \
+                        1, Asu0
+    KeccakThetaRhoPiChi Agi0, Aka1,  r2, 31,  7, \
+                        Amo1, Ase1,  r9, 27, 14, \
+                        Abu1, Agi0, r12, 19,  3, \
+                        Aka1, Amo1,  r8, 20,  5, \
+                        Ase1, Abu1, r11,  1, 20, \
+                        1, Aku0
+    ldr     r9, [sp, #mDo1]
+    KeccakThetaRhoPiChiIota Aba0, r8,  0,     \
+                            Ake1, r10,22, 23, \
+                            Asi0, r2, 22,  9, \
+                            Ago0, r9, 11, 13, \
+                            Amu1, r12, 7, 28, \
+                            16, 0, 1, Abu1, r1
+    ldr.w   r2, [sp, #mDi0]
+    KeccakThetaRhoPiChi Aso0, Ama1,  r9, 14,  0, \
+                        Agu1, Abe1, r14, 10, 10, \
+                        Ama1, Aki1,  r8,  1, 13, \
+                        Abe1, Aso0, r10, 22,  8, \
+                        Aki1, Agu1,  r2, 30,  1, \
+                        1, Aba0
+    KeccakThetaRhoPiChi Ame0, Aga1, r11,  1, 10, \
+                        Abi1, Ame0,  r2,  3, 31, \
+                        Ako1, Abi1,  r9, 13,  0, \
+                        Asu1, Ako1, r12,  4, 18, \
+                        Aga1, Asu1,  r8,  9, 20, \
+                        1, Agu1
+    ldr     r8, [sp, #mDa1]
+    KeccakThetaRhoPiChi Aku1, Asa0, r12, 13, 22, \
+                        Asa0, Age0,  r8, 18,  1, \
+                        Age0, Ami0, r11,  5,  4, \
+                        Ami0, Abo0,  r2,  7, 28, \
+                        Abo0, Aku1,  r9, 28, 31, \
+                        1, Asu1
+    KeccakThetaRhoPiChi Agi1, Aka0,  r2, 31,  7, \
+                        Amo0, Ase0,  r9, 28, 14, \
+                        Abu0, Agi1, r14, 20,  3, \
+                        Aka0, Amo0,  r8, 21,  5, \
+                        Ase0, Abu0, r10,  1, 21, \
+                        1, Aku1
+    ldr     r9, [sp, #mDo0]
+    KeccakThetaRhoPiChiIota Aba1,  r8,  0,     \
+                            Ake0, r11, 22, 22, \
+                            Asi1,  r2, 21,  9, \
+                            Ago1,  r9, 10, 14, \
+                            Amu0, r14,  7, 27, \
+                            20, 0, 1, Abu0, r14
 
-	KeccakThetaRhoPiChi r5, Ama0, r8,  2, r6, Abe0, r11, 23, r7, Aki0, r2, 31, r3, Aso1, r9, 14, r4, Agu0, r12, 10
-	KeccakThetaRhoPiChi r7, Aga0, r8,  9, r3, Ame1, r10,  0, r4, Abi0, r2,  3, r5, Ako0, r9, 12, r6, Asu0, lr,  4
-	ldr			r8, [sp, #mDa0]
-	KeccakThetaRhoPiChi r4, Asa1, r8, 18, r5, Age1, r10,  5, r6, Ami1, r2,  8, r7, Abo1, r9, 28, r3, Aku0, lr, 14
-	KeccakThetaRhoPiChi r6, Aka1, r8, 20, r7, Ase1, r11,  1, r3, Agi0, r2, 31, r4, Amo1, r9, 27, r5, Abu1, r12, 19
-	ldr			r9, [sp, #mDo1]
-	KeccakThetaRhoPiChiIota  Aba0, r8,          Ake1, r10, 22,      Asi0, r2, 22,      Ago0, r9, 11,      Amu1, r12,  7, 16, 0
+.endm
 
-	ldr			r2, [sp, #mDi0]
-	KeccakThetaRhoPiChi r5, Ama1, r8,  1, r6, Abe1, r10, 22, r7, Aki1, r2, 30, r3, Aso0, r9, 14, r4, Agu1, lr, 10
-	KeccakThetaRhoPiChi r7, Aga1, r8,  9, r3, Ame0, r11,  1, r4, Abi1, r2,  3, r5, Ako1, r9, 13, r6, Asu1, r12,  4
-	ldr			r8, [sp, #mDa1]
-	KeccakThetaRhoPiChi r4, Asa0, r8, 18, r5, Age0, r11,  5, r6, Ami0, r2,  7, r7, Abo0, r9, 28, r3, Aku1, r12, 13
-	KeccakThetaRhoPiChi r6, Aka0, r8, 21, r7, Ase0, r10,  1, r3, Agi1, r2, 31, r4, Amo0, r9, 28, r5, Abu0, lr, 20
-	ldr			r9, [sp, #mDo0]
-	KeccakThetaRhoPiChiIota  Aba1, r8,          Ake0, r11, 22,      Asi1, r2, 21,      Ago1, r9, 10,      Amu0, lr,  7, 20, 0
-	.endm
 
-.macro	KeccakRound3
-
-	xor5        r3,  Amu1, Agu0, Asu1, Aku0, Abu0
-	xor5        r7, Ake0, Abe1, Ame1, Age0, Ase1
-	xorrol      r6, r3, r7
-	str			r6, [sp, #mDa0]
-	xor5        r6,  Amu0, Agu1, Asu0, Aku1, Abu1
-	xor5        lr, Ake1, Abe0, Ame0, Age1, Ase0
-	eors        r8, r6, lr
-	str			r8, [sp, #mDa1]
-
-	xor5        r5,  Asi0, Aki0, Abi1, Ami1, Agi1
-	xorrol      r9, r5, r6
-	str			r9, [sp, #mDo0]
-	xor5        r4,  Asi1, Aki1, Abi0, Ami0, Agi0
-	eors		r3, r3, r4
-	str			r3, [sp, #mDo1]
-
-	xor5        r3,  Aba0, Ama0, Aga1, Asa1, Aka0
-	xorrol      r10, r3, r4
-	xor5        r6,  Aba1, Ama1, Aga0, Asa0, Aka1
-	eors        r11, r6, r5
-
-	xor5        r4,  Ago1, Aso0, Ako0, Abo0, Amo1
-	xorrol      r5, lr, r4
-	str			r5, [sp, #mDi0]
-	xor5        r5,  Ago0, Aso1, Ako1, Abo1, Amo0
-	eors        r2, r7, r5
-
-	xorrol      r12, r5, r6
-	eors        lr, r4, r3
-
-	KeccakThetaRhoPiChi r5, Aga0, r8,  2, r6, Age0, r11, 23, r7, Agi0, r2, 31, r3, Ago0, r9, 14, r4, Agu0, r12, 10
-	KeccakThetaRhoPiChi r7, Aka1, r8,  9, r3, Ake1, r10,  0, r4, Aki1, r2,  3, r5, Ako1, r9, 12, r6, Aku1, lr,  4
-	ldr			r8, [sp, #mDa0]
-	KeccakThetaRhoPiChi r4, Ama0, r8, 18, r5, Ame0, r10,  5, r6, Ami0, r2,  8, r7, Amo0, r9, 28, r3, Amu0, lr, 14
-	KeccakThetaRhoPiChi r6, Asa1, r8, 20, r7, Ase1, r11,  1, r3, Asi1, r2, 31, r4, Aso1, r9, 27, r5, Asu1, r12, 19
-	ldr			r9, [sp, #mDo1]
-	KeccakThetaRhoPiChiIota  Aba0, r8,          Abe0, r10, 22,      Abi0, r2, 22,      Abo0, r9, 11,      Abu0, r12,  7, 24, 0
-
-	ldr			r2, [sp, #mDi0]
-	KeccakThetaRhoPiChi r5, Aga1, r8,  1, r6, Age1, r10, 22, r7, Agi1, r2, 30, r3, Ago1, r9, 14, r4, Agu1, lr, 10
-	KeccakThetaRhoPiChi r7, Aka0, r8,  9, r3, Ake0, r11,  1, r4, Aki0, r2,  3, r5, Ako0, r9, 13, r6, Aku0, r12,  4
-	ldr			r8, [sp, #mDa1]
-	KeccakThetaRhoPiChi r4, Ama1, r8, 18, r5, Ame1, r11,  5, r6, Ami1, r2,  7, r7, Amo1, r9, 28, r3, Amu1, r12, 13
-	KeccakThetaRhoPiChi r6, Asa0, r8, 21, r7, Ase0, r10,  1, r3, Asi0, r2, 31, r4, Aso0, r9, 28, r5, Asu0, lr, 20
-	ldr			r9, [sp, #mDo0]
-	KeccakThetaRhoPiChiIota  Aba1, r8,          Abe1, r11, 22,      Abi1, r2, 21,      Abo1, r9, 10,      Abu1, lr,  7, 28, 1
-	.endm
+/******************************************************************************
+ * 4th round of the 4 unrolled rounds routine due to in-place processing.
+ * Note that the Rho step is *not* delayed so that the internal state is
+ * compliant w/ the classical representation at the end of the routine. 
+ *****************************************************************************/
+.macro    KeccakRound3
+    xor5str     r3, Amu1, Agu0, Asu1, Aku0, Abu0, 22, 10,  3, 18, 28, r14, r0, Aba1
+    xor5        r7, Ake0, Abe1, Ame1, Age0, Ase1, 10, 22,  4,  7, 20
+    ror         r3, 32-22
+    xorrol      r6, r3, r7, 32-10
+    xor5str     r4, Asi1, Aki1, Abi0, Ami0, Agi0,  7, 30,  9, 28,  1, r6, sp, mDa0
+    eor         r6, r3, r4, ror 32-7
+    xor5str     r3, Ago0, Aso1, Ako1, Abo1, Amo0,  0, 14,  1, 14, 31, r6, sp, mDo1
+    eor         r2, r3, r7, ror 32-10
+    xor5        r7, Aba0, Ama0, Aga1, Asa1, Aka0,  0,  2, 13,  5, 20
+    xorrol     r10, r7, r4, 32-7
+    xor5        r4, Ago1, Aso0, Ako0, Abo0, Amo1,  0, 14,  0, 13, 31
+    eor        r14, r4, r7
+    xor5        r7, Ake1, Abe0, Ame0, Age1, Ase0, 11, 23,  4,  8, 21
+    ror         r7, #32-11
+    xorrol      r6, r7, r4, 32
+    xor5str     r4, Amu0, Agu1, Asu0, Aku1, Abu1, 22, 10,  3, 18, 27, r6, sp, mDi0
+    eor         r8, r7, r4, ror 32-22
+    xor5str     r7, Asi0, Aki0, Abi1, Ami1, Agi1,  7, 31,  9, 28,  1, r8, sp, mDa1
+    ror         r7, 32-7
+    xorrol      r9, r7, r4, 32-22
+    xor5str     r4, Aba1, Ama1, Aga0, Asa0, Aka1,  0,  1, 12,  5, 19, r9, sp, mDo0
+    eor        r11, r4, r7
+    xorrol     r12, r3, r4, 32
+    KeccakThetaRhoPiChi     Ago0, Aga0,  r9, 14,  0, \
+                            Agu0, Age0, r12, 10, 10, \
+                            Aga0, Agi0,  r8,  2, 12, \
+                            Age0, Ago0, r11, 23,  7, \
+                            Agi0, Agu0,  r2, 31,  1, \
+                            0, Aga0
+    KeccakThetaRhoPiChi     Ake1, Aka1, r10,  0, 11, \
+                            Aki1, Ake1,  r2,  3, 30, \
+                            Ako1, Aki1,  r9, 12,  1, \
+                            Aku1, Ako1, r14,  4, 18, \
+                            Aka1, Aku1,  r8,  9, 19, \
+                            0, Agu0
+    ldr     r8, [sp, #mDa0]
+    KeccakThetaRhoPiChi     Amu0, Ama0, r14, 14, 22, \
+                            Ama0, Ame0,  r8, 18,  2, \
+                            Ame0, Ami0, r10,  5,  4, \
+                            Ami0, Amo0,  r2,  8, 28, \
+                            Amo0, Amu0,  r9, 28, 31, \
+                            0, Aku1
+    KeccakThetaRhoPiChi     Asi1, Asa1,  r2, 31,  7, \
+                            Aso1, Ase1,  r9, 27, 14, \
+                            Asu1, Asi1, r12, 19,  3, \
+                            Asa1, Aso1,  r8, 20,  5, \
+                            Ase1, Asu1, r11,  1, 20, \
+                            0, Amu0
+    ldr     r9, [sp, #mDo1]
+    KeccakThetaRhoPiChiIota Aba0,  r8,  0,     \
+                            Abe0, r10, 22, 23, \
+                            Abi0,  r2, 22,  9, \
+                            Abo0,  r9, 11, 13, \
+                            Abu0, r12,  7, 28, \
+                            24, 0, 0, Asu1, r1
+    ldr.w   r2, [sp, #mDi0]
+    KeccakThetaRhoPiChi     Ago1, Aga1,  r9, 14,  0, \
+                            Agu1, Age1, r14, 10, 10, \
+                            Aga1, Agi1,  r8,  1, 13, \
+                            Age1, Ago1, r10, 22,  8, \
+                            Agi1, Agu1,  r2, 30,  1, \
+                            0, Aba0
+    KeccakThetaRhoPiChi     Ake0, Aka0, r11,  1, 10, \
+                            Aki0, Ake0,  r2,  3, 31, \
+                            Ako0, Aki0,  r9, 13,  0, \
+                            Aku0, Ako0, r12,  4, 18, \
+                            Aka0, Aku0,  r8,  9, 20, \
+                            0, Agu1
+    ldr     r8, [sp, #mDa1]
+    KeccakThetaRhoPiChi     Amu1, Ama1, r12, 13, 22, \
+                            Ama1, Ame1,  r8, 18,  1, \
+                            Ame1, Ami1, r11,  5,  4, \
+                            Ami1, Amo1,  r2,  7, 28, \
+                            Amo1, Amu1,  r9, 28, 31, \
+                            0, Aku0
+    KeccakThetaRhoPiChi     Asi0, Asa0,  r2, 31,  7, \
+                            Aso0, Ase0,  r9, 28, 14, \
+                            Asu0, Asi0, r14, 20,  3, \
+                            Asa0, Aso0,  r8, 21,  5, \
+                            Ase0, Asu0, r10,  1, 21, \
+                            0, Amu1
+    ldr     r9, [sp, #mDo0]
+    KeccakThetaRhoPiChiIota Aba1,  r8, 0,      \
+                            Abe1, r11, 22, 22, \
+                            Abi1,  r2, 21,  9, \
+                            Abo1,  r9, 10, 14, \
+                            Abu1, r14,  7, 27, \
+                            28, 1, 0, Asu0, r1
+    str.w r1, [r0, #Aba1]
+.endm
 
 
 @----------------------------------------------------------------------------
