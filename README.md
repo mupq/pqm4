@@ -1,5 +1,5 @@
 # pqm4
-Post-quantum crypto library for the ARM Cortex-M4
+Collection of post-quantum cryptographic alrogithms for the ARM Cortex-M4
 
 ## Introduction
 The **pqm4** library, benchmarking and testing framework started as a result of the 
@@ -377,6 +377,16 @@ When referring to this framework in academic literature, please consider using t
   note = {\url{https://github.com/mupq/pqm4}}
 }
 ```
+
+**Please note** however, that pqm4 does not author the implementations that
+are included in pqm4.  Most of the implementations that are included in the
+collection originate from original research projects.  Moreover, many
+implementations have been swapped out over the years.  When comparing or
+improving implementations, please consider not only pqm4, but also cite
+the publication corresponding to the implementation.
+
+Sometimes it might not be entirely clear which paper to cite.  Feel free to
+you open an issue such that we can help you find it.
 
 ## License
 Different parts of **pqm4** have different licenses. 
