@@ -16,4 +16,4 @@ elf/keccaktest.elf: $(call objs,common/keccaktest.c) $(LINKDEPS) $(CONFIG)
 endif
 
 tests: elf/boardtest.elf elf/aestest.elf elf/keccaktest.elf
-tests-bin: bin/boardtest.bin bin/aestest.bin bin/keccaktest.elf
+tests-bin: bin/boardtest.bin bin/aestest.bin bin/keccaktest.bin
