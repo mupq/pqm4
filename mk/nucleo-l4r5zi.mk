@@ -1,4 +1,5 @@
 DEVICE=stm32l4r5zi
+OPENCM3_TARGET=lib/stm32/l4
 
 EXCLUDED_SCHEMES = \
 	mupq/pqclean/crypto_kem/mceliece% \
