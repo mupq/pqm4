@@ -374,3 +374,74 @@ size_t hal_get_stack_size(void)
 	__asm__ volatile ("mov %0, sp" : "=r" (cur_stack));
   return cur_stack - heap_end;
 }
+
+/* Implement some system calls to shut up the linker warnings */
+
+#include <errno.h>
+#undef errno
+extern int errno;
+
+int _close(int fd)
+{
+  errno = ENOSYS;
+	(void) fd;
+	return -1;
+}
+
+#include <sys/stat.h>
+
+int _fstat(int fd, struct stat* buf)
+{
+  (void) fd;
+  (void) buf;
+  errno = ENOSYS;
+	return -1;
+}
+
+int _getpid(void)
+{
+  errno = ENOSYS;
+	return -1;
+}
+
+int _isatty(int file)
+{
+  (void) file;
+  errno = ENOSYS;
+  return 0;
+}
+
+int _kill(int pid, int sig)
+{
+  (void) pid;
+  (void) sig;
+  errno = ENOSYS;
+	return -1;
+}
+
+int _lseek(int fd, int ptr, int dir)
+{
+  (void) fd;
+  (void) ptr;
+  (void) dir;
+  errno = ENOSYS;
+	return -1;
+}
+
+int _read(int fd, char* ptr, int len)
+{
+  (void) fd;
+  (void) ptr;
+  (void) len;
+  errno = ENOSYS;
+	return -1;
+}
+
+int _write(int fd, const char* ptr, int len)
+{
+  (void) fd;
+  (void) ptr;
+  (void) len;
+  errno = ENOSYS;
+	return -1;
+}
