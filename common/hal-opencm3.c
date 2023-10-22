@@ -130,6 +130,7 @@ static void clock_setup(enum clock_mode clock)
 
   flash_prefetch_enable();
 #elif defined(CW_BOARD)
+  (void) clock;
   /* Some STM32 Platform */
   rcc_periph_clock_enable(RCC_GPIOH);
   rcc_osc_off(RCC_HSE);
