@@ -61,6 +61,17 @@ const struct rcc_clock_scale benchmarkclock = {
 #define SERIAL_PINS (GPIO9 | GPIO10)
 #define STM32
 #define CW_BOARD
+#elif defined(STM32F415RGT6)
+#include <libopencm3/stm32/rcc.h>
+#include <libopencm3/stm32/gpio.h>
+#include <libopencm3/stm32/usart.h>
+#include <libopencm3/stm32/flash.h>
+
+#define SERIAL_GPIO GPIOA
+#define SERIAL_USART USART1
+#define SERIAL_PINS (GPIO9 | GPIO10)
+#define STM32
+#define CW_BOARD
 #elif defined(STM32L4R5ZI)
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
@@ -131,8 +142,13 @@ static void clock_setup(enum clock_mode clock)
   rcc_apb2_frequency = 7372800;
   _clock_freq = 7372800;
   rcc_set_hpre(RCC_CFGR_HPRE_DIV_NONE);
+#if defined(STM32F3)
   rcc_set_ppre1(RCC_CFGR_PPRE1_DIV_NONE);
   rcc_set_ppre2(RCC_CFGR_PPRE2_DIV_NONE);
+#elif defined(STM32F4)
+  rcc_set_ppre1(RCC_CFGR_PPRE_DIV_NONE);
+  rcc_set_ppre2(RCC_CFGR_PPRE_DIV_NONE);
+#endif
   rcc_set_sysclk_source(RCC_CFGR_SW_HSE);
   rcc_wait_for_sysclk_status(RCC_HSE);
 #elif defined(NUCLEO_BOARD)
