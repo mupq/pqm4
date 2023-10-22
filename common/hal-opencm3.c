@@ -164,8 +164,8 @@ static void clock_setup(enum clock_mode clock)
     rcc_apb2_frequency = 16000000;
     _clock_freq = 16000000;
     rcc_set_hpre(RCC_CFGR_HPRE_NODIV);
-    rcc_set_ppre1(RCC_CFGR_PPRE1_NODIV);
-    rcc_set_ppre2(RCC_CFGR_PPRE2_NODIV);
+    rcc_set_ppre1(RCC_CFGR_PPRE_NODIV);
+    rcc_set_ppre2(RCC_CFGR_PPRE_NODIV);
     flash_dcache_enable();
     flash_icache_enable();
     flash_set_ws(FLASH_ACR_LATENCY_0WS);
@@ -182,8 +182,8 @@ static void clock_setup(enum clock_mode clock)
     rcc_apb2_frequency = 80000000;
     _clock_freq = 80000000;
     rcc_set_hpre(RCC_CFGR_HPRE_NODIV);
-    rcc_set_ppre1(RCC_CFGR_PPRE1_NODIV);
-    rcc_set_ppre2(RCC_CFGR_PPRE2_NODIV);
+    rcc_set_ppre1(RCC_CFGR_PPRE_NODIV);
+    rcc_set_ppre2(RCC_CFGR_PPRE_NODIV);
     rcc_osc_off(RCC_PLL);
     while(rcc_is_osc_ready(RCC_PLL));
     /* Configure the PLL oscillator (use CUBEMX tool -> scale HSI16 to 80MHz). */
@@ -216,8 +216,8 @@ static void clock_setup(enum clock_mode clock)
     rcc_apb2_frequency = 16000000;
     _clock_freq = 16000000;
     rcc_set_hpre(RCC_CFGR_HPRE_NODIV);
-    rcc_set_ppre1(RCC_CFGR_PPRE1_NODIV);
-    rcc_set_ppre2(RCC_CFGR_PPRE2_NODIV);
+    rcc_set_ppre1(RCC_CFGR_PPRE_NODIV);
+    rcc_set_ppre2(RCC_CFGR_PPRE_NODIV);
     flash_dcache_enable();
     flash_icache_enable();
     flash_set_ws(FLASH_ACR_LATENCY_0WS);
@@ -234,8 +234,8 @@ static void clock_setup(enum clock_mode clock)
     rcc_apb2_frequency = 120000000;
     _clock_freq = 120000000;
     rcc_set_hpre(RCC_CFGR_HPRE_NODIV);
-    rcc_set_ppre1(RCC_CFGR_PPRE1_NODIV);
-    rcc_set_ppre2(RCC_CFGR_PPRE2_NODIV);
+    rcc_set_ppre1(RCC_CFGR_PPRE_NODIV);
+    rcc_set_ppre2(RCC_CFGR_PPRE_NODIV);
     rcc_osc_off(RCC_PLL);
     while(rcc_is_osc_ready(RCC_PLL));
     /* Configure the PLL oscillator (use CUBEMX tool -> scale HSI16 to 120MHz). */
