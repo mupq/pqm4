@@ -206,24 +206,33 @@ static void clock_setup(enum clock_mode clock)
   rcc_periph_clock_enable(RCC_PWR);
   rcc_periph_clock_enable(RCC_SYSCFG);
   pwr_set_vos_scale(PWR_SCALE1);
+  /* The L4R5ZI chip also needs the R1MODE bit in PWR_CR5 register set, but
+     OpenCM3 doesn't support this yet. But luckily the default value for the bit
+     is 1. */
   switch (clock) {
   case CLOCK_BENCHMARK:
     /* Benchmark straight from the HSI16 without prescaling */
     rcc_osc_on(RCC_HSI16);
     rcc_wait_for_osc_ready(RCC_HSI16);
-    rcc_ahb_frequency = 16000000;
-    rcc_apb1_frequency = 16000000;
-    rcc_apb2_frequency = 16000000;
-    _clock_freq = 16000000;
+    rcc_ahb_frequency = 20000000;
+    rcc_apb1_frequency = 20000000;
+    rcc_apb2_frequency = 20000000;
+    _clock_freq = 20000000;
     rcc_set_hpre(RCC_CFGR_HPRE_NODIV);
     rcc_set_ppre1(RCC_CFGR_PPRE_NODIV);
     rcc_set_ppre2(RCC_CFGR_PPRE_NODIV);
+    rcc_osc_off(RCC_PLL);
+    while(rcc_is_osc_ready(RCC_PLL));
+    /* Configure the PLL oscillator (use CUBEMX tool -> scale HSI16 to 20MHz). */
+    _rcc_set_main_pll(RCC_PLLCFGR_PLLSRC_HSI16, 1, 10, 2, RCC_PLLCFGR_PLLQ_DIV2, RCC_PLLCFGR_PLLR_DIV8);
+    /* Enable PLL oscillator and wait for it to stabilize. */
+    rcc_osc_on(RCC_PLL);
     flash_dcache_enable();
     flash_icache_enable();
     flash_set_ws(FLASH_ACR_LATENCY_0WS);
     flash_prefetch_enable();
-    rcc_set_sysclk_source(RCC_CFGR_SW_HSI16);
-    rcc_wait_for_sysclk_status(RCC_HSI16);
+    rcc_set_sysclk_source(RCC_CFGR_SW_PLL);
+    rcc_wait_for_sysclk_status(RCC_PLL);
     break;
   case CLOCK_FAST:
   default:
@@ -239,7 +248,7 @@ static void clock_setup(enum clock_mode clock)
     rcc_osc_off(RCC_PLL);
     while(rcc_is_osc_ready(RCC_PLL));
     /* Configure the PLL oscillator (use CUBEMX tool -> scale HSI16 to 120MHz). */
-    _rcc_set_main_pll(RCC_PLLCFGR_PLLSRC_HSI16, 2, 30, 2u, RCC_PLLCFGR_PLLQ_DIV2, RCC_PLLCFGR_PLLR_DIV2);
+    _rcc_set_main_pll(RCC_PLLCFGR_PLLSRC_HSI16, 1, 15, 2, RCC_PLLCFGR_PLLQ_DIV2, RCC_PLLCFGR_PLLR_DIV2);
     /* Enable PLL oscillator and wait for it to stabilize. */
     rcc_osc_on(RCC_PLL);
     rcc_wait_for_osc_ready(RCC_PLL);
@@ -252,7 +261,9 @@ static void clock_setup(enum clock_mode clock)
     break;
   }
   rcc_osc_on(RCC_HSI48); /* HSI48 must always be on for RNG */
+  rcc_wait_for_osc_ready(RCC_HSI48);
   rcc_periph_clock_enable(RCC_RNG);
+  rcc_set_clock48_source(RCC_CCIPR_CLK48SEL_HSI48);
   rng_enable();
 #else
 #error Unsupported platform
