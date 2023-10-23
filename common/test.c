@@ -124,9 +124,13 @@ static void memory_timing_test(void)
 }
 #endif
 
+#ifndef CLOCK_TEST
+#define CLOCK_TEST CLOCK_BENCHMARK
+#endif
+
 int main(void)
 {
-  hal_setup(CLOCK_FAST);
+  hal_setup(CLOCK_TEST);
   hal_send_str("Hello world");
   send_unsigned("Stack Size", hal_get_stack_size());
   unsigned rnd;
