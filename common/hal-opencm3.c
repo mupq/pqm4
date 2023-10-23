@@ -382,7 +382,7 @@ size_t hal_get_stack_size(void)
 #undef errno
 extern int errno;
 
-int _close(int fd)
+int __wrap__close(int fd)
 {
   errno = ENOSYS;
 	(void) fd;
@@ -391,7 +391,7 @@ int _close(int fd)
 
 #include <sys/stat.h>
 
-int _fstat(int fd, struct stat* buf)
+int __wrap__fstat(int fd, struct stat* buf)
 {
   (void) fd;
   (void) buf;
@@ -399,20 +399,20 @@ int _fstat(int fd, struct stat* buf)
 	return -1;
 }
 
-int _getpid(void)
+int __wrap__getpid(void)
 {
   errno = ENOSYS;
 	return -1;
 }
 
-int _isatty(int file)
+int __wrap__isatty(int file)
 {
   (void) file;
   errno = ENOSYS;
   return 0;
 }
 
-int _kill(int pid, int sig)
+int __wrap__kill(int pid, int sig)
 {
   (void) pid;
   (void) sig;
@@ -420,7 +420,7 @@ int _kill(int pid, int sig)
 	return -1;
 }
 
-int _lseek(int fd, int ptr, int dir)
+int __wrap__lseek(int fd, int ptr, int dir)
 {
   (void) fd;
   (void) ptr;
@@ -429,7 +429,7 @@ int _lseek(int fd, int ptr, int dir)
 	return -1;
 }
 
-int _read(int fd, char* ptr, int len)
+int __wrap__read(int fd, char* ptr, int len)
 {
   (void) fd;
   (void) ptr;
@@ -438,7 +438,7 @@ int _read(int fd, char* ptr, int len)
 	return -1;
 }
 
-int _write(int fd, const char* ptr, int len)
+int __wrap__write(int fd, const char* ptr, int len)
 {
   (void) fd;
   (void) ptr;
