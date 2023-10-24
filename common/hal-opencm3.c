@@ -61,6 +61,17 @@ const struct rcc_clock_scale benchmarkclock = {
 #define SERIAL_PINS (GPIO9 | GPIO10)
 #define STM32
 #define CW_BOARD
+#elif defined(STM32F415RGT6)
+#include <libopencm3/stm32/rcc.h>
+#include <libopencm3/stm32/gpio.h>
+#include <libopencm3/stm32/usart.h>
+#include <libopencm3/stm32/flash.h>
+
+#define SERIAL_GPIO GPIOA
+#define SERIAL_USART USART1
+#define SERIAL_PINS (GPIO9 | GPIO10)
+#define STM32
+#define CW_BOARD
 #elif defined(STM32L4R5ZI)
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
@@ -119,6 +130,7 @@ static void clock_setup(enum clock_mode clock)
 
   flash_prefetch_enable();
 #elif defined(CW_BOARD)
+  (void) clock;
   /* Some STM32 Platform */
   rcc_periph_clock_enable(RCC_GPIOH);
   rcc_osc_off(RCC_HSE);
@@ -131,8 +143,13 @@ static void clock_setup(enum clock_mode clock)
   rcc_apb2_frequency = 7372800;
   _clock_freq = 7372800;
   rcc_set_hpre(RCC_CFGR_HPRE_DIV_NONE);
+#if defined(STM32F3)
   rcc_set_ppre1(RCC_CFGR_PPRE1_DIV_NONE);
   rcc_set_ppre2(RCC_CFGR_PPRE2_DIV_NONE);
+#elif defined(STM32F4)
+  rcc_set_ppre1(RCC_CFGR_PPRE_DIV_NONE);
+  rcc_set_ppre2(RCC_CFGR_PPRE_DIV_NONE);
+#endif
   rcc_set_sysclk_source(RCC_CFGR_SW_HSE);
   rcc_wait_for_sysclk_status(RCC_HSE);
 #elif defined(NUCLEO_BOARD)
@@ -147,8 +164,8 @@ static void clock_setup(enum clock_mode clock)
     rcc_apb2_frequency = 16000000;
     _clock_freq = 16000000;
     rcc_set_hpre(RCC_CFGR_HPRE_NODIV);
-    rcc_set_ppre1(RCC_CFGR_PPRE1_NODIV);
-    rcc_set_ppre2(RCC_CFGR_PPRE2_NODIV);
+    rcc_set_ppre1(RCC_CFGR_PPRE_NODIV);
+    rcc_set_ppre2(RCC_CFGR_PPRE_NODIV);
     flash_dcache_enable();
     flash_icache_enable();
     flash_set_ws(FLASH_ACR_LATENCY_0WS);
@@ -165,8 +182,8 @@ static void clock_setup(enum clock_mode clock)
     rcc_apb2_frequency = 80000000;
     _clock_freq = 80000000;
     rcc_set_hpre(RCC_CFGR_HPRE_NODIV);
-    rcc_set_ppre1(RCC_CFGR_PPRE1_NODIV);
-    rcc_set_ppre2(RCC_CFGR_PPRE2_NODIV);
+    rcc_set_ppre1(RCC_CFGR_PPRE_NODIV);
+    rcc_set_ppre2(RCC_CFGR_PPRE_NODIV);
     rcc_osc_off(RCC_PLL);
     while(rcc_is_osc_ready(RCC_PLL));
     /* Configure the PLL oscillator (use CUBEMX tool -> scale HSI16 to 80MHz). */
@@ -189,24 +206,33 @@ static void clock_setup(enum clock_mode clock)
   rcc_periph_clock_enable(RCC_PWR);
   rcc_periph_clock_enable(RCC_SYSCFG);
   pwr_set_vos_scale(PWR_SCALE1);
+  /* The L4R5ZI chip also needs the R1MODE bit in PWR_CR5 register set, but
+     OpenCM3 doesn't support this yet. But luckily the default value for the bit
+     is 1. */
   switch (clock) {
   case CLOCK_BENCHMARK:
     /* Benchmark straight from the HSI16 without prescaling */
     rcc_osc_on(RCC_HSI16);
     rcc_wait_for_osc_ready(RCC_HSI16);
-    rcc_ahb_frequency = 16000000;
-    rcc_apb1_frequency = 16000000;
-    rcc_apb2_frequency = 16000000;
-    _clock_freq = 16000000;
+    rcc_ahb_frequency = 20000000;
+    rcc_apb1_frequency = 20000000;
+    rcc_apb2_frequency = 20000000;
+    _clock_freq = 20000000;
     rcc_set_hpre(RCC_CFGR_HPRE_NODIV);
-    rcc_set_ppre1(RCC_CFGR_PPRE1_NODIV);
-    rcc_set_ppre2(RCC_CFGR_PPRE2_NODIV);
+    rcc_set_ppre1(RCC_CFGR_PPRE_NODIV);
+    rcc_set_ppre2(RCC_CFGR_PPRE_NODIV);
+    rcc_osc_off(RCC_PLL);
+    while(rcc_is_osc_ready(RCC_PLL));
+    /* Configure the PLL oscillator (use CUBEMX tool -> scale HSI16 to 20MHz). */
+    _rcc_set_main_pll(RCC_PLLCFGR_PLLSRC_HSI16, 1, 10, 2, RCC_PLLCFGR_PLLQ_DIV2, RCC_PLLCFGR_PLLR_DIV8);
+    /* Enable PLL oscillator and wait for it to stabilize. */
+    rcc_osc_on(RCC_PLL);
     flash_dcache_enable();
     flash_icache_enable();
     flash_set_ws(FLASH_ACR_LATENCY_0WS);
     flash_prefetch_enable();
-    rcc_set_sysclk_source(RCC_CFGR_SW_HSI16);
-    rcc_wait_for_sysclk_status(RCC_HSI16);
+    rcc_set_sysclk_source(RCC_CFGR_SW_PLL);
+    rcc_wait_for_sysclk_status(RCC_PLL);
     break;
   case CLOCK_FAST:
   default:
@@ -217,12 +243,12 @@ static void clock_setup(enum clock_mode clock)
     rcc_apb2_frequency = 120000000;
     _clock_freq = 120000000;
     rcc_set_hpre(RCC_CFGR_HPRE_NODIV);
-    rcc_set_ppre1(RCC_CFGR_PPRE1_NODIV);
-    rcc_set_ppre2(RCC_CFGR_PPRE2_NODIV);
+    rcc_set_ppre1(RCC_CFGR_PPRE_NODIV);
+    rcc_set_ppre2(RCC_CFGR_PPRE_NODIV);
     rcc_osc_off(RCC_PLL);
     while(rcc_is_osc_ready(RCC_PLL));
     /* Configure the PLL oscillator (use CUBEMX tool -> scale HSI16 to 120MHz). */
-    _rcc_set_main_pll(RCC_PLLCFGR_PLLSRC_HSI16, 2, 30, 2u, RCC_PLLCFGR_PLLQ_DIV2, RCC_PLLCFGR_PLLR_DIV2);
+    _rcc_set_main_pll(RCC_PLLCFGR_PLLSRC_HSI16, 1, 15, 2, RCC_PLLCFGR_PLLQ_DIV2, RCC_PLLCFGR_PLLR_DIV2);
     /* Enable PLL oscillator and wait for it to stabilize. */
     rcc_osc_on(RCC_PLL);
     rcc_wait_for_osc_ready(RCC_PLL);
@@ -235,7 +261,9 @@ static void clock_setup(enum clock_mode clock)
     break;
   }
   rcc_osc_on(RCC_HSI48); /* HSI48 must always be on for RNG */
+  rcc_wait_for_osc_ready(RCC_HSI48);
   rcc_periph_clock_enable(RCC_RNG);
+  rcc_set_clock48_source(RCC_CCIPR_CLK48SEL_HSI48);
   rng_enable();
 #else
 #error Unsupported platform
@@ -357,4 +385,75 @@ size_t hal_get_stack_size(void)
   register char* cur_stack;
 	__asm__ volatile ("mov %0, sp" : "=r" (cur_stack));
   return cur_stack - heap_end;
+}
+
+/* Implement some system calls to shut up the linker warnings */
+
+#include <errno.h>
+#undef errno
+extern int errno;
+
+int __wrap__close(int fd)
+{
+  errno = ENOSYS;
+	(void) fd;
+	return -1;
+}
+
+#include <sys/stat.h>
+
+int __wrap__fstat(int fd, struct stat* buf)
+{
+  (void) fd;
+  (void) buf;
+  errno = ENOSYS;
+	return -1;
+}
+
+int __wrap__getpid(void)
+{
+  errno = ENOSYS;
+	return -1;
+}
+
+int __wrap__isatty(int file)
+{
+  (void) file;
+  errno = ENOSYS;
+  return 0;
+}
+
+int __wrap__kill(int pid, int sig)
+{
+  (void) pid;
+  (void) sig;
+  errno = ENOSYS;
+	return -1;
+}
+
+int __wrap__lseek(int fd, int ptr, int dir)
+{
+  (void) fd;
+  (void) ptr;
+  (void) dir;
+  errno = ENOSYS;
+	return -1;
+}
+
+int __wrap__read(int fd, char* ptr, int len)
+{
+  (void) fd;
+  (void) ptr;
+  (void) len;
+  errno = ENOSYS;
+	return -1;
+}
+
+int __wrap__write(int fd, const char* ptr, int len)
+{
+  (void) fd;
+  (void) ptr;
+  (void) len;
+  errno = ENOSYS;
+	return -1;
 }

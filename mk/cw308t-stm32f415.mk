@@ -1,5 +1,5 @@
-DEVICE=stm32f303rct7
-OPENCM3_TARGET=lib/stm32/f3
+DEVICE=stm32f415rgt6
+OPENCM3_TARGET=lib/stm32/f4
 
 EXCLUDED_SCHEMES = \
 	mupq/pqclean/crypto_sign/sphincs-haraka-256f% \
