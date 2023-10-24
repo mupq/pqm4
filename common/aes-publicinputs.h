@@ -1,6 +1,8 @@
 #ifndef AES_PUBLICINPUTS_H
 #define AES_PUBLICINPUTS_H
 
+#define PQM4_AES
+
 #include <stdint.h>
 #include <stdlib.h>
 
