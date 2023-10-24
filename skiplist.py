@@ -168,4 +168,12 @@ skip_list = [
     {'scheme': 'picnicl1fs', 'implementation': 'opt', 'estmemory': 43008},
     {'scheme': 'picnic3l1', 'implementation': 'opt-mem', 'estmemory': 51200},
     {'scheme': 'picnic3l1', 'implementation': 'opt', 'estmemory': 106496},
+    {'scheme': 'ov-Ip', 'implementation': 'm4f', 'estmemory': 524288},
+    {'scheme': 'ov-Ip-pkc', 'implementation': 'm4fstack', 'estmemory': 361472},
+    {'scheme': 'ov-Ip-pkc', 'implementation': 'm4fspeed', 'estmemory': 565248},
+    {'scheme': 'ov-Ip-pkc-skc', 'implementation': 'm4fstack', 'estmemory': 332800},
+    {'scheme': 'ov-Ip-pkc-skc', 'implementation': 'm4fspeed', 'estmemory': 332800},
+    {'scheme': 'ov-Ip', 'implementation': 'ref', 'estmemory': 525312},
+    {'scheme': 'ov-Ip-pkc', 'implementation': 'ref', 'estmemory': 568320},
+    {'scheme': 'ov-Ip-pkc-skc', 'implementation': 'ref', 'estmemory': 330752},
 ]
