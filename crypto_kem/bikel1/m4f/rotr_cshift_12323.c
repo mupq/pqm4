@@ -1,10 +1,13 @@
 // Implemented by Ming-Shing Chen, Tung Chou and Markus Krausz.
+// Modified by Till Eifert
 // public domain
 
 #include <stdint.h>
 #define r 12323
 
 #include "run_config.h"
+#include "rotr_cshift.h"
+#include "asm.h"
 
 static inline uint32_t bit_mask(uint32_t s,int i) { return -((s>>i)&1); }
 
