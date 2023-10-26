@@ -3,11 +3,15 @@
  *
  * Written by Nir Drucker and Shay Gueron
  * AWS Cryptographic Algorithms Group.
+ *
+ * Modification: 2023 Till Eifert
+ *
  */
 
 #pragma once
 
 #include "types.h"
+#include "crypto_kem.h"
 
 #define CRYPTO_SECRETKEYBYTES  sizeof(sk_t)
 #define CRYPTO_PUBLICKEYBYTES  sizeof(pk_t)

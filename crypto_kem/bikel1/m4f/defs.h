@@ -3,6 +3,10 @@
  *
  * Written by Nir Drucker, Shay Gueron and Dusan Kostic,
  * AWS Cryptographic Algorithms Group.
+ *
+ * Modification: 2021 Ming-Shing Chen, Tung Chou, and Markus Krausz
+ * Modification: 2023 Till Eifert
+ *
  */
 
 #pragma once
@@ -26,7 +30,8 @@
 
 // In asm the symbols '==' and '?' are not allowed. Therefore, if using
 // divide_and_ceil in asm files, we must ensure with static_assert its validity.
-#if(__cplusplus >= 201103L) || defined(static_assert)
+//#if(__cplusplus >= 201103L) || defined(static_assert)
+#if defined(static_assert)
 #  define bike_static_assert(COND, MSG) static_assert(COND, "MSG")
 #else
 #  define bike_static_assert(COND, MSG) \
@@ -34,7 +39,7 @@
 #endif
 
 // Divide by the divider and round up to next integer
-#define DIVIDE_AND_CEIL(x, divider) (((x) + (divider)) / (divider))
+#define DIVIDE_AND_CEIL(x, divider) (((x) + (divider) - 1) / (divider))
 
 // Bit manipulations
 // Linux Assemblies, except for Ubuntu, cannot understand what ULL mean.
