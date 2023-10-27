@@ -66,6 +66,7 @@ class M4Settings(mupq.PlatformSettings):
         'stm32f4discovery': 128*1024,
         'nucleo-l476rg': 128*1024,
         'cw308t-stm32f3': 64*1024,
+        'cw308t-stm32f415': 192*1024,
         'mps2-an386': 4096*1024,
         'nucleo-l4r5zi': 640*1024
     }

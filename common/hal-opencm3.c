@@ -66,6 +66,7 @@ const struct rcc_clock_scale benchmarkclock = {
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/usart.h>
 #include <libopencm3/stm32/flash.h>
+#include <libopencm3/stm32/rng.h>
 
 #define SERIAL_GPIO GPIOA
 #define SERIAL_USART USART1
@@ -143,13 +144,31 @@ static void clock_setup(enum clock_mode clock)
   rcc_apb2_frequency = 7372800;
   _clock_freq = 7372800;
   rcc_set_hpre(RCC_CFGR_HPRE_DIV_NONE);
-#if defined(STM32F3)
+# if defined(STM32F3)
   rcc_set_ppre1(RCC_CFGR_PPRE1_DIV_NONE);
   rcc_set_ppre2(RCC_CFGR_PPRE2_DIV_NONE);
-#elif defined(STM32F4)
+# elif defined(STM32F4)
   rcc_set_ppre1(RCC_CFGR_PPRE_DIV_NONE);
   rcc_set_ppre2(RCC_CFGR_PPRE_DIV_NONE);
-#endif
+#   if defined(STM32F415RGT6)
+  flash_set_ws(FLASH_ACR_LATENCY_0WS);
+  rcc_set_sysclk_source(RCC_CFGR_SW_HSE);
+  rcc_wait_for_sysclk_status(RCC_HSE);
+  
+  /* HSI and PLL needed for RNG
+  that's why we can't use rcc_clock_setup_pll()*/
+  rcc_osc_on(RCC_HSI);
+  rcc_wait_for_osc_ready(RCC_HSI);
+  rcc_osc_off(RCC_PLL);
+  rcc_set_main_pll_hse(12, 196, 4, 7, 0);
+  
+  rcc_osc_on(RCC_PLL);
+  rcc_wait_for_osc_ready(RCC_PLL);
+
+  rcc_periph_clock_enable(RCC_RNG);
+  rng_enable();
+#   endif
+# endif
   rcc_set_sysclk_source(RCC_CFGR_SW_HSE);
   rcc_wait_for_sysclk_status(RCC_HSE);
 #elif defined(NUCLEO_BOARD)
