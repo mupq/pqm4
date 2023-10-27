@@ -1,0 +1,52 @@
+Speed Evaluation,,,,,,,,,,
+Key Encapsulation Schemes,,,,,,,,,,
+Scheme,Implementation,Key Generation [cycles] (mean),Key Generation [cycles] (min),Key Generation [cycles] (max),Encapsulation [cycles] (mean),Encapsulation [cycles] (min),Encapsulation [cycles] (max),Decapsulation [cycles] (mean),Decapsulation [cycles] (min),Decapsulation [cycles] (max)
+Signature Schemes,,,,,,,,,,
+Scheme,Implementation,Key Generation [cycles] (mean),Key Generation [cycles] (min),Key Generation [cycles] (max),Sign [cycles] (mean),Sign [cycles] (min),Sign [cycles] (max),Verify [cycles] (mean),Verify [cycles] (min),Verify [cycles] (max)
+ov-Ip (100 executions),m4f,138685787,138685772,138685828,2488529,2464562,4861007,993529,970257,996849
+ov-Ip (100 executions),ref,350266803,350266761,350267118,6548206,6484449,12858979,1309303,1309301,1309336
+ov-Ip-pkc (100 executions),m4fspeed,174887930,174887906,174887957,2556235,2483862,4896138,10699967,10679534,10703471
+ov-Ip-pkc (100 executions),m4fstack,174887935,174887911,174887964,2483868,2483862,2483903,11521985,11494511,11525897
+ov-Ip-pkc (100 executions),ref,374601982,374601950,374602024,6933668,6933653,6933693,10946959,10946937,10947004
+ov-Ip-pkc-skc (100 executions),m4fspeed,174888071,174888044,174888099,88664377,88664362,88664408,11458067,11429199,11462352
+ov-Ip-pkc-skc (100 executions),m4fstack,174888061,174888040,174888089,88664370,88664359,88664402,11521533,11491491,11525897
+ov-Ip-pkc-skc (100 executions),ref,374602058,374602033,374602092,241007574,241007551,241007605,11657933,11657906,11657948
+Memory Evaluation,,,,,,,,,,
+Key Encapsulation Schemes,,,,,,,,,,
+Scheme,Implementation,Key Generation [bytes],Encapsulation [bytes],Decapsulation [bytes],,,,,,
+Signature Schemes,,,,,,,,,,
+Scheme,Implementation,Key Generation [bytes],Sign [bytes],Verify [bytes],,,,,,
+ov-Ip,m4f,1488,5252,2548,,,,,,
+ov-Ip,ref,1536,3640,6160,,,,,,
+ov-Ip-pkc,m4fspeed,142288,5252,280980,,,,,,
+ov-Ip-pkc,m4fstack,133152,5252,6560,,,,,,
+ov-Ip-pkc,ref,15752,12872,284704,,,,,,
+ov-Ip-pkc-skc,m4fspeed,371072,243164,280980,,,,,,
+ov-Ip-pkc-skc,m4fstack,371072,243164,6560,,,,,,
+ov-Ip-pkc-skc,ref,253656,253616,284704,,,,,,
+Hashing Evaluation,,,,,,,,,,
+Key Encapsulation Schemes,,,,,,,,,,
+Scheme,Implementation,Key Generation [%],Encapsulation [%],Decapsulation [%],,,,,,
+Signature Schemes,,,,,,,,,,
+Scheme,Implementation,Key Generation [%],Sign [%],Verify [%],,,,,,
+ov-Ip,m4f,7.2,0.9,1.1,,,,,,
+ov-Ip,ref,2.8,0.3,0.9,,,,,,
+ov-Ip-pkc,m4fspeed,6.1,0.9,90.8,,,,,,
+ov-Ip-pkc,m4fstack,6.1,0.9,90.7,,,,,,
+ov-Ip-pkc,ref,2.8,0.3,88.8,,,,,,
+ov-Ip-pkc-skc,m4fspeed,6.1,12.1,91.2,,,,,,
+ov-Ip-pkc-skc,m4fstack,6.1,12.1,90.7,,,,,,
+ov-Ip-pkc-skc,ref,2.8,4.4,89.6,,,,,,
+Size Evaluation,,,,,,,,,,
+Key Encapsulation Schemes,,,,,,,,,,
+Scheme,Implementation,.text [bytes],.data [bytes],.bss [bytes],Total [bytes],,,,,
+Signature Schemes,,,,,,,,,,
+Scheme,Implementation,.text [bytes],.data [bytes],.bss [bytes],Total [bytes],,,,,
+ov-Ip,m4f,116847,0,0,116847,,,,,
+ov-Ip,ref,28599,0,0,28599,,,,,
+ov-Ip-pkc,m4fspeed,117039,0,0,117039,,,,,
+ov-Ip-pkc,m4fstack,116967,0,0,116967,,,,,
+ov-Ip-pkc,ref,28807,0,0,28807,,,,,
+ov-Ip-pkc-skc,m4fspeed,117083,0,0,117083,,,,,
+ov-Ip-pkc-skc,m4fstack,117011,0,0,117011,,,,,
+ov-Ip-pkc-skc,ref,28851,0,0,28851,,,,,
