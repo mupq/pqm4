@@ -252,12 +252,8 @@ void accumulate_unsat_syndrome(OUT upc_t *_upc,
     bit_sliced_adder(_upc, rotated_syndrome, LOG2_MSB(j + 1));
   }
 #elif 71 == D
-#if !defined( _UPC_SMALL_MEM_ ) && defined(_USE_CCM_IF_STM32F4_)
-my_upc_t * upc = (my_upc_t*)0x10000000;
-#else
 my_upc_t __upc;
 my_upc_t * upc = &__upc;
-#endif
 
 //bike_memset(upc, 0, sizeof(my_upc_t));
 //rotate_cmov_right(rotated_syndrome, syndrome,
@@ -409,12 +405,8 @@ for(int i = 0; i < R_QWORDS; i++) { _upc->slice[7].u.qw[i] = 0; }
 bike_memset(upc, 0, sizeof(my_upc_t));
 #elif 103 == D
 
-#if defined(_USE_CCM_IF_STM32F4_)
-my_upc_t * upc = (my_upc_t*)0x10000000;
-#else
 my_upc_t __upc;
 my_upc_t * upc = &__upc;
-#endif
 
 rotr_cshift((uint32_t*)rotated_syndrome, (uint32_t*)syndrome, wlist_val[0]);
 adder_size_k(upc, rotated_syndrome, 0, 0);
