@@ -163,3 +163,116 @@ size_t hal_get_stack_size(void)
 	__asm__ volatile ("mov %0, sp" : "=r" (cur_stack));
   return cur_stack - heap_end;
 }
+
+const uint32_t stackpattern = 0xDEADBEEFlu;
+
+static void* last_sp = NULL;
+
+void hal_spraystack(void)
+{
+  
+  char* _heap_end = heap_end;
+  asm volatile ("mov %0, sp\n"
+                ".L%=:\n\t"
+                "str %2, [%1], #4\n\t"
+                "cmp %1, %0\n\t"
+                "blt .L%=\n\t"
+                : "+r" (last_sp), "+r" (_heap_end) : "r" (stackpattern) : "cc", "memory");
+}
+
+size_t hal_checkstack(void)
+{
+  size_t result = 0;
+  asm volatile("sub %0, %1, %2\n"
+               ".L%=:\n\t"
+               "ldr ip, [%2], #4\n\t"
+               "cmp ip, %3\n\t"
+               "ite eq\n\t"
+               "subeq %0, #4\n\t"
+               "bne .LE%=\n\t"
+               "cmp %2, %1\n\t"
+               "blt .L%=\n\t"
+               ".LE%=:\n"
+               : "+r"(result) : "r" (last_sp), "r" (heap_end), "r" (stackpattern) : "ip", "cc");
+  return result;
+}
+
+/* Implement some system calls to shut up the linker warnings */
+
+#include <errno.h>
+#undef errno
+extern int errno;
+
+int __wrap__open(char *file, int flags, int mode)
+{
+  (void) file;
+  (void) flags;
+  (void) mode;
+  errno = ENOSYS;
+  return -1;
+}
+
+int __wrap__close(int fd)
+{
+  errno = ENOSYS;
+	(void) fd;
+	return -1;
+}
+
+#include <sys/stat.h>
+
+int __wrap__fstat(int fd, struct stat* buf)
+{
+  (void) fd;
+  (void) buf;
+  errno = ENOSYS;
+	return -1;
+}
+
+int __wrap__getpid(void)
+{
+  errno = ENOSYS;
+	return -1;
+}
+
+int __wrap__isatty(int file)
+{
+  (void) file;
+  errno = ENOSYS;
+  return 0;
+}
+
+int __wrap__kill(int pid, int sig)
+{
+  (void) pid;
+  (void) sig;
+  errno = ENOSYS;
+	return -1;
+}
+
+int __wrap__lseek(int fd, int ptr, int dir)
+{
+  (void) fd;
+  (void) ptr;
+  (void) dir;
+  errno = ENOSYS;
+	return -1;
+}
+
+int __wrap__read(int fd, char* ptr, int len)
+{
+  (void) fd;
+  (void) ptr;
+  (void) len;
+  errno = ENOSYS;
+	return -1;
+}
+
+int __wrap__write(int fd, const char* ptr, int len)
+{
+  (void) fd;
+  (void) ptr;
+  (void) len;
+  errno = ENOSYS;
+	return -1;
+}
