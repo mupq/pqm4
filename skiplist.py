@@ -176,4 +176,12 @@ skip_list = [
     {'scheme': 'ov-Ip', 'implementation': 'ref', 'estmemory': 534528},
     {'scheme': 'ov-Ip-pkc', 'implementation': 'ref', 'estmemory': 568320},
     {'scheme': 'ov-Ip-pkc-skc', 'implementation': 'ref', 'estmemory': 330752},
+    {'scheme': 'perk-192-fast-3', 'implementation': 'ref', 'estmemory': 1036288},
+    {'scheme': 'perk-192-fast-5', 'implementation': 'ref', 'estmemory': 1001472},
+    {'scheme': 'perk-128-fast-5', 'implementation': 'ref', 'estmemory': 463872},
+    {'scheme': 'perk-256-fast-5', 'implementation': 'ref', 'estmemory': 1722368},
+    {'scheme': 'perk-128-fast-3', 'implementation': 'ref', 'estmemory': 475136},
+    {'scheme': 'perk-128-short-5', 'implementation': 'ref', 'estmemory': 2235392},
+    {'scheme': 'perk-256-fast-3', 'implementation': 'ref', 'estmemory': 1797120},
+    {'scheme': 'perk-128-short-3', 'implementation': 'ref', 'estmemory': 2377728},
 ]
