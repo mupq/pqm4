@@ -383,8 +383,41 @@ void* __wrap__sbrk (int incr)
 size_t hal_get_stack_size(void)
 {
   register char* cur_stack;
-	__asm__ volatile ("mov %0, sp" : "=r" (cur_stack));
+	asm volatile ("mov %0, sp" : "=r" (cur_stack));
   return cur_stack - heap_end;
+}
+
+const uint32_t stackpattern = 0xDEADBEEFlu;
+
+static void* last_sp = NULL;
+
+void hal_spraystack(void)
+{
+  
+  char* _heap_end = heap_end;
+  asm volatile ("mov %0, sp\n"
+                ".L%=:\n\t"
+                "str %2, [%1], #4\n\t"
+                "cmp %1, %0\n\t"
+                "blt .L%=\n\t"
+                : "+r" (last_sp), "+r" (_heap_end) : "r" (stackpattern) : "cc", "memory");
+}
+
+size_t hal_checkstack(void)
+{
+  size_t result = 0;
+  asm volatile("sub %0, %1, %2\n"
+               ".L%=:\n\t"
+               "ldr ip, [%2], #4\n\t"
+               "cmp ip, %3\n\t"
+               "ite eq\n\t"
+               "subeq %0, #4\n\t"
+               "bne .LE%=\n\t"
+               "cmp %2, %1\n\t"
+               "blt .L%=\n\t"
+               ".LE%=:\n"
+               : "+r"(result) : "r" (last_sp), "r" (heap_end), "r" (stackpattern) : "ip", "cc");
+  return result;
 }
 
 /* Implement some system calls to shut up the linker warnings */
@@ -392,6 +425,15 @@ size_t hal_get_stack_size(void)
 #include <errno.h>
 #undef errno
 extern int errno;
+
+int __wrap__open(char *file, int flags, int mode)
+{
+  (void) file;
+  (void) flags;
+  (void) mode;
+  errno = ENOSYS;
+  return -1;
+}
 
 int __wrap__close(int fd)
 {

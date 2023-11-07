@@ -128,6 +128,14 @@ static void memory_timing_test(void)
 #define CLOCK_TEST CLOCK_BENCHMARK
 #endif
 
+void stacktest(size_t size)
+{
+  volatile uint32_t mem[size] __attribute__((unused));
+  for (unsigned i = 0; i < size; ++i) {
+    mem[i] = 0;
+  }
+}
+
 int main(void)
 {
   hal_setup(CLOCK_TEST);
@@ -136,6 +144,15 @@ int main(void)
   unsigned rnd;
   randombytes((unsigned char*) &rnd, sizeof(unsigned));
   send_unsigned("Random number", rnd);
+  size_t stack;
+  hal_spraystack();
+  stacktest(100);
+  stack = hal_checkstack();
+  send_unsigned("stackusage1", stack);
+  hal_spraystack();
+  stacktest(200);
+  stack = hal_checkstack();
+  send_unsigned("stackusage2", stack);
 #if defined(SRAM_TIMING_TEST)
   memory_timing_test();
 #endif
