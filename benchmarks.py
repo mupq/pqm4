@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from mupq import mupq
 from interface import parse_arguments, get_platform
+import sys
 
 if __name__ == "__main__":
     args, rest = parse_arguments()
@@ -12,16 +13,20 @@ if __name__ == "__main__":
                                                 '--nosize']]
         if "--nostack" not in rest:
             test = mupq.StackBenchmark(settings, platform)
-            test.test_all(schemes)
+            if test.test_all(schemes):
+                sys.exit(1)
 
         if "--nospeed" not in rest:
             test = mupq.SpeedBenchmark(settings, platform)
-            test.test_all(schemes)
+            if test.test_all(schemes):
+                sys.exit(1)
 
         if "--nohashing" not in rest:
             test = mupq.HashingBenchmark(settings, platform)
-            test.test_all(schemes)
+            if test.test_all(schemes):
+                sys.exit(1)
 
         if "--nosize" not in rest:
             test = mupq.SizeBenchmark(settings, platform)
-            test.test_all(schemes)
+            if test.test_all(schemes):
+                sys.exit(1)

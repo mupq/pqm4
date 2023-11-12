@@ -7,4 +7,5 @@ if __name__ == "__main__":
     platform, settings = get_platform(args)
     with platform:
         test = mupq.TestVectors(settings, platform)
-        test.test_all(rest)
+        if test.test_all(rest):
+            sys.exit(1)
