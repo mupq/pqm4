@@ -176,4 +176,12 @@ skip_list = [
     {'scheme': 'ov-Ip', 'implementation': 'ref', 'estmemory': 534528},
     {'scheme': 'ov-Ip-pkc', 'implementation': 'ref', 'estmemory': 568320},
     {'scheme': 'ov-Ip-pkc-skc', 'implementation': 'ref', 'estmemory': 330752},
+    {'scheme': 'ascon-sign-128s-simple', 'implementation': 'ref', 'estmemory': 12288},
+    {'scheme': 'ascon-sign-128f-simple', 'implementation': 'ref', 'estmemory': 21504},
+    {'scheme': 'ascon-sign-192s-simple', 'implementation': 'ref', 'estmemory': 22528},
+    {'scheme': 'ascon-sign-192f-robust', 'implementation': 'ref', 'estmemory': 43008},
+    {'scheme': 'ascon-sign-192f-simple', 'implementation': 'ref', 'estmemory': 41984},
+    {'scheme': 'ascon-sign-192s-robust', 'implementation': 'ref', 'estmemory': 23552},
+    {'scheme': 'ascon-sign-128s-robust', 'implementation': 'ref', 'estmemory': 12288},
+    {'scheme': 'ascon-sign-128f-robust', 'implementation': 'ref', 'estmemory': 21504},
 ]
