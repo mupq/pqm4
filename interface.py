@@ -27,7 +27,7 @@ def parse_arguments():
         "--no-aio", help="Disable all-in-one compilation", default=False, action="store_true"
     )
     parser.add_argument("-u", "--uart", default="/dev/ttyUSB0", help="Path to UART output")
-    parser.add_argument("-i", "--iterations", default=1, help="Number of iterations for benchmarks")
+    parser.add_argument("-i", "--iterations", type=int, default=1, help="Number of iterations for benchmarks")
     return parser.parse_known_args()
 
 
@@ -88,6 +88,7 @@ class M4Settings(mupq.PlatformSettings):
         self.makeflags = [f"PLATFORM={platform}"]
         self.makeflags += [f"MUPQ_ITERATIONS={iterations}"]
         self.makeflags += optflags[opt]
+        self.iterations = iterations
         if lto:
             self.makeflags += ["LTO=1"]
         else:
