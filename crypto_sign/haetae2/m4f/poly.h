@@ -71,7 +71,8 @@ void poly_uniform_frozen(poly_frozen *a, const uint8_t seed[SEEDBYTES], uint16_t
 #define poly_uniform_eta HAETAE_NAMESPACE(poly_uniform_eta)
 void poly_uniform_eta(poly *a, const uint8_t seed[CRHBYTES], uint16_t nonce);
 #define poly_challenge HAETAE_NAMESPACE(poly_challenge)
-void poly_challenge(poly *c, const uint8_t seed[SEEDBYTES]);
+void poly_challenge(poly *c, const uint8_t highbits_lsb[POLYVECK_HIGHBITS_PACKEDBYTES + 
+                    POLYC_PACKEDBYTES], const uint8_t mu[SEEDBYTES]);
 
 #define poly_decomposed_pack HAETAE_NAMESPACE(poly_decomposed_pack)
 void poly_decomposed_pack(uint8_t *buf, const poly *a);

@@ -62,10 +62,10 @@ uint64_t polyfix_sqnorm2(const polyfix *a);
 uint64_t polyfixveclk_sqnorm2(const polyfixvecl *a, const polyfixveck *b);
 
 #define polyfixveclk_sample_hyperball HAETAE_NAMESPACE(polyfixveclk_sample_hyperball)
-uint16_t polyfixveclk_sample_hyperball(polyfixvecl *y1, polyfixveck *y2, const uint8_t seed[CRHBYTES], const uint16_t nonce);
+uint16_t polyfixveclk_sample_hyperball(polyfixvecl *y1, polyfixveck *y2, uint8_t *b, const uint8_t seed[CRHBYTES], const uint16_t nonce);
 
 #define polyfixveclk_two_pass_sample_hyperball HAETAE_NAMESPACE(polyfixveclk_two_pass_sample_hyperball)
-uint16_t polyfixveclk_two_pass_sample_hyperball(polyfixvecl *y1, polyfixveck *y2, const uint8_t seed[CRHBYTES], const uint16_t nonce);
+uint16_t polyfixveclk_two_pass_sample_hyperball(polyfixvecl *y1, polyfixveck *y2, uint8_t *b, const uint8_t seed[CRHBYTES], const uint16_t nonce);
 
 #endif
 // clang-format on
