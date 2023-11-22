@@ -155,7 +155,7 @@ void unpack_sk(polyvecl A[K], polyvecm *s0, polyveck *s1, uint8_t *key,
  *Enc(h)).
  *
  * Arguments:   - uint8_t sig[]: output byte array
- *              - const uint8_t c_seed[]: pointer to seed of challenge
+ *              - const poly *c: pointer to challenge polynomial
  *              - const polyvecl *lowbits_z1: pointer to vector LowBits(z1) of
  *length L
  *              - const polyvecl *highbits_z1: pointer to vector HighBits(z1) of
@@ -163,7 +163,7 @@ void unpack_sk(polyvecl A[K], polyvecm *s0, polyveck *s1, uint8_t *key,
  *              - const polyveck *h: pointer t vector h of length K
  * Returns 1 in case the signature size is above the threshold; otherwise 0.
  **************************************************/
-int pack_sig(uint8_t sig[CRYPTO_BYTES], const uint8_t c_seed[SEEDBYTES],
+int pack_sig(uint8_t sig[CRYPTO_BYTES], const poly *c,
              const polyvecl *lowbits_z1, const polyvecl *highbits_z1,
              const polyveck *h) {
 
@@ -174,9 +174,13 @@ int pack_sig(uint8_t sig[CRYPTO_BYTES], const uint8_t c_seed[SEEDBYTES],
 
     // init/padding with zeros:
     memset(sig, 0, CRYPTO_BYTES);
-
-    memcpy(sig, c_seed, SEEDBYTES);
-    sig += SEEDBYTES;
+    
+    // encode challenge
+    for (size_t i = 0; i < N; i++)
+    {
+      sig[i/8] |= c->coeffs[i] << (i%8);
+    }
+    sig += N / 8;
 
     for (int i = 0; i < L; ++i)
         poly_decomposed_pack(sig + N * i, &lowbits_z1->vec[i]);
@@ -196,13 +200,13 @@ int pack_sig(uint8_t sig[CRYPTO_BYTES], const uint8_t c_seed[SEEDBYTES],
         size_enc_h > BASE_ENC_H + 255 || size_enc_hb_z1 > BASE_ENC_HB_Z1 + 255) {
             return 1; // encoding size offset out of range
         }
-
+    
     offset_enc_hb_z1 = size_enc_hb_z1 - BASE_ENC_HB_Z1;
     offset_enc_h = size_enc_h - BASE_ENC_H;
 
     if (SEEDBYTES + L * N + 2 + size_enc_hb_z1 + size_enc_h >
         CRYPTO_BYTES) {
-        return 1; // signature too big
+        return 1; // signature too big     
     }
 
     sig[0] = offset_enc_hb_z1;
@@ -214,7 +218,7 @@ int pack_sig(uint8_t sig[CRYPTO_BYTES], const uint8_t c_seed[SEEDBYTES],
 
     memcpy(sig, encoded_h, size_enc_h);
     sig += size_enc_h;
-
+  
     return 0;
 }
 
@@ -224,7 +228,7 @@ int pack_sig(uint8_t sig[CRYPTO_BYTES], const uint8_t c_seed[SEEDBYTES],
  * Description: Unpack signature sig = (c, LB(z1), len(x), x= Enc(HB(z1)),
  *Enc(h)).
  *
- * Arguments:   - uint8_t c_seed[]: pointer to output seed of challenge
+ * Arguments:   - poly *c: pointer to challenge polynomial
  *              - polyvecl *lowbits_z1: pointer to output vector LowBits(z1)
  *              - polyvecl *highbits_z1: pointer to output vector HighBits(z1)
  *              - polyveck *h: pointer to output vector h
@@ -233,16 +237,20 @@ int pack_sig(uint8_t sig[CRYPTO_BYTES], const uint8_t c_seed[SEEDBYTES],
  *
  * Returns 1 in case of malformed signature; otherwise 0.
  **************************************************/
-int unpack_sig(uint8_t c_seed[SEEDBYTES], polyvecl *lowbits_z1,
+int unpack_sig(poly *c, polyvecl *lowbits_z1,
                polyvecl *highbits_z1, polyveck *h,
                const uint8_t sig[CRYPTO_BYTES]) {
 
+    unsigned int i;
     uint16_t size_enc_hb_z1, size_enc_h;
 
-    memcpy(c_seed, sig, SEEDBYTES);
-    sig += SEEDBYTES;
+    for (i = 0; i < N; i++)
+    {
+      c->coeffs[i] = (sig[i/8] >> (i%8)) & 1;
+    }
+    sig += N / 8;
 
-    for (int i = 0; i < L; ++i)
+    for (i = 0; i < L; ++i)
         poly_decomposed_unpack(&lowbits_z1->vec[i], sig + N * i);
     sig += L * N;
 
@@ -256,13 +264,13 @@ int unpack_sig(uint8_t c_seed[SEEDBYTES], polyvecl *lowbits_z1,
     if(decode_hb_z1(&highbits_z1->vec[0].coeffs[0], sig, size_enc_hb_z1)) {
         return 1; // decoding failed
     }
-
+        
     sig += size_enc_hb_z1;
 
     if(decode_h(&h->vec[0].coeffs[0], sig, size_enc_h)) {
         return 1; // decoding failed
     }
-
+        
     sig += size_enc_h;
 
     for(int i=0; i < CRYPTO_BYTES - (SEEDBYTES + L * N + 2 + size_enc_hb_z1 + size_enc_h); i++)

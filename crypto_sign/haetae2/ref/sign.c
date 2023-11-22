@@ -135,7 +135,6 @@ int crypto_sign_signature(uint8_t *sig, size_t *siglen, const uint8_t *m,
     uint8_t buf[POLYVECK_HIGHBITS_PACKEDBYTES + POLYC_PACKEDBYTES] = {0};
     uint8_t seedbuf[CRHBYTES] = {0}, key[SEEDBYTES] = {0};
     uint8_t mu[SEEDBYTES] = {0};
-    uint8_t cseed[SEEDBYTES] = {0}; // seed of a challenge polynomial c
     uint8_t b = 0;                  // one bit
     uint16_t counter = 0;
     uint64_t reject1, reject2;
@@ -148,7 +147,7 @@ int crypto_sign_signature(uint8_t *sig, size_t *siglen, const uint8_t *m,
     polyvecl z1rnd; // round of z1
     polyvecl hb_z1, lb_z1;
     polyveck z2rnd, h, htmp; // round of z2
-    poly c, z1rnd0, lsb;
+    poly c, chat, z1rnd0, lsb;
 
     xof256_state state;
 
@@ -168,8 +167,7 @@ int crypto_sign_signature(uint8_t *sig, size_t *siglen, const uint8_t *m,
 reject:
 
     /*------------------ 1. Sample y1 and y2 from hyperball ------------------*/
-    randombytes(&b, sizeof(uint8_t));
-    counter = polyfixveclk_sample_hyperball(&y1, &y2, seedbuf, counter);
+    counter = polyfixveclk_sample_hyperball(&y1, &y2, &b, seedbuf, counter);
 
     /*------------------- 2. Compute a chanllenge c --------------------------*/
     // Round y1 and y2
@@ -198,25 +196,20 @@ reject:
     polyveck_pack_highbits(buf, &highbits);
     poly_pack_lsb(buf + POLYVECK_HIGHBITS_PACKEDBYTES, &lsb);
 
-    // c_seed = H(HighBits(A * y mod 2q), LSB(round(y0) * j), M)
-    xof256_absorbe_twice(&state, buf,
-                         POLYVECK_HIGHBITS_PACKEDBYTES + POLYC_PACKEDBYTES, mu,
-                         SEEDBYTES);
-    xof256_squeeze(cseed, SEEDBYTES, &state);
-
-    // c = challenge(c_seed)
-    poly_challenge(&c, cseed);
+    // c = challenge(highbits, lsb, mu)
+    poly_challenge(&c, buf, mu);
 
     /*------------------- 3. Compute z = y + (-1)^b c * s --------------------*/
     // cs = c * s = c * (si1 || s2)
     cs1.vec[0] = c;
-    poly_ntt(&c);
+    chat = c;
+    poly_ntt(&chat);
 
     for (i = 1; i < L; ++i) {
-        poly_pointwise_montgomery(&cs1.vec[i], &c, &s1.vec[i - 1]);
+        poly_pointwise_montgomery(&cs1.vec[i], &chat, &s1.vec[i - 1]);
         poly_invntt_tomont(&cs1.vec[i]);
     }
-    polyveck_poly_pointwise_montgomery(&cs2, &s2, &c);
+    polyveck_poly_pointwise_montgomery(&cs2, &s2, &chat);
     polyveck_invntt_tomont(&cs2);
 
     // z = y + (-1)^b cs = z1 + z2
@@ -264,7 +257,7 @@ reject:
     polyvecl_lowbits(&lb_z1, &z1rnd); // TODO do this in one function together!
     polyvecl_highbits(&hb_z1, &z1rnd);
 
-    if (pack_sig(sig, cseed, &lb_z1, &hb_z1,
+    if (pack_sig(sig, &c, &lb_z1, &hb_z1,
                  &h)) { // reject if signature is too big
         goto reject;
     }
@@ -317,15 +310,14 @@ int crypto_sign_verify(const uint8_t *sig, size_t siglen, const uint8_t *m,
                        size_t mlen, const uint8_t *pk) {
     unsigned int i;
     uint8_t buf[POLYVECK_HIGHBITS_PACKEDBYTES + POLYC_PACKEDBYTES] = {0};
-    uint8_t c_seed[SEEDBYTES] = {0}, c_seed2[SEEDBYTES] = {0};
-    uint8_t rhoprime[SEEDBYTES] = {0};
+    uint8_t rhoprime[SEEDBYTES] = {0}, mu[SEEDBYTES];
     uint64_t sqnorm2;
     polyvecl A1[K], z1;
     polyveck b, highbits, h, z2, w;
 #if D > 0
     polyveck a;
 #endif
-    poly c, wprime;
+    poly c, cprime, wprime;
 
     xof256_state state;
 
@@ -339,7 +331,7 @@ int crypto_sign_verify(const uint8_t *sig, size_t siglen, const uint8_t *m,
 
     // Unpack signature and Check conditions -- A1 is used only as intermediate
     // buffer for the low bits
-    if (unpack_sig(c_seed, A1, &z1, &h, sig)) {
+    if (unpack_sig(&c, A1, &z1, &h, sig)) {
         return -1;
     }
 
@@ -369,9 +361,6 @@ int crypto_sign_verify(const uint8_t *sig, size_t siglen, const uint8_t *m,
     }
 
     /*------------------- 2. Compute \tilde{z}_2 -----------------------------*/
-    // c = challenge(c_seed)
-    poly_challenge(&c, c_seed);
-
     // compute squared norm of z1 and w' before NTT
     sqnorm2 = polyvecl_sqnorm2(&z1);
     poly_sub(&wprime, &z1.vec[0], &c);
@@ -410,16 +399,13 @@ int crypto_sign_verify(const uint8_t *sig, size_t siglen, const uint8_t *m,
     poly_pack_lsb(buf + POLYVECK_HIGHBITS_PACKEDBYTES, &wprime);
 
     xof256_absorbe_twice(&state, pk, CRYPTO_PUBLICKEYBYTES, m, mlen);
-    xof256_squeeze(c_seed2, SEEDBYTES, &state);
+    xof256_squeeze(mu, SEEDBYTES, &state);
 
     // c_seed = H(HighBits(A * y mod 2q), LSB(round(y0) * j), M)
-    xof256_absorbe_twice(&state, buf,
-                         POLYVECK_HIGHBITS_PACKEDBYTES + POLYC_PACKEDBYTES,
-                         c_seed2, SEEDBYTES);
-    xof256_squeeze(c_seed2, SEEDBYTES, &state);
+    poly_challenge(&cprime, buf, mu);
 
-    for (i = 0; i < SEEDBYTES; ++i) {
-        if (c_seed[i] != c_seed2[i]) {
+    for (i = 0; i < N; ++i) {
+        if (c.coeffs[i] != cprime.coeffs[i]) {
             return -1;
         }
     }
