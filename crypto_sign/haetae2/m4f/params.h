@@ -5,24 +5,45 @@
 #include "config.h"
 
 /***************************************************************
- * Settings for Stack Management
+ * Settings for Stack Management, use STACK_STRATEGY 
+ * in config.h to select these.
  *  ENABLE_TWO_PASS_SAMPLING:
  *     - Default: not defined
  *     - relates to polyfixveclk_sample_hyperball()
+ *     - Discards and recomputes some intermediate results
  *     - use about (L + K - 1) * 2kB less stack memory
  *     - roughly double the execution time
  *  ENABLE_SIGNATURE_MATRIX_BUFFER:
  *     - Default: defined
- *     - Enables the use of large matrices to
- *       store the public key matrix
+ *     - Enables the use of large matrices in 
+ *       crypto_sign() to store the public key matrix
  *     - Uses about L * K * 2kB stack memory 
- *     - increases runtime, as the matrix needs
- *     - to be recomputed for each rejection cycle
+ *     - disabling increases runtime, as the matrix needs
+ *       to be recomputed for each rejection cycle
+ *  ENABLE_KEYPAIR_MATRIX_BUFFER:
+ *     - Default: defined
+ *     - Enables the use of large matrices in 
+ *       crypto_keypair() to store the public key matrix
+ *     - Uses about L * K * 2kB stack memory 
+ *     - disabling increases runtime, as the matrix needs
+ *       to be recomputed for each rejection cycle
  * Execute "make clean" to ensure the switches take effect.
  ***************************************************************/
+#ifndef STACK_STRATEGY
+#define ENABLE_SIGNATURE_MATRIX_BUFFER
+#define ENABLE_KEYPAIR_MATRIX_BUFFER
+#else
+#if STACK_STRATEGY == 0
+#define ENABLE_SIGNATURE_MATRIX_BUFFER
+#define ENABLE_KEYPAIR_MATRIX_BUFFER
+#elif STACK_STRATEGY == 1
+#elif STACK_STRATEGY == 2
 #define ENABLE_TWO_PASS_SAMPLING
-//#define ENABLE_SIGNATURE_MATRIX_BUFFER
-//#define ENABLE_KEYPAIR_MATRIX_BUFFER
+#else 
+#error Unknown STACK_STRATEGY specified
+#endif /* if STACK_STRATEGY == 0 */
+#endif /* ifndef STACK_STRATEGY */
+
 
 
 #define SEEDBYTES 32

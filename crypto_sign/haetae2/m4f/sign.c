@@ -331,7 +331,7 @@ static void decompose_z1_vecl(polyvecl *lb_z1, polyvecl *hb_z1, const polyfixvec
  *              - polyveck *s2:     part of the secret key, NTT domain
  *              - polyfixvecl *y1:  part of the uniform samples from the hyperball
  *              - polyfixveck *y2:  part of the uniform samples from the hyperball
- *              - uint8_t b:        a random byte for bimodal selection
+ *              - uint8_t b:        a random byte for bimodal selection using byte mask 0x01
  * 
  * Returns void
  **************************************************/
@@ -399,8 +399,8 @@ static uint64_t is_norm_of_z_geq_big_b_prime(const polyfixvecl *z1, const polyfi
  *              - polyfixveck *z2:  part of the signature candidate
  *              - polyfixvecl *y1:  part of the uniform samples from the hyperball
  *              - polyfixveck *y2:  part of the uniform samples from the hyperball
- *              - uint8_t b:        a random byte for bimodal selection, this function
- *                                  uses bits corresponding to the mask 0x02
+ *              - uint8_t b:        a random byte for rejection in the overlap
+ *                                  region using byte mask 0x02
  *
  * Returns 0 if the test passed, 1 if the signature needs to be rejected.
  **************************************************/
