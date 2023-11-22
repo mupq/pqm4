@@ -413,13 +413,17 @@ uint8_t hammingWeight_8(uint8_t x) {
  *              - const uint8_t seed[]: byte array containing seed of length
  *                SEEDBYTES
  **************************************************/
-void poly_challenge(poly *c, const uint8_t seed[SEEDBYTES]) {
+void poly_challenge(poly *c, const uint8_t highbits_lsb[POLYVECK_HIGHBITS_PACKEDBYTES + 
+                    POLYC_PACKEDBYTES], const uint8_t mu[SEEDBYTES]) {
 #if (HAETAE_MODE == 2) || (HAETAE_MODE == 3)
     unsigned int i, b, pos = 0;
     uint8_t buf[XOF256_BLOCKBYTES];
     xof256_state state;
 
-    xof256_absorb_once(&state, seed, SEEDBYTES);
+    // H(HighBits(A * y mod 2q), LSB(round(y0) * j), M)
+    xof256_absorb_twice(&state, 
+                        highbits_lsb, POLYVECK_HIGHBITS_PACKEDBYTES + POLYC_PACKEDBYTES, 
+                        mu, SEEDBYTES);    
     xof256_squeezeblocks(buf, 1, &state);
 
     for (i = 0; i < N; ++i)
@@ -443,7 +447,10 @@ void poly_challenge(poly *c, const uint8_t seed[SEEDBYTES]) {
     uint8_t buf[32] = {0};
     xof256_state state;
 
-    xof256_absorb_once(&state, seed, SEEDBYTES);
+    // H(HighBits(A * y mod 2q), LSB(round(y0) * j), M)
+    xof256_absorb_twice(&state, 
+                        highbits_lsb, POLYVECK_HIGHBITS_PACKEDBYTES + POLYC_PACKEDBYTES, 
+                        mu, SEEDBYTES);
     xof256_squeeze(buf, 32, &state);
 
     for (i = 0; i < 32; ++i)

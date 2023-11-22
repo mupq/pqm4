@@ -266,7 +266,7 @@ uint64_t polyfixveclk_sqnorm2(const polyfixvecl *a, const polyfixveck *b) {
     return ret;
 }
 
-uint16_t polyfixveclk_sample_hyperball(polyfixvecl *y1, polyfixveck *y2,
+uint16_t polyfixveclk_sample_hyperball(polyfixvecl *y1, polyfixveck *y2, uint8_t *b,
                                        const uint8_t seed[CRHBYTES],
                                        const uint16_t nonce) {
     uint16_t ni = nonce;
@@ -313,10 +313,23 @@ uint16_t polyfixveclk_sample_hyperball(polyfixvecl *y1, polyfixveck *y2,
         }
         sqnorm2 = polyfixveclk_sqnorm2(y1, y2);
     } while (sqnorm2 > B0SQ * LN * LN);
+
+    {
+        uint8_t tmp[CRHBYTES + 2];
+        for (i = 0; i < CRHBYTES; i++)
+        {
+            tmp[i] = seed[i];
+        }
+        tmp[CRHBYTES + 0] = ni >> 0;
+        tmp[CRHBYTES + 1] = ni >> 8;
+        shake256(b, 1, tmp, CRHBYTES+2);
+    }
+
     return ni;
 }
 
 uint16_t polyfixveclk_two_pass_sample_hyperball(polyfixvecl *y1, polyfixveck *y2,
+                                       uint8_t *b, 
                                        const uint8_t seed[CRHBYTES],
                                        const uint16_t nonce) {
     uint16_t ni = nonce;
@@ -377,6 +390,17 @@ uint16_t polyfixveclk_two_pass_sample_hyperball(polyfixvecl *y1, polyfixveck *y2
                     (signs[j / 8] >> (j % 8)) & 1);
         }
     } while (polyfixveclk_sqnorm2(y1, y2) > B0SQ * LN * LN);
+
+    {
+        uint8_t tmp[CRHBYTES + 2];
+        for (i = 0; i < CRHBYTES; i++)
+        {
+            tmp[i] = seed[i];
+        }
+        tmp[CRHBYTES + 0] = ni >> 0;
+        tmp[CRHBYTES + 1] = ni >> 8;
+        shake256(b, 1, tmp, CRHBYTES+2);
+    }
 
     return ni;
 }

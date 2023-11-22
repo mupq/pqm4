@@ -326,36 +326,35 @@ static void decompose_z1_vecl(polyvecl *lb_z1, polyvecl *hb_z1, const polyfixvec
  *
  * Arguments:   - polyfixvecl *z1:  part of the signature candidate
  *              - polyfixveck *z2:  part of the signature candidate
- *              - uint8_t cseed:    seed of the challenge polynomial
+ *              - poly *c:          challenge polynomial
  *              - polyvecm *s1:     part of the secret key, NTT domain
  *              - polyveck *s2:     part of the secret key, NTT domain
  *              - polyfixvecl *y1:  part of the uniform samples from the hyperball
  *              - polyfixveck *y2:  part of the uniform samples from the hyperball
- *              - uint8_t b:        a random byte for bimodal selection
+ *              - uint8_t b:        a random byte for bimodal selection using byte mask 0x01
  * 
  * Returns void
  **************************************************/
-static void compute_z_veckl(polyfixvecl *z1, polyfixveck *z2, const uint8_t cseed[SEEDBYTES], 
+static void compute_z_veckl(polyfixvecl *z1, polyfixveck *z2, const poly *c, 
                             const polyvecm *s1, const polyveck *s2, 
                             const polyfixvecl *y1, const polyfixveck *y2, const uint8_t b){
-    poly c;
     poly t;
-
-    // c = challenge(c_seed)
-    poly_challenge(&c, cseed);
+    poly chat;
 
     // t = (c * s).vec[i] = (c * (1 || s1 || s2)).vec[i]
     // z = y + (-1)^b (c * s) = z1 || z2
 
+    chat = *c;
+    poly_ntt(&chat);
+
     // z1[0]
-    t = c;
+    t = *c;
     poly_cneg(&t, b & 1);
     polyfix_add(&z1->vec[0], &y1->vec[0], &t);
 
     // z1.vec[1..L-1]
-    poly_ntt(&c);
     for (size_t column = 1; column < L; ++column) {
-        poly_pointwise_montgomery(&t, &c, &s1->vec[column - 1]);
+        poly_pointwise_montgomery(&t, &chat, &s1->vec[column - 1]);
         poly_invntt_tomont(&t);
         poly_cneg(&t, b & 1);
         polyfix_add(&z1->vec[column], &y1->vec[column], &t);
@@ -363,7 +362,7 @@ static void compute_z_veckl(polyfixvecl *z1, polyfixveck *z2, const uint8_t csee
 
     // z2.vec[0..K-1]
     for (size_t row = 0; row < K; row++) {
-        poly_pointwise_montgomery(&t, &s2->vec[row], &c);
+        poly_pointwise_montgomery(&t, &s2->vec[row], &chat);
         poly_invntt_tomont(&t);
         poly_cneg(&t, b & 1);
         polyfix_add(&z2->vec[row], &y2->vec[row], &t);
@@ -400,8 +399,8 @@ static uint64_t is_norm_of_z_geq_big_b_prime(const polyfixvecl *z1, const polyfi
  *              - polyfixveck *z2:  part of the signature candidate
  *              - polyfixvecl *y1:  part of the uniform samples from the hyperball
  *              - polyfixveck *y2:  part of the uniform samples from the hyperball
- *              - uint8_t b:        a random byte for bimodal selection, this function
- *                                  uses bits corresponding to the mask 0x02
+ *              - uint8_t b:        a random byte for rejection in the overlap
+ *                                  region using byte mask 0x02
  *
  * Returns 0 if the test passed, 1 if the signature needs to be rejected.
  **************************************************/
@@ -434,7 +433,7 @@ static uint64_t is_rejected_in_intersection(const polyfixvecl *z1, const polyfix
  * Name:        multiply_a1_by_rounded_y1_mod_q
  *
  * Description: Computes Ay = A1 * round(y1) mod q and a copy of round(y1)[0].
- *              Subfunction of compute_challenge_seed()
+ *              Subfunction of compute_challenge_polynomial()
  *
  * Arguments:   - poly *z1rnd0:     round(y1)[0], not in Montgomery domain
  *              - polyveck *Ay:     vector mod q
@@ -490,7 +489,7 @@ static void multiply_a1_by_rounded_y1_mod_q(poly *z1rnd0,
  * Name:        accumulate_two_times_rounded_y2_mod_q
  *
  * Description: Accumulates 2 * round(y2) mod q to Ay 
- *              Subfunction of compute_challenge_seed()
+ *              Subfunction of compute_challenge_polynomial()
  *
  * Arguments:   - polyveck *Ay:     vector mod q
  *              - polyfixveck *y2:  part of the hyperball samples
@@ -509,11 +508,11 @@ static void accumulate_two_times_rounded_y2_mod_q(polyveck *Ay, const polyfixvec
 }
 
 /*************************************************
- * Name:        compute_challenge_seed
+ * Name:        compute_challenge_polynomial
  *
- * Description: Computes a challenge seed, Ay and HighBits(hint)
+ * Description: Computes a challenge polynomial, Ay and HighBits(hint)
  *
- * Arguments:   - uint8_t *cseed[SEEDBYTES]:    seed to expand challenge polynomial from
+ * Arguments:   - poly *c:                      challenge polynomial
  *              - polyveck *Ay:                 A1 * round(y1) + 2 * round(y2) mod q
  *              - polyveck *highbits:           HighBits of hint (A * round(y) mod 2q)
  *              - const polyvecl *A1[K]:        public key matrix
@@ -523,7 +522,7 @@ static void accumulate_two_times_rounded_y2_mod_q(polyveck *Ay, const polyfixvec
  *
  * Returns 0 (success)
  **************************************************/
-static void compute_challenge_seed(uint8_t cseed[SEEDBYTES], polyveck *Ay, polyveck *highbits, 
+static void compute_challenge_polynomial(poly *c, polyveck *Ay, polyveck *highbits, 
                                    const uMatrixPointerL_frozen a1ptr, const polyfixvecl *y1, 
                                    const polyfixveck *y2, const uint8_t mu[SEEDBYTES]){
 	uint8_t buf[POLYVECK_HIGHBITS_PACKEDBYTES + POLYC_PACKEDBYTES] = {0};
@@ -548,10 +547,9 @@ static void compute_challenge_seed(uint8_t cseed[SEEDBYTES], polyveck *Ay, polyv
     polyveck_pack_highbits(buf, highbits);
     poly_pack_lsb(buf + POLYVECK_HIGHBITS_PACKEDBYTES, &lsb);
 
-    // c_seed = H(HighBits(A * y mod 2q), LSB(round(y0) * j), M)
-    generate_seed_from_two_sources(cseed, SEEDBYTES, 
-                                   buf, POLYVECK_HIGHBITS_PACKEDBYTES + POLYC_PACKEDBYTES, 
-                                   mu, SEEDBYTES);
+    // c = challenge(HighBits(A * y mod 2q), LSB(round(y0) * j), mu)
+    poly_challenge(c, buf, mu);
+
     return;
 };
 
@@ -568,7 +566,7 @@ static void compute_challenge_seed(uint8_t cseed[SEEDBYTES], polyveck *Ay, polyv
  **************************************************/
 static int compress_and_pack_signature(
     uint8_t *sig,
-    uint8_t cseed[SEEDBYTES],
+    poly *c,
     const polyfixvecl *z1,
     const polyfixveck *z2,
     const polyveck *Ay,
@@ -581,7 +579,7 @@ static int compress_and_pack_signature(
     decompose_z1_vecl(&lb_z1, &hb_z1, z1);
 
     /*------------------ Pack signature -----------------------------*/
-    if (pack_sig(sig, cseed, &lb_z1, &hb_z1, &h)) { // reject if signature is too big
+    if (pack_sig(sig, c, &lb_z1, &hb_z1, &h)) { // reject if signature is too big
         return 1;
     }
     return 0;
@@ -607,8 +605,8 @@ int crypto_sign_signature(uint8_t *sig, size_t *siglen, const uint8_t *m,
 
     uint8_t seedbuf[CRHBYTES] = {0}, key[SEEDBYTES] = {0};
     uint8_t mu[SEEDBYTES] = {0};
-    uint8_t cseed[SEEDBYTES] = {0}; // seed of a challenge polynomial c
-    uint8_t b = 0;                  // one bit
+    poly c = { .coeffs = {0} }; // challenge polynomial
+    uint8_t b = 0;              // some random bits
     uint16_t counter = 0;
     uint64_t reject1, reject2;
 
@@ -639,19 +637,18 @@ int crypto_sign_signature(uint8_t *sig, size_t *siglen, const uint8_t *m,
 reject:
 
     /*------------------ 1. Sample y1 and y2 from hyperball ------------------*/
-    randombytes(&b, sizeof(uint8_t));
 
 #ifdef ENABLE_TWO_PASS_SAMPLING
-    counter = polyfixveclk_two_pass_sample_hyperball(&y1, &y2, seedbuf, counter);
+    counter = polyfixveclk_two_pass_sample_hyperball(&y1, &y2, &b, seedbuf, counter);
 #else
-    counter = polyfixveclk_sample_hyperball(&y1, &y2, seedbuf, counter);
+    counter = polyfixveclk_sample_hyperball(&y1, &y2, &b, seedbuf, counter);
 #endif
 
     /*------------------- 2. Compute a challenge c --------------------------*/
-    compute_challenge_seed(cseed, &Ay, &highbits, a1ptr, &y1, &y2, mu);
+    compute_challenge_polynomial(&c, &Ay, &highbits, a1ptr, &y1, &y2, mu);
 
     /*------------------- 3. Compute z = y + (-1)^b c * s --------------------*/
-    compute_z_veckl(&z1, &z2, cseed, &s1, &s2, &y1, &y2, b);
+    compute_z_veckl(&z1, &z2, &c, &s1, &s2, &y1, &y2, b);
 
     reject1 = is_norm_of_z_geq_big_b_prime(&z1, &z2);
     reject2 = is_rejected_in_intersection(&z1, &z2, &y1, &y2, b);
@@ -661,7 +658,7 @@ reject:
 
     /*------------------- 4. Make a hint and decompose z1 -----------*/
     /*------------------ Pack signature -----------------------------*/
-    if (0 != compress_and_pack_signature(sig, cseed, &z1, &z2, &Ay, &highbits)) 
+    if (0 != compress_and_pack_signature(sig, &c, &z1, &z2, &Ay, &highbits)) 
         goto reject;
     *siglen = CRYPTO_BYTES;
 
@@ -705,12 +702,12 @@ int crypto_sign(uint8_t *sm, size_t *smlen, const uint8_t *m, size_t mlen,
 // ###################################################################
 // ###################################################################
 
-static int unpack_cseed_z1_and_hint_from_sig(uint8_t c_seed[SEEDBYTES], polyvecl *z1, 
+static int unpack_cseed_z1_and_hint_from_sig(poly *c, polyvecl *z1, 
                polyveck *h, const uint8_t sig[CRYPTO_BYTES]){
     polyvecl highbits_z1;
 
     // Unpack signature and Check conditions -- low bits are stored in z1
-    if (unpack_sig(c_seed, &highbits_z1, z1, h, sig)) {
+    if (unpack_sig(c, &highbits_z1, z1, h, sig)) {
         return -1;
     }
 
@@ -760,8 +757,8 @@ int crypto_sign_verify(const uint8_t *sig, size_t siglen, const uint8_t *m,
                        size_t mlen, const uint8_t *pk) {
     unsigned int i;
     uint8_t buf[POLYVECK_HIGHBITS_PACKEDBYTES + POLYC_PACKEDBYTES] = {0};
-    uint8_t c_seed[SEEDBYTES] = {0}, c_seed2[SEEDBYTES] = {0};
     uint8_t rhoprime[SEEDBYTES] = {0};
+    uint8_t mu[SEEDBYTES] = {0};
     uint64_t sqnorm2;
     polyvecl z1;
     polyveck b; 
@@ -770,6 +767,7 @@ int crypto_sign_verify(const uint8_t *sig, size_t siglen, const uint8_t *m,
     polyveck z2; 
     polyveck w;
     poly c;
+    poly cprime;
     poly wprime;
 
     // Check signature length
@@ -779,12 +777,9 @@ int crypto_sign_verify(const uint8_t *sig, size_t siglen, const uint8_t *m,
 
     // Unpack public key
     unpack_pk(&b, rhoprime, pk);
-    unpack_cseed_z1_and_hint_from_sig(c_seed, &z1, &h, sig);
+    unpack_cseed_z1_and_hint_from_sig(&c, &z1, &h, sig);
 
     /*------------------- 2. Compute \tilde{z}_2 -----------------------------*/
-    // c = challenge(c_seed)
-    poly_challenge(&c, c_seed);
-
     // compute  w' = lsb(z1[0] - c) and the squared norm of z1 before NTT
     sqnorm2 = polyvecl_sqnorm2(&z1);
     poly_sub(&wprime, &z1.vec[0], &c);
@@ -847,21 +842,18 @@ int crypto_sign_verify(const uint8_t *sig, size_t siglen, const uint8_t *m,
         return -1;
     }
 
-    /*------------------- 3. Compute c_seed' and Compare ---------------------*/
+    /*------------------- 3. Compute cprime and Compare ---------------------*/
 
     // Pack highBits(A * round(z) - qcj mod 2q) and h'
     polyveck_pack_highbits(buf, &w);
     poly_pack_lsb(buf + POLYVECK_HIGHBITS_PACKEDBYTES, &wprime);
 
-    generate_seed_from_two_sources(c_seed2, SEEDBYTES, pk, CRYPTO_PUBLICKEYBYTES, m, mlen);
+    generate_seed_from_two_sources(mu, SEEDBYTES, pk, CRYPTO_PUBLICKEYBYTES, m, mlen);
 
-    // c_seed = H(HighBits(A * y mod 2q), LSB(round(y0) * j), M)
-    generate_seed_from_two_sources(c_seed2, SEEDBYTES, 
-                                   buf, POLYVECK_HIGHBITS_PACKEDBYTES + POLYC_PACKEDBYTES,
-                                   c_seed2, SEEDBYTES);
+    poly_challenge(&cprime, buf, mu);
 
-    for (i = 0; i < SEEDBYTES; ++i) {
-        if (c_seed[i] != c_seed2[i]) {
+    for (i = 0; i < N; ++i) {
+        if (c.coeffs[i] != cprime.coeffs[i]) {
             return -1;
         }
     }
