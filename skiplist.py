@@ -193,4 +193,12 @@ skip_list = [
     {'scheme': 'perk-128-short-5', 'implementation': 'ref', 'estmemory': 2235392},
     {'scheme': 'perk-256-fast-3', 'implementation': 'ref', 'estmemory': 1797120},
     {'scheme': 'perk-128-short-3', 'implementation': 'ref', 'estmemory': 2377728},
+    {'scheme': 'ascon-sign-128s-simple', 'implementation': 'ref', 'estmemory': 12288},
+    {'scheme': 'ascon-sign-128f-simple', 'implementation': 'ref', 'estmemory': 21504},
+    {'scheme': 'ascon-sign-192s-simple', 'implementation': 'ref', 'estmemory': 22528},
+    {'scheme': 'ascon-sign-192f-robust', 'implementation': 'ref', 'estmemory': 43008},
+    {'scheme': 'ascon-sign-192f-simple', 'implementation': 'ref', 'estmemory': 41984},
+    {'scheme': 'ascon-sign-192s-robust', 'implementation': 'ref', 'estmemory': 23552},
+    {'scheme': 'ascon-sign-128s-robust', 'implementation': 'ref', 'estmemory': 12288},
+    {'scheme': 'ascon-sign-128f-robust', 'implementation': 'ref', 'estmemory': 21504},
 ]
