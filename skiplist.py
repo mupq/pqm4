@@ -182,4 +182,7 @@ skip_list = [
     {'scheme': 'mayo3', 'implementation': 'ref', 'estmemory': 1144832},
     {'scheme': 'mayo1', 'implementation': 'ref', 'estmemory': 404480},
     {'scheme': 'mayo2', 'implementation': 'ref', 'estmemory': 279552},
+    {'scheme': 'hawk512', 'implementation': 'ref', 'estmemory': 17408},
+    {'scheme': 'hawk1024', 'implementation': 'ref', 'estmemory': 32768},
+    {'scheme': 'hawk256', 'implementation': 'ref', 'estmemory': 10240},
 ]
