@@ -225,4 +225,10 @@ skip_list = [
     {'scheme': 'cross-sha3-r-sdpg-3-fast', 'implementation': 'ref', 'estmemory': 230400},
     {'scheme': 'cross-sha3-r-sdp-5-fast', 'implementation': 'ref', 'estmemory': 914432},
     {'scheme': 'cross-sha3-r-sdp-3-fast', 'implementation': 'ref', 'estmemory': 365568},
+    {'scheme': 'biscuit128f', 'implementation': 'ref', 'estmemory': 145408},
+    {'scheme': 'biscuit128s', 'implementation': 'ref', 'estmemory': 1099776},
+    {'scheme': 'biscuit192f', 'implementation': 'ref', 'estmemory': 282624},
+    {'scheme': 'biscuit192s', 'implementation': 'ref', 'estmemory': 2257920},
+    {'scheme': 'biscuit256f', 'implementation': 'ref', 'estmemory': 505856},
+    {'scheme': 'biscuit256s', 'implementation': 'ref', 'estmemory': 4004864},
 ]
