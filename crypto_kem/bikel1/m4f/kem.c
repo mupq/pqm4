@@ -5,10 +5,11 @@
  * AWS Cryptographic Algorithms Group.
  *
  * Modification: 2021 Ming-Shing Chen, Tung Chou, and Markus Krausz
+ * Modification: 2023 Till Eifert
  *
  */
 
- #include "crypto_kem.h"
+#include "crypto_kem.h"
 #include "decode.h"
 #include "gf2x.h"
 #include "sampling.h"
@@ -95,7 +96,7 @@ _INLINE_ ret_t encrypt(OUT ct_t *ct,
   // ct = pk * e1 + e0
   //gf2x_mod_mul(&p_ct, &e->val[1], &p_pk);
   //gf2x_mod_add(&p_ct, &p_ct, &e->val[0]);
-  ring_mul(&p_ct, &e->val[1], &p_pk);
+ring_mul(&p_ct, &e->val[1], &p_pk);
   ring_add(&p_ct, &p_ct, &e->val[0]);
 
 
@@ -150,11 +151,11 @@ int crypto_kem_keypair(OUT unsigned char *pk, OUT unsigned char *sk)
   // The randomness of the key generation
   DEFER_CLEANUP(seeds_t seeds = {0}, seeds_cleanup);
 
-  // An AES_PRF state for the secret key
-  DEFER_CLEANUP(aes_ctr_prf_state_t h_prf_state = {0}, aes_ctr_prf_state_cleanup);
-
   get_seeds(&seeds);
-  GUARD(init_aes_ctr_prf_state(&h_prf_state, MAX_AES_INVOKATION, &seeds.seed[0]));
+  // A SHAKE_PRF state for the secret key
+  DEFER_CLEANUP(prf_state_t h_prf_state = {0}, clean_shake256_prf_state);
+
+  GUARD(init_shake256_prf_state(&h_prf_state, MAX_PRF_INVOCATION, &seeds.seed[0]));
 
   // Generate the secret key (h0, h1) with weight w/2
   GUARD(generate_sparse_rep(&h0, l_sk.wlist[0].val, &h_prf_state));
@@ -166,7 +167,7 @@ int crypto_kem_keypair(OUT unsigned char *pk, OUT unsigned char *sk)
   // Calculate the public key
   gf2x_mod_inv(&h0inv, &h0);
   //gf2x_mod_mul(&h, &h1, &h0inv);
-  ring_mul(&h, &h1, &h0inv);
+ring_mul(&h, &h1, &h0inv);
 
   // Fill the secret key data structure with contents - cancel the padding
   l_sk.bin[0] = h0.val;
@@ -256,8 +257,9 @@ int crypto_kem_dec(OUT unsigned char *     ss,
   // (Note: possibly, a "fixed" zeroed error vector could suffice too,
   // and serve this generation)
 //  get_seeds(&seeds);
-//  GUARD(generate_error_vector(&e_prime, &seeds.seed[0]));
-  memset(&e_prime,0,sizeof(e_prime));
+  //GUARD(generate_error_vector(&e_prime, &seeds.seed[0]));
+//  generate_error_vector(&e_prime, &seeds.seed[0]);
+  memset( &e_prime, 0 , sizeof(e_prime) );
 
   // Decode and on success check if |e|=T (all in constant-time)
   volatile uint32_t success_cond = (decode(&e, &l_ct, &l_sk) == SUCCESS);

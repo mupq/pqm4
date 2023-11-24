@@ -5,6 +5,8 @@
  * AWS Cryptographic Algorithms Group.
  *
  * Modified by Ming-Shing Chen, Tung Chou and Markus Krausz.
+ * Modification: 2023 Till Eifert
+ *
  *
  * The inversion algorithm in this file is based on:
  * [1] Nir Drucker, Shay Gueron, and Dusan Kostic. 2020. "Fast polynomial
@@ -32,6 +34,7 @@ _INLINE_ void repeated_squaring(OUT pad_r_t *c,
   for(size_t i = 0; i < num_sqrs; i++) {
 #if defined(_MY_SQU_)
     ring_squ(c , c);
+    (void) sec_buf;
 #else
     gf2x_mod_sqr_in_place(c, sec_buf);
 #endif
@@ -150,7 +153,7 @@ void gf2x_mod_inv(OUT pad_r_t *c, IN const pad_r_t *a)
   const size_t exp0_k[MAX_I] = {EXP0_K_VALS};
   const size_t exp0_l[MAX_I] = {EXP0_L_VALS};
   const size_t exp1_k[MAX_I] = {EXP1_K_VALS};
-  const size_t exp1_l[MAX_I] = {EXP1_L_VALS};
+  // const size_t exp1_l[MAX_I] = {EXP1_L_VALS};
 
 #if defined(_ITOH_TSUJII_)
   DEFER_CLEANUP(mul_internal_t ta = {0}, mul_internal_cleanup);

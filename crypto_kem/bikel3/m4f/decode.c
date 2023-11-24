@@ -526,15 +526,9 @@ _INLINE_ void find_err1(OUT e_t *e,
   DEFER_CLEANUP(syndrome_t rotated_syndrome = {0}, syndrome_cleanup);
 
   //DEFER_CLEANUP(upc_t upc, upc_cleanup);
-#if defined(_USE_CCM_IF_STM32F4_)
-  uint8_t * ptr = 0x10000000;
-  upc_t * upc = (upc_t*) ptr;
-  my_upc_t * myupc = (my_upc_t*) ptr;
-#else
   my_upc_t __myupc;
   upc_t *upc = (upc_t*)&__myupc;
   my_upc_t * myupc = &__myupc;
-#endif
 
   for(uint32_t i = 0; i < N0; i++) {
     // UPC must start from zero at every iteration
@@ -588,15 +582,9 @@ _INLINE_ void find_err2(OUT e_t *e,
 {
   DEFER_CLEANUP(syndrome_t rotated_syndrome = {0}, syndrome_cleanup);
   //DEFER_CLEANUP(upc_t upc, upc_cleanup);
-#if defined(_USE_CCM_IF_STM32F4_)
-  uint8_t * ptr = 0x10000000;
-  upc_t * upc = (upc_t*) ptr;
-  my_upc_t * myupc = (my_upc_t*) ptr;
-#else
   my_upc_t __myupc;
   upc_t *upc = (upc_t*)&__myupc;
   my_upc_t * myupc = &__myupc;
-#endif
 
 
   for(uint32_t i = 0; i < N0; i++) {

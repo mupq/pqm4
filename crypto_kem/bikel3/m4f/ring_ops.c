@@ -45,31 +45,6 @@ _INLINE_ void ring_red(OUT pad_r_t *c, IN const dbl_pad_r_t *a)
 
 #include "run_config.h"
 
-#if defined(_USE_CCM_IF_STM32F4_)
-
-
-#if 2048 == R_PADDED_BYTES
-#define LOG_POLYLEN 11
-
-#if defined(_USE_BMUL2_)
-#define bitpolymul_input_transform(ao,ai,l,buf)  bmul2_2048_to_4096_prepare_ebuff((uint32_t*)ao,ai,buf)
-#define bitpolymul_mul(c,a,b,l,buf)              bmul2_2048_to_4096_mul_ebuff(c,(const uint32_t*)a,(const uint32_t * )b,buf)
-#endif
-
-#elif 4096 == R_PADDED_BYTES
-#define LOG_POLYLEN 12
-
-#if defined(_USE_BMUL2_)
-#define bitpolymul_input_transform(ao,ai,l,buf)  bmul2_4096_to_8192_prepare_ebuff((uint32_t*)ao,ai,buf)
-#define bitpolymul_mul(c,a,b,l,buf)              bmul2_4096_to_8192_mul_ebuff(c,(const uint32_t*)a,(const uint32_t * )b,buf)
-#endif
-
-#else
-error
-#endif
-
-#else
-
 
 #if 2048 == R_PADDED_BYTES
 #define LOG_POLYLEN 11
@@ -91,18 +66,10 @@ error
 error
 #endif
 
-#endif
-
-
 
 void ring_mul_inputtransform(OUT mul_internal_t *c, IN const pad_r_t *a)
 {
-#if defined(_USE_CCM_IF_STM32F4_)
-  uint8_t * ptr = 0x10000000;
-  bitpolymul_input_transform( (uint16_t*)c, (const uint8_t*)a , LOG_POLYLEN , ptr );
-#else
   bitpolymul_input_transform( (uint16_t*)c, (const uint8_t*)a , LOG_POLYLEN );
-#endif
 }
 
 
@@ -111,21 +78,6 @@ void ring_mul_inputtransform(OUT mul_internal_t *c, IN const pad_r_t *a)
 
 void ring_mul(OUT pad_r_t *c, IN const pad_r_t *a, IN const pad_r_t *b)
 {
-#if defined(_USE_CCM_IF_STM32F4_)
-  uint8_t * ptr = 0x10000000;
-  dbl_pad_r_t * t = ptr; ptr += sizeof(dbl_pad_r_t);
-
-  mul_internal_t *ta = ptr; ptr += sizeof(mul_internal_t);
-  memset(ta, 0, sizeof(mul_internal_t));
-  mul_internal_t *tb = ptr; ptr += sizeof(mul_internal_t);
-  memset(tb, 0, sizeof(mul_internal_t));
-
-  bitpolymul_input_transform( (uint16_t*)ta, (const uint8_t*)a , LOG_POLYLEN , ptr );
-  bitpolymul_input_transform( (uint16_t*)tb, (const uint8_t*)b , LOG_POLYLEN , ptr );
-  bitpolymul_mul( (uint8_t*)t , (uint16_t *)ta, (const uint16_t *)tb , LOG_POLYLEN + 1 , ptr );
-
-  ring_red(c, t);
-#else
   DEFER_CLEANUP(dbl_pad_r_t t = {0}, dbl_pad_r_cleanup);
   DEFER_CLEANUP(mul_internal_t ta = {0}, mul_internal_cleanup);
   DEFER_CLEANUP(mul_internal_t tb = {0}, mul_internal_cleanup);
@@ -135,52 +87,14 @@ void ring_mul(OUT pad_r_t *c, IN const pad_r_t *a, IN const pad_r_t *b)
   bitpolymul_mul( (uint8_t*)&t , (uint16_t *)&ta, (const uint16_t *)&tb , LOG_POLYLEN + 1 );
 
   ring_red(c, &t);
-#endif
 }
 
 
-#if 0
-void ring_mul_2(OUT pad_r_t *c, IN const pad_r_t *a, IN const mul_internal_t *tb)
-{
-#if defined(_USE_CCM_IF_STM32F4_)
-  uint8_t * ptr = 0x10000000;
-  mul_internal_t * t = ptr; ptr += sizeof(mul_internal_t);
-
-  mul_internal_t *ta = ptr; ptr += sizeof(mul_internal_t);
-  memset(ta, 0, sizeof(mul_internal_t));
-
-  bitpolymul_input_transform( (uint16_t*)ta, (const uint8_t*)a , LOG_POLYLEN );
-  bitpolymul_mul( (uint8_t*)t , (uint16_t *)ta, (const uint16_t *)tb , LOG_POLYLEN + 1 );
-
-  ring_red(c, t);
-#else
-  DEFER_CLEANUP(mul_internal_t t = {0}, mul_internal_cleanup);
-  DEFER_CLEANUP(mul_internal_t ta = {0}, mul_internal_cleanup);
-
-  bitpolymul_input_transform( (uint16_t*)&ta, (const uint8_t*)a , LOG_POLYLEN );
-  bitpolymul_mul( (uint8_t*)&t , (uint16_t *)&ta, (const uint16_t *)tb , LOG_POLYLEN + 1 );
-
-  ring_red(c, &t);
-#endif
-}
-#else
 void ring_mul_2(OUT pad_r_t *c, IN const pad_r_t *a, IN const mul_internal_t *tb) { ring_mul_rep(c,a,tb); }
-#endif
+
 
 void ring_mul_rep(OUT pad_r_t *c, IN const pad_r_t *a, IN const mul_internal_t *tb)
 {
-#if defined(_USE_CCM_IF_STM32F4_)
-  uint8_t * ptr = 0x10000000;
-  mul_internal_t * t = ptr; ptr += sizeof(mul_internal_t);
-
-  mul_internal_t *ta = ptr; ptr += sizeof(mul_internal_t);
-  memset(ta, 0, sizeof(mul_internal_t));
-
-  bitpolymul_input_transform( (uint16_t*)ta, (const uint8_t*)a , LOG_POLYLEN , ptr );
-  bitpolymul_mul( (uint8_t*)t , (uint16_t *)ta, (const uint16_t *)tb , LOG_POLYLEN + 1 , ptr );
-
-  ring_red(c, t);
-#else
   DEFER_CLEANUP(mul_internal_t t = {0}, mul_internal_cleanup);
   DEFER_CLEANUP(mul_internal_t ta = {0}, mul_internal_cleanup);
 
@@ -188,7 +102,6 @@ void ring_mul_rep(OUT pad_r_t *c, IN const pad_r_t *a, IN const mul_internal_t *
   bitpolymul_mul( (uint8_t*)&t , (uint16_t *)&ta, (const uint16_t *)tb , LOG_POLYLEN + 1 );
 
   ring_red(c, &t);
-#endif
 }
 
 
