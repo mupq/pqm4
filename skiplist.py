@@ -176,4 +176,10 @@ skip_list = [
     {'scheme': 'ov-Ip', 'implementation': 'ref', 'estmemory': 534528},
     {'scheme': 'ov-Ip-pkc', 'implementation': 'ref', 'estmemory': 568320},
     {'scheme': 'ov-Ip-pkc-skc', 'implementation': 'ref', 'estmemory': 330752},
+    {'scheme': 'mayo3', 'implementation': 'm4f', 'estmemory': 477184},
+    {'scheme': 'mayo1', 'implementation': 'm4f', 'estmemory': 446464},
+    {'scheme': 'mayo2', 'implementation': 'm4f', 'estmemory': 287744},
+    {'scheme': 'mayo3', 'implementation': 'ref', 'estmemory': 1144832},
+    {'scheme': 'mayo1', 'implementation': 'ref', 'estmemory': 404480},
+    {'scheme': 'mayo2', 'implementation': 'ref', 'estmemory': 279552},
 ]
