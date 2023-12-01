@@ -1,1 +1,0 @@
-../../haetae2/ref/ntt.h
