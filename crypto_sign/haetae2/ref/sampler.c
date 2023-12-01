@@ -34,6 +34,36 @@ unsigned int rej_uniform(int32_t *a, unsigned int len, const uint8_t *buf,
 }
 
 /*************************************************
+ * Name:        rej_uniform_frozen
+ *
+ * Description: Sample uniformly random coefficients in [0, Q-1] by
+ *              performing rejection sampling on array of random bytes.
+ *
+ * Arguments:   - int32_t *a: pointer to output array (allocated)
+ *              - unsigned int len: number of coefficients to be sampled
+ *              - const uint8_t *buf: array of random bytes
+ *              - unsigned int buflen: length of array of random bytes
+ *
+ * Returns number of sampled coefficients. Can be smaller than len if not enough
+ * random bytes were given.
+ **************************************************/
+unsigned int rej_uniform_frozen(uint16_t *a, unsigned int len, const uint8_t *buf,
+                         unsigned int buflen) {
+    unsigned int ctr, pos;
+    uint16_t t;
+
+    ctr = pos = 0;
+    while (ctr < len && pos + 2 <= buflen) {
+        t = buf[pos++];
+        t |= (uint16_t)buf[pos++] << 8;
+
+        if (t < Q)
+            a[ctr++] = t;
+    }
+    return ctr;
+}
+
+/*************************************************
  * Name:        rej_eta
  *
  * Description: Sample uniformly random coefficients in [-ETA, ETA] by

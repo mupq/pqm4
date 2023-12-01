@@ -89,12 +89,12 @@ void pack_sk(uint8_t sk[CRYPTO_SECRETKEYBYTES],
  *
  * Description: Unpack secret key sk = (A, s).
  *
- * Arguments:   - polyvecl A[K]: output polyvecl array for A
+ * Arguments:   - polyvecl A[K]: output polyvecl_frozen array for A
  *              - polyvecl s0: output polyvecl pointer for s0
  *              - polyveck s1: output polyveck pointer for s1
  *              - const uint8_t sk[]: byte array containing bit-packed sk
  **************************************************/
-void unpack_sk(polyvecl A[K], polyvecm *s0, polyveck *s1, uint8_t *key,
+void unpack_sk(polyvecl_frozen A[K], polyvecm *s0, polyveck *s1, uint8_t *key,
                const uint8_t sk[CRYPTO_SECRETKEYBYTES]) {
     unsigned int i;
     uint8_t rhoprime[SEEDBYTES];
@@ -126,8 +126,8 @@ void unpack_sk(polyvecl A[K], polyvecm *s0, polyveck *s1, uint8_t *key,
     memcpy(key, sk, SEEDBYTES);
 
     // A' = PRG(rhoprime)
-    polymatkl_expand(A, rhoprime);
-    polymatkl_double(A);
+    polymatkl_expand_frozen(A, rhoprime);
+    polymatkl_double_frozen(A);
 #if D > 0
     polyveck_expand(&a, rhoprime);
 #endif
@@ -144,7 +144,9 @@ void unpack_sk(polyvecl A[K], polyvecm *s0, polyveck *s1, uint8_t *key,
 #endif
     // append b into A
     for (i = 0; i < K; ++i) {
-        A[i].vec[0] = b1.vec[i];
+        for (size_t j = 0; j < N; j++) {
+            A[i].vec[0].coeffs[j] = (uint16_t) freeze(b1.vec[i].coeffs[j]);
+        }
     }
 }
 
@@ -241,16 +243,15 @@ int unpack_sig(poly *c, polyvecl *lowbits_z1,
                polyvecl *highbits_z1, polyveck *h,
                const uint8_t sig[CRYPTO_BYTES]) {
 
-    unsigned int i;
     uint16_t size_enc_hb_z1, size_enc_h;
 
-    for (i = 0; i < N; i++)
+    for (unsigned int i = 0; i < N; i++)
     {
       c->coeffs[i] = (sig[i/8] >> (i%8)) & 1;
     }
     sig += N / 8;
 
-    for (i = 0; i < L; ++i)
+    for (unsigned int i = 0; i < L; ++i)
         poly_decomposed_unpack(&lowbits_z1->vec[i], sig + N * i);
     sig += L * N;
 

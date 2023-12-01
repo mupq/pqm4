@@ -14,7 +14,7 @@ void unpack_pk(polyveck *b, uint8_t seed[SEEDBYTES], const uint8_t pk[CRYPTO_PUB
 #define pack_sk HAETAE_NAMESPACE(pack_sk)
 void pack_sk(uint8_t sk[CRYPTO_SECRETKEYBYTES], const uint8_t pk[CRYPTO_PUBLICKEYBYTES], const polyvecm *s0, const polyveck *s1, const uint8_t key[SEEDBYTES]);
 #define unpack_sk HAETAE_NAMESPACE(unpack_sk)
-void unpack_sk(polyvecl A[K], polyvecm *s0, polyveck *s1, uint8_t *key, const uint8_t sk[CRYPTO_SECRETKEYBYTES]);
+void unpack_sk(polyvecl_frozen A[K], polyvecm *s0, polyveck *s1, uint8_t *key, const uint8_t sk[CRYPTO_SECRETKEYBYTES]);
 
 #define pack_sig HAETAE_NAMESPACE(pack_sig)
 int pack_sig(uint8_t sig[CRYPTO_BYTES], const poly *c, const polyvecl *lowbits_z1, const polyvecl *highbits_z1, const polyveck *h);

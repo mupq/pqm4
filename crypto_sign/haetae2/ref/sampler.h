@@ -9,6 +9,9 @@
 #define rej_uniform HAETAE_NAMESPACE(rej_uniform)
 unsigned int rej_uniform(int32_t *a, unsigned int len, const uint8_t *buf,
                          unsigned int buflen);
+#define rej_uniform_frozen HAETAE_NAMESPACE(rej_uniform_frozen)
+unsigned int rej_uniform_frozen(uint16_t *a, unsigned int len, const uint8_t *buf,
+                         unsigned int buflen);
 #define rej_eta HAETAE_NAMESPACE(rej_eta)
 unsigned int rej_eta(int32_t *a, unsigned int len, const uint8_t *buf,
                      unsigned int buflen);

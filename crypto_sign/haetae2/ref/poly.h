@@ -7,9 +7,24 @@
 #include "sampler.h"
 #include <stdint.h>
 
+/**********************************************************************
+ * Name:        poly
+ * Description: Holds the coefficients of a polynomial.
+ **********************************************************************/
 typedef struct {
     int32_t coeffs[N];
 } poly;
+
+/**********************************************************************
+ * Name:        poly_frozen
+ * Description: Holds the fully reduced coefficients of a polynomial,
+ *              i.e. all coefficients are in the interval [0,q-1].
+ *              Typically used for polynomials which are used as 
+ *              read-only after initial computation.
+ **********************************************************************/
+typedef struct {
+    uint16_t coeffs[N];
+} poly_frozen;
 
 #define poly_add HAETAE_NAMESPACE(poly_add)
 void poly_add(poly *c, const poly *a, const poly *b);
@@ -17,6 +32,8 @@ void poly_add(poly *c, const poly *a, const poly *b);
 void poly_sub(poly *c, const poly *a, const poly *b);
 #define poly_pointwise_montgomery HAETAE_NAMESPACE(poly_pointwise_montgomery)
 void poly_pointwise_montgomery(poly *c, const poly *a, const poly *b);
+#define poly_pointwise_montgomery_frozen HAETAE_NAMESPACE(poly_pointwise_montgomery_frozen)
+void poly_pointwise_montgomery_frozen(poly *c, const poly_frozen *a, const poly *b);
 
 #define poly_reduce2q HAETAE_NAMESPACE(poly_reduce2q)
 void poly_reduce2q(poly *a);
@@ -36,6 +53,8 @@ void poly_lsb(poly *a0, const poly *a);
 
 #define poly_uniform HAETAE_NAMESPACE(poly_uniform)
 void poly_uniform(poly *a, const uint8_t seed[SEEDBYTES], uint16_t nonce);
+#define poly_uniform_frozen HAETAE_NAMESPACE(poly_uniform_frozen)
+void poly_uniform_frozen(poly_frozen *a, const uint8_t seed[SEEDBYTES], uint16_t nonce);
 #define poly_uniform_eta HAETAE_NAMESPACE(poly_uniform_eta)
 void poly_uniform_eta(poly *a, const uint8_t seed[CRHBYTES], uint16_t nonce);
 #define poly_challenge HAETAE_NAMESPACE(poly_challenge)

@@ -140,14 +140,17 @@ int crypto_sign_signature(uint8_t *sig, size_t *siglen, const uint8_t *m,
     uint64_t reject1, reject2;
 
     polyvecm s1;
-    polyvecl A1[K], cs1;
-    polyveck s2, cs2, highbits, Ay;
-    polyfixvecl y1, z1, z1tmp;
-    polyfixveck y2, z2, z2tmp;
-    polyvecl z1rnd; // round of z1
-    polyvecl hb_z1, lb_z1;
-    polyveck z2rnd, h, htmp; // round of z2
+    polyvecl_frozen A1[K];
+    polyveck s2, highbits, Ay;
     poly c, chat, z1rnd0, lsb;
+
+    vecl1 vl1;  // cs1, z1rnd, z1tmp
+    vecl2 vl2;  // y1, lb_z1
+    veck1 vk1;  // cs2, z2rnd, z2tmp
+    veck2 vk2;  // y2, htmp
+    vecl3 vl3;  // z1, hb_z1
+    veck3 vk3;  // z2, h
+
 
     xof256_state state;
 
@@ -167,20 +170,20 @@ int crypto_sign_signature(uint8_t *sig, size_t *siglen, const uint8_t *m,
 reject:
 
     /*------------------ 1. Sample y1 and y2 from hyperball ------------------*/
-    counter = polyfixveclk_sample_hyperball(&y1, &y2, &b, seedbuf, counter);
+    counter = polyfixveclk_sample_hyperball(&vl2.y1, &vk2.y2, &b, seedbuf, counter);
 
     /*------------------- 2. Compute a chanllenge c --------------------------*/
     // Round y1 and y2
-    polyfixvecl_round(&z1rnd, &y1);
-    polyfixveck_round(&z2rnd, &y2);
+    polyfixvecl_round(&vl1.z1rnd, &vl2.y1);
+    polyfixveck_round(&vk1.z2rnd, &vk2.y2);
 
     // A * round(y) mod q = A1 * round(y1) + 2 * round(y2) mod q
-    z1rnd0 = z1rnd.vec[0];
-    polyvecl_ntt(&z1rnd);
-    polymatkl_pointwise_montgomery(&Ay, A1, &z1rnd);
+    z1rnd0 = vl1.z1rnd.vec[0];
+    polyvecl_ntt(&vl1.z1rnd);
+    polymatkl_pointwise_montgomery_frozen(&Ay, A1, &vl1.z1rnd);
     polyveck_invntt_tomont(&Ay);
-    polyveck_double(&z2rnd);
-    polyveck_add(&Ay, &Ay, &z2rnd);
+    polyveck_double(&vk1.z2rnd);
+    polyveck_add(&Ay, &Ay, &vk1.z2rnd);
 
     // recover A * round(y) mod 2q
     polyveck_poly_fromcrt(&Ay, &Ay, &z1rnd0);
@@ -201,36 +204,36 @@ reject:
 
     /*------------------- 3. Compute z = y + (-1)^b c * s --------------------*/
     // cs = c * s = c * (si1 || s2)
-    cs1.vec[0] = c;
+    vl1.cs1.vec[0] = c;
     chat = c;
     poly_ntt(&chat);
 
     for (i = 1; i < L; ++i) {
-        poly_pointwise_montgomery(&cs1.vec[i], &chat, &s1.vec[i - 1]);
-        poly_invntt_tomont(&cs1.vec[i]);
+        poly_pointwise_montgomery(&vl1.cs1.vec[i], &chat, &s1.vec[i - 1]);
+        poly_invntt_tomont(&vl1.cs1.vec[i]);
     }
-    polyveck_poly_pointwise_montgomery(&cs2, &s2, &chat);
-    polyveck_invntt_tomont(&cs2);
+    polyveck_poly_pointwise_montgomery(&vk1.cs2, &s2, &chat);
+    polyveck_invntt_tomont(&vk1.cs2);
 
     // z = y + (-1)^b cs = z1 + z2
-    polyvecl_cneg(&cs1, b & 1);
-    polyveck_cneg(&cs2, b & 1);
-    polyfixvecl_add(&z1, &y1, &cs1);
-    polyfixveck_add(&z2, &y2, &cs2);
+    polyvecl_cneg(&vl1.cs1, b & 1);
+    polyveck_cneg(&vk1.cs2, b & 1);
+    polyfixvecl_add(&vl3.z1, &vl2.y1, &vl1.cs1);
+    polyfixveck_add(&vk3.z2, &vk2.y2, &vk1.cs2);
 
     // reject if norm(z) >= B'
-    reject1 = ((uint64_t)B1SQ * LN * LN - polyfixveclk_sqnorm2(&z1, &z2)) >> 63;
+    reject1 = ((uint64_t)B1SQ * LN * LN - polyfixveclk_sqnorm2(&vl3.z1, &vk3.z2)) >> 63;
     reject1 &= 1;
 
-    polyfixvecl_double(&z1tmp, &z1);
-    polyfixveck_double(&z2tmp, &z2);
+    polyfixvecl_double(&vl1.z1tmp, &vl3.z1);
+    polyfixveck_double(&vk1.z2tmp, &vk3.z2);
 
-    polyfixfixvecl_sub(&z1tmp, &z1tmp, &y1);
-    polyfixfixveck_sub(&z2tmp, &z2tmp, &y2);
+    polyfixfixvecl_sub(&vl1.z1tmp, &vl1.z1tmp, &vl2.y1);
+    polyfixfixveck_sub(&vk1.z2tmp, &vk1.z2tmp, &vk2.y2);
 
     // reject if norm(2z-y) < B and b' = 0
     reject2 =
-        (polyfixveclk_sqnorm2(&z1tmp, &z2tmp) - (uint64_t)B0SQ * LN * LN) >> 63;
+        (polyfixveclk_sqnorm2(&vl1.z1tmp, &vk1.z2tmp) - (uint64_t)B0SQ * LN * LN) >> 63;
     reject2 &= 1;
     reject2 &= (b & 0x2) >> 1;
 
@@ -240,25 +243,25 @@ reject:
 
     /*------------------- 4. Make a hint -------------------------------------*/
     // Round z1 and z2
-    polyfixvecl_round(&z1rnd, &z1);
-    polyfixveck_round(&z2rnd, &z2);
+    polyfixvecl_round(&vl1.z1rnd, &vl3.z1);
+    polyfixveck_round(&vk1.z2rnd, &vk3.z2);
 
     // recover A1 * round(z1) - qcj mod 2q
-    polyveck_double(&z2rnd);
-    polyveck_sub(&htmp, &Ay, &z2rnd);
-    polyveck_freeze2q(&htmp);
+    polyveck_double(&vk1.z2rnd);
+    polyveck_sub(&vk2.htmp, &Ay, &vk1.z2rnd);
+    polyveck_freeze2q(&vk2.htmp);
 
     // HighBits of (A * round(z) - qcj mod 2q) and (A1 * round(z1) - qcj mod 2q)
-    polyveck_highbits_hint(&htmp, &htmp);
-    polyveck_sub(&h, &highbits, &htmp);
-    polyveck_caddDQ2ALPHA(&h);
+    polyveck_highbits_hint(&vk2.htmp, &vk2.htmp);
+    polyveck_sub(&vk3.h, &highbits, &vk2.htmp);
+    polyveck_caddDQ2ALPHA(&vk3.h);
 
     /*------------------ Decompose(z1) and Pack signature -------------------*/
-    polyvecl_lowbits(&lb_z1, &z1rnd); // TODO do this in one function together!
-    polyvecl_highbits(&hb_z1, &z1rnd);
+    polyvecl_lowbits(&vl2.lb_z1, &vl1.z1rnd); // TODO do this in one function together!
+    polyvecl_highbits(&vl3.hb_z1, &vl1.z1rnd);
 
-    if (pack_sig(sig, &c, &lb_z1, &hb_z1,
-                 &h)) { // reject if signature is too big
+    if (pack_sig(sig, &c, &vl2.lb_z1, &vl3.hb_z1,
+                 &vk3.h)) { // reject if signature is too big
         goto reject;
     }
     *siglen = CRYPTO_BYTES;

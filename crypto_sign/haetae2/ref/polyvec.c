@@ -412,6 +412,29 @@ void polyvecl_pointwise_acc_montgomery(poly *w, const polyvecl *u,
     }
 }
 
+/*************************************************
+ * Name:        polyvecl_pointwise_acc_montgomery_frozen
+ *
+ * Description: Pointwise multiply vectors of polynomials of length L, multiply
+ *              resulting vector by 2^{-32} and add (accumulate) polynomials
+ *              in it. Input/output vectors are in NTT domain representation.
+ *
+ * Arguments:   - poly *w: output polynomial
+ *              - const polyvecl *u: pointer to first input vector
+ *              - const polyvecl *v: pointer to second input vector
+ **************************************************/
+void polyvecl_pointwise_acc_montgomery_frozen(poly *w, const polyvecl_frozen *u,
+                                       const polyvecl *v) {
+    unsigned int i;
+    poly t;
+
+    poly_pointwise_montgomery_frozen(w, &u->vec[0], &v->vec[0]);
+    for (i = 1; i < L; ++i) {
+        poly_pointwise_montgomery_frozen(&t, &u->vec[i], &v->vec[i]);
+        poly_add(w, w, &t);
+    }
+}
+
 void polyvecl_ntt(polyvecl *x) {
     unsigned int i;
     for (i = 0; i < L; i++) {

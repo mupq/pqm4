@@ -15,5 +15,6 @@
 #define CRYPTO_ALGNAME "HAETAE5"
 #define HAETAE_NAMESPACETOP haetae5
 #define HAETAE_NAMESPACE(s) cryptolab_haetae5_##s
-#endif
-#endif
+#endif /* if HAETAE_MODE */
+
+#endif /* CONFIG_H */

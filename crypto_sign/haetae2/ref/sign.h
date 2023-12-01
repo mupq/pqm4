@@ -5,8 +5,41 @@
 #include "poly.h"
 #include "polymat.h"
 #include "polyvec.h"
+#include "polyfix.h"
 #include <stddef.h>
 #include <stdint.h>
+
+typedef union {
+    polyvecl cs1;
+    polyvecl z1rnd;
+    polyfixvecl z1tmp;
+} vecl1;
+
+typedef union {
+    polyveck cs2;
+    polyveck z2rnd;
+    polyfixveck z2tmp;
+} veck1;
+
+typedef union {
+    polyfixvecl y1;
+    polyvecl lb_z1;
+} vecl2;
+
+typedef union {
+    polyfixveck y2;
+    polyveck htmp;
+} veck2;
+
+typedef union {
+    polyfixvecl z1;
+    polyvecl hb_z1;
+} vecl3;
+
+typedef union {
+    polyfixveck z2;
+    polyveck h;
+} veck3;
 
 #define crypto_sign_keypair HAETAE_NAMESPACE(keypair)
 int crypto_sign_keypair(uint8_t *pk, uint8_t *sk);
