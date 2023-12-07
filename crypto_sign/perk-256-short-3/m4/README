@@ -1,0 +1,43 @@
++=============================================================================+
+|                                                                             |
+|               ***********************************************               |
+|               *     POST-QUANTUM CRYPTO STANDARDIZATION     *               |
+|               ***********************************************               |
+|                                                                             |
+|=============================================================================|
+|                                                                             |
+|        Proposal: PERK                                                       |
+|                                                                             |
+|        Submitters (by alphabetical order):                                  |
+|                  - Najwa AARAJ                                              |
+|                  - Slim BETTAIEB                                            |
+| [main contact]   - Loïc BIDOUX                                              |
+|                  - Alessandro BUDRONI                                       |
+|                  - Victor DYSERYN                                           |
+|                  - Andre ESSER                                              |
+| [backup contact] - Philippe GABORIT                                         |
+|                  - Mukul KULKARNI                                           |
+|                  - Victor MATEU                                             |
+|                  - Marco PALUMBI                                            |
+|                  - Lucas PERIN                                              |
+|                  - Jean-Pierre TILLICH                                      |
+|                                                                             |
+|        Inventors: Same as submitters                                        |
+|                                                                             |
+|        Developers: Same as submitters                                       |
+|                                                                             |
+|        Owners: Same as submitters                                           |
+|                                                                             |
++=============================================================================+
+
+This archive is a proposal in response to NIST's call for proposal for standar-
+dization of quantum-resistant digital signature schemes.
+
+PERK provides POST-QUANTUM SIGNATURES and targets NIST's
+security levels 1, 3, and 5.
+
+===============================================================================
+
+Implementation compliant with version v1.1 of 2023/10/16
+https://pqc-perk.org/
+
