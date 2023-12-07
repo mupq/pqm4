@@ -58,6 +58,7 @@ SECTIONS
   *(COMMON)
   . = ALIGN(4);
   _ebss = .;
+  end = .;
  } >ram
  .ram2 : {
   *(.ram2*)
@@ -69,6 +70,5 @@ SECTIONS
  } >ccm
  /DISCARD/ : { *(.eh_frame) }
  . = ALIGN(4);
- end = .;
 }
 PROVIDE(_stack = ORIGIN(ram) + LENGTH(ram));
