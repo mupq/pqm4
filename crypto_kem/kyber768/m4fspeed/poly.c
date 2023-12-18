@@ -541,13 +541,18 @@ void poly_frommsg(poly *r, const unsigned char msg[KYBER_SYMBYTES]) {
 *              - const poly *a:      pointer to input polynomial
 **************************************************/
 void poly_tomsg(unsigned char msg[KYBER_SYMBYTES], poly *a) {
-    uint16_t t;
+    uint32_t t;
     int i, j;
 
     for (i = 0; i < KYBER_SYMBYTES; i++) {
         msg[i] = 0;
         for (j = 0; j < 8; j++) {
-            t = (((a->coeffs[8 * i + j] << 1) + KYBER_Q / 2) / KYBER_Q) & 1;
+            t  = a->coeffs[8*i+j];
+            t <<= 1;
+            t += 1665;
+            t *= 80635;
+            t >>= 28;
+            t &= 1;
             msg[i] |= t << j;
         }
     }
