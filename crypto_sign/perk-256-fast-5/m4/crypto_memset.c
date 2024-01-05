@@ -1,7 +1,1 @@
-/**
- * @file memset.c
- * @brief Implementation of safe memset
- */
-#include <string.h>
-
-void *(*volatile memset_volatile)(void *, int, size_t) = memset;
+../../perk-128-fast-3/m4/./crypto_memset.c
