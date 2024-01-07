@@ -249,4 +249,10 @@ skip_list = [
     {'scheme': 'perk-256-short-3', 'implementation': 'ref', 'estmemory': 4222976},
     {'scheme': 'perk-256-short-5', 'implementation': 'm4', 'estmemory': 109568},
     {'scheme': 'perk-256-short-5', 'implementation': 'ref', 'estmemory': 4221952},
+    {'scheme': 'haetae2', 'implementation': 'ref', 'estmemory': 59392},
+    {'scheme': 'haetae5', 'implementation': 'ref', 'estmemory': 109568},
+    {'scheme': 'haetae3', 'implementation': 'ref', 'estmemory': 88064},
+    {'scheme': 'haetae2', 'implementation': 'm4f', 'estmemory': 60416},
+    {'scheme': 'haetae5', 'implementation': 'm4f', 'estmemory': 112640},
+    {'scheme': 'haetae3', 'implementation': 'm4f', 'estmemory': 90112},
 ]
