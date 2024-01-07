@@ -15,3 +15,5 @@ elf/mupq_pqclean_crypto_kem_frodokem640shake_opt_%.elf: LDSCRIPT=ldscripts/stm32
 elf/crypto_sign_dilithium5_m4f_%.elf: LDSCRIPT=ldscripts/stm32f4discovery_fullram.ld
 elf/crypto_sign_perk-256-%_m4_testvectors.elf: LDSCRIPT=ldscripts/stm32f4discovery_fullram.ld
 elf/crypto_sign_perk-256-fast%_m4_test.elf: LDSCRIPT=ldscripts/stm32f4discovery_fullram.ld
+elf/crypto_sign_haetae5_m4f_%.elf: LDSCRIPT=ldscripts/stm32f4discovery_fullram.ld
+elf/crypto_sign_haetae5_ref_%.elf: LDSCRIPT=ldscripts/stm32f4discovery_fullram.ld
