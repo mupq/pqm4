@@ -275,4 +275,11 @@ skip_list = [
     {'scheme': 'snova-60-10-16-4-ssk', 'implementation': 'ref', 'estmemory': 1953792},
     {'scheme': 'snova-37-8-16-4-esk', 'implementation': 'ref', 'estmemory': 775168},
     {'scheme': 'snova-37-8-16-4-ssk', 'implementation': 'ref', 'estmemory': 646144},
+    {'scheme': 'aimer-l1-param2', 'implementation': 'ref', 'estmemory': 461824},
+    {'scheme': 'aimer-l1-param1', 'implementation': 'ref', 'estmemory': 206848},
+    {'scheme': 'aimer-l3-param1', 'implementation': 'ref', 'estmemory': 452608},
+    {'scheme': 'aimer-l5-param1', 'implementation': 'ref', 'estmemory': 926720},
+    {'scheme': 'aimer-l3-param2', 'implementation': 'ref', 'estmemory': 1091584},
+    {'scheme': 'aimer-l5-param2', 'implementation': 'ref', 'estmemory': 2169856},
+    {'scheme': 'aimer-l1-param3', 'implementation': 'ref', 'estmemory': 1442816},
 ]
