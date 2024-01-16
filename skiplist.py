@@ -300,4 +300,10 @@ skip_list = [
     {'scheme': 'meds134180', 'implementation': 'ref', 'estmemory': 1152000},
     {'scheme': 'meds9923', 'implementation': 'ref', 'estmemory': 1021952},
     {'scheme': 'meds55604', 'implementation': 'ref', 'estmemory': 510976},
+    {'scheme': 'biscuit128f', 'implementation': 'ref', 'estmemory': 145408},
+    {'scheme': 'biscuit128s', 'implementation': 'ref', 'estmemory': 1099776},
+    {'scheme': 'biscuit192f', 'implementation': 'ref', 'estmemory': 282624},
+    {'scheme': 'biscuit192s', 'implementation': 'ref', 'estmemory': 2257920},
+    {'scheme': 'biscuit256f', 'implementation': 'ref', 'estmemory': 505856},
+    {'scheme': 'biscuit256s', 'implementation': 'ref', 'estmemory': 4004864},
 ]
