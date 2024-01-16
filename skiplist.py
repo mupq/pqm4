@@ -294,4 +294,10 @@ skip_list = [
     {'scheme': 'aimer-l3-param2', 'implementation': 'ref', 'estmemory': 1091584},
     {'scheme': 'aimer-l5-param2', 'implementation': 'ref', 'estmemory': 2169856},
     {'scheme': 'aimer-l1-param3', 'implementation': 'ref', 'estmemory': 1442816},
+    {'scheme': 'meds167717', 'implementation': 'ref', 'estmemory': 927744},
+    {'scheme': 'meds41711', 'implementation': 'ref', 'estmemory': 1388544},
+    {'scheme': 'meds13220', 'implementation': 'ref', 'estmemory': 210944},
+    {'scheme': 'meds134180', 'implementation': 'ref', 'estmemory': 1152000},
+    {'scheme': 'meds9923', 'implementation': 'ref', 'estmemory': 1021952},
+    {'scheme': 'meds55604', 'implementation': 'ref', 'estmemory': 510976},
 ]
