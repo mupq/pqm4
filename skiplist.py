@@ -287,4 +287,11 @@ skip_list = [
     {'scheme': 'sphincs-a-sha2-192f', 'implementation': 'ref', 'estmemory': 542720},
     {'scheme': 'sphincs-a-sha2-256s', 'implementation': 'ref', 'estmemory': 2292736},
     {'scheme': 'sphincs-a-sha2-256f', 'implementation': 'ref', 'estmemory': 1125376},
+    {'scheme': 'aimer-l1-param2', 'implementation': 'ref', 'estmemory': 461824},
+    {'scheme': 'aimer-l1-param1', 'implementation': 'ref', 'estmemory': 206848},
+    {'scheme': 'aimer-l3-param1', 'implementation': 'ref', 'estmemory': 452608},
+    {'scheme': 'aimer-l5-param1', 'implementation': 'ref', 'estmemory': 926720},
+    {'scheme': 'aimer-l3-param2', 'implementation': 'ref', 'estmemory': 1091584},
+    {'scheme': 'aimer-l5-param2', 'implementation': 'ref', 'estmemory': 2169856},
+    {'scheme': 'aimer-l1-param3', 'implementation': 'ref', 'estmemory': 1442816},
 ]
