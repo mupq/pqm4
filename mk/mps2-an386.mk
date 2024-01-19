@@ -1,3 +1,6 @@
+EXCLUDED_SCHEMES = \
+	mupq/crypto_sign/tuov_v/ref%
+
 MPS2_DATA_IN_FLASH = 1
 CROSS_PREFIX ?= arm-none-eabi
 CC := $(CROSS_PREFIX)-gcc
