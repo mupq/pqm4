@@ -20,6 +20,8 @@ There may well be room for performance-optimizations and improvements.
 
 */
 
+#include "parameters.h"
+
 #include <stdint.h>
 #include <assert.h>
 
@@ -30,10 +32,19 @@ There may well be room for performance-optimizations and improvements.
 #endif
 
 /* Size of big-numbers in bytes */
-//#define BN_ARRAY_SIZE    (64 / WORD_SIZE)
-//#define BN_ARRAY_SIZE    (128 / WORD_SIZE)
-#define BN_ARRAY_SIZE    28 // PERK LEVEL 5 custom WORLD_SIZE
-
+#if (PARAM_N1 == 79 || PARAM_N1 == 83)
+#define BN_ARRAY_SIZE    13 // PERK LEVEL=1, T=3,5 custom WORLD_SIZE
+#elif (PARAM_N1 == 112)
+#define BN_ARRAY_SIZE    19 // PERK LEVEL=3, T=3   custom WORLD_SIZE
+#elif (PARAM_N1 == 116)
+#define BN_ARRAY_SIZE    20 // PERK LEVEL=3, T=5   custom WORLD_SIZE
+#elif (PARAM_N1 == 146)
+#define BN_ARRAY_SIZE    27 // PERK LEVEL=5, T=3   custom WORLD_SIZE
+#elif (PARAM_N1 == 150)
+#define BN_ARRAY_SIZE    28 // PERK LEVEL=5, T=5   custom WORLD_SIZE
+#else
+#error Invalid value for parameter PARAM_N1
+#endif
 
 /* Here comes the compile-time specialization for how large the underlying array size should be. */
 /* The choices are 1, 2 and 4 bytes in size with uint32, uint64 for WORD_SIZE==4, as temporary. */

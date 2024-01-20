@@ -99,11 +99,11 @@ void bignum_add(const struct bn* a, const struct bn* b, struct bn* c)
     require(b, "b is null");
     require(c, "c is null");
 
-    DTYPE_TMP tmp;
     int carry = 0;
     int i;
     for (i = 0; i < BN_ARRAY_SIZE; ++i)
     {
+        DTYPE_TMP tmp;
         tmp = (DTYPE_TMP)a->array[i] + b->array[i] + carry;
         carry = (tmp > MAX_VAL);
         c->array[i] = (tmp & MAX_VAL);
@@ -117,13 +117,13 @@ void bignum_sub(const struct bn* a, const struct bn* b, struct bn* c)
     require(b, "b is null");
     require(c, "c is null");
 
-    DTYPE_TMP res;
-    DTYPE_TMP tmp1;
-    DTYPE_TMP tmp2;
     int borrow = 0;
     int i;
     for (i = 0; i < BN_ARRAY_SIZE; ++i)
     {
+        DTYPE_TMP res;
+        DTYPE_TMP tmp1;
+        DTYPE_TMP tmp2;
         tmp1 = (DTYPE_TMP)a->array[i] + (MAX_VAL + 1); /* + number_base */
         tmp2 = (DTYPE_TMP)b->array[i] + borrow;
         res = (tmp1 - tmp2);
