@@ -74,6 +74,7 @@ class M4Settings(mupq.PlatformSettings):
     def __init__(self, platform, opt="speed", lto=False, aio=False, iterations=1, binary_type='bin'):
         """Initialize with a specific platform"""
         import skiplist
+        self.platform = platform
         self.skip_list = []
         for impl in skiplist.skip_list:
             if impl['estmemory'] > self.platform_memory[platform]:

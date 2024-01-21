@@ -15,7 +15,7 @@ endif
 
 LDLIBS += -lc -lgcc
 
-export OPENCM3_DIR := $(CURDIR)/libopencm3
+export OPENCM3_DIR := $(SRCDIR)/libopencm3
 
 _git_submodule_update_opencm3 := $(shell git submodule update --init --recursive $(OPENCM3_DIR))
 
@@ -65,14 +65,14 @@ $(OPENCM3_DIR)/lib/lib$(LIBNAME).a:
 
 obj/common/hal-opencm3.c.o: $(OPENCM3_DIR)/lib/lib$(LIBNAME).a
 
-ifeq ($(wildcard ldscripts/$(PLATFORM).ld),)
+ifeq ($(wildcard $(SRCDIR)/ldscripts/$(PLATFORM).ld),)
 LDSCRIPT = obj/generated.$(DEVICE).ld
 $(LDSCRIPT): $(OPENCM3_DIR)/ld/linker.ld.S $(OPENCM3_DIR)/ld/devices.data $(CONFIG)
 	@printf "  GENLNK  $(DEVICE)\n"
 	$(Q)mkdir -p $(@D)
 	$(Q)$(CPP) $(ARCH_FLAGS) $(shell $(OPENCM3_DIR)/scripts/genlink.py $(DEVICES_DATA) $(DEVICE) DEFS) -P -E $< -o $@
 else
-LDSCRIPT = ldscripts/$(PLATFORM).ld
+LDSCRIPT = $(SRCDIR)/ldscripts/$(PLATFORM).ld
 endif
 
 CROSS_PREFIX ?= arm-none-eabi

@@ -6,12 +6,12 @@ EXCLUDED_SCHEMES = \
 	mupq/crypto_sign/tuov% \
 	mupq/crypto_sign/falcon-1024-tree%
 
-DEVICES_DATA := ldscripts/devices.data
+DEVICES_DATA := $(SRCDIR)/ldscripts/devices.data
 
 elf/boardtest.elf: CPPFLAGS+=-DSRAM_TIMING_TEST -DHAS_SRAM2 -DHAS_SRAM3
-elf/boardtest.elf: LDSCRIPT=ldscripts/$(PLATFORM)-ramtest.ld
+elf/boardtest.elf: LDSCRIPT=$(SRCDIR)/ldscripts/$(PLATFORM)-ramtest.ld
 
 elf/boardtest-fast.elf: CPPFLAGS+=-DSRAM_TIMING_TEST -DHAS_SRAM2 -DHAS_SRAM3
-elf/boardtest-fast.elf: LDSCRIPT=ldscripts/$(PLATFORM)-ramtest.ld
+elf/boardtest-fast.elf: LDSCRIPT=$(SRCDIR)/ldscripts/$(PLATFORM)-ramtest.ld
 
 include mk/opencm3.mk

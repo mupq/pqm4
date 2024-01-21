@@ -45,7 +45,7 @@ LIBHAL_SRC := \
 
 obj/libpqm4hal.a: $(call objs,$(LIBHAL_SRC))
 obj/libpqm4hal-nornd.a: $(call objs,$(filter-out common/randombytes.c,$(LIBHAL_SRC)))
-obj/libpqm4hal.a: CPPFLAGS += -Icommon/mps2
+obj/libpqm4hal.a: CPPFLAGS += -I$(SRCDIR)/common/mps2
 $(LDSCRIPT): CPPFLAGS += $(if $(MPS2_DATA_IN_FLASH),-DDATA_IN_FLASH)
 obj/common/mps2/startup_MPS2.S.o: CPPFLAGS += $(if $(MPS2_DATA_IN_FLASH),-DDATA_IN_FLASH)
 
@@ -57,7 +57,7 @@ $(LDSCRIPT): common/mps2/MPS2.ld
 	[ -d $(@D) ] || $(Q)mkdir -p $(@D); \
 	arm-none-eabi-gcc -x assembler-with-cpp -E -Wp,-P $(CPPFLAGS) $< -o $@
 
-$(LDSCRIPT): CPPFLAGS += -Icommon/mps2
+$(LDSCRIPT): CPPFLAGS += -I$(SRCDIR)/common/mps2
 
 LINKDEPS += $(LDSCRIPT) $(LIBDEPS)
 
