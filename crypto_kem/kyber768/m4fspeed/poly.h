@@ -16,7 +16,7 @@ typedef struct {
     int16_t coeffs[KYBER_N];
 } poly;
 
-void poly_compress(unsigned char *r, poly *a);
+void poly_compress(unsigned char *r, const poly *a);
 void poly_decompress(poly *r, const unsigned char *a);
 
 void poly_packcompress(unsigned char *r, poly *a, int i);
