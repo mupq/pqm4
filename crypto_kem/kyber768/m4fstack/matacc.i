@@ -98,7 +98,7 @@
       movw \bptr, #1
       vmov \cptr, s26 // load state
       #ifndef nohash
-      bl kyber_shake128_squeezeblocks
+      bl shake128_squeezeblocks
       #endif
       
       vmov r12, s16

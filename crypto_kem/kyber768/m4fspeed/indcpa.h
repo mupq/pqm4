@@ -1,8 +1,9 @@
 #ifndef INDCPA_H
 #define INDCPA_H
 
-void indcpa_keypair(unsigned char *pk,
-                    unsigned char *sk);
+void indcpa_keypair_derand(unsigned char *pk,
+                    unsigned char *sk, 
+                    const unsigned char *coins);
 
 void indcpa_enc(unsigned char *c,
                 const unsigned char *m,

@@ -1,5 +1,5 @@
 #include "matacc.i"
-.extern kyber_shake128_squeezeblocks
+.extern shake128_squeezeblocks
 
 .syntax unified
 .cpu cortex-m4

@@ -1,64 +1,71 @@
 #include "fips202.h"
+#include "params.h"
 #include "symmetric.h"
-
-#include <stdlib.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
 
 /*************************************************
 * Name:        kyber_shake128_absorb
 *
 * Description: Absorb step of the SHAKE128 specialized for the Kyber context.
 *
-* Arguments:   - shake128ctx *s:                  pointer to (uninitialized) output Keccak state
-*              - const unsigned char *input:      pointer to KYBER_SYMBYTES input to be absorbed into s
-*              - unsigned char i                  additional byte of input
-*              - unsigned char j                  additional byte of input
+* Arguments:   - xof_state *state: pointer to (uninitialized) output Keccak state
+*              - const uint8_t *seed: pointer to KYBER_SYMBYTES input to be absorbed into state
+*              - uint8_t i: additional byte of input
+*              - uint8_t j: additional byte of input
 **************************************************/
-void kyber_shake128_absorb(shake128ctx *s, const unsigned char *input, unsigned char x, unsigned char y) {
-    unsigned char extseed[KYBER_SYMBYTES + 2];
-    int i;
+void kyber_shake128_absorb(xof_state *state,
+        const uint8_t seed[KYBER_SYMBYTES],
+        uint8_t x,
+        uint8_t y) {
+    uint8_t extseed[KYBER_SYMBYTES + 2];
 
-    for (i = 0; i < KYBER_SYMBYTES; i++) {
-        extseed[i] = input[i];
-    }
-    extseed[i++] = x;
-    extseed[i]   = y;
-    shake128_absorb(s, extseed, KYBER_SYMBYTES + 2);
+    memcpy(extseed, seed, KYBER_SYMBYTES);
+    extseed[KYBER_SYMBYTES + 0] = x;
+    extseed[KYBER_SYMBYTES + 1] = y;
+
+    shake128_absorb(state, extseed, sizeof(extseed));
 }
 
 /*************************************************
-* Name:        kyber_shake128_squeezeblocks
-*
-* Description: Squeeze step of SHAKE128 XOF. Squeezes full blocks of SHAKE128_RATE bytes each.
-*              Modifies the state. Can be called multiple times to keep squeezing,
-*              i.e., is incremental.
-*
-* Arguments:   - unsigned char *output:      pointer to output blocks
-*              - size_t nblocks:             number of blocks to be squeezed (written to output)
-*              - shake128ctx *s:            pointer to in/output Keccak state
-**************************************************/
-void kyber_shake128_squeezeblocks(unsigned char *output, size_t nblocks, shake128ctx *s) {
-    shake128_squeezeblocks(output, nblocks, s);
-}
-
-/*************************************************
-* Name:        shake256_prf
+* Name:        kyber_shake256_prf
 *
 * Description: Usage of SHAKE256 as a PRF, concatenates secret and public input
 *              and then generates outlen bytes of SHAKE256 output
 *
-* Arguments:   - unsigned char *output:      pointer to output
-*              - size_t outlen:              number of requested output bytes
-*              - const unsigned char * key:  pointer to the key (of length KYBER_SYMBYTES)
-*              - const unsigned char nonce:  single-byte nonce (public PRF input)
+* Arguments:   - uint8_t *out: pointer to output
+*              - size_t outlen: number of requested output bytes
+*              - const uint8_t *key: pointer to the key (of length KYBER_SYMBYTES)
+*              - uint8_t nonce: single-byte nonce (public PRF input)
 **************************************************/
-void shake256_prf(unsigned char *output, size_t outlen, const unsigned char *key, unsigned char nonce) {
-    unsigned char extkey[KYBER_SYMBYTES + 1];
-    size_t i;
+void kyber_shake256_prf(uint8_t *out, size_t outlen, const uint8_t key[KYBER_SYMBYTES], uint8_t nonce) {
+    uint8_t extkey[KYBER_SYMBYTES + 1];
 
-    for (i = 0; i < KYBER_SYMBYTES; i++) {
-        extkey[i] = key[i];
-    }
-    extkey[i] = nonce;
+    memcpy(extkey, key, KYBER_SYMBYTES);
+    extkey[KYBER_SYMBYTES] = nonce;
 
-    shake256(output, outlen, extkey, KYBER_SYMBYTES + 1);
+    shake256(out, outlen, extkey, sizeof(extkey));
+}
+
+/*************************************************
+* Name:        kyber_shake256_prf
+*
+* Description: Usage of SHAKE256 as a PRF, concatenates secret and public input
+*              and then generates outlen bytes of SHAKE256 output
+*
+* Arguments:   - uint8_t *out: pointer to output
+*              - size_t outlen: number of requested output bytes
+*              - const uint8_t *key: pointer to the key (of length KYBER_SYMBYTES)
+*              - uint8_t nonce: single-byte nonce (public PRF input)
+**************************************************/
+void kyber_shake256_rkprf(uint8_t out[KYBER_SSBYTES], const uint8_t key[KYBER_SYMBYTES], const uint8_t input[KYBER_CIPHERTEXTBYTES]) {
+    shake256incctx s;
+
+    shake256_inc_init(&s);
+    shake256_inc_absorb(&s, key, KYBER_SYMBYTES);
+    shake256_inc_absorb(&s, input, KYBER_CIPHERTEXTBYTES);
+    shake256_inc_finalize(&s);
+    shake256_inc_squeeze(out, KYBER_SSBYTES, &s);
+    shake256_inc_ctx_release(&s);
 }
