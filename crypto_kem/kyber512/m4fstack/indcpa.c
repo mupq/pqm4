@@ -18,7 +18,9 @@
 * Arguments:   - unsigned char *pk: pointer to output public key (of length KYBER_INDCPA_PUBLICKEYBYTES bytes)
 *              - unsigned char *sk: pointer to output private key (of length KYBER_INDCPA_SECRETKEYBYTES bytes)
 **************************************************/
-void indcpa_keypair(unsigned char *pk, unsigned char *sk) {
+void indcpa_keypair_derand(unsigned char *pk,
+                    unsigned char *sk, 
+                    const unsigned char *coins){
     polyvec skpv;
     poly pkp;
     unsigned char buf[2 * KYBER_SYMBYTES];
@@ -27,8 +29,7 @@ void indcpa_keypair(unsigned char *pk, unsigned char *sk) {
     int i;
     unsigned char nonce = 0;
 
-    randombytes(buf, KYBER_SYMBYTES);
-    hash_g(buf, buf, KYBER_SYMBYTES);
+    hash_g(buf, coins, KYBER_SYMBYTES);
 
     for (i = 0; i < KYBER_K; i++)
         poly_getnoise_eta1(skpv.vec + i, noiseseed, nonce++);

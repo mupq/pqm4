@@ -7,52 +7,68 @@
 *
 * Description: Compress and serialize vector of polynomials
 *
-* Arguments:   - unsigned char *r: pointer to output byte array (needs space for KYBER_POLYVECCOMPRESSEDBYTES)
+* Arguments:   - uint8_t *r: pointer to output byte array
+*                            (needs space for KYBER_POLYVECCOMPRESSEDBYTES)
 *              - const polyvec *a: pointer to input vector of polynomials
 **************************************************/
-void polyvec_compress(unsigned char *r, polyvec *a)
+void polyvec_compress(unsigned char *r, const polyvec *a)
 {
-  int i,j,k;
+  unsigned int i,j,k;
+  uint64_t d0;
 
 #if (KYBER_POLYVECCOMPRESSEDBYTES == (KYBER_K * 352))
   uint16_t t[8];
-  for(i=0;i<KYBER_K;i++)
-  {
-    for(j=0;j<KYBER_N/8;j++)
-    {
-      for(k=0;k<8;k++)
-        t[k] = ((((uint32_t)a->vec[i].coeffs[8*j+k] << 11) + KYBER_Q/2) / KYBER_Q) & 0x7ff;
+  for(i=0;i<KYBER_K;i++) {
+    for(j=0;j<KYBER_N/8;j++) {
+      for(k=0;k<8;k++) {
+        t[k]  = a->vec[i].coeffs[8*j+k];
+        t[k] += ((int16_t)t[k] >> 15) & KYBER_Q;
+/*      t[k]  = ((((uint32_t)t[k] << 11) + KYBER_Q/2)/KYBER_Q) & 0x7ff; */
+        d0 = t[k];
+        d0 <<= 11;
+        d0 += 1664;
+        d0 *= 645084;
+        d0 >>= 31;
+        t[k] = d0 & 0x7ff;
+      }
 
-      r[11*j+ 0] =  t[0] & 0xff;
-      r[11*j+ 1] = (t[0] >>  8) | ((t[1] & 0x1f) << 3);
-      r[11*j+ 2] = (t[1] >>  5) | ((t[2] & 0x03) << 6);
-      r[11*j+ 3] = (t[2] >>  2) & 0xff;
-      r[11*j+ 4] = (t[2] >> 10) | ((t[3] & 0x7f) << 1);
-      r[11*j+ 5] = (t[3] >>  7) | ((t[4] & 0x0f) << 4);
-      r[11*j+ 6] = (t[4] >>  4) | ((t[5] & 0x01) << 7);
-      r[11*j+ 7] = (t[5] >>  1) & 0xff;
-      r[11*j+ 8] = (t[5] >>  9) | ((t[6] & 0x3f) << 2);
-      r[11*j+ 9] = (t[6] >>  6) | ((t[7] & 0x07) << 5);
-      r[11*j+10] = (t[7] >>  3);
+      r[ 0] = (t[0] >>  0);
+      r[ 1] = (t[0] >>  8) | (t[1] << 3);
+      r[ 2] = (t[1] >>  5) | (t[2] << 6);
+      r[ 3] = (t[2] >>  2);
+      r[ 4] = (t[2] >> 10) | (t[3] << 1);
+      r[ 5] = (t[3] >>  7) | (t[4] << 4);
+      r[ 6] = (t[4] >>  4) | (t[5] << 7);
+      r[ 7] = (t[5] >>  1);
+      r[ 8] = (t[5] >>  9) | (t[6] << 2);
+      r[ 9] = (t[6] >>  6) | (t[7] << 5);
+      r[10] = (t[7] >>  3);
+      r += 11;
     }
-    r += 352;
   }
 #elif (KYBER_POLYVECCOMPRESSEDBYTES == (KYBER_K * 320))
   uint16_t t[4];
-  for(i=0;i<KYBER_K;i++)
-  {
-    for(j=0;j<KYBER_N/4;j++)
-    {
-      for(k=0;k<4;k++)
-        t[k] = ((((uint32_t)a->vec[i].coeffs[4*j+k] << 10) + KYBER_Q/2) / KYBER_Q) & 0x3ff;
+  for(i=0;i<KYBER_K;i++) {
+    for(j=0;j<KYBER_N/4;j++) {
+      for(k=0;k<4;k++) {
+        t[k]  = a->vec[i].coeffs[4*j+k];
+        t[k] += ((int16_t)t[k] >> 15) & KYBER_Q;
+/*      t[k]  = ((((uint32_t)t[k] << 10) + KYBER_Q/2)/ KYBER_Q) & 0x3ff; */
+        d0 = t[k];
+        d0 <<= 10;
+        d0 += 1665;
+        d0 *= 1290167;
+        d0 >>= 32;
+        t[k] = d0 & 0x3ff;
+      }
 
-      r[5*j+ 0] =  t[0] & 0xff;
-      r[5*j+ 1] = (t[0] >>  8) | ((t[1] & 0x3f) << 2);
-      r[5*j+ 2] = (t[1] >>  6) | ((t[2] & 0x0f) << 4);
-      r[5*j+ 3] = (t[2] >>  4) | ((t[3] & 0x03) << 6);
-      r[5*j+ 4] = (t[3] >>  2);
+      r[0] = (t[0] >> 0);
+      r[1] = (t[0] >> 8) | (t[1] << 2);
+      r[2] = (t[1] >> 6) | (t[2] << 4);
+      r[3] = (t[2] >> 4) | (t[3] << 6);
+      r[4] = (t[3] >> 2);
+      r += 5;
     }
-    r += 320;
   }
 #else
 #error "KYBER_POLYVECCOMPRESSEDBYTES needs to be in {320*KYBER_K, 352*KYBER_K}"

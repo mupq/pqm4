@@ -8,17 +8,22 @@
 
 #include <string.h>
 #include <stdint.h>
-
 /*************************************************
-* Name:        indcpa_keypair
+* Name:        indcpa_keypair_derand
 *
 * Description: Generates public and private key for the CPA-secure
 *              public-key encryption scheme underlying Kyber
 *
-* Arguments:   - unsigned char *pk: pointer to output public key (of length KYBER_INDCPA_PUBLICKEYBYTES bytes)
-*              - unsigned char *sk: pointer to output private key (of length KYBER_INDCPA_SECRETKEYBYTES bytes)
+* Arguments:   - uint8_t *pk: pointer to output public key
+*                             (of length KYBER_INDCPA_PUBLICKEYBYTES bytes)
+*              - uint8_t *sk: pointer to output private key
+*                             (of length KYBER_INDCPA_SECRETKEYBYTES bytes)
+*              - const uint8_t *coins: pointer to input randomness
+*                             (of length KYBER_SYMBYTES bytes)
 **************************************************/
-void indcpa_keypair(unsigned char *pk, unsigned char *sk) {
+void indcpa_keypair_derand(unsigned char *pk,
+                    unsigned char *sk, 
+                    const unsigned char *coins){
     polyvec skpv, skpv_prime;
     poly pkp;
     unsigned char buf[2 * KYBER_SYMBYTES];
@@ -27,8 +32,7 @@ void indcpa_keypair(unsigned char *pk, unsigned char *sk) {
     int i;
     unsigned char nonce = 0;
 
-    randombytes(buf, KYBER_SYMBYTES);
-    hash_g(buf, buf, KYBER_SYMBYTES);
+    hash_g(buf, coins, KYBER_SYMBYTES);
 
     for (i = 0; i < KYBER_K; i++)
         poly_getnoise(skpv.vec + i, noiseseed, nonce++);

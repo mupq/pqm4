@@ -1,11 +1,11 @@
 #include "matacc.i"
-.extern kyber_shake128_squeezeblocks
+.extern shake128_squeezeblocks
 
 .syntax unified
 .cpu cortex-m4
 .thumb
 
-// kyber_shake128_squeezeblocks into buffer if all bytes have been used
+// shake128_squeezeblocks into buffer if all bytes have been used
 .macro third_if tmp, tmp2, rptr, bptr, cptr, bufptr, ctr
 // if (pos + 3 > buflen && ctr < KYBER_N/4)
   vmov \tmp, s17
@@ -27,7 +27,7 @@
       movw \bptr, #1
       vmov \cptr, s26 // load state
 
-      bl kyber_shake128_squeezeblocks
+      bl shake128_squeezeblocks
 
       vmov r12, s16
       vmov \rptr, s18

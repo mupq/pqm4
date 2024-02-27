@@ -1,1 +1,0 @@
-../../kyber512/m4fstack/fastinvntt.S
