@@ -18,7 +18,9 @@ The design goals of the library are to offer
 
 ## Previous NIST PQC
 
-The master branch of **pqm4** contains schemes that either [selected for standardization by NIST](https://csrc.nist.gov/Projects/post-quantum-cryptography/selected-algorithms-2022) or part of the [4th round of the NIST PQC competition](https://csrc.nist.gov/Projects/post-quantum-cryptography/round-4-submissions).
+The master branch of **pqm4** contains schemes that either [selected for standardization by NIST](https://csrc.nist.gov/Projects/post-quantum-cryptography/selected-algorithms-2022),
+part of the [4th round of the NIST PQC standardization process](https://csrc.nist.gov/Projects/post-quantum-cryptography/round-4-submissions),
+or part or the [first round of additional signatures of the NIST PQC standardization process](https://csrc.nist.gov/projects/pqc-dig-sig/round-1-additional-signatures).
 
 Implementations for previous NIST PQC rounds are available here:
 - Round 3: https://github.com/mupq/pqm4/releases/tag/Round3
@@ -26,12 +28,22 @@ Implementations for previous NIST PQC rounds are available here:
 - Round 1: https://github.com/mupq/pqm4/releases/tag/Round1
 
 ## Changes in Round 2
-For the second round of the NIST PQC, **pqm4** was extended (see [#78](https://github.com/mupq/pqm4/pull/78)) with the following features:
+For the second round of the NIST PQC process, **pqm4** was extended (see [#78](https://github.com/mupq/pqm4/pull/78)) with the following features:
 - common code was moved to [mupq](https://github.com/mupq/mupq) for reuse in [pqriscv](https://github.com/mupq/pqriscv),
 - much simpler build process,
 - automated profiling of cycles spent in symmetric primitives (SHA-2, SHA-3, AES),
 - reporting of code-size,
 - integration of clean implementations from [PQClean](https://github.com/PQClean/PQClean).
+
+## Changes in Round 3
+For the third round of the NIST PQC process, **pqm4** was extended with the following features:
+- overhaul of the build process to support multiple target boards, and
+- use of the QEMU simulator to measure stack usage of larger schemes.
+
+## Changes in Round 4 / Round 1 of Additional signatures
+For the fourth round of the NIST PQC process **pqm4** was extended with the following features:
+- Switch to the Nucleo-L4R5ZI board as the default board for measurements, and
+- an overhaul of the console output.
 
 ## Schemes included in pqm4
 
@@ -47,7 +59,10 @@ The naming scheme for these implementations is as follows:
 The testing and benchmarking framework of **pqm4** targets several development
 boards, all featuring an ARM Cortex-M4 chip:
 
-* `stm32f4discovery` (default): The [STM32F4 Discovery board](https://www.st.com/en/evaluation-tools/stm32f4discovery.html)
+* `nucleo-l4r5zi` (default): The [NUCLEO-L4R5ZI board](https://www.st.com/en/evaluation-tools/nucleo-l4r5zi.html)
+  featuring 2MB of Flash and 640KB of RAM. This board does not require a
+  separate USB serial interface converter.
+* `stm32f4discovery`: The [STM32F4 Discovery board](https://www.st.com/en/evaluation-tools/stm32f4discovery.html)
   featuring 1MB of Flash, and 192KB of RAM. Connecting the
   development to the host computer requires a mini-USB cable and a USB-TTL
   converter together with a 2-pin dupont / jumper cable.
@@ -56,9 +71,6 @@ boards, all featuring an ARM Cortex-M4 chip:
   separate USB serial interface converter.
 * `cw308t-stm32f3`: The ChipWhisperer [CW308-STM32F3 target board](https://rtfm.newae.com/Targets/UFO%20Targets/CW308T-STM32F/)
   (in the F3 configuration) featuring 256KB of Flash and 40KB of RAM.
-* `nucleo-l4r5zi`: The [NUCLEO-L4R5ZI board](https://www.st.com/en/evaluation-tools/nucleo-l4r5zi.html)
-  featuring 2MB of Flash and 640KB of RAM. This board does not require a
-  separate USB serial interface converter.
 * `mps2-an386`: The ARM MPS2(+) FPGA prototyping board when used with the
   ARM-Cortex M4 bitstream (see [ARM AN386](https://developer.arm.com/documentation/dai0386/c))
   featuring two 4MB RAM blocks, one used in lieu of Flash one as RAM. This board
@@ -67,7 +79,7 @@ boards, all featuring an ARM Cortex-M4 chip:
 
 ### Installing the ARM toolchain
 The **pqm4** build system assumes that you have the [arm-none-eabi toolchain](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads)
-toolchain installed.
+toolchain installed. All benchmarks are performed using this toolchain.
 On most Linux systems, the correct toolchain gets installed when you install the `arm-none-eabi-gcc` (or `gcc-arm-none-eabi`) package.  
 On some Linux distributions, you will also have to explicitly install `libnewlib-arm-none-eabi` .
 
@@ -78,12 +90,12 @@ refer to the stlink Github page for instructions on how to [compile it from sour
 (in that case, be careful to use libusb-1.0.0-dev, not libusb-0.1).
 
 ### Installing OpenOCD
-For the `nucleo-l4r5zi` board [OpenOCD](http://openocd.org) (tested with version 0.11) is used for flashing binaries.
+For the `nucleo-l4r5zi` board [OpenOCD](http://openocd.org) (tested with version 0.12) is used for flashing binaries.
 Depending on your operating system, OpenOCD may be available in your package manager -- if not, please
 refer to the OpenOCD README for instructions on how to [compile it from source](http://openocd.org/doc-release/README).
 
 ### Python3
-The benchmarking scripts used in **pqm4** require Python >= 3.6.
+The benchmarking scripts used in **pqm4** require Python >= 3.8.
 
 ### Installing pyserial
 The host-side Python code for most platforms requires the [pyserial](https://github.com/pyserial/pyserial) module.
