@@ -37,4 +37,5 @@ void unpack_sk_stack(uint8_t rho[SEEDBYTES],
                smallpoly s1[L],
                smallpoly s2[K],
                const uint8_t sk[CRYPTO_SECRETKEYBYTES]);
+void poly_decompose_w1(poly *a1, const poly *a);
 #endif

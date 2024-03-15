@@ -90,10 +90,10 @@ int crypto_sign_signature(uint8_t *sig,
   uint16_t nonce = 0;
   unsigned int n;
   polyvecl y, z;
-  polyveck w1, w0;
+  uint8_t wcomp[K][768];
   poly cp;
   uint8_t ccomp[68];
-  poly matel;
+  poly tmp0, tmp1;
   shake256incctx state;
 
   smallpoly s1_prime[L];
@@ -133,22 +133,27 @@ rej:
   z = y;
   polyvecl_ntt(&z);
   
-  for (size_t k_idx = 0; k_idx < K; k_idx++) {
-      poly_uniform(&matel, rho, (k_idx << 8) + 0);
-      poly_pointwise_montgomery(&w1.vec[k_idx],  &matel, &z.vec[0]);
-      for (size_t l_idx = 1; l_idx < L; l_idx++) {
-        poly_uniform(&matel, rho, (k_idx << 8) + l_idx);
-        poly_pointwise_acc_montgomery(&w1.vec[k_idx],  &matel, &z.vec[l_idx]);
+    for (size_t k_idx = 0; k_idx < K; k_idx++) {
+      for(size_t i=0;i<768;i++){
+        wcomp[k_idx][i] = 0;
       }
+
+
+      for (size_t l_idx = 0; l_idx < L; l_idx++) {
+        poly_uniform(&tmp0, rho, (k_idx << 8) + l_idx);
+        poly_pointwise_montgomery(&tmp0,  &tmp0, &z.vec[l_idx]);
+        polyw_add(wcomp[k_idx], &tmp0);
+      }
+
+      polyw_unpack(&tmp0, wcomp[k_idx]);
+      poly_invntt_tomont(&tmp0);
+      poly_caddq(&tmp0);
+
+      polyw_pack(wcomp[k_idx], &tmp0);
+
+      poly_decompose_w1(&tmp0, &tmp0);
+      polyw1_pack(&sig[k_idx*POLYW1_PACKEDBYTES], &tmp0);
   }
-
-  polyveck_reduce(&w1);
-  polyveck_invntt_tomont(&w1);
-
-  /* Decompose w and call the random oracle */
-  polyveck_caddq(&w1);
-  polyveck_decompose(&w1, &w0, &w1);
-  polyveck_pack_w1(sig, &w1);
 
   shake256_inc_init(&state);
   shake256_inc_absorb(&state, mu, CRHBYTES);
@@ -176,28 +181,38 @@ rej:
   unsigned int hints_written = 0;
   /* Check that subtracting cs2 does not change high bits of w and low bits
    * do not reveal secret information */
-  for(unsigned int i = 0; i < K; ++i) {
-    poly *tmp = &z.vec[0];
-    poly_small_basemul_invntt(tmp, &cp_small, &cp_small_prime, &s2_prime[i]);
+  
+  for(unsigned int k_idx = 0; k_idx < K; ++k_idx) {
+    polyw_unpack(&tmp0, wcomp[k_idx]);
+    poly_decompose(&tmp1, &tmp0, &tmp0);
 
-    poly_sub(&w0.vec[i], &w0.vec[i], tmp);
-    poly_reduce(&w0.vec[i]);
-    if(poly_chknorm(&w0.vec[i], GAMMA2 - BETA))
+    poly_small_basemul_invntt(&tmp1, &cp_small, &cp_small_prime, &s2_prime[k_idx]);
+
+    poly_sub(&tmp0, &tmp0, &tmp1);
+    poly_reduce(&tmp0);
+    if(poly_chknorm(&tmp0, GAMMA2 - BETA))
       goto rej;
 
-    poly_schoolbook(tmp, ccomp, sk + SEEDBYTES + TRBYTES + SEEDBYTES +
-      L*POLYETA_PACKEDBYTES + K*POLYETA_PACKEDBYTES + i*POLYT0_PACKEDBYTES);
+    poly_schoolbook(&tmp1, ccomp, sk + SEEDBYTES + TRBYTES + SEEDBYTES +
+      L*POLYETA_PACKEDBYTES + K*POLYETA_PACKEDBYTES + k_idx*POLYT0_PACKEDBYTES);
 
     /* Compute hints for w1 */
 
-    if(poly_chknorm(tmp, GAMMA2))
+    if(poly_chknorm(&tmp1, GAMMA2))
       goto rej;
-    poly_add(&w0.vec[i], &w0.vec[i], tmp);
-    hint_n += poly_make_hint(tmp, &w0.vec[i], &w1.vec[i]);
+
+    poly_add(&tmp0, &tmp0, &tmp1);
+
+
+    polyw_unpack(&tmp1, wcomp[k_idx]);
+    poly_decompose_w1(&tmp1, &tmp1);
+
+
+    hint_n += poly_make_hint(&tmp1, &tmp0, &tmp1);
     if (hint_n > OMEGA) {
       goto rej;
     }
-    pack_sig_h(sig, tmp, i, &hints_written);
+    pack_sig_h(sig, &tmp1, k_idx, &hints_written);
   }
   pack_sig_h_zero(sig, &hints_written);
   *siglen = CRYPTO_BYTES;

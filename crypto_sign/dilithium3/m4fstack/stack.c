@@ -402,3 +402,25 @@ void unpack_sk_stack(uint8_t rho[SEEDBYTES],
     small_polyeta_unpack(&s2[i], sk + i*POLYETA_PACKEDBYTES);
   sk += K*POLYETA_PACKEDBYTES;
 }
+
+static int32_t decompose_w1(int32_t a){
+  int32_t a1;
+
+  a1  = (a + 127) >> 7;
+#if GAMMA2 == (Q-1)/32
+  a1  = (a1*1025 + (1 << 21)) >> 22;
+  a1 &= 15;
+#elif GAMMA2 == (Q-1)/88
+  a1  = (a1*11275 + (1 << 23)) >> 24;
+  a1 ^= ((43 - a1) >> 31) & a1;
+#endif
+
+  return a1;
+}
+
+void poly_decompose_w1(poly *a1, const poly *a) {
+  unsigned int i;
+
+  for(i = 0; i < N; ++i)
+    a1->coeffs[i] = decompose_w1(a->coeffs[i]);
+}
