@@ -9,6 +9,8 @@
 #include "smallpoly.h"
 #include "stack.h"
 
+#include "smallntt.h"
+
 /*************************************************
 * Name:        crypto_sign_keypair
 *
@@ -94,8 +96,7 @@ int crypto_sign_signature(uint8_t *sig,
   poly tmp0, tmp1;
   shake256incctx state;
 
-  smallpoly s1_prime[L];
-  smallpoly s2_prime[K];
+  smallpoly stmp0, stmp1;
   smallpoly cp_small;
   smallhalfpoly cp_small_prime;
 
@@ -105,7 +106,7 @@ int crypto_sign_signature(uint8_t *sig,
   rnd = key + SEEDBYTES;
   mu = rnd + RNDBYTES;
   rhoprime = mu + CRHBYTES;
-  unpack_sk_stack(rho, tr, key, s1_prime, s2_prime, sk);
+  unpack_sk_stack(rho, tr, key, sk);
 
   /* Compute mu = CRH(tr, msg) */
   shake256_inc_init(&state);
@@ -118,10 +119,6 @@ int crypto_sign_signature(uint8_t *sig,
      rnd[n] = 0;
   }
   shake256(rhoprime, CRHBYTES, key, SEEDBYTES + RNDBYTES + CRHBYTES);
-
-  /* Transform vectors */
-  polyvecl_small_ntt(s1_prime);
-  polyveck_small_ntt(s2_prime);
 
 rej:  
     for (size_t k_idx = 0; k_idx < K; k_idx++) {
@@ -164,7 +161,10 @@ rej:
 
   /* Compute z, reject if it reveals secret */
     for(size_t l_idx=0;l_idx < L; l_idx++){
-      poly_small_basemul_invntt(&tmp0, &cp_small, &cp_small_prime, &s1_prime[l_idx]);
+      unpack_sk_s1(&stmp0, sk, l_idx);
+      small_ntt(&stmp0);
+      poly_small_basemul_invntt(&tmp0, &cp_small, &cp_small_prime, &stmp0);
+
       poly_uniform_gamma1(&tmp1, rhoprime, L*(nonce-1) + l_idx);
 
       poly_add(&tmp0, &tmp0, &tmp1);
@@ -188,7 +188,9 @@ rej:
     polyw_unpack(&tmp0, wcomp[k_idx]);
     poly_decompose(&tmp1, &tmp0, &tmp0);
 
-    poly_small_basemul_invntt(&tmp1, &cp_small, &cp_small_prime, &s2_prime[k_idx]);
+    unpack_sk_s2(&stmp0, sk, k_idx);
+    small_ntt(&stmp0);
+    poly_small_basemul_invntt(&tmp1, &cp_small, &cp_small_prime, &stmp0);
 
     poly_sub(&tmp0, &tmp0, &tmp1);
     poly_reduce(&tmp0);

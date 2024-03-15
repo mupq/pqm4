@@ -222,10 +222,10 @@ void poly_lowbits(poly *a0, const poly *a){
 }
 
 void unpack_sk_s1(smallpoly *a, const uint8_t *sk, size_t idx) {
-  small_polyeta_unpack(a, sk + 3*SEEDBYTES + idx*POLYETA_PACKEDBYTES);
+  small_polyeta_unpack(a, sk + 2*SEEDBYTES + TRBYTES + idx*POLYETA_PACKEDBYTES);
 }
 void unpack_sk_s2(smallpoly *a, const uint8_t *sk, size_t idx) {
-  small_polyeta_unpack(a, sk + 3*SEEDBYTES + L*POLYETA_PACKEDBYTES + idx*POLYETA_PACKEDBYTES);
+  small_polyeta_unpack(a, sk + 2*SEEDBYTES + TRBYTES + L*POLYETA_PACKEDBYTES + idx*POLYETA_PACKEDBYTES);
 }
 
 
@@ -376,8 +376,6 @@ size_t poly_make_hint_stack(poly *a, poly *t, uint8_t w[768]){
 void unpack_sk_stack(uint8_t rho[SEEDBYTES],
                uint8_t tr[TRBYTES],
                uint8_t key[SEEDBYTES],
-               smallpoly s1[L],
-               smallpoly s2[K],
                const uint8_t sk[CRYPTO_SECRETKEYBYTES])
 {
   unsigned int i;
@@ -393,14 +391,6 @@ void unpack_sk_stack(uint8_t rho[SEEDBYTES],
   for(i = 0; i < TRBYTES; ++i)
     tr[i] = sk[i];
   sk += TRBYTES;
-
-  for(i=0; i < L; ++i)
-    small_polyeta_unpack(&s1[i], sk + i*POLYETA_PACKEDBYTES);
-  sk += L*POLYETA_PACKEDBYTES;
-
-  for(i=0; i < K; ++i)
-    small_polyeta_unpack(&s2[i], sk + i*POLYETA_PACKEDBYTES);
-  sk += K*POLYETA_PACKEDBYTES;
 }
 
 static int32_t decompose_w1(int32_t a){

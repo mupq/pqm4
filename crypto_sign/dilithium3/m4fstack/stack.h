@@ -34,8 +34,6 @@ size_t poly_make_hint_stack(poly *a, poly *t, uint8_t w[768]);
 void unpack_sk_stack(uint8_t rho[SEEDBYTES],
                uint8_t tr[TRBYTES],
                uint8_t key[SEEDBYTES],
-               smallpoly s1[L],
-               smallpoly s2[K],
                const uint8_t sk[CRYPTO_SECRETKEYBYTES]);
 void poly_decompose_w1(poly *a1, const poly *a);
 #endif
