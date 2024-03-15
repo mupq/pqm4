@@ -90,7 +90,6 @@ int crypto_sign_signature(uint8_t *sig,
   uint16_t nonce = 0;
   unsigned int n;
   uint8_t wcomp[K][768];
-  poly cp;
   uint8_t ccomp[68];
   poly tmp0, tmp1;
   shake256incctx state;
@@ -157,11 +156,11 @@ rej:
   shake256_inc_absorb(&state, sig, K*POLYW1_PACKEDBYTES);
   shake256_inc_finalize(&state);
   shake256_inc_squeeze(sig, CTILDEBYTES, &state);
-  poly_challenge(&cp, sig);
+  poly_challenge(&tmp0, sig);
 
-  poly_challenge_compress(ccomp, &cp);
+  poly_challenge_compress(ccomp, &tmp0);
   
-  poly_small_ntt_precomp(&cp_small, &cp_small_prime, &cp);
+  poly_small_ntt_precomp(&cp_small, &cp_small_prime, &tmp0);
 
   /* Compute z, reject if it reveals secret */
     for(size_t l_idx=0;l_idx < L; l_idx++){
