@@ -2,7 +2,7 @@
 #include "smallntt.h"
 
 void poly_small_ntt_precomp(smallpoly *out, smallhalfpoly *out2, poly *in) {
-  for (int i = 0; i < N; i++)
+  for (int i = N; i >= 0; i--)
   {
     out->coeffs[i] = in->coeffs[i];
   }

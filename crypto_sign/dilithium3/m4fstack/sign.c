@@ -7,6 +7,7 @@
 #include "randombytes.h"
 #include "symmetric.h"
 #include "smallpoly.h"
+#include "stack.h"
 
 /*************************************************
 * Name:        crypto_sign_keypair
@@ -88,9 +89,11 @@ int crypto_sign_signature(uint8_t *sig,
   uint8_t *rho, *tr, *key, *mu, *rhoprime, *rnd;
   uint16_t nonce = 0;
   unsigned int n;
-  polyvecl mat[K], y, z;
-  polyveck t0, w1, w0;
+  polyvecl y, z;
+  polyveck w1, w0;
   poly cp;
+  uint8_t ccomp[68];
+  poly matel;
   shake256incctx state;
 
   smallpoly s1_prime[L];
@@ -104,7 +107,7 @@ int crypto_sign_signature(uint8_t *sig,
   rnd = key + SEEDBYTES;
   mu = rnd + RNDBYTES;
   rhoprime = mu + CRHBYTES;
-  unpack_sk(rho, tr, key, &t0, s1_prime, s2_prime, sk);
+  unpack_sk_stack(rho, tr, key, s1_prime, s2_prime, sk);
 
   /* Compute mu = CRH(tr, msg) */
   shake256_inc_init(&state);
@@ -118,12 +121,9 @@ int crypto_sign_signature(uint8_t *sig,
   }
   shake256(rhoprime, CRHBYTES, key, SEEDBYTES + RNDBYTES + CRHBYTES);
 
-  /* Expand matrix and transform vectors */
-  polyvec_matrix_expand(mat, rho);
+  /* Transform vectors */
   polyvecl_small_ntt(s1_prime);
   polyveck_small_ntt(s2_prime);
-
-  polyveck_ntt(&t0);
 
 rej:
   /* Sample intermediate vector y */
@@ -132,7 +132,16 @@ rej:
   /* Matrix-vector multiplication */
   z = y;
   polyvecl_ntt(&z);
-  polyvec_matrix_pointwise_montgomery(&w1, mat, &z);
+  
+  for (size_t k_idx = 0; k_idx < K; k_idx++) {
+      poly_uniform(&matel, rho, (k_idx << 8) + 0);
+      poly_pointwise_montgomery(&w1.vec[k_idx],  &matel, &z.vec[0]);
+      for (size_t l_idx = 1; l_idx < L; l_idx++) {
+        poly_uniform(&matel, rho, (k_idx << 8) + l_idx);
+        poly_pointwise_acc_montgomery(&w1.vec[k_idx],  &matel, &z.vec[l_idx]);
+      }
+  }
+
   polyveck_reduce(&w1);
   polyveck_invntt_tomont(&w1);
 
@@ -147,9 +156,10 @@ rej:
   shake256_inc_finalize(&state);
   shake256_inc_squeeze(sig, CTILDEBYTES, &state);
   poly_challenge(&cp, sig);
+
+  poly_challenge_compress(ccomp, &cp);
   
   poly_small_ntt_precomp(&cp_small, &cp_small_prime, &cp);
-  poly_ntt(&cp);
 
   /* Compute z, reject if it reveals secret */
   polyvecl_small_basemul_invntt(&z, &cp_small, &cp_small_prime, s1_prime);
@@ -175,11 +185,10 @@ rej:
     if(poly_chknorm(&w0.vec[i], GAMMA2 - BETA))
       goto rej;
 
-    /* Compute hints for w1 */
-    poly_pointwise_montgomery(tmp, &cp, &t0.vec[i]);
+    poly_schoolbook(tmp, ccomp, sk + SEEDBYTES + TRBYTES + SEEDBYTES +
+      L*POLYETA_PACKEDBYTES + K*POLYETA_PACKEDBYTES + i*POLYT0_PACKEDBYTES);
 
-    poly_invntt_tomont(tmp);
-    poly_reduce(tmp);
+    /* Compute hints for w1 */
 
     if(poly_chknorm(tmp, GAMMA2))
       goto rej;
