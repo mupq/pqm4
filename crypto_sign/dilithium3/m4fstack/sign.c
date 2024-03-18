@@ -93,14 +93,25 @@ int crypto_sign_signature(uint8_t *sig,
   unsigned int n;
   uint8_t wcomp[K][768];
   uint8_t ccomp[68];
-  poly tmp0;
+
   union {
     shake128incctx s128;
     shake256incctx s256;
   } state;
 
-  smallpoly stmp0;
-  smallpoly cp_small;
+    // TODO: change this to union
+  struct {
+    poly full;
+    struct {
+      smallpoly stmp0;
+      smallpoly stmp1;
+    } small;
+  } polybuffer;
+
+  poly      *tmp0  = &polybuffer.full;
+  smallpoly *stmp0 = &polybuffer.small.stmp0;
+  smallpoly *scp   = &polybuffer.small.stmp1;
+
   smallhalfpoly cp_small_prime;
 
   rho = seedbuf;
@@ -132,24 +143,24 @@ rej:
 
       for (size_t l_idx = 0; l_idx < L; l_idx++) {
         /* Sample intermediate vector y */
-        poly_uniform_gamma1(&tmp0, rhoprime, L*nonce + l_idx);
-        poly_ntt(&tmp0);
+        poly_uniform_gamma1(tmp0, rhoprime, L*nonce + l_idx);
+        poly_ntt(tmp0);
 
         /* Matrix-vector multiplication */
         for (size_t k_idx = 0; k_idx < K; k_idx++) {
           // sampling of y and packing into wcomp inlined into the basemul
-          poly_uniform_pointwise_montgomery_polywadd_stack(wcomp[k_idx], &tmp0, rho, (k_idx << 8) + l_idx, &state.s128);
+          poly_uniform_pointwise_montgomery_polywadd_stack(wcomp[k_idx], tmp0, rho, (k_idx << 8) + l_idx, &state.s128);
         }
       }
       nonce++;
       for (size_t k_idx = 0; k_idx < K; k_idx++) {
-        polyw_unpack(&tmp0, wcomp[k_idx]);
-        poly_invntt_tomont(&tmp0);
-        poly_caddq(&tmp0);
+        polyw_unpack(tmp0, wcomp[k_idx]);
+        poly_invntt_tomont(tmp0);
+        poly_caddq(tmp0);
 
-        polyw_pack(wcomp[k_idx], &tmp0);
-        poly_highbits(&tmp0, &tmp0);
-        polyw1_pack(&sig[k_idx*POLYW1_PACKEDBYTES], &tmp0);
+        polyw_pack(wcomp[k_idx], tmp0);
+        poly_highbits(tmp0, tmp0);
+        polyw1_pack(&sig[k_idx*POLYW1_PACKEDBYTES], tmp0);
       }
 
   shake256_inc_init(&state.s256);
@@ -157,26 +168,26 @@ rej:
   shake256_inc_absorb(&state.s256, sig, K*POLYW1_PACKEDBYTES);
   shake256_inc_finalize(&state.s256);
   shake256_inc_squeeze(sig, CTILDEBYTES, &state.s256);
-  poly_challenge(&tmp0, sig);
+  poly_challenge(tmp0, sig);
 
-  poly_challenge_compress(ccomp, &tmp0);
+  poly_challenge_compress(ccomp, tmp0);
   
-  poly_small_ntt_precomp(&cp_small, &cp_small_prime, &tmp0);
+  poly_small_ntt_precomp(scp, &cp_small_prime, tmp0);
 
   /* Compute z, reject if it reveals secret */
     for(size_t l_idx=0;l_idx < L; l_idx++){
-      unpack_sk_s1(&stmp0, sk, l_idx);
-      small_ntt(stmp0.coeffs);
-      poly_small_basemul_invntt(&tmp0, &cp_small, &cp_small_prime, &stmp0);
+      unpack_sk_s1(stmp0, sk, l_idx);
+      small_ntt(stmp0->coeffs);
+      poly_small_basemul_invntt(tmp0, scp, &cp_small_prime, stmp0);
 
-      poly_uniform_gamma1_add_stack(&tmp0, &tmp0, rhoprime, L*(nonce-1) + l_idx, &state.s256);
+      poly_uniform_gamma1_add_stack(tmp0, tmp0, rhoprime, L*(nonce-1) + l_idx, &state.s256);
 
-      poly_reduce(&tmp0);
+      poly_reduce(tmp0);
 
-      if(poly_chknorm(&tmp0, GAMMA1 - BETA))
+      if(poly_chknorm(tmp0, GAMMA1 - BETA))
         goto rej;
 
-      polyz_pack(sig + CTILDEBYTES + l_idx*POLYZ_PACKEDBYTES, &tmp0);
+      polyz_pack(sig + CTILDEBYTES + l_idx*POLYZ_PACKEDBYTES, tmp0);
   }
 
 
@@ -187,36 +198,36 @@ rej:
    * do not reveal secret information */
   
   for(unsigned int k_idx = 0; k_idx < K; ++k_idx) {
-    unpack_sk_s2(&stmp0, sk, k_idx);
-    small_ntt(stmp0.coeffs);
-    poly_small_basemul_invntt(&tmp0, &cp_small, &cp_small_prime, &stmp0);
+    unpack_sk_s2(stmp0, sk, k_idx);
+    small_ntt(stmp0->coeffs);
+    poly_small_basemul_invntt(tmp0, scp, &cp_small_prime, stmp0);
 
-    polyw_sub(&tmp0, wcomp[k_idx], &tmp0);
-    poly_reduce(&tmp0);
+    polyw_sub(tmp0, wcomp[k_idx], tmp0);
+    poly_reduce(tmp0);
 
-    polyw_pack(wcomp[k_idx], &tmp0);
+    polyw_pack(wcomp[k_idx], tmp0);
 
-    poly_lowbits(&tmp0, &tmp0);
-    poly_reduce(&tmp0);
-    if(poly_chknorm(&tmp0, GAMMA2 - BETA)){
+    poly_lowbits(tmp0, tmp0);
+    poly_reduce(tmp0);
+    if(poly_chknorm(tmp0, GAMMA2 - BETA)){
       goto rej;
     }
 
-    poly_schoolbook(&tmp0, ccomp, sk + SEEDBYTES + TRBYTES + SEEDBYTES +
+    poly_schoolbook(tmp0, ccomp, sk + SEEDBYTES + TRBYTES + SEEDBYTES +
       L*POLYETA_PACKEDBYTES + K*POLYETA_PACKEDBYTES + k_idx*POLYT0_PACKEDBYTES);
 
     /* Compute hints for w1 */
 
-    if(poly_chknorm(&tmp0, GAMMA2)) {
+    if(poly_chknorm(tmp0, GAMMA2)) {
       goto rej;
     }
 
-    hint_n += poly_make_hint_stack(&tmp0, &tmp0, wcomp[k_idx]);
+    hint_n += poly_make_hint_stack(tmp0, tmp0, wcomp[k_idx]);
 
     if (hint_n > OMEGA) {
       goto rej;
     }
-    pack_sig_h(sig, &tmp0, k_idx, &hints_written);
+    pack_sig_h(sig, tmp0, k_idx, &hints_written);
   }
   pack_sig_h_zero(sig, &hints_written);
   *siglen = CRYPTO_BYTES;
