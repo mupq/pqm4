@@ -8,7 +8,6 @@
 #include "fips202.h"
 
 void poly_challenge_compress(uint8_t c[68], const poly *cp);
-// TODO: remove this one
 void poly_challenge_decompress(poly *cp, const uint8_t c[68]);
 
 

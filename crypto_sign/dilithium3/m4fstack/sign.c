@@ -99,8 +99,7 @@ int crypto_sign_signature(uint8_t *sig,
     shake256incctx s256;
   } state;
 
-    // TODO: change this to union
-  struct {
+  union {
     poly full;
     struct {
       smallpoly stmp0;
@@ -172,10 +171,12 @@ rej:
 
   poly_challenge_compress(ccomp, tmp0);
   
-  poly_small_ntt_precomp(scp, &cp_small_prime, tmp0);
-
   /* Compute z, reject if it reveals secret */
     for(size_t l_idx=0;l_idx < L; l_idx++){
+    if(l_idx != 0){
+      poly_challenge_decompress(tmp0, ccomp);
+    }
+    poly_small_ntt_precomp(scp, &cp_small_prime, tmp0);
       unpack_sk_s1(stmp0, sk, l_idx);
       small_ntt(stmp0->coeffs);
       poly_small_basemul_invntt(tmp0, scp, &cp_small_prime, stmp0);
@@ -198,6 +199,9 @@ rej:
    * do not reveal secret information */
   
   for(unsigned int k_idx = 0; k_idx < K; ++k_idx) {
+    poly_challenge_decompress(tmp0, ccomp);
+    poly_small_ntt_precomp(scp, &cp_small_prime, tmp0);
+
     unpack_sk_s2(stmp0, sk, k_idx);
     small_ntt(stmp0->coeffs);
     poly_small_basemul_invntt(tmp0, scp, &cp_small_prime, stmp0);
