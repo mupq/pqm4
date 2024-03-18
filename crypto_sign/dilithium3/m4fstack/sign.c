@@ -96,7 +96,7 @@ int crypto_sign_signature(uint8_t *sig,
   poly tmp0;
   shake256incctx state;
 
-  smallpoly stmp0, stmp1;
+  smallpoly stmp0;
   smallpoly cp_small;
   smallhalfpoly cp_small_prime;
 
@@ -135,7 +135,7 @@ rej:
         /* Matrix-vector multiplication */
         for (size_t k_idx = 0; k_idx < K; k_idx++) {
           // sampling of y and packing into wcomp inlined into the basemul
-          poly_uniform_pointwise_montgomery_polywadd_stack(&wcomp[k_idx], &tmp0, rho, (k_idx << 8) + l_idx);
+          poly_uniform_pointwise_montgomery_polywadd_stack(wcomp[k_idx], &tmp0, rho, (k_idx << 8) + l_idx);
         }
       }
       nonce++;
@@ -145,7 +145,7 @@ rej:
         poly_caddq(&tmp0);
 
         polyw_pack(wcomp[k_idx], &tmp0);
-        poly_decompose_w1(&tmp0, &tmp0);
+        poly_highbits(&tmp0, &tmp0);
         polyw1_pack(&sig[k_idx*POLYW1_PACKEDBYTES], &tmp0);
       }
 
@@ -163,7 +163,7 @@ rej:
   /* Compute z, reject if it reveals secret */
     for(size_t l_idx=0;l_idx < L; l_idx++){
       unpack_sk_s1(&stmp0, sk, l_idx);
-      small_ntt(&stmp0);
+      small_ntt(stmp0.coeffs);
       poly_small_basemul_invntt(&tmp0, &cp_small, &cp_small_prime, &stmp0);
 
       poly_uniform_gamma1_add_stack(&tmp0, &tmp0, rhoprime, L*(nonce-1) + l_idx);
@@ -185,7 +185,7 @@ rej:
   
   for(unsigned int k_idx = 0; k_idx < K; ++k_idx) {
     unpack_sk_s2(&stmp0, sk, k_idx);
-    small_ntt(&stmp0);
+    small_ntt(stmp0.coeffs);
     poly_small_basemul_invntt(&tmp0, &cp_small, &cp_small_prime, &stmp0);
 
     polyw_sub(&tmp0, wcomp[k_idx], &tmp0);
@@ -193,7 +193,7 @@ rej:
 
     polyw_pack(wcomp[k_idx], &tmp0);
 
-    poly_decompose_w0(&tmp0, &tmp0);
+    poly_lowbits(&tmp0, &tmp0);
     poly_reduce(&tmp0);
     if(poly_chknorm(&tmp0, GAMMA2 - BETA)){
       goto rej;
