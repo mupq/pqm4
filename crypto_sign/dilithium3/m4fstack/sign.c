@@ -150,7 +150,7 @@ rej:
 
       for (size_t l_idx = 0; l_idx < L; l_idx++) {
         /* Sample intermediate vector y */
-        poly_uniform_gamma1(tmp0, rhoprime, L*nonce + l_idx);
+        poly_uniform_gamma1_stack(tmp0, rhoprime, L*nonce + l_idx, &state.s256);
         poly_ntt(tmp0);
 
         /* Matrix-vector multiplication */

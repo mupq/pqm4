@@ -325,6 +325,19 @@ static void polyz_unpack_inplace(int32_t *r){
 #endif
 }
 
+void poly_uniform_gamma1_stack(poly *a, const uint8_t seed[CRHBYTES], uint16_t nonce, shake256incctx *state){
+  int32_t buf[POLY_UNIFORM_GAMMA1_BUFFERSIZE_COEFFS];
+
+  stream256_init(state, seed, nonce);
+  for(size_t i = 0; i < N/POLY_UNIFORM_GAMMA1_BUFFERSIZE_COEFFS; i++){
+    shake256_inc_squeeze((uint8_t *)buf, POLY_UNIFORM_GAMMA1_BUFFERSIZE_BYTES, state);
+    polyz_unpack_inplace(buf);
+
+    for(size_t j = 0; j < POLY_UNIFORM_GAMMA1_BUFFERSIZE_COEFFS; j++){
+      a->coeffs[i*POLY_UNIFORM_GAMMA1_BUFFERSIZE_COEFFS + j] = buf[j];
+    }
+  }
+}
 
 void poly_uniform_gamma1_add_stack(poly *a, poly *b, const uint8_t seed[CRHBYTES], uint16_t nonce, shake256incctx *state){
   int32_t buf[POLY_UNIFORM_GAMMA1_BUFFERSIZE_COEFFS];
