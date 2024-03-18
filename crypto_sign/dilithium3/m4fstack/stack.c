@@ -232,7 +232,7 @@ void unpack_sk_s2(smallpoly *a, const uint8_t *sk, size_t idx) {
 // TODO: in the end increase this buffer size as far as possible
 #define POLY_UNIFORM_BUFFERSIZE 3
 void poly_uniform_pointwise_montgomery_polywadd_stack(uint8_t wcomp[3*N], poly *b, uint8_t seed[SEEDBYTES], uint16_t nonce){
-  //externalize the Keccak state
+  // TODO: externalize the Keccak state
   shake128incctx state;
   int32_t t;
   uint8_t buf[POLY_UNIFORM_BUFFERSIZE*3];
@@ -321,19 +321,22 @@ static void polyz_unpack_inplace(int32_t *r){
     tmp1 |= (uint32_t)a[5*i+2] << 16;
     tmp1 &= 0xFFFFF;
 
-    r[2*i+0] = GAMMA1 - tmp0;
-    r[2*i+1] = GAMMA1 - tmp1;
+    r[2*i+0] = GAMMA1 - tmp1;
+    r[2*i+1] = GAMMA1 - tmp0;
   }
 #endif
 }
 
 
-void poly_uniform_gamma1_add_stack(poly *a, poly *b, const uint8_t seed[CRHBYTES], uint16_t nonce, shake256incctx *state){
+#define POLY_UNIFORM_GAMMA1_NBLOCKS ((POLYZ_PACKEDBYTES + STREAM256_BLOCKBYTES - 1)/STREAM256_BLOCKBYTES)
+void poly_uniform_gamma1_add_stack(poly *a, poly *b, const uint8_t seed[CRHBYTES], uint16_t nonce){
+  // TODO: externalize the state
+  shake256incctx state;
   int32_t buf[POLY_UNIFORM_GAMMA1_BUFFERSIZE_COEFFS];
 
-  stream256_init(state, seed, nonce);
+  stream256_init(&state, seed, nonce);
   for(size_t i = 0; i < N/POLY_UNIFORM_GAMMA1_BUFFERSIZE_COEFFS; i++){
-    shake256_inc_squeeze((uint8_t *)buf, POLY_UNIFORM_GAMMA1_BUFFERSIZE_BYTES, state);
+    shake256_inc_squeeze((uint8_t *)buf, POLY_UNIFORM_GAMMA1_BUFFERSIZE_BYTES, &state);
     polyz_unpack_inplace(buf);
 
     for(size_t j = 0; j < POLY_UNIFORM_GAMMA1_BUFFERSIZE_COEFFS; j++){
