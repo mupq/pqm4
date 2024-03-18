@@ -87,8 +87,9 @@ int crypto_sign_signature(uint8_t *sig,
                           size_t mlen,
                           const uint8_t *sk)
 {
-  uint8_t seedbuf[2 * SEEDBYTES + TRBYTES + RNDBYTES + 2 * CRHBYTES];
-  uint8_t *rho, *tr, *key, *mu, *rhoprime, *rnd;
+  uint8_t buf[2 * CRHBYTES];
+  uint8_t *mu, *rhoprime, *rnd;
+  const uint8_t *rho, *tr, *key;
   uint16_t nonce = 0;
   unsigned int n;
   uint8_t wcomp[K][768];
@@ -113,11 +114,12 @@ int crypto_sign_signature(uint8_t *sig,
 
   smallhalfpoly cp_small_prime;
 
-  rho = seedbuf;
-  tr = rho + SEEDBYTES;
-  key = tr + TRBYTES;
-  rnd = key + SEEDBYTES;
-  mu = rnd + RNDBYTES;
+  rho = sk;
+  tr = sk + SEEDBYTES*2;
+  key = sk + SEEDBYTES;
+  
+  mu = buf;
+  rnd = mu + CRHBYTES;
   rhoprime = mu + CRHBYTES;
   unpack_sk_stack(rho, tr, key, sk);
 
@@ -128,10 +130,18 @@ int crypto_sign_signature(uint8_t *sig,
   shake256_inc_finalize(&state.s256);
   shake256_inc_squeeze(mu, CRHBYTES, &state.s256);
 
+  // Note: RNDBYTES < CRHBYTES, so buffer has proper size
   for (n = 0; n < RNDBYTES; n++) {
      rnd[n] = 0;
   }
-  shake256(rhoprime, CRHBYTES, key, SEEDBYTES + RNDBYTES + CRHBYTES);
+
+  shake256_inc_init(&state.s256);
+  shake256_inc_absorb(&state.s256, key, SEEDBYTES);
+  shake256_inc_absorb(&state.s256, rnd, RNDBYTES);
+  shake256_inc_absorb(&state.s256, mu, CRHBYTES);
+  shake256_inc_finalize(&state.s256);
+  // rnd can be overwritten here
+  shake256_inc_squeeze(rhoprime, CRHBYTES, &state.s256);
 
 rej:  
     for (size_t k_idx = 0; k_idx < K; k_idx++) {
