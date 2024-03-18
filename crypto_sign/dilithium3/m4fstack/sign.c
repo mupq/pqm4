@@ -184,25 +184,31 @@ rej:
    * do not reveal secret information */
   
   for(unsigned int k_idx = 0; k_idx < K; ++k_idx) {
-    polyw_unpack(&tmp0, wcomp[k_idx]);
-    poly_decompose(&tmp1, &tmp0, &tmp0);
-
     unpack_sk_s2(&stmp0, sk, k_idx);
     small_ntt(&stmp0);
     poly_small_basemul_invntt(&tmp1, &cp_small, &cp_small_prime, &stmp0);
 
+    polyw_unpack(&tmp0, wcomp[k_idx]);
+
     poly_sub(&tmp0, &tmp0, &tmp1);
     poly_reduce(&tmp0);
-    if(poly_chknorm(&tmp0, GAMMA2 - BETA))
-      goto rej;
 
-    poly_schoolbook(&tmp1, ccomp, sk + SEEDBYTES + TRBYTES + SEEDBYTES +
+    polyw_pack(wcomp[k_idx], &tmp0);
+
+    poly_decompose(&tmp1, &tmp0, &tmp0);
+    poly_reduce(&tmp0);
+    if(poly_chknorm(&tmp0, GAMMA2 - BETA)){
+      goto rej;
+    }
+
+    poly_schoolbook(&tmp0, ccomp, sk + SEEDBYTES + TRBYTES + SEEDBYTES +
       L*POLYETA_PACKEDBYTES + K*POLYETA_PACKEDBYTES + k_idx*POLYT0_PACKEDBYTES);
 
     /* Compute hints for w1 */
 
-    if(poly_chknorm(&tmp1, GAMMA2))
+    if(poly_chknorm(&tmp0, GAMMA2)) {
       goto rej;
+    }
 
     poly_add(&tmp0, &tmp0, &tmp1);
 
@@ -211,11 +217,12 @@ rej:
     poly_decompose_w1(&tmp1, &tmp1);
 
 
-    hint_n += poly_make_hint(&tmp1, &tmp0, &tmp1);
+    hint_n += poly_make_hint_stack(&tmp0, &tmp0, wcomp[k_idx]);
+
     if (hint_n > OMEGA) {
       goto rej;
     }
-    pack_sig_h(sig, &tmp1, k_idx, &hints_written);
+    pack_sig_h(sig, &tmp0, k_idx, &hints_written);
   }
   pack_sig_h_zero(sig, &hints_written);
   *siglen = CRYPTO_BYTES;

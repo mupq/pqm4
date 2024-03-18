@@ -328,7 +328,6 @@ static void polyz_unpack_inplace(int32_t *r){
 }
 
 
-#define POLY_UNIFORM_GAMMA1_NBLOCKS ((POLYZ_PACKEDBYTES + STREAM256_BLOCKBYTES - 1)/STREAM256_BLOCKBYTES)
 void poly_uniform_gamma1_add_stack(poly *a, poly *b, const uint8_t seed[CRHBYTES], uint16_t nonce){
   // TODO: externalize the state
   shake256incctx state;
