@@ -42,12 +42,10 @@ static const int16_t zetas_inv_CT_asm[256] = {
 
 void small_ntt_asm(int16_t a[N], const int16_t * zetas);
 void small_invntt_tomont_asm(int16_t a[N], const int16_t * zetas);
-void small_pointmul_asm(int16_t out[N], const int16_t in[N], const int16_t *zetas);
-void small_asymmetric_mul_asm(int16_t c[256], const int16_t a[256], const int16_t b[256], const int16_t b_prime[256]);
+void small_basemul_asm(int16_t *c, const int16_t *a, const int16_t *b, const int16_t *zetas);
 
 #define small_ntt(a) small_ntt_asm(a, zetas_asm)
 #define small_invntt_tomont(a) small_invntt_tomont_asm(a, zetas_inv_CT_asm)
-#define small_point_mul(out, in) small_pointmul_asm(out, in, zetas)
-#define small_asymmetric_mul(c, a, b, b_prime) small_asymmetric_mul_asm(c, a, b, b_prime);
+#define small_basemul(r,a,b) small_basemul_asm(r, a, b, zetas)
 
 #endif

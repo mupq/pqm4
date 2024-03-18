@@ -112,8 +112,6 @@ int crypto_sign_signature(uint8_t *sig,
   smallpoly *stmp0 = &polybuffer.small.stmp0;
   smallpoly *scp   = &polybuffer.small.stmp1;
 
-  smallhalfpoly cp_small_prime;
-
   rho = sk;
   tr = sk + SEEDBYTES*2;
   key = sk + SEEDBYTES;
@@ -186,10 +184,10 @@ rej:
     if(l_idx != 0){
       poly_challenge_decompress(tmp0, ccomp);
     }
-    poly_small_ntt_precomp(scp, &cp_small_prime, tmp0);
+      poly_small_ntt_copy(scp, tmp0);
       unpack_sk_s1(stmp0, sk, l_idx);
       small_ntt(stmp0->coeffs);
-      poly_small_basemul_invntt(tmp0, scp, &cp_small_prime, stmp0);
+      poly_small_basemul_invntt(tmp0, scp, stmp0);
 
       poly_uniform_gamma1_add_stack(tmp0, tmp0, rhoprime, L*(nonce-1) + l_idx, &state.s256);
 
@@ -210,11 +208,11 @@ rej:
   
   for(unsigned int k_idx = 0; k_idx < K; ++k_idx) {
     poly_challenge_decompress(tmp0, ccomp);
-    poly_small_ntt_precomp(scp, &cp_small_prime, tmp0);
+    poly_small_ntt_copy(scp, tmp0);
 
     unpack_sk_s2(stmp0, sk, k_idx);
     small_ntt(stmp0->coeffs);
-    poly_small_basemul_invntt(tmp0, scp, &cp_small_prime, stmp0);
+    poly_small_basemul_invntt(tmp0, scp, stmp0);
 
     polyw_sub(tmp0, wcomp[k_idx], tmp0);
     poly_reduce(tmp0);

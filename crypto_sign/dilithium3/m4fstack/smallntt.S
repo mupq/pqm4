@@ -111,7 +111,6 @@
 .align 2
 small_ntt_asm:
   push {r4-r11, r14}
-  vpush.w {s16}
 
   poly        .req r0
   twiddle_ptr .req r1
@@ -137,33 +136,33 @@ small_ntt_asm:
   .equ offset, 32
   .equ strincr, 4
   // pre-load twiddle factors to FPU registers
-  vldm twiddle_ptr!, {s8-s15}
+  vldm twiddle_ptr!, {s20-s27}
 
 
   add tmp, poly, #strincr*8
-  vmov s16, tmp
+  vmov s12, tmp
   1:
     // load a1, a3, ..., a15
     load poly, poly0, poly1, poly2, poly3, #offset, #distance/4+offset, #2*distance/4+offset, #3*distance/4+offset
     load poly, poly4, poly5, poly6, poly7, #distance+offset, #5*distance/4+offset, #6*distance/4+offset, #7*distance/4+offset
 
     // 8-NTT on a1, a3, ..., a15
-    _3_layer_double_CT_16_fp poly0, poly1, poly2, poly3, poly4, poly5, poly6, poly7, s8, s9, s10, s11, twiddle, qinv, q, tmp, tmp2
+    _3_layer_double_CT_16_fp poly0, poly1, poly2, poly3, poly4, poly5, poly6, poly7, s20, s21, s22, s23, twiddle, qinv, q, tmp, tmp2
 
     // multiply coeffs by layer 4 twiddles for later use
-    vmov twiddle, s12
+    vmov twiddle, s24
     mul_twiddle b, poly0, twiddle, tmp, tmp2, q, qinv
     mul_twiddle t, poly1, twiddle, tmp, tmp2, q, qinv
 
-    vmov twiddle, s13
+    vmov twiddle, s25
     mul_twiddle b, poly2, twiddle, tmp, tmp2, q, qinv
     mul_twiddle t, poly3, twiddle, tmp, tmp2, q, qinv
 
-    vmov twiddle, s14
+    vmov twiddle, s26
     mul_twiddle b, poly4, twiddle, tmp, tmp2, q, qinv
     mul_twiddle t, poly5, twiddle, tmp, tmp2, q, qinv
 
-    vmov twiddle, s15
+    vmov twiddle, s27
     mul_twiddle b, poly6, twiddle, tmp, tmp2, q, qinv
     mul_twiddle t, poly7, twiddle, tmp, tmp2, q, qinv
 
@@ -183,7 +182,7 @@ small_ntt_asm:
     load poly, poly4, poly5, poly6, poly7, #distance, #5*distance/4, #6*distance/4, #7*distance/4
 
     // 8-NTT on a0, a2, ..., a14
-    _3_layer_double_CT_16_fp poly0, poly1, poly2, poly3, poly4, poly5, poly6, poly7, s8, s9, s10, s11, twiddle, qinv, q, tmp, tmp2
+    _3_layer_double_CT_16_fp poly0, poly1, poly2, poly3, poly4, poly5, poly6, poly7, s20, s21, s22, s23, twiddle, qinv, q, tmp, tmp2
 
     // layer 4 - 1
     // addsub: (a2, a6, a10, a14), (a3, a7, a11, a15)
@@ -247,7 +246,7 @@ small_ntt_asm:
     str.w poly7, [poly, #6*distance/4+offset]
     str.w poly0, [poly], #4
 
-    vmov tmp, s16
+    vmov tmp, s12
     cmp.w poly, tmp
   bne.w 1b
 
@@ -277,7 +276,6 @@ small_ntt_asm:
     cmp.w poly, tmp
   bne.w 2b
 
-  vpop.w {s16}
   pop {r4-r11, pc}
 
 
@@ -495,32 +493,32 @@ small_invntt_tomont_asm:
   .equ strincr, 64
 
   // pre-load twiddle factors to FPU registers
-  vldm twiddle_ptr!, {s8-s15}
+  vldm twiddle_ptr!, {s20-s27}
 
   add.w tmp, poly, #8*strincr
-  vmov s8, tmp
+  vmov s12, tmp
   1:
     // load a1, a3, ..., a15
     load poly, poly0, poly1, poly2, poly3, #offset, #distance/4+offset, #2*distance/4+offset, #3*distance/4+offset
     load poly, poly4, poly5, poly6, poly7, #distance+offset, #5*distance/4+offset, #6*distance/4+offset, #7*distance/4+offset
 
     // NTT on a1, a3, ..., a15
-    _3_layer_double_inv_CT_16_light poly0, poly1, poly2, poly3, poly4, poly5, poly6, poly7, s8, s9, s10, s11, twiddle, q, qinv, tmp, tmp2
+    _3_layer_double_inv_CT_16_light poly0, poly1, poly2, poly3, poly4, poly5, poly6, poly7, s20, s21, s22, s23, twiddle, q, qinv, tmp, tmp2
 
     // multiply coeffs by layer 4 twiddles for later use
-    vmov twiddle, s12
+    vmov twiddle, s24
     mul_twiddle b, poly0, twiddle, tmp, tmp2, q, qinv // could be omitted but kept for reduction only
     mul_twiddle t, poly1, twiddle, tmp, tmp2, q, qinv
 
-    vmov twiddle, s13
+    vmov twiddle, s25
     mul_twiddle b, poly2, twiddle, tmp, tmp2, q, qinv
     mul_twiddle t, poly3, twiddle, tmp, tmp2, q, qinv
 
-    vmov twiddle, s14
+    vmov twiddle, s26
     mul_twiddle b, poly4, twiddle, tmp, tmp2, q, qinv
     mul_twiddle t, poly5, twiddle, tmp, tmp2, q, qinv
 
-    vmov twiddle, s15
+    vmov twiddle, s27
     mul_twiddle b, poly6, twiddle, tmp, tmp2, q, qinv
     mul_twiddle t, poly7, twiddle, tmp, tmp2, q, qinv
 
@@ -540,7 +538,7 @@ small_invntt_tomont_asm:
     load poly, poly4, poly5, poly6, poly7, #distance, #5*distance/4, #6*distance/4, #7*distance/4
 
     // NTT on a0, a2, ..., a14
-    _3_layer_double_inv_CT_16_light poly0, poly1, poly2, poly3, poly4, poly5, poly6, poly7, s8, s9, s10, s11, twiddle, q, qinv, tmp, tmp2
+    _3_layer_double_inv_CT_16_light poly0, poly1, poly2, poly3, poly4, poly5, poly6, poly7, s20, s21, s22, s23, twiddle, q, qinv, tmp, tmp2
 
     // layer 4 - 1
     // addsub: (a2, a6, a10, a14), (a3, a7, a11, a15)
@@ -604,7 +602,7 @@ small_invntt_tomont_asm:
     str.w poly7, [poly, #6*distance/4+offset]
     str.w poly0, [poly], #strincr // increase 2*8*4 = 64 (2 * 8 loads of 4 bytes each)
 
-    vmov tmp, s8
+    vmov tmp, s12
     cmp.w poly, tmp
   bne.w 1b
 
@@ -618,9 +616,9 @@ small_invntt_tomont_asm:
   load poly, poly0, poly1, poly2, poly3, #0, #distance/4, #2*distance/4, #3*distance/4
   load poly, poly4, poly5, poly6, poly7, #distance, #5*distance/4, #6*distance/4, #7*distance/4
 
-  vldm twiddle_ptr!, {s5-s7}
+  vldm twiddle_ptr!, {s21-s23}
 
-  _3_layer_double_inv_CT_16_light_reduce poly0, poly1, poly2, poly3, poly4, poly5, poly6, poly7, s5, s5, s6, s7, twiddle, q, qinv, tmp, tmp2
+  _3_layer_double_inv_CT_16_light_reduce poly0, poly1, poly2, poly3, poly4, poly5, poly6, poly7, s20, s21, s22, s23, twiddle, q, qinv, tmp, tmp2
 
   vmov.w s2, poly
   movw poly, #:lower16:5585133
@@ -742,96 +740,69 @@ small_invntt_tomont_asm:
 .unreq tmp
 .unreq tmp2
 
+// BASEMUL
+
+
+.global small_basemul_asm
+.type small_basemul_asm, %function
 .align 2
-.global small_pointmul_asm
-.type small_pointmul_asm, %function
-small_pointmul_asm:
-    push.w {r4-r11, lr}
+small_basemul_asm:
+  push {r4-r11, lr}
 
-    movw r14, #769
-    movt r14, #767
+  rptr  .req r0
+  aptr  .req r1
+  bptr  .req r2
+  zeta_ptr  .req r3
+  poly0 .req r4
+  poly1 .req r6
+  poly2 .req r5
+  poly3 .req r7 // TODO: remove poly3
+  q     .req r8
+  qinv  .req r8
+  tmp   .req r9
+  tmp2  .req r10
+  tmp3  .req r11
+  zeta  .req r12
+  ctr  .req r14
 
-    .equ width, 4
+  movw  q, #769
+  movt qinv, #767
+  add ctr, rptr, #64*2*4
+  1:
 
-    add.w r12, r2, #64*2
-    _point_mul_16_loop:
+    ldr poly2, [aptr, #4]
+    ldr poly3, [bptr, #4]  
+    ldrh.w zeta, [zeta_ptr], #2
+    ldr poly0, [aptr], #8
+    ldr poly1, [bptr], #8
+    
+    //basemul(r->coeffs + 4 * i, a->coeffs + 4 * i, b->coeffs + 4 * i, zetas[64 + i]);
+    smultt tmp, poly0, poly1
+    montgomery q, qinv, tmp, tmp2
+    smultb tmp2, tmp2, zeta
+    smlabb tmp2, poly0, poly1, tmp2
+    montgomery q, qinv, tmp2, tmp
 
-    ldr.w r7, [r1, #2*width]
-    ldr.w r8, [r1, #3*width]
-    ldrsh.w r9, [r2, #1*2]
-    ldr.w r5, [r1, #1*width]
-    ldr.w r4, [r1], #4*width
-    ldrsh.w r6, [r2], #2*2
+    smuadx tmp2, poly0, poly1
+    montgomery q, qinv, tmp2, tmp3
+    pkhtb tmp, tmp3, tmp, asr#16
+    str tmp, [rptr], #4
+    
+    neg zeta, zeta
+    
+    //basemul(r->coeffs + 4 * i + 2, a->coeffs + 4 * i + 2, b->coeffs + 4 * i + 2, - zetas[64 + i]);
+    smultt tmp, poly2, poly3
+    montgomery q, qinv, tmp, tmp2
+    smultb tmp2, tmp2, zeta
+    smlabb tmp2, poly2, poly3, tmp2
+    montgomery q, qinv, tmp2, tmp
 
-    smultb r10, r4, r6
-    montgomery r14, r14, r10, r11
-    pkhbt r4, r4, r11
+    smuadx tmp2, poly2, poly3
+    montgomery q, qinv, tmp2, tmp3
+    pkhtb tmp, tmp3, tmp, asr#16
+    
+    str tmp, [rptr], #4
+    cmp.w rptr, ctr
+    bne.w 1b
 
-
-    neg.w r6, r6
-
-    smultb r10, r5, r6
-    montgomery r14, r14, r10, r11
-    pkhbt r5, r5, r11
-
-    str.w r5, [r0, #1*width]
-    str.w r4, [r0], #2*width
-
-    smultb r10, r7, r9
-    montgomery r14, r14, r10, r11
-    pkhbt r7, r7, r11
-
-    neg.w r9, r9
-
-    smultb r10, r8, r9
-    montgomery r14, r14, r10, r11
-    pkhbt r8, r8, r11
-
-    str.w r8, [r0, #1*width]
-    str.w r7, [r0], #2*width
-
-    cmp.w r2, r12
-    bne.w _point_mul_16_loop
-
-    pop.w {r4-r11, pc}
-
-  .align 2
-.global small_asymmetric_mul_asm
-.type small_asymmetric_mul_asm, %function
-small_asymmetric_mul_asm:
-    push.w {r4-r11, lr}
-
-    movw r14, #769
-    movt r14, #767
-    .equ width, 4
-    add.w r12, r0, #256*2
-    _asymmetric_mul_16_loop:
-    ldr.w r7, [r1, #width]
-    ldr.w r4, [r1], #2*width
-    ldr.w r8, [r2, #width]
-    ldr.w r5, [r2], #2*width
-    ldr.w r9, [r3, #width]
-    ldr.w r6, [r3], #2*width
-
-    smuad r10, r4, r6
-    montgomery r14, r14, r10, r6
-    smuadx r11, r4, r5
-    montgomery r14, r14, r11, r10
-
-    pkhtb r10, r10, r6, asr#16
-
-    str.w r10, [r0], #width
-
-    smuad r10, r7, r9
-    montgomery r14, r14, r10, r6
-    smuadx r11, r7, r8
-    montgomery r14, r14, r11, r10
-
-    pkhtb r10, r10, r6, asr#16
-    str.w r10, [r0], #width
-
-
-    cmp.w r0, r12
-    bne.w _asymmetric_mul_16_loop
-
-    pop.w {r4-r11, pc}
+  pop {r4-r11, pc}
