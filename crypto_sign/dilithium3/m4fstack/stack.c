@@ -418,3 +418,28 @@ void poly_decompose_w1(poly *a1, const poly *a) {
   for(i = 0; i < N; ++i)
     a1->coeffs[i] = decompose_w1(a->coeffs[i]);
 }
+
+static int32_t decompose_w0(int32_t a){
+  int32_t a1;
+  int32_t a0;
+
+  a1  = (a + 127) >> 7;
+#if GAMMA2 == (Q-1)/32
+  a1  = (a1*1025 + (1 << 21)) >> 22;
+  a1 &= 15;
+#elif GAMMA2 == (Q-1)/88
+  a1  = (a1*11275 + (1 << 23)) >> 24;
+  a1 ^= ((43 - a1) >> 31) & a1;
+#endif
+
+  a0  = a - a1*2*GAMMA2;
+  a0 -= (((Q-1)/2 - a0) >> 31) & Q;
+  return a0;
+}
+
+void poly_decompose_w0(poly *a0, const poly *a){
+  unsigned int i;
+
+  for(i = 0; i < N; ++i)
+    a0->coeffs[i] = decompose_w0(a->coeffs[i]);
+}

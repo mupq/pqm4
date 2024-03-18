@@ -93,7 +93,7 @@ int crypto_sign_signature(uint8_t *sig,
   unsigned int n;
   uint8_t wcomp[K][768];
   uint8_t ccomp[68];
-  poly tmp0, tmp1;
+  poly tmp0;
   shake256incctx state;
 
   smallpoly stmp0, stmp1;
@@ -186,16 +186,14 @@ rej:
   for(unsigned int k_idx = 0; k_idx < K; ++k_idx) {
     unpack_sk_s2(&stmp0, sk, k_idx);
     small_ntt(&stmp0);
-    poly_small_basemul_invntt(&tmp1, &cp_small, &cp_small_prime, &stmp0);
+    poly_small_basemul_invntt(&tmp0, &cp_small, &cp_small_prime, &stmp0);
 
-    polyw_unpack(&tmp0, wcomp[k_idx]);
-
-    poly_sub(&tmp0, &tmp0, &tmp1);
+    polyw_sub(&tmp0, wcomp[k_idx], &tmp0);
     poly_reduce(&tmp0);
 
     polyw_pack(wcomp[k_idx], &tmp0);
 
-    poly_decompose(&tmp1, &tmp0, &tmp0);
+    poly_decompose_w0(&tmp0, &tmp0);
     poly_reduce(&tmp0);
     if(poly_chknorm(&tmp0, GAMMA2 - BETA)){
       goto rej;
@@ -209,13 +207,6 @@ rej:
     if(poly_chknorm(&tmp0, GAMMA2)) {
       goto rej;
     }
-
-    poly_add(&tmp0, &tmp0, &tmp1);
-
-
-    polyw_unpack(&tmp1, wcomp[k_idx]);
-    poly_decompose_w1(&tmp1, &tmp1);
-
 
     hint_n += poly_make_hint_stack(&tmp0, &tmp0, wcomp[k_idx]);
 
