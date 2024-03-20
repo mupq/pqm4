@@ -300,9 +300,8 @@ int crypto_sign_verify(const uint8_t *sig,
   uint8_t w1_packed[POLYW1_PACKEDBYTES];
   uint8_t rho[SEEDBYTES];
   uint8_t mu[CRHBYTES];
-  uint8_t c[CTILDEBYTES];
   uint8_t c2[CTILDEBYTES];
-  poly w1, tmp0, tmp1;
+  poly w1, tmp0;
 
   uint8_t wcomp[768];
   uint8_t ccomp[68];
@@ -336,27 +335,28 @@ int crypto_sign_verify(const uint8_t *sig,
         wcomp[i] = 0;
     }
 
-    polyz_unpack(&tmp1, sig + CTILDEBYTES);
-    if(poly_chknorm(&tmp1, GAMMA1 - BETA))
+    polyz_unpack(&tmp0, sig + CTILDEBYTES);
+    if(poly_chknorm(&tmp0, GAMMA1 - BETA))
       return -1;
-    poly_ntt(&tmp1);
+    poly_ntt(&tmp0);
     
-    poly_uniform_pointwise_montgomery_polywadd_stack(wcomp, &tmp1, rho, (k_idx << 8) + 0, &s128);
+    poly_uniform_pointwise_montgomery_polywadd_stack(wcomp, &tmp0, rho, (k_idx << 8) + 0, &s128);
 
     for (size_t l_idx = 1; l_idx < L; l_idx++) {
-      polyz_unpack(&tmp1, sig + CTILDEBYTES + l_idx*POLYZ_PACKEDBYTES);
-      if(poly_chknorm(&tmp1, GAMMA1 - BETA))
+      polyz_unpack(&tmp0, sig + CTILDEBYTES + l_idx*POLYZ_PACKEDBYTES);
+      if(poly_chknorm(&tmp0, GAMMA1 - BETA))
         return -1;
-      poly_ntt(&tmp1);
-      poly_uniform_pointwise_montgomery_polywadd_stack(wcomp, &tmp1, rho, (k_idx << 8) + l_idx, &s128);
+      poly_ntt(&tmp0);
+      poly_uniform_pointwise_montgomery_polywadd_stack(wcomp, &tmp0, rho, (k_idx << 8) + l_idx, &s128);
     }
     polyw_unpack(&w1, wcomp);
     poly_reduce(&w1);
     poly_invntt_tomont(&w1);
+    polyw_pack(wcomp, &w1);
     
     poly_schoolbook_t1(&tmp0, ccomp, pk + SEEDBYTES + k_idx*POLYT1_PACKEDBYTES);
 
-    poly_sub(&w1, &w1, &tmp0);
+    polyw_sub(&w1, wcomp, &tmp0);
     poly_reduce(&w1);
 
     /* Reconstruct w1 */
