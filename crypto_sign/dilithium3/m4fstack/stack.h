@@ -24,7 +24,7 @@ void poly_lowbits(poly *a0, const poly *a);
 
 void unpack_sk_s1(smallpoly *a, const uint8_t *sk, size_t idx);
 void unpack_sk_s2(smallpoly *a, const uint8_t *sk, size_t idx);
-
+unpack_sig_h(poly *h, unsigned int idx, const unsigned char sig[CRYPTO_BYTES]);
 
 void poly_uniform_pointwise_montgomery_polywadd_stack(uint8_t wcomp[3*N], poly *b, uint8_t  seed[SEEDBYTES], uint16_t nonce, shake128incctx *state);
 void poly_uniform_gamma1_stack(poly *a, const uint8_t seed[CRHBYTES], uint16_t nonce, shake256incctx *state);

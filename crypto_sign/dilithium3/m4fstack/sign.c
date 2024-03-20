@@ -302,9 +302,7 @@ int crypto_sign_verify(const uint8_t *sig,
   uint8_t mu[CRHBYTES];
   uint8_t c[CTILDEBYTES];
   uint8_t c2[CTILDEBYTES];
-  polyvecl z;
-  polyveck h, t1;
-  poly w1, cp, tmp0;
+  poly w1, tmp0, tmp1;
   shake256incctx state;
 
   uint8_t wcomp[768];
@@ -313,11 +311,8 @@ int crypto_sign_verify(const uint8_t *sig,
   if(siglen != CRYPTO_BYTES)
     return -1;
 
-  unpack_pk(rho, &t1, pk);
-  if(unpack_sig(c, &z, &h, sig))
-    return -1;
-  if(polyvecl_chknorm(&z, GAMMA1 - BETA))
-    return -1;
+  for(i = 0; i < SEEDBYTES; ++i)
+    rho[i] = pk[i];
 
   /* Compute CRH(h(rho, t1), msg) */
   shake256(mu, TRBYTES, pk, CRYPTO_PUBLICKEYBYTES);
@@ -328,21 +323,27 @@ int crypto_sign_verify(const uint8_t *sig,
   shake256_inc_squeeze(mu, CRHBYTES, &state);
 
   /* Matrix-vector multiplication; compute Az - c2^dt1 */
-  poly_challenge(&cp, sig);
-  poly_challenge_compress(ccomp, &cp);
-  poly_ntt(&cp);
-
-  polyvecl_ntt(&z);
+  poly_challenge(&tmp0, sig);
+  poly_challenge_compress(ccomp, &tmp0);
 
   shake256_inc_init(&state);
   shake256_inc_absorb(&state, mu, CRHBYTES);
 
   for (size_t k_idx = 0; k_idx < K; k_idx++) {
+    polyz_unpack(&tmp1, sig + CTILDEBYTES);
+    if(poly_chknorm(&tmp1, GAMMA1 - BETA))
+      return -1;
+    poly_ntt(&tmp1);
+    
     poly_uniform(&tmp0, rho, (k_idx << 8) + 0);
-    poly_pointwise_montgomery(&w1,  &tmp0, &z.vec[0]);
+    poly_pointwise_montgomery(&w1,  &tmp0, &tmp1);
     for (size_t l_idx = 1; l_idx < L; l_idx++) {
+      polyz_unpack(&tmp1, sig + CTILDEBYTES + l_idx*POLYZ_PACKEDBYTES);
+      if(poly_chknorm(&tmp1, GAMMA1 - BETA))
+        return -1;
+      poly_ntt(&tmp1);
       poly_uniform(&tmp0, rho, (k_idx << 8) + l_idx);
-      poly_pointwise_acc_montgomery(&w1,  &tmp0, &z.vec[l_idx]);
+      poly_pointwise_acc_montgomery(&w1,  &tmp0, &tmp1);
     }
     
     poly_reduce(&w1);
@@ -350,13 +351,16 @@ int crypto_sign_verify(const uint8_t *sig,
     
     poly_schoolbook_t1(&tmp0, ccomp, pk + SEEDBYTES + k_idx*POLYT1_PACKEDBYTES);
 
-    // TODO invNTT before sub because of schoolbook
     poly_sub(&w1, &w1, &tmp0);
     poly_reduce(&w1);
 
     /* Reconstruct w1 */
     poly_caddq(&w1);
-    poly_use_hint(&w1, &w1, &h.vec[k_idx]);
+
+    if (unpack_sig_h(&tmp0, k_idx, sig) != 0) {
+      return -1;
+    };
+    poly_use_hint(&w1, &w1, &tmp0);
     polyw1_pack(w1_packed, &w1);
 
     shake256_inc_absorb(&state, w1_packed, POLYW1_PACKEDBYTES);
@@ -365,7 +369,7 @@ int crypto_sign_verify(const uint8_t *sig,
   shake256_inc_finalize(&state);
   shake256_inc_squeeze(c2, CTILDEBYTES, &state);
   for(i = 0; i < CTILDEBYTES; ++i)
-    if(c[i] != c2[i])
+    if(sig[i] != c2[i])
       return -1;
 
   return 0;

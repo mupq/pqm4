@@ -457,3 +457,52 @@ void unpack_sk_stack(uint8_t rho[SEEDBYTES],
     tr[i] = sk[i];
   sk += TRBYTES;
 }
+
+/*************************************************
+* Name:        unpack_sig_h
+*
+* Description: Unpack only h from signature sig = (c, z, h).
+*
+* Arguments:   - polyveck *h: pointer to output hint vector h
+*              - const unsigned char sig[]: byte array containing
+*                bit-packed signature
+*
+* Returns 1 in case of malformed signature; otherwise 0.
+**************************************************/
+int unpack_sig_h(poly *h, unsigned int idx, const unsigned char sig[CRYPTO_BYTES]) {
+    sig += L * POLYZ_PACKEDBYTES;
+    sig += CTILDEBYTES;
+    /* Decode h */
+    unsigned int k = 0;
+    for (unsigned int i = 0; i < K; ++i) {
+        for (unsigned int j = 0; j < N; ++j) {
+            if (i == idx) {
+                h->coeffs[j] = 0;
+            }
+        }
+
+        if (sig[OMEGA + i] < k || sig[OMEGA + i] > OMEGA) {
+            return 1;
+        }
+
+        for (unsigned int j = k; j < sig[OMEGA + i]; ++j) {
+            /* Coefficients are ordered for strong unforgeability */
+            if (j > k && sig[j] <= sig[j - 1]) {
+                return 1;
+            }
+            if (i == idx) {
+                h->coeffs[sig[j]] = 1;
+            }
+        }
+
+        k = sig[OMEGA + i];
+    }
+
+    /* Extra indices are zero for strong unforgeability */
+    for (unsigned int j = k; j < OMEGA; ++j) {
+        if (sig[j]) {
+            return 1;
+        }
+    }
+    return 0;
+}
