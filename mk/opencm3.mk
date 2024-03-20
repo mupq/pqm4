@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0 or CC0-1.0
 LIBHAL_SRC := \
 	common/hal-opencm3.c \
 	common/randombytes.c

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: Apache-2.0 or CC0-1.0
 import sys
 from mupq import mupq
     
