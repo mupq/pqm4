@@ -297,15 +297,18 @@ int crypto_sign_verify(const uint8_t *sig,
                        const uint8_t *pk)
 {
   unsigned int i;
-  uint8_t buf[K*POLYW1_PACKEDBYTES];
+  uint8_t w1_packed[POLYW1_PACKEDBYTES];
   uint8_t rho[SEEDBYTES];
   uint8_t mu[CRHBYTES];
   uint8_t c[CTILDEBYTES];
   uint8_t c2[CTILDEBYTES];
-  poly cp;
-  polyvecl mat[K], z;
-  polyveck t1, w1, h;
+  polyvecl z;
+  polyveck h, t1;
+  poly w1, cp, tmp0;
   shake256incctx state;
+
+  uint8_t wcomp[768];
+  uint8_t ccomp[68];
 
   if(siglen != CRYPTO_BYTES)
     return -1;
@@ -325,30 +328,40 @@ int crypto_sign_verify(const uint8_t *sig,
   shake256_inc_squeeze(mu, CRHBYTES, &state);
 
   /* Matrix-vector multiplication; compute Az - c2^dt1 */
-  poly_challenge(&cp, c);
-  polyvec_matrix_expand(mat, rho);
+  poly_challenge(&cp, sig);
+  poly_challenge_compress(ccomp, &cp);
+  poly_ntt(&cp);
 
   polyvecl_ntt(&z);
-  polyvec_matrix_pointwise_montgomery(&w1, mat, &z);
 
-  poly_ntt(&cp);
-  polyveck_shiftl(&t1);
-  polyveck_ntt(&t1);
-  polyveck_pointwise_poly_montgomery(&t1, &cp, &t1);
-
-  polyveck_sub(&w1, &w1, &t1);
-  polyveck_reduce(&w1);
-  polyveck_invntt_tomont(&w1);
-
-  /* Reconstruct w1 */
-  polyveck_caddq(&w1);
-  polyveck_use_hint(&w1, &w1, &h);
-  polyveck_pack_w1(buf, &w1);
-
-  /* Call random oracle and verify challenge */
   shake256_inc_init(&state);
   shake256_inc_absorb(&state, mu, CRHBYTES);
-  shake256_inc_absorb(&state, buf, K*POLYW1_PACKEDBYTES);
+
+  for (size_t k_idx = 0; k_idx < K; k_idx++) {
+    poly_uniform(&tmp0, rho, (k_idx << 8) + 0);
+    poly_pointwise_montgomery(&w1,  &tmp0, &z.vec[0]);
+    for (size_t l_idx = 1; l_idx < L; l_idx++) {
+      poly_uniform(&tmp0, rho, (k_idx << 8) + l_idx);
+      poly_pointwise_acc_montgomery(&w1,  &tmp0, &z.vec[l_idx]);
+    }
+    
+    poly_reduce(&w1);
+    poly_invntt_tomont(&w1);
+    
+    poly_schoolbook_t1(&tmp0, ccomp, pk + SEEDBYTES + k_idx*POLYT1_PACKEDBYTES);
+
+    // TODO invNTT before sub because of schoolbook
+    poly_sub(&w1, &w1, &tmp0);
+    poly_reduce(&w1);
+
+    /* Reconstruct w1 */
+    poly_caddq(&w1);
+    poly_use_hint(&w1, &w1, &h.vec[k_idx]);
+    polyw1_pack(w1_packed, &w1);
+
+    shake256_inc_absorb(&state, w1_packed, POLYW1_PACKEDBYTES);
+  }
+  /* Call random oracle and verify challenge */
   shake256_inc_finalize(&state);
   shake256_inc_squeeze(c2, CTILDEBYTES, &state);
   for(i = 0; i < CTILDEBYTES; ++i)

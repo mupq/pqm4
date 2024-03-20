@@ -12,6 +12,7 @@ void poly_challenge_decompress(poly *cp, const uint8_t c[68]);
 
 
 void poly_schoolbook(poly *c, const uint8_t ccomp[68], const uint8_t *t0);
+void poly_schoolbook_t1(poly *c, const uint8_t ccomp[68], const uint8_t *t1);
 void polyw_pack(uint8_t buf[3*256], poly *w);
 void polyw_unpack(poly *w, const uint8_t buf[3*256]);
 

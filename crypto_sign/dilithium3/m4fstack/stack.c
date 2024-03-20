@@ -88,6 +88,28 @@ static inline int32_t polyt0_unpack_idx(const uint8_t *t0, unsigned idx){
     return (1 << (D-1)) - coeff;
 }
 
+static inline int32_t polyt1_unpack_idx(const uint8_t *t1, unsigned idx){
+    int32_t coeff;
+    // 4 coefficients are packed in 5 bytes
+    t1 += 5*(idx >> 2);
+
+    if(idx % 4 == 0){
+        coeff  = (t1[0] >> 0);
+        coeff |= ((uint32_t)t1[1] << 8);
+    } else if(idx % 4 == 1){
+        coeff  =  (t1[1] >> 2);
+        coeff |= ((uint32_t)t1[2] << 6);
+    } else if(idx % 4 == 2){
+        coeff  = (t1[2] >> 4);
+        coeff |= ((uint32_t)t1[3] << 4);
+    } else if(idx % 4 == 3){
+        coeff  = (t1[3] >> 6);
+        coeff |= ((uint32_t)t1[4] << 2);
+    }
+    coeff &= 0x3FF;
+    return coeff;
+}
+
 void poly_schoolbook(poly *c, const uint8_t ccomp[68], const uint8_t *t0){
   unsigned i,j,idx;
   uint64_t signs = 0;
@@ -111,6 +133,36 @@ void poly_schoolbook(poly *c, const uint8_t ccomp[68], const uint8_t *t0){
         }
         for(j = N-i; j<N; j++){
             c->coeffs[i+j-N] += polyt0_unpack_idx(t0, j);
+        }
+    }
+
+    signs >>= 1;
+  }
+}
+
+void poly_schoolbook_t1(poly *c, const uint8_t ccomp[68], const uint8_t *t1){
+  unsigned i,j,idx;
+  uint64_t signs = 0;
+  for(i = 0; i < N; i++) c->coeffs[i] = 0;
+  for(i = 0; i < 8; i++) {
+    signs |= ((uint64_t)ccomp[60+i]) << (8*i);
+  }
+
+  for(idx = 0; idx < TAU; idx++){
+    i = ccomp[idx];
+    if(!(signs & 1)){
+        for(j = 0; i+j < N; j++){
+            c->coeffs[i+j] += (polyt1_unpack_idx(t1, j) << D);
+        }
+        for(j = N-i; j<N; j++){
+            c->coeffs[i+j-N] -= (polyt1_unpack_idx(t1, j) << D);
+        }
+    } else {
+        for(j = 0; i+j < N; j++){
+            c->coeffs[i+j] -= (polyt1_unpack_idx(t1, j) << D);
+        }
+        for(j = N-i; j<N; j++){
+            c->coeffs[i+j-N] += (polyt1_unpack_idx(t1, j) << D);
         }
     }
 
