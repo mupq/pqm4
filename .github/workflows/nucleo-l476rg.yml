@@ -1,0 +1,21 @@
+name: nucleo-l476rg build
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches: [ "master" ]
+jobs:
+  build-all:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Install Toolchain
+        uses: carlosperate/arm-none-eabi-gcc-action@v1.8.0
+        with:
+          release: 13.2.Rel1
+      - name: Build All (nucleo-l476rg)
+        run: make PLATFORM=nucleo-l476rg -j2
