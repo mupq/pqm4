@@ -7,6 +7,10 @@ EXCLUDED_SCHEMES = \
 	mupq/pqclean/crypto_sign/sphincs-shake256-256f% \
 	mupq/pqclean/crypto_sign/sphincs-sha256-256f% \
 	mupq/crypto_sign/ov-Ip% \
+	mupq/crypto_sign/tuov_is% \
+	mupq/crypto_sign/tuov_ip% \
+	mupq/crypto_sign/tuov_iii% \
+	mupq/crypto_sign/tuov_v% \
 	crypto_sign/ov-Ip% \
 	mupq/crypto_sign/falcon-1024% \
 	mupq/crypto_sign/falcon-512% \
