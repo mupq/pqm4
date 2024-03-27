@@ -6,6 +6,15 @@ EXCLUDED_SCHEMES = \
 	mupq/pqclean/crypto_kem/mceliece% \
 	mupq/crypto_sign/tuov% \
 	mupq/crypto_sign/ov-Ip% \
+	mupq/crypto_sign/snova-43-25-16-2-esk% \
+	mupq/crypto_sign/snova-61-33-16-2-esk% \
+	mupq/crypto_sign/snova-60-10-16-4-esk% \
+	mupq/crypto_sign/snova-66-15-16-3-esk% \
+	mupq/crypto_sign/snova-49-11-16-3-esk% \
+	mupq/crypto_sign/snova-37-8-16-4-esk% \
+	mupq/crypto_sign/meds55604% \
+	mupq/crypto_sign/meds167717% \
+	mupq/crypto_sign/meds134180% \
 	crypto_sign/ov-Ip% \
 	mupq/crypto_sign/falcon-1024-tree%
 
