@@ -297,11 +297,13 @@ int crypto_sign_verify(const uint8_t *sig,
                        const uint8_t *pk)
 {
   unsigned int i;
+  unsigned int number_of_hints;
   uint8_t w1_packed[POLYW1_PACKEDBYTES];
   uint8_t rho[SEEDBYTES];
   uint8_t mu[CRHBYTES];
   uint8_t c2[CTILDEBYTES];
-  poly w1, tmp0;
+  uint8_t hint_ones[OMEGA];
+  poly p;
 
   uint8_t wcomp[768];
   uint8_t ccomp[68];
@@ -316,7 +318,11 @@ int crypto_sign_verify(const uint8_t *sig,
     rho[i] = pk[i];
 
   /* Compute CRH(h(rho, t1), msg) */
-  shake256(mu, TRBYTES, pk, CRYPTO_PUBLICKEYBYTES);
+  shake256_inc_init(&s256);
+  shake256_inc_absorb(&s256, pk, CRYPTO_PUBLICKEYBYTES);
+  shake256_inc_finalize(&s256);
+  shake256_inc_squeeze(mu, CRHBYTES, &s256);
+
   shake256_inc_init(&s256);
   shake256_inc_absorb(&s256, mu, TRBYTES);
   shake256_inc_absorb(&s256, m, mlen);
@@ -324,49 +330,51 @@ int crypto_sign_verify(const uint8_t *sig,
   shake256_inc_squeeze(mu, CRHBYTES, &s256);
 
   /* Matrix-vector multiplication; compute Az - c2^dt1 */
-  poly_challenge(&tmp0, sig);
-  poly_challenge_compress(ccomp, &tmp0);
+  poly_challenge(&p, sig);
+  poly_challenge_compress(ccomp, &p);
 
   shake256_inc_init(&s256);
   shake256_inc_absorb(&s256, mu, CRHBYTES);
 
   for (size_t k_idx = 0; k_idx < K; k_idx++) {
-    for(size_t i=0;i<768;i++){
-        wcomp[i] = 0;
+    for(size_t widx=0;widx<768;widx++){
+        wcomp[widx] = 0;
     }
 
-    polyz_unpack(&tmp0, sig + CTILDEBYTES);
-    if(poly_chknorm(&tmp0, GAMMA1 - BETA))
+    polyz_unpack(&p, sig + CTILDEBYTES);
+    if(poly_chknorm(&p, GAMMA1 - BETA))
       return -1;
-    poly_ntt(&tmp0);
+    poly_ntt(&p);
     
-    poly_uniform_pointwise_montgomery_polywadd_stack(wcomp, &tmp0, rho, (k_idx << 8) + 0, &s128);
+    poly_uniform_pointwise_montgomery_polywadd_stack(wcomp, &p, rho, (k_idx << 8) + 0, &s128);
 
     for (size_t l_idx = 1; l_idx < L; l_idx++) {
-      polyz_unpack(&tmp0, sig + CTILDEBYTES + l_idx*POLYZ_PACKEDBYTES);
-      if(poly_chknorm(&tmp0, GAMMA1 - BETA))
+      polyz_unpack(&p, sig + CTILDEBYTES + l_idx*POLYZ_PACKEDBYTES);
+      if(poly_chknorm(&p, GAMMA1 - BETA))
         return -1;
-      poly_ntt(&tmp0);
-      poly_uniform_pointwise_montgomery_polywadd_stack(wcomp, &tmp0, rho, (k_idx << 8) + l_idx, &s128);
+      poly_ntt(&p);
+      poly_uniform_pointwise_montgomery_polywadd_stack(wcomp, &p, rho, (k_idx << 8) + l_idx, &s128);
     }
-    polyw_unpack(&w1, wcomp);
-    poly_reduce(&w1);
-    poly_invntt_tomont(&w1);
-    polyw_pack(wcomp, &w1);
+    polyw_unpack(&p, wcomp);
+    poly_reduce(&p);
+    poly_invntt_tomont(&p);
+    polyw_pack(wcomp, &p);
     
-    poly_schoolbook_t1(&tmp0, ccomp, pk + SEEDBYTES + k_idx*POLYT1_PACKEDBYTES);
+    poly_schoolbook_t1(&p, ccomp, pk + SEEDBYTES + k_idx*POLYT1_PACKEDBYTES);
 
-    polyw_sub(&w1, wcomp, &tmp0);
-    poly_reduce(&w1);
+    polyw_sub(&p, wcomp, &p);
+    poly_reduce(&p);
 
     /* Reconstruct w1 */
-    poly_caddq(&w1);
+    poly_caddq(&p);
 
-    if (unpack_sig_h(&tmp0, k_idx, sig) != 0) {
+    if (unpack_sig_h_indices(&hint_ones, &number_of_hints, k_idx, sig) != 0)
+    {
       return -1;
-    };
-    poly_use_hint(&w1, &w1, &tmp0);
-    polyw1_pack(w1_packed, &w1);
+    }
+    poly_use_hint_stack(&p, &p, &hint_ones, number_of_hints);
+
+    polyw1_pack(w1_packed, &p);
 
     shake256_inc_absorb(&s256, w1_packed, POLYW1_PACKEDBYTES);
   }

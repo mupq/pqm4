@@ -3,6 +3,7 @@
 #include "symmetric.h"
 #include "vector.h"
 #include "reduce.h"
+#include "rounding.h"
 
 void poly_challenge_compress(uint8_t c[68], const poly *cp){
   unsigned int i, pos;
@@ -406,7 +407,7 @@ void poly_uniform_gamma1_add_stack(poly *a, poly *b, const uint8_t seed[CRHBYTES
 }
 
 
-static inline int32_t make_hint(int32_t z, int32_t r){
+static inline int32_t make_hint_stack(int32_t z, int32_t r){
   int32_t r1, v1;
 
   r1 = highbits(r);
@@ -429,7 +430,7 @@ size_t poly_make_hint_stack(poly *a, poly *t, uint8_t w[768]){
     // compute w - cs2 + c*t0
     coeff  = coeff + t->coeffs[i];
 
-    a->coeffs[i] = make_hint(-t->coeffs[i], coeff);
+    a->coeffs[i] = make_hint_stack(-t->coeffs[i], coeff);
     if(a->coeffs[i] == 1){
       hints_n++;
     }
@@ -458,6 +459,7 @@ void unpack_sk_stack(uint8_t rho[SEEDBYTES],
   sk += TRBYTES;
 }
 
+/* TODO: remove this function */
 /*************************************************
 * Name:        unpack_sig_h
 *
@@ -474,30 +476,30 @@ int unpack_sig_h(poly *h, unsigned int idx, const unsigned char sig[CRYPTO_BYTES
     sig += CTILDEBYTES;
     /* Decode h */
     unsigned int k = 0;
-    for (unsigned int i = 0; i < K; ++i) {
-        for (unsigned int j = 0; j < N; ++j) {
-            if (i == idx) {
-                h->coeffs[j] = 0;
-            }
-        }
 
-        if (sig[OMEGA + i] < k || sig[OMEGA + i] > OMEGA) {
-            return 1;
-        }
-
-        for (unsigned int j = k; j < sig[OMEGA + i]; ++j) {
-            /* Coefficients are ordered for strong unforgeability */
-            if (j > k && sig[j] <= sig[j - 1]) {
-                return 1;
-            }
-            if (i == idx) {
-                h->coeffs[sig[j]] = 1;
-            }
-        }
-
-        k = sig[OMEGA + i];
+    if (idx > 0)
+    {
+        k = sig[OMEGA + (idx - 1)];
+    }
+    
+    for (unsigned int j = 0; j < N; ++j) {
+        h->coeffs[j] = 0;
     }
 
+    if (sig[OMEGA + idx] < k || sig[OMEGA + idx] > OMEGA) {
+        return 1;
+    }
+
+    for (unsigned int j = k; j < sig[OMEGA + idx]; ++j) {
+        /* Coefficients are ordered for strong unforgeability */
+        if (j > k && sig[j] <= sig[j - 1]) {
+            return 1;
+        }
+        h->coeffs[sig[j]] = 1;
+    }
+
+    /* TODO: extract this check, redundant here */
+    k = sig[OMEGA + (K - 1)];
     /* Extra indices are zero for strong unforgeability */
     for (unsigned int j = k; j < OMEGA; ++j) {
         if (sig[j]) {
@@ -505,4 +507,88 @@ int unpack_sig_h(poly *h, unsigned int idx, const unsigned char sig[CRYPTO_BYTES
         }
     }
     return 0;
+}
+
+/*************************************************
+* Name:        unpack_sig_h_indices
+*
+* Description: Unpack only h from signature sig = (c, z, h).
+*
+* Arguments:   - polyveck *h: pointer to output hint vector h
+*              - const unsigned char sig[]: byte array containing
+*                bit-packed signature
+*
+* Returns 1 in case of malformed signature; otherwise 0.
+**************************************************/
+int unpack_sig_h_indices(uint8_t h_i[OMEGA], unsigned int * number_of_hints, unsigned int idx, const unsigned char sig[CRYPTO_BYTES]) {
+    sig += L * POLYZ_PACKEDBYTES;
+    sig += CTILDEBYTES;
+    /* Decode h */
+    unsigned int k = 0;
+    unsigned int hidx = 0;
+
+    if (idx > 0)
+    {
+        k = sig[OMEGA + (idx - 1)];
+    }
+
+    if (sig[OMEGA + idx] < k || sig[OMEGA + idx] > OMEGA) {
+        return 1;
+    }
+
+    for (unsigned int j = k; j < sig[OMEGA + idx]; ++j) {
+        /* Coefficients are ordered for strong unforgeability */
+        if (j > k && sig[j] <= sig[j - 1]) {
+            return 1;
+        }
+        h_i[hidx++] = sig[j];
+    }
+
+    *number_of_hints = hidx;
+
+    /* TODO: extract this check, redundant here */
+    k = sig[OMEGA + (K - 1)];
+    /* Extra indices are zero for strong unforgeability */
+    for (unsigned int j = k; j < OMEGA; ++j) {
+        if (sig[j]) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+/*************************************************
+* Name:        poly_use_hint_stack
+*
+* Description: Use hint polynomial to correct the high bits of a polynomial.
+*
+* Arguments:   - poly *b: pointer to output polynomial with corrected high bits
+*              - const poly *a: pointer to input polynomial
+*              - const poly *h: pointer to input hint polynomial
+**************************************************/
+void poly_use_hint_stack(poly *b, const poly *a, uint8_t h_i[OMEGA], unsigned int number_of_hints) {
+  unsigned int i;
+  unsigned int in_list;
+
+  for(i = 0; i < N; ++i)
+  {
+    in_list = 0;
+    for (size_t hidx = 0; hidx < number_of_hints; hidx++)
+    {
+      if (i == h_i[hidx])
+      {
+        in_list = 1;
+        break;
+      }
+    }
+    if (in_list)
+    {
+      b->coeffs[i] = use_hint(a->coeffs[i], 1);
+    }
+    else
+    {
+      b->coeffs[i] = use_hint(a->coeffs[i], 0);
+    }
+    
+  }
 }
