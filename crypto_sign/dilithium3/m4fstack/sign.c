@@ -297,25 +297,37 @@ int crypto_sign_verify(const uint8_t *sig,
                        const uint8_t *pk)
 {
   unsigned int i;
-  unsigned int number_of_hints;
-  uint8_t w1_packed[POLYW1_PACKEDBYTES];
-  uint8_t rho[SEEDBYTES];
-  uint8_t mu[CRHBYTES];
-  uint8_t c2[CTILDEBYTES];
-  uint8_t hint_ones[OMEGA];
+  
   poly p;
 
-  uint8_t wcomp[768];
-  uint8_t ccomp[68];
+  union {
+    uint8_t w1_packed[POLYW1_PACKEDBYTES];
+    uint8_t wcomp[768];
+  } w1_packed_comp;
+  uint8_t *w1_packed = &w1_packed_comp.w1_packed;
+  uint8_t *wcomp  = &w1_packed_comp.wcomp;
 
-  shake128incctx s128;
+  union {
+    uint8_t ccomp[68];
+    uint8_t mu[CRHBYTES];
+  } ccomp_mu;
+  uint8_t *ccomp = &ccomp_mu.ccomp;
+  uint8_t *mu  = &ccomp_mu.mu;
+
   shake256incctx s256;
+
+  union {
+    uint8_t hint_ones[OMEGA];
+    shake128incctx s128;
+    uint8_t c2[CTILDEBYTES];
+  } shake_hint;
+
+  uint8_t *hint_ones   = &shake_hint.hint_ones;
+  shake128incctx *s128 = &shake_hint.s128;
+  uint8_t *c2          = &shake_hint.c2;
 
   if(siglen != CRYPTO_BYTES)
     return -1;
-
-  for(i = 0; i < SEEDBYTES; ++i)
-    rho[i] = pk[i];
 
   /* Compute CRH(h(rho, t1), msg) */
   shake256_inc_init(&s256);
@@ -329,12 +341,12 @@ int crypto_sign_verify(const uint8_t *sig,
   shake256_inc_finalize(&s256);
   shake256_inc_squeeze(mu, CRHBYTES, &s256);
 
+  shake256_inc_init(&s256);
+  shake256_inc_absorb(&s256, mu, CRHBYTES);
+
   /* Matrix-vector multiplication; compute Az - c2^dt1 */
   poly_challenge(&p, sig);
   poly_challenge_compress(ccomp, &p);
-
-  shake256_inc_init(&s256);
-  shake256_inc_absorb(&s256, mu, CRHBYTES);
 
   for (size_t k_idx = 0; k_idx < K; k_idx++) {
     for(size_t widx=0;widx<768;widx++){
@@ -346,14 +358,14 @@ int crypto_sign_verify(const uint8_t *sig,
       return -1;
     poly_ntt(&p);
     
-    poly_uniform_pointwise_montgomery_polywadd_stack(wcomp, &p, rho, (k_idx << 8) + 0, &s128);
+    poly_uniform_pointwise_montgomery_polywadd_stack(wcomp, &p, pk, (k_idx << 8) + 0, s128);
 
     for (size_t l_idx = 1; l_idx < L; l_idx++) {
       polyz_unpack(&p, sig + CTILDEBYTES + l_idx*POLYZ_PACKEDBYTES);
       if(poly_chknorm(&p, GAMMA1 - BETA))
         return -1;
       poly_ntt(&p);
-      poly_uniform_pointwise_montgomery_polywadd_stack(wcomp, &p, rho, (k_idx << 8) + l_idx, &s128);
+      poly_uniform_pointwise_montgomery_polywadd_stack(wcomp, &p, pk, (k_idx << 8) + l_idx, s128);
     }
     polyw_unpack(&p, wcomp);
     poly_reduce(&p);
@@ -368,11 +380,11 @@ int crypto_sign_verify(const uint8_t *sig,
     /* Reconstruct w1 */
     poly_caddq(&p);
 
-    if (unpack_sig_h_indices(&hint_ones, &number_of_hints, k_idx, sig) != 0)
+    if (unpack_sig_h_indices(hint_ones, &i, k_idx, sig) != 0)
     {
       return -1;
     }
-    poly_use_hint_stack(&p, &p, &hint_ones, number_of_hints);
+    poly_use_hint_stack(&p, &p, hint_ones, i);
 
     polyw1_pack(w1_packed, &p);
 
