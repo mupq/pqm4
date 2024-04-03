@@ -237,7 +237,7 @@ int cmp_poly_compress(const unsigned char *r, poly *a) {
     int i, j, k = 0;
 
 #if (KYBER_POLYCOMPRESSEDBYTES == 128)
-    for (i = 0; i < KYBER_N; i += 8) {
+  for(i=0;i<KYBER_N/8;i++) {
     for(j=0;j<8;j++) {
       // map to positive standard representatives
       u  = a->coeffs[8*i+j];
@@ -256,8 +256,7 @@ int cmp_poly_compress(const unsigned char *r, poly *a) {
         k += 4;
     }
 #elif (KYBER_POLYCOMPRESSEDBYTES == 160)
-    for(i=0;i<KYBER_N;i+=8)
-    {
+  for(i=0;i<KYBER_N/8;i++) {
     for(j=0;j<8;j++) {
       // map to positive standard representatives
       u  = a->coeffs[8*i+j];
