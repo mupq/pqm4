@@ -24,12 +24,12 @@
 * Returns 0 (success)
 **************************************************/
 int crypto_sign_keypair(uint8_t *pk, uint8_t *sk) {
+  unsigned int i, j;
   uint8_t seedbuf[2*SEEDBYTES + CRHBYTES];
   uint8_t tr[TRBYTES];
   const uint8_t *rho, *rhoprime, *key;
-  polyvecl mat[K];
-  polyvecl s1, s1hat;
-  polyveck s2, t1, t0;
+
+  poly tA, tB, tC;
 
   /* Get randomness for rho, rhoprime and key */
   randombytes(seedbuf, SEEDBYTES);
@@ -38,31 +38,57 @@ int crypto_sign_keypair(uint8_t *pk, uint8_t *sk) {
   rhoprime = rho + SEEDBYTES;
   key = rhoprime + CRHBYTES;
 
-  /* Expand matrix */
-  polyvec_matrix_expand(mat, rho);
-
-  /* Sample short vectors s1 and s2 */
-  polyvecl_uniform_eta(&s1, rhoprime, 0);
-  polyveck_uniform_eta(&s2, rhoprime, L);
+  pack_sk_rho(sk, rho);
+  pack_sk_key(sk, key);
+  pack_pk_rho(pk, rho);
 
   /* Matrix-vector multiplication */
-  s1hat = s1;
-  polyvecl_ntt(&s1hat);
-  polyvec_matrix_pointwise_montgomery(&t1, mat, &s1hat);
-  polyveck_reduce(&t1);
-  polyveck_invntt_tomont(&t1);
+  for (i = 0; i < K; i++)
+  {
+    /* Expand part of s1 */
+    poly_uniform_eta(&tC, rhoprime, 0);
+    if (i == 0)
+    {
+      pack_sk_s1(sk, &tC, 0);
+    }
+    poly_ntt(&tC);
+    /* expand part of the matrix */
+    poly_uniform(&tB, rho, (i << 8) + 0);
+    /* partial matrix-vector multiplication */
+    poly_pointwise_montgomery(&tA, &tB, &tC);
+    for(j = 1; j < L; j++)
+    {
+      /* Expand part of s1 */
+      poly_uniform_eta(&tC, rhoprime, j);
+      if (i == 0)
+      {
+        pack_sk_s1(sk, &tC, j);
+      }
+      poly_ntt(&tC);
+      poly_uniform(&tB, rho, (i << 8) + j);
+      poly_pointwise_acc_montgomery(&tA, &tB, &tC);
+    }
 
-  /* Add error vector s2 */
-  polyveck_add(&t1, &t1, &s2);
+    poly_reduce(&tA);
+    poly_invntt_tomont(&tA);
 
-  /* Extract t1 and write public key */
-  polyveck_caddq(&t1);
-  polyveck_power2round(&t1, &t0, &t1);
-  pack_pk(pk, rho, &t1);
+    /* Add error vector s2 */
+    /* Sample short vector s2 */
+    poly_uniform_eta(&tB, rhoprime, L + i);
+    pack_sk_s2(sk, &tB, i);
+    poly_add(&tA, &tA, &tB);
+
+    /* Compute t{0,1} */
+    poly_caddq(&tA);
+    poly_power2round(&tC, &tB, &tA);
+    pack_sk_t0(sk, &tB, i);
+    pack_pk_t1(pk, &tC, i);
+
+  }
 
   /* Compute H(rho, t1) and write secret key */
   shake256(tr, TRBYTES, pk, CRYPTO_PUBLICKEYBYTES);
-  pack_sk(sk, rho, tr, key, &t0, &s1, &s2);
+  pack_sk_tr(sk, tr);
 
   return 0;
 }

@@ -284,7 +284,7 @@ void unpack_sk_s2(smallpoly *a, const uint8_t *sk, size_t idx) {
 
 // TODO: in the end increase this buffer size as far as possible
 #define POLY_UNIFORM_BUFFERSIZE 3
-void poly_uniform_pointwise_montgomery_polywadd_stack(uint8_t wcomp[3*N], poly *b, uint8_t seed[SEEDBYTES], uint16_t nonce, shake128incctx *state){
+void poly_uniform_pointwise_montgomery_polywadd_stack(uint8_t wcomp[3*N], poly *b, const uint8_t seed[SEEDBYTES], uint16_t nonce, shake128incctx *state){
   int32_t t;
   uint8_t buf[POLY_UNIFORM_BUFFERSIZE*3];
   {
@@ -438,7 +438,6 @@ size_t poly_make_hint_stack(poly *a, poly *t, uint8_t w[768]){
   return hints_n;
 }
 
-// TODO: remove this later
 void unpack_sk_stack(uint8_t rho[SEEDBYTES],
                uint8_t tr[TRBYTES],
                uint8_t key[SEEDBYTES],
@@ -457,56 +456,6 @@ void unpack_sk_stack(uint8_t rho[SEEDBYTES],
   for(i = 0; i < TRBYTES; ++i)
     tr[i] = sk[i];
   sk += TRBYTES;
-}
-
-/* TODO: remove this function */
-/*************************************************
-* Name:        unpack_sig_h
-*
-* Description: Unpack only h from signature sig = (c, z, h).
-*
-* Arguments:   - polyveck *h: pointer to output hint vector h
-*              - const unsigned char sig[]: byte array containing
-*                bit-packed signature
-*
-* Returns 1 in case of malformed signature; otherwise 0.
-**************************************************/
-int unpack_sig_h(poly *h, unsigned int idx, const unsigned char sig[CRYPTO_BYTES]) {
-    sig += L * POLYZ_PACKEDBYTES;
-    sig += CTILDEBYTES;
-    /* Decode h */
-    unsigned int k = 0;
-
-    if (idx > 0)
-    {
-        k = sig[OMEGA + (idx - 1)];
-    }
-    
-    for (unsigned int j = 0; j < N; ++j) {
-        h->coeffs[j] = 0;
-    }
-
-    if (sig[OMEGA + idx] < k || sig[OMEGA + idx] > OMEGA) {
-        return 1;
-    }
-
-    for (unsigned int j = k; j < sig[OMEGA + idx]; ++j) {
-        /* Coefficients are ordered for strong unforgeability */
-        if (j > k && sig[j] <= sig[j - 1]) {
-            return 1;
-        }
-        h->coeffs[sig[j]] = 1;
-    }
-
-    /* TODO: extract this check, redundant here */
-    k = sig[OMEGA + (K - 1)];
-    /* Extra indices are zero for strong unforgeability */
-    for (unsigned int j = k; j < OMEGA; ++j) {
-        if (sig[j]) {
-            return 1;
-        }
-    }
-    return 0;
 }
 
 /*************************************************
@@ -591,4 +540,130 @@ void poly_use_hint_stack(poly *b, const poly *a, uint8_t h_i[OMEGA], unsigned in
     }
     
   }
+}
+
+/*************************************************
+* Name:        pack_pk_rho
+*
+* Description: Bit-pack only rho in public key pk = (rho, t1).
+*
+* Arguments:   - unsigned char pk[]: output byte array
+*              - const unsigned char rho[]: byte array containing rho
+**************************************************/
+void pack_pk_rho(unsigned char pk[CRYPTO_PUBLICKEYBYTES],
+                 const unsigned char rho[SEEDBYTES]) {
+    for (unsigned int i = 0; i < SEEDBYTES; ++i) {
+        pk[i] = rho[i];
+    }
+}
+
+/*************************************************
+* Name:        pack_pk_t1
+*
+* Description: Bit-pack only the t1 elem at idx in public key pk = (rho, t1).
+*
+* Arguments:   - unsigned char pk[]: output byte array
+*              - const polyveck *t1: pointer to vector t1
+*              - const unsigned int idx: index to the elem to pack
+**************************************************/
+void pack_pk_t1(unsigned char pk[CRYPTO_PUBLICKEYBYTES],
+             const poly *t1,
+             const unsigned int idx) {
+    pk += SEEDBYTES;
+    polyt1_pack(pk + idx * POLYT1_PACKEDBYTES, t1);
+}
+
+/*************************************************
+* Name:        pack_sk_s1
+*
+* Description: Bit-pack only some element of s1 in secret key sk = (rho, key, tr, s1, s2, t0).
+*
+* Arguments:   - unsigned char sk[]: output byte array
+*              - const poly *s1_elem: pointer to vector element idx in s1
+*              - const unisgned int idx: index to the element of s1 that should be packed
+**************************************************/
+void pack_sk_s1(unsigned char sk[CRYPTO_SECRETKEYBYTES],
+                const poly *s1_elem,
+                const unsigned int idx) {
+    sk += 2 * SEEDBYTES + TRBYTES;
+    polyeta_pack(sk + idx * POLYETA_PACKEDBYTES, s1_elem);
+}
+
+/*************************************************
+* Name:        pack_sk_s2
+*
+* Description: Bit-pack only some element of s2 in secret key sk = (rho, key, tr, s1, s2, t0).
+*
+* Arguments:   - unsigned char sk[]: output byte array
+*              - const poly *s2_elem: pointer to vector element idx in s2
+*              - const unsigned int idx: index to the element of s1 that should be packed
+**************************************************/
+void pack_sk_s2(unsigned char sk[CRYPTO_SECRETKEYBYTES],
+                const poly *s2_elem,
+                const unsigned int idx) {
+    sk += 2 * SEEDBYTES + TRBYTES + L * POLYETA_PACKEDBYTES;
+    polyeta_pack(sk + idx * POLYETA_PACKEDBYTES, s2_elem);
+}
+
+/*************************************************
+* Name:        pack_sk_t0
+*
+* Description: Bit-pack only some element of t0 in secret key sk = (rho, key, tr, s1, s2, t0).
+*
+* Arguments:   - unsigned char sk[]: output byte array
+*              - const poly *t0_elem: pointer to vector element idx in s2
+*              - const unsigned int idx: index to the element of s1 that should be packed
+**************************************************/
+void pack_sk_t0(unsigned char sk[CRYPTO_SECRETKEYBYTES],
+                const poly *t0_elem,
+                const unsigned int idx) {
+    sk += 2 * SEEDBYTES + TRBYTES + L * POLYETA_PACKEDBYTES + K * POLYETA_PACKEDBYTES;
+    polyt0_pack(sk + idx * POLYT0_PACKEDBYTES, t0_elem);
+}
+
+/*************************************************
+* Name:        pack_sk_rho
+*
+* Description: Bit-pack only rho in secret key sk = (rho, key, tr, s1, s2, t0).
+*
+* Arguments:   - unsigned char sk[]: output byte array
+*              - const unsigned char rho[]: byte array containing rho
+**************************************************/
+void pack_sk_rho(unsigned char sk[CRYPTO_SECRETKEYBYTES],
+                 const unsigned char rho[SEEDBYTES]) {
+  for (unsigned int i = 0; i < SEEDBYTES; ++i) {
+    sk[i] = rho[i];
+  }
+}
+
+/*************************************************
+* Name:        pack_sk_key
+*
+* Description: Bit-pack only key in secret key sk = (rho, key, tr, s1, s2, t0).
+*
+* Arguments:   - unsigned char sk[]: output byte array
+*              - const unsigned char key[]: byte array containing key
+**************************************************/
+void pack_sk_key(unsigned char sk[CRYPTO_SECRETKEYBYTES],
+                 const unsigned char key[SEEDBYTES]) {
+    sk += SEEDBYTES;
+    for (unsigned int i = 0; i < SEEDBYTES; ++i) {
+      sk[i] = key[i];
+    }
+}
+
+/*************************************************
+* Name:        pack_sk_tr
+*
+* Description: Bit-pack only tr in secret key sk = (rho, key, tr, s1, s2, t0).
+*
+* Arguments:   - unsigned char sk[]: output byte array
+*              - const unsigned char tr[]: byte array containing tr
+**************************************************/
+void pack_sk_tr(unsigned char sk[CRYPTO_SECRETKEYBYTES],
+                const unsigned char tr[TRBYTES]) {
+    sk += 2*SEEDBYTES;
+    for (unsigned int i = 0; i < TRBYTES; ++i) {
+        sk[i] = tr[i];
+    }
 }
