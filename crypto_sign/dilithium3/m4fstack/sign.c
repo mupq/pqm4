@@ -26,14 +26,27 @@
 int crypto_sign_keypair(uint8_t *pk, uint8_t *sk) {
   unsigned int i, j;
   uint8_t seedbuf[2*SEEDBYTES + CRHBYTES];
-  uint8_t tr[TRBYTES];
   const uint8_t *rho, *rhoprime, *key;
 
-  poly tA, tB, tC;
+  poly tA, tB;
+
+  union {
+    uint8_t tr[TRBYTES];
+    shake256incctx s256;
+    poly tC;
+  } data;
+
+  shake256incctx *s256 = &data.s256;
+  uint8_t *tr          = &data.tr;
+  poly *tC             = &data.tC;
 
   /* Get randomness for rho, rhoprime and key */
   randombytes(seedbuf, SEEDBYTES);
-  shake256(seedbuf, 2*SEEDBYTES + CRHBYTES, seedbuf, SEEDBYTES);
+  shake256_inc_init(s256);
+  shake256_inc_absorb(s256, seedbuf, SEEDBYTES);
+  shake256_inc_finalize(s256);
+  shake256_inc_squeeze(seedbuf, 2*SEEDBYTES + CRHBYTES, s256);
+
   rho = seedbuf;
   rhoprime = rho + SEEDBYTES;
   key = rhoprime + CRHBYTES;
@@ -46,27 +59,27 @@ int crypto_sign_keypair(uint8_t *pk, uint8_t *sk) {
   for (i = 0; i < K; i++)
   {
     /* Expand part of s1 */
-    poly_uniform_eta(&tC, rhoprime, 0);
+    poly_uniform_eta(tC, rhoprime, 0);
     if (i == 0)
     {
-      pack_sk_s1(sk, &tC, 0);
+      pack_sk_s1(sk, tC, 0);
     }
-    poly_ntt(&tC);
+    poly_ntt(tC);
     /* expand part of the matrix */
     poly_uniform(&tB, rho, (i << 8) + 0);
     /* partial matrix-vector multiplication */
-    poly_pointwise_montgomery(&tA, &tB, &tC);
+    poly_pointwise_montgomery(&tA, &tB, tC);
     for(j = 1; j < L; j++)
     {
       /* Expand part of s1 */
-      poly_uniform_eta(&tC, rhoprime, j);
+      poly_uniform_eta(tC, rhoprime, j);
       if (i == 0)
       {
-        pack_sk_s1(sk, &tC, j);
+        pack_sk_s1(sk, tC, j);
       }
-      poly_ntt(&tC);
+      poly_ntt(tC);
       poly_uniform(&tB, rho, (i << 8) + j);
-      poly_pointwise_acc_montgomery(&tA, &tB, &tC);
+      poly_pointwise_acc_montgomery(&tA, &tB, tC);
     }
 
     poly_reduce(&tA);
@@ -80,9 +93,9 @@ int crypto_sign_keypair(uint8_t *pk, uint8_t *sk) {
 
     /* Compute t{0,1} */
     poly_caddq(&tA);
-    poly_power2round(&tC, &tB, &tA);
+    poly_power2round(tC, &tB, &tA);
     pack_sk_t0(sk, &tB, i);
-    pack_pk_t1(pk, &tC, i);
+    pack_pk_t1(pk, tC, i);
 
   }
 
