@@ -667,3 +667,49 @@ void pack_sk_tr(unsigned char sk[CRYPTO_SECRETKEYBYTES],
         sk[i] = tr[i];
     }
 }
+
+/*************************************************
+* Name:        challenge
+*
+* Description: Implementation of H. Samples polynomial with TAU nonzero
+*              coefficients in {-1,1} using the output stream of
+*              SHAKE256(seed). Stack optimized.
+*
+* Arguments:   - poly *c: pointer to output polynomial
+*              - const uint8_t mu[]: byte array containing seed of length SEEDBYTES
+**************************************************/
+#define CHALLENGE_STACK_BUF_SIZE 8
+void poly_challenge_stack(poly *c, const uint8_t seed[SEEDBYTES]) {
+  unsigned int i, b, pos;
+  uint64_t signs;
+  uint8_t buf[CHALLENGE_STACK_BUF_SIZE];
+  shake256incctx state;
+
+  shake256_inc_init(&state);
+  shake256_inc_absorb(&state, seed, SEEDBYTES);
+  shake256_inc_finalize(&state);
+  shake256_inc_squeeze(buf, CHALLENGE_STACK_BUF_SIZE, &state);
+  signs = 0;
+  for(i = 0; i < 8; ++i)
+  {
+    signs |= (uint64_t)buf[i] << 8*i;
+  }
+  pos = 8;
+
+  for(i = 0; i < N; ++i)
+    c->coeffs[i] = 0;
+  for(i = N-TAU; i < N; ++i) {
+    do {
+      if(pos >= CHALLENGE_STACK_BUF_SIZE) {
+        shake256_inc_squeeze(buf, CHALLENGE_STACK_BUF_SIZE, &state);
+        pos = 0;
+      }
+
+      b = buf[pos++];
+    } while(b > i);
+
+    c->coeffs[i] = c->coeffs[b];
+    c->coeffs[b] = 1 - 2*(signs & 1);
+    signs >>= 1;
+  }
+}

@@ -28,6 +28,7 @@ void unpack_sk_s2(smallpoly *a, const uint8_t *sk, size_t idx);
 void poly_uniform_pointwise_montgomery_polywadd_stack(uint8_t wcomp[3*N], poly *b, const uint8_t  seed[SEEDBYTES], uint16_t nonce, shake128incctx *state);
 void poly_uniform_gamma1_stack(poly *a, const uint8_t seed[CRHBYTES], uint16_t nonce, shake256incctx *state);
 void poly_uniform_gamma1_add_stack(poly *a, poly *b, const uint8_t seed[CRHBYTES], uint16_t nonce, shake256incctx *state);
+void poly_challenge_stack(poly *c, const uint8_t seed[SEEDBYTES]);
 
 size_t poly_make_hint_stack(poly *a, poly *t, uint8_t w[768]);
 int unpack_sig_h_indices(uint8_t h_i[OMEGA], unsigned int * number_of_hints, unsigned int idx, const unsigned char sig[CRYPTO_BYTES]);

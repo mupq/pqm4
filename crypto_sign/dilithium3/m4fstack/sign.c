@@ -384,7 +384,7 @@ int crypto_sign_verify(const uint8_t *sig,
   shake256_inc_absorb(&s256, mu, CRHBYTES);
 
   /* Matrix-vector multiplication; compute Az - c2^dt1 */
-  poly_challenge(&p, sig);
+  poly_challenge_stack(&p, sig);
   poly_challenge_compress(ccomp, &p);
 
   for (size_t k_idx = 0; k_idx < K; k_idx++) {
