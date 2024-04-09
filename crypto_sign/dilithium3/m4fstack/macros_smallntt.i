@@ -1,9 +1,23 @@
 /* 
-* NTT and inverse NTT code from: 
-* Huang, J. et al. 2024. Revisiting Keccak and Dilithium Implementations on ARMv7-M. 
-* IACR Transactions on Cryptographic Hardware and Embedded Systems. 2024, 2 (Mar. 2024), 1–24.
-* DOI:https://doi.org/10.46586/tches.v2024.i2.1-24.
-* https://github.com/UIC-ESLAS/Dilithium-Multi-Moduli/blob/332a32cc02d407020e48a4f9b3a0dc78d4c8b0bc/M4/crypto_sign/dilithium3/m4plant/smallntt_769.S
+ * Copyright (c) 2023 Junhao Huang (jhhuang_nuaa@126.com)
+ *
+ * Licensed under the Apache License, Version 2.0(the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * NTT and inverse NTT code from: 
+ * Huang, J. et al. 2024. Revisiting Keccak and Dilithium Implementations on ARMv7-M. 
+ * IACR Transactions on Cryptographic Hardware and Embedded Systems. 2024, 2 (Mar. 2024), 1–24.
+ * DOI:https://doi.org/10.46586/tches.v2024.i2.1-24.
+ * https://github.com/UIC-ESLAS/Dilithium-Multi-Moduli/blob/332a32cc02d407020e48a4f9b3a0dc78d4c8b0bc/M4/crypto_sign/dilithium3/m4plant/smallntt_769.S
 */
 
 #ifndef MACROS_SMALLNTT_I

@@ -1,1 +1,0 @@
-../../dilithium3/m4fstack/smallntt.S
