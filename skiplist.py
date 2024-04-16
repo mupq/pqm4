@@ -237,4 +237,7 @@ skip_list = [
     {'scheme': 'tuov_is_pkc_skc', 'implementation': 'ref', 'estmemory': 1275904},
     {'scheme': 'tuov_v_pkc', 'implementation': 'ref', 'estmemory': 7083008},
     {'scheme': 'tuov_v_pkc_skc', 'implementation': 'ref', 'estmemory': 4639744},
+    {'scheme': 'dilithium2', 'implementation': 'm4fstack', 'estmemory': 12288},
+    {'scheme': 'dilithium5', 'implementation': 'm4fstack', 'estmemory': 21504},
+    {'scheme': 'dilithium3', 'implementation': 'm4fstack', 'estmemory': 17408},
 ]
