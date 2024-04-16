@@ -8,12 +8,15 @@ bikel3 (10 executions),opt,248083316,248083286,248083345,16405238,16405236,16405
 hqc-128 (10 executions),clean,52705201,52705180,52705224,105650897,105650877,105650927,159569179,159569176,159569183
 hqc-192 (10 executions),clean,161458617,161458590,161458638,323146261,323146250,323146292,486156251,486156214,486156266
 hqc-256 (10 executions),clean,295934078,295934057,295934104,591853870,591853850,591853898,891163005,891162988,891163038
-kyber1024 (10 executions),m4fspeed,1004995,1004386,1005713,1023370,1022780,1024086,1094273,1093643,1094989
-kyber1024 (10 executions),m4fstack,1011563,1007750,1019668,1035234,1031419,1043376,1106876,1103061,1114980
-kyber512 (10 executions),m4fspeed,387426,387191,387884,386486,386251,386942,427576,427342,428033
-kyber512 (10 executions),m4fstack,387995,386694,398090,389242,387941,399338,430376,429075,440473
-kyber768 (10 executions),m4fspeed,632049,631494,632680,651880,651323,652515,706301,705744,706936
-kyber768 (10 executions),m4fstack,635213,632659,643980,658865,656311,667633,713751,711197,722519
+kyber1024 (10 executions),clean,1540378,1537672,1549497,1707203,1704498,1716319,2019461,2016781,2028566
+kyber1024 (10 executions),m4fspeed,1007332,1004620,1027834,1025692,1023006,1046169,1088140,1085497,1108618
+kyber1024 (10 executions),m4fstack,1010439,1007447,1019916,1034164,1031168,1043640,1097375,1094378,1106850
+kyber512 (10 executions),clean,596231,595868,596646,696137,695809,696547,884186,883823,884599
+kyber512 (10 executions),m4fspeed,387168,386737,387669,386230,385800,386729,423509,423078,424010
+kyber512 (10 executions),m4fstack,386859,386551,387231,388111,387802,388486,425445,425136,425820
+kyber768 (10 executions),clean,990392,988002,998996,1134996,1132606,1143599,1384768,1382378,1393371
+kyber768 (10 executions),m4fspeed,631922,631406,632490,651769,651258,652364,700842,700331,701436
+kyber768 (10 executions),m4fstack,633057,632425,633410,656716,656088,657072,706247,705620,706604
 Signature Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [cycles] (mean),Key Generation [cycles] (min),Key Generation [cycles] (max),Sign [cycles] (mean),Sign [cycles] (min),Sign [cycles] (max),Verify [cycles] (mean),Verify [cycles] (min),Verify [cycles] (max)
 aimer-l1-param1 (10 executions),ref,392943,392938,392977,32386301,32386203,32386424,31111672,31111588,31111782
@@ -153,14 +156,14 @@ hqc-128,clean,33644,51428,55892,,,,,,
 hqc-192,clean,65668,101636,110660,,,,,,
 hqc-256,clean,103756,161508,175972,,,,,,
 kyber1024,clean,15136,18784,20360,,,,,,
-kyber1024,m4fspeed,6436,7500,9076,,,,,,
-kyber1024,m4fstack,3332,3372,4948,,,,,,
+kyber1024,m4fspeed,6436,7500,7484,,,,,,
+kyber1024,m4fstack,3332,3372,3356,,,,,,
 kyber512,clean,6168,8800,9576,,,,,,
-kyber512,m4fspeed,4364,5436,6212,,,,,,
-kyber512,m4fstack,2292,2348,3124,,,,,,
+kyber512,m4fspeed,4364,5436,5412,,,,,,
+kyber512,m4fstack,2292,2348,2332,,,,,,
 kyber768,clean,10272,13408,14504,,,,,,
-kyber768,m4fspeed,5396,6468,7564,,,,,,
-kyber768,m4fstack,2820,2860,3956,,,,,,
+kyber768,m4fspeed,5396,6468,6452,,,,,,
+kyber768,m4fstack,2820,2860,2844,,,,,,
 Signature Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [bytes],Sign [bytes],Verify [bytes],,,,,,
 aimer-l1-param1,ref,10952,187724,196728,,,,,,
@@ -302,15 +305,15 @@ bikel3,opt,0.0,6.3,0.2,,,,,,
 hqc-128,clean,0.4,0.8,0.5,,,,,,
 hqc-192,clean,0.3,0.5,0.3,,,,,,
 hqc-256,clean,0.2,0.4,0.3,,,,,,
-kyber1024,clean,49.9,45.7,38.6,,,,,,
-kyber1024,m4fspeed,76.1,75.9,71.0,,,,,,
-kyber1024,m4fstack,75.8,75.2,70.4,,,,,,
+kyber1024,clean,50.0,45.8,38.7,,,,,,
+kyber1024,m4fspeed,76.0,75.8,71.5,,,,,,
+kyber1024,m4fstack,75.9,75.3,71.0,,,,,,
 kyber512,clean,49.8,41.4,32.6,,,,,,
-kyber512,m4fspeed,76.5,74.4,67.3,,,,,,
-kyber512,m4fstack,76.6,74.0,67.0,,,,,,
-kyber768,clean,48.4,43.2,35.4,,,,,,
-kyber768,m4fspeed,75.4,74.9,69.1,,,,,,
-kyber768,m4fstack,75.3,74.3,68.6,,,,,,
+kyber512,m4fspeed,76.6,74.4,68.0,,,,,,
+kyber512,m4fstack,76.6,74.0,67.6,,,,,,
+kyber768,clean,48.4,43.3,35.5,,,,,,
+kyber768,m4fspeed,75.4,74.9,69.6,,,,,,
+kyber768,m4fstack,75.4,74.5,69.3,,,,,,
 Signature Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [%],Sign [%],Verify [%],,,,,,
 aimer-l1-param1,ref,72.0,47.2,46.7,,,,,,
@@ -452,14 +455,14 @@ hqc-128,clean,18628,0,0,18628,,,,,
 hqc-192,clean,21104,0,0,21104,,,,,
 hqc-256,clean,26260,0,0,26260,,,,,
 kyber1024,clean,6296,0,0,6296,,,,,
-kyber1024,m4fspeed,16928,0,0,16928,,,,,
-kyber1024,m4fstack,14136,0,0,14136,,,,,
+kyber1024,m4fspeed,16912,0,0,16912,,,,,
+kyber1024,m4fstack,14120,0,0,14120,,,,,
 kyber512,clean,5164,0,0,5164,,,,,
-kyber512,m4fspeed,15840,0,0,15840,,,,,
-kyber512,m4fstack,13324,0,0,13324,,,,,
+kyber512,m4fspeed,15824,0,0,15824,,,,,
+kyber512,m4fstack,13308,0,0,13308,,,,,
 kyber768,clean,5168,0,0,5168,,,,,
-kyber768,m4fspeed,16008,0,0,16008,,,,,
-kyber768,m4fstack,13332,0,0,13332,,,,,
+kyber768,m4fspeed,15992,0,0,15992,,,,,
+kyber768,m4fstack,13316,0,0,13316,,,,,
 Signature Schemes,,,,,,,,,,
 Scheme,Implementation,.text [bytes],.data [bytes],.bss [bytes],Total [bytes],,,,,
 aimer-l1-param1,ref,19302,468,0,19770,,,,,
