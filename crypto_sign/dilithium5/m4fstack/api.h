@@ -1,1 +1,1 @@
-../m4f/api.h
+../../dilithium2/m4f/api.h

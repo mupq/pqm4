@@ -1,1 +1,1 @@
-../../dilithium3/m4fstack/smallntt_769.S
+../../dilithium2/m4fstack/smallntt_769.S

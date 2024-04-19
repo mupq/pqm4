@@ -1,1 +1,1 @@
-../m4f/ntt.h
+../../dilithium2/m4f/ntt.h

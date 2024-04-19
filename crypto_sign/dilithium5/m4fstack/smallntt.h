@@ -1,1 +1,1 @@
-../../dilithium3/m4fstack/smallntt.h
+../../dilithium2/m4fstack/smallntt.h

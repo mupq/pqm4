@@ -1,1 +1,1 @@
-../../dilithium3/m4fstack/macros_smallntt.i
+../../dilithium2/m4fstack/macros_smallntt.i

@@ -1,1 +1,1 @@
-../m4f/vector.s
+../../dilithium2/m4f/vector.s

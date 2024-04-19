@@ -1,1 +1,1 @@
-../../dilithium3/m4fstack/reduce.h
+../../dilithium2/m4fstack/reduce.h
