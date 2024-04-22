@@ -1,1 +1,1 @@
-../m4f/polyvec.c
+../../dilithium2/m4f/polyvec.c

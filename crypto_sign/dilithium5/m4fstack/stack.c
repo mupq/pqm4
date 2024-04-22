@@ -1,1 +1,1 @@
-../../dilithium3/m4fstack/stack.c
+../../dilithium2/m4fstack/stack.c

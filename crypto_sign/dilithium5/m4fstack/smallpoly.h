@@ -1,1 +1,1 @@
-../../dilithium3/m4fstack/smallpoly.h
+../../dilithium2/m4fstack/smallpoly.h

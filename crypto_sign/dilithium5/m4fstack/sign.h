@@ -1,1 +1,1 @@
-../m4f/sign.h
+../../dilithium2/m4f/sign.h

@@ -1,1 +1,1 @@
-../m4f/pointwise_mont.h
+../../dilithium2/m4f/pointwise_mont.h
