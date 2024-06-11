@@ -606,6 +606,8 @@ void poly_sub(poly *r, const poly *a, const poly *b) {
     pointwise_sub(r->coeffs,a->coeffs,b->coeffs);
 }
 
+void cmov_int16(int16_t *r, int16_t v, uint16_t b);
+
 /*************************************************
 * Name:        poly_frommsg
 *
