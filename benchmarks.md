@@ -9,15 +9,15 @@
 | hqc-128 (10 executions) | clean | AVG: 52,705,201 <br /> MIN: 52,705,180 <br /> MAX: 52,705,224 | AVG: 105,650,897 <br /> MIN: 105,650,877 <br /> MAX: 105,650,927 | AVG: 159,569,179 <br /> MIN: 159,569,176 <br /> MAX: 159,569,183 |
 | hqc-192 (10 executions) | clean | AVG: 161,458,617 <br /> MIN: 161,458,590 <br /> MAX: 161,458,638 | AVG: 323,146,261 <br /> MIN: 323,146,250 <br /> MAX: 323,146,292 | AVG: 486,156,251 <br /> MIN: 486,156,214 <br /> MAX: 486,156,266 |
 | hqc-256 (10 executions) | clean | AVG: 295,934,078 <br /> MIN: 295,934,057 <br /> MAX: 295,934,104 | AVG: 591,853,870 <br /> MIN: 591,853,850 <br /> MAX: 591,853,898 | AVG: 891,163,005 <br /> MIN: 891,162,988 <br /> MAX: 891,163,038 |
-| kyber1024 (10 executions) | clean | AVG: 1,540,378 <br /> MIN: 1,537,672 <br /> MAX: 1,549,497 | AVG: 1,707,203 <br /> MIN: 1,704,498 <br /> MAX: 1,716,319 | AVG: 2,019,461 <br /> MIN: 2,016,781 <br /> MAX: 2,028,566 |
-| kyber1024 (10 executions) | m4fspeed | AVG: 1,007,332 <br /> MIN: 1,004,620 <br /> MAX: 1,027,834 | AVG: 1,025,692 <br /> MIN: 1,023,006 <br /> MAX: 1,046,169 | AVG: 1,088,140 <br /> MIN: 1,085,497 <br /> MAX: 1,108,618 |
-| kyber1024 (10 executions) | m4fstack | AVG: 1,010,439 <br /> MIN: 1,007,447 <br /> MAX: 1,019,916 | AVG: 1,034,164 <br /> MIN: 1,031,168 <br /> MAX: 1,043,640 | AVG: 1,097,375 <br /> MIN: 1,094,378 <br /> MAX: 1,106,850 |
-| kyber512 (10 executions) | clean | AVG: 596,231 <br /> MIN: 595,868 <br /> MAX: 596,646 | AVG: 696,137 <br /> MIN: 695,809 <br /> MAX: 696,547 | AVG: 884,186 <br /> MIN: 883,823 <br /> MAX: 884,599 |
-| kyber512 (10 executions) | m4fspeed | AVG: 387,168 <br /> MIN: 386,737 <br /> MAX: 387,669 | AVG: 386,230 <br /> MIN: 385,800 <br /> MAX: 386,729 | AVG: 423,509 <br /> MIN: 423,078 <br /> MAX: 424,010 |
-| kyber512 (10 executions) | m4fstack | AVG: 386,859 <br /> MIN: 386,551 <br /> MAX: 387,231 | AVG: 388,111 <br /> MIN: 387,802 <br /> MAX: 388,486 | AVG: 425,445 <br /> MIN: 425,136 <br /> MAX: 425,820 |
-| kyber768 (10 executions) | clean | AVG: 990,392 <br /> MIN: 988,002 <br /> MAX: 998,996 | AVG: 1,134,996 <br /> MIN: 1,132,606 <br /> MAX: 1,143,599 | AVG: 1,384,768 <br /> MIN: 1,382,378 <br /> MAX: 1,393,371 |
-| kyber768 (10 executions) | m4fspeed | AVG: 631,922 <br /> MIN: 631,406 <br /> MAX: 632,490 | AVG: 651,769 <br /> MIN: 651,258 <br /> MAX: 652,364 | AVG: 700,842 <br /> MIN: 700,331 <br /> MAX: 701,436 |
-| kyber768 (10 executions) | m4fstack | AVG: 633,057 <br /> MIN: 632,425 <br /> MAX: 633,410 | AVG: 656,716 <br /> MIN: 656,088 <br /> MAX: 657,072 | AVG: 706,247 <br /> MIN: 705,620 <br /> MAX: 706,604 |
+| kyber1024 (10 executions) | clean | AVG: 1,540,394 <br /> MIN: 1,537,580 <br /> MAX: 1,549,267 | AVG: 1,712,150 <br /> MIN: 1,709,337 <br /> MAX: 1,721,019 | AVG: 2,024,408 <br /> MIN: 2,021,583 <br /> MAX: 2,033,304 |
+| kyber1024 (10 executions) | m4fspeed | AVG: 1,006,341 <br /> MIN: 1,004,590 <br /> MAX: 1,016,692 | AVG: 1,029,398 <br /> MIN: 1,027,642 <br /> MAX: 1,039,752 | AVG: 1,091,847 <br /> MIN: 1,090,091 <br /> MAX: 1,102,201 |
+| kyber1024 (10 executions) | m4fstack | AVG: 1,009,603 <br /> MIN: 1,007,702 <br /> MAX: 1,019,835 | AVG: 1,038,001 <br /> MIN: 1,036,100 <br /> MAX: 1,048,226 | AVG: 1,101,208 <br /> MIN: 1,099,307 <br /> MAX: 1,111,470 |
+| kyber512 (10 executions) | clean | AVG: 597,372 <br /> MIN: 596,106 <br /> MAX: 607,563 | AVG: 702,227 <br /> MIN: 700,957 <br /> MAX: 712,416 | AVG: 890,274 <br /> MIN: 889,008 <br /> MAX: 900,467 |
+| kyber512 (10 executions) | m4fspeed | AVG: 387,341 <br /> MIN: 386,762 <br /> MAX: 387,769 | AVG: 391,098 <br /> MIN: 390,520 <br /> MAX: 391,527 | AVG: 428,365 <br /> MIN: 427,786 <br /> MAX: 428,794 |
+| kyber512 (10 executions) | m4fstack | AVG: 386,853 <br /> MIN: 386,573 <br /> MAX: 387,221 | AVG: 392,801 <br /> MIN: 392,521 <br /> MAX: 393,166 | AVG: 430,140 <br /> MIN: 429,861 <br /> MAX: 430,504 |
+| kyber768 (10 executions) | clean | AVG: 989,247 <br /> MIN: 987,825 <br /> MAX: 999,577 | AVG: 1,138,807 <br /> MIN: 1,137,381 <br /> MAX: 1,149,131 | AVG: 1,388,568 <br /> MIN: 1,387,146 <br /> MAX: 1,398,896 |
+| kyber768 (10 executions) | m4fspeed | AVG: 631,912 <br /> MIN: 631,599 <br /> MAX: 632,459 | AVG: 656,455 <br /> MIN: 656,155 <br /> MAX: 656,969 | AVG: 705,524 <br /> MIN: 705,223 <br /> MAX: 706,037 |
+| kyber768 (10 executions) | m4fstack | AVG: 634,213 <br /> MIN: 632,786 <br /> MAX: 644,273 | AVG: 662,556 <br /> MIN: 661,130 <br /> MAX: 672,615 | AVG: 712,081 <br /> MIN: 710,655 <br /> MAX: 722,140 |
 ## Signature Schemes
 | scheme | implementation | key generation [cycles] | sign [cycles] | verify [cycles] |
 | ------ | -------------- | ----------------------- | ------------- | --------------- |
@@ -316,15 +316,15 @@
 | hqc-128 | clean | 0.4% | 0.8% | 0.5% |
 | hqc-192 | clean | 0.3% | 0.5% | 0.3% |
 | hqc-256 | clean | 0.2% | 0.4% | 0.3% |
-| kyber1024 | clean | 50.0% | 45.8% | 38.7% |
-| kyber1024 | m4fspeed | 76.0% | 75.8% | 71.5% |
-| kyber1024 | m4fstack | 75.9% | 75.3% | 71.0% |
-| kyber512 | clean | 49.8% | 41.4% | 32.6% |
-| kyber512 | m4fspeed | 76.6% | 74.4% | 68.0% |
-| kyber512 | m4fstack | 76.6% | 74.0% | 67.6% |
-| kyber768 | clean | 48.4% | 43.3% | 35.5% |
-| kyber768 | m4fspeed | 75.4% | 74.9% | 69.6% |
-| kyber768 | m4fstack | 75.4% | 74.5% | 69.3% |
+| kyber1024 | clean | 49.9% | 45.6% | 38.6% |
+| kyber1024 | m4fspeed | 76.1% | 75.5% | 71.2% |
+| kyber1024 | m4fstack | 75.8% | 74.9% | 70.6% |
+| kyber512 | clean | 49.8% | 41.1% | 32.5% |
+| kyber512 | m4fspeed | 76.5% | 73.5% | 67.1% |
+| kyber512 | m4fstack | 76.5% | 73.1% | 66.8% |
+| kyber768 | clean | 48.5% | 43.2% | 35.4% |
+| kyber768 | m4fspeed | 75.4% | 74.4% | 69.2% |
+| kyber768 | m4fstack | 75.3% | 73.8% | 68.7% |
 ## Signature Schemes
 | Scheme | Implementation | Key Generation [%] | Sign [%] | Verify [%] |
 | ------ | -------------- | ------------------ | -------- | ---------- |
@@ -470,15 +470,15 @@
 | hqc-128 | clean | 18,628 | 0 | 0 | 18,628 |
 | hqc-192 | clean | 21,104 | 0 | 0 | 21,104 |
 | hqc-256 | clean | 26,260 | 0 | 0 | 26,260 |
-| kyber1024 | clean | 6,296 | 0 | 0 | 6,296 |
-| kyber1024 | m4fspeed | 16,912 | 0 | 0 | 16,912 |
-| kyber1024 | m4fstack | 14,120 | 0 | 0 | 14,120 |
-| kyber512 | clean | 5,164 | 0 | 0 | 5,164 |
-| kyber512 | m4fspeed | 15,824 | 0 | 0 | 15,824 |
-| kyber512 | m4fstack | 13,308 | 0 | 0 | 13,308 |
-| kyber768 | clean | 5,168 | 0 | 0 | 5,168 |
-| kyber768 | m4fspeed | 15,992 | 0 | 0 | 15,992 |
-| kyber768 | m4fstack | 13,316 | 0 | 0 | 13,316 |
+| kyber1024 | clean | 6,264 | 0 | 0 | 6,264 |
+| kyber1024 | m4fspeed | 16,884 | 0 | 0 | 16,884 |
+| kyber1024 | m4fstack | 14,092 | 0 | 0 | 14,092 |
+| kyber512 | clean | 5,132 | 0 | 0 | 5,132 |
+| kyber512 | m4fspeed | 15,796 | 0 | 0 | 15,796 |
+| kyber512 | m4fstack | 13,280 | 0 | 0 | 13,280 |
+| kyber768 | clean | 5,136 | 0 | 0 | 5,136 |
+| kyber768 | m4fspeed | 15,964 | 0 | 0 | 15,964 |
+| kyber768 | m4fstack | 13,288 | 0 | 0 | 13,288 |
 ## Signature Schemes
 | Scheme | Implementation | .text [bytes] | .data [bytes] | .bss [bytes] | Total [bytes] |
 | ------ | -------------- | ------------- | ------------- | ------------ | ------------- |
