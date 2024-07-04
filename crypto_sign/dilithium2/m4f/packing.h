@@ -2,6 +2,7 @@
 #define PACKING_H
 
 #include <stdint.h>
+#include <stddef.h>
 #include "params.h"
 #include "polyvec.h"
 #include "smallpoly.h"
@@ -24,6 +25,9 @@ void pack_sig(uint8_t sig[CRYPTO_BYTES], const uint8_t c[CTILDEBYTES], const pol
 #define unpack_pk DILITHIUM_NAMESPACE(unpack_pk)
 void unpack_pk(uint8_t rho[SEEDBYTES], polyveck *t1, const uint8_t pk[CRYPTO_PUBLICKEYBYTES]);
 
+#define unpack_pk_t1 DILITHIUM_NAMESPACE(unpack_pk_t1)
+void unpack_pk_t1(poly *t1, size_t idx, const unsigned char pk[CRYPTO_PUBLICKEYBYTES]);
+
 #define unpack_sk DILITHIUM_NAMESPACE(unpack_sk)
 void unpack_sk(uint8_t rho[SEEDBYTES],
                uint8_t tr[TRBYTES],
@@ -35,6 +39,15 @@ void unpack_sk(uint8_t rho[SEEDBYTES],
 
 #define unpack_sig DILITHIUM_NAMESPACE(unpack_sig)
 int unpack_sig(uint8_t c[CTILDEBYTES], polyvecl *z, polyveck *h, const uint8_t sig[CRYPTO_BYTES]);
+
+
+#define unpack_sig_z DILITHIUM_NAMESPACE(unpack_sig_z)
+int unpack_sig_z(polyvecl *z, const unsigned char sig[CRYPTO_BYTES]);
+#define unpack_sig_h DILITHIUM_NAMESPACE(unpack_sig_h)
+int unpack_sig_h(poly *h, size_t idx, const unsigned char sig[CRYPTO_BYTES]);
+#define unpack_sig_c DILITHIUM_NAMESPACE(unpack_sig_c)
+int unpack_sig_c(uint8_t c[CTILDEBYTES], const unsigned char sig[CRYPTO_BYTES]);
+
 
 #define pack_sig_c DILITHIUM_NAMESPACE(pack_sig_c)
 void pack_sig_c(uint8_t sig[CRYPTO_BYTES], const uint8_t c[CTILDEBYTES]);

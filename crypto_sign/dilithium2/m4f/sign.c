@@ -225,20 +225,36 @@ int crypto_sign(uint8_t *sm,
   *smlen += mlen;
   return 0;
 }
+/*************************************************
+ * Name:        expand_mat_elem
+ *
+ * Description: Implementation of ExpandA. Generates matrix A with uniformly
+ *              random coefficients a_{i,j} by performing rejection
+ *              sampling on the output stream of SHAKE128(rho|i|j).
+ *
+ * Arguments:   - poly mat_elem: output matrix element
+ *              - const unsigned char rho[]: byte array containing seed rho
+ *              - k_idx: matrix row index
+ *              - l_idx: matrix col index
+ **************************************************/
+static void expand_mat_elem(poly *mat_elem, const unsigned char rho[SEEDBYTES], size_t k_idx, size_t l_idx)
+{
+  poly_uniform(mat_elem, rho, (uint16_t)((k_idx << 8) + l_idx));
+}
 
 /*************************************************
-* Name:        crypto_sign_verify
-*
-* Description: Verifies signature.
-*
-* Arguments:   - uint8_t *m: pointer to input signature
-*              - size_t siglen: length of signature
-*              - const uint8_t *m: pointer to message
-*              - size_t mlen: length of message
-*              - const uint8_t *pk: pointer to bit-packed public key
-*
-* Returns 0 if signature could be verified correctly and -1 otherwise
-**************************************************/
+ * Name:        crypto_sign_verify
+ *
+ * Description: Verifies signature.
+ *
+ * Arguments:   - uint8_t *m: pointer to input signature
+ *              - size_t siglen: length of signature
+ *              - const uint8_t *m: pointer to message
+ *              - size_t mlen: length of message
+ *              - const uint8_t *pk: pointer to bit-packed public key
+ *
+ * Returns 0 if signature could be verified correctly and -1 otherwise
+ **************************************************/
 int crypto_sign_verify(const uint8_t *sig,
                        size_t siglen,
                        const uint8_t *m,
@@ -246,23 +262,23 @@ int crypto_sign_verify(const uint8_t *sig,
                        const uint8_t *pk)
 {
   unsigned int i;
-  uint8_t buf[K*POLYW1_PACKEDBYTES];
-  uint8_t rho[SEEDBYTES];
+  const uint8_t *rho = pk;
   uint8_t mu[CRHBYTES];
   uint8_t c[CTILDEBYTES];
   uint8_t c2[CTILDEBYTES];
   poly cp;
-  polyvecl mat[K], z;
-  polyveck t1, w1, h;
+  polyvecl z;
   shake256incctx state;
 
-  if(siglen != CRYPTO_BYTES)
+  poly tmp_elem, w1_elem;
+
+  if (siglen != CRYPTO_BYTES)
     return -1;
 
-  unpack_pk(rho, &t1, pk);
-  if(unpack_sig(c, &z, &h, sig))
+  if (unpack_sig_z(&z, sig) != 0) {
     return -1;
-  if(polyvecl_chknorm(&z, GAMMA1 - BETA))
+  }
+  if (polyvecl_chknorm(&z, GAMMA1 - BETA))
     return -1;
 
   /* Compute CRH(h(rho, t1), msg) */
@@ -273,35 +289,58 @@ int crypto_sign_verify(const uint8_t *sig,
   shake256_inc_finalize(&state);
   shake256_inc_squeeze(mu, CRHBYTES, &state);
 
-  /* Matrix-vector multiplication; compute Az - c2^dt1 */
-  poly_challenge(&cp, c);
-  polyvec_matrix_expand(mat, rho);
-
-  polyvecl_ntt(&z);
-  polyvec_matrix_pointwise_montgomery(&w1, mat, &z);
-
-  poly_ntt(&cp);
-  polyveck_shiftl(&t1);
-  polyveck_ntt(&t1);
-  polyveck_pointwise_poly_montgomery(&t1, &cp, &t1);
-
-  polyveck_sub(&w1, &w1, &t1);
-  polyveck_reduce(&w1);
-  polyveck_invntt_tomont(&w1);
-
-  /* Reconstruct w1 */
-  polyveck_caddq(&w1);
-  polyveck_use_hint(&w1, &w1, &h);
-  polyveck_pack_w1(buf, &w1);
-
-  /* Call random oracle and verify challenge */
+  // Hash [mu || w1'] to get c.
   shake256_inc_init(&state);
   shake256_inc_absorb(&state, mu, CRHBYTES);
-  shake256_inc_absorb(&state, buf, K*POLYW1_PACKEDBYTES);
+
+  /* Matrix-vector multiplication; compute Az - c2^dt1 */
+  if (unpack_sig_c(c, sig) != 0) {
+    return -1;
+  }
+  poly_challenge(&cp, c);
+  poly_ntt(&cp);
+  polyvecl_ntt(&z);
+
+
+  for (size_t k_idx = 0; k_idx < K; k_idx++)
+  {
+    // Sample the current element from A.
+    expand_mat_elem(&tmp_elem, rho, k_idx, 0);
+    poly_pointwise_montgomery(&w1_elem, &tmp_elem, &z.vec[0]);
+
+    for (size_t l_idx = 1; l_idx < L; l_idx++)
+    {
+      // Sample the element from A.
+      expand_mat_elem(&tmp_elem, rho, k_idx, l_idx);
+      poly_pointwise_acc_montgomery(&w1_elem, &tmp_elem, &z.vec[l_idx]);
+    }
+
+    // Subtract c*(t1_{k_idx} * 2^d)
+    unpack_pk_t1(&tmp_elem, k_idx, pk);
+    poly_shiftl(&tmp_elem);
+    poly_ntt(&tmp_elem);
+    poly_pointwise_montgomery(&tmp_elem, &cp, &tmp_elem);
+    poly_sub(&w1_elem, &w1_elem, &tmp_elem);
+    poly_reduce(&w1_elem);
+    poly_invntt_tomont(&w1_elem);
+
+    // Reconstruct w1
+    poly_csubq(&w1_elem);
+    if (unpack_sig_h(&tmp_elem, k_idx, sig) != 0) {
+      return -1;
+    }
+    poly_use_hint(&w1_elem, &w1_elem, &tmp_elem);
+    uint8_t w1_packed[POLYW1_PACKEDBYTES];
+    polyw1_pack(w1_packed, &w1_elem);
+    shake256_inc_absorb(&state, w1_packed, POLYW1_PACKEDBYTES);
+  }
+
+
+  /* Call random oracle and verify challenge */
   shake256_inc_finalize(&state);
   shake256_inc_squeeze(c2, CTILDEBYTES, &state);
-  for(i = 0; i < CTILDEBYTES; ++i)
-    if(c[i] != c2[i])
+  for (i = 0; i < CTILDEBYTES; ++i)
+    if (c[i] != c2[i])
       return -1;
 
   return 0;
