@@ -19,3 +19,7 @@ jobs:
           release: 13.2.Rel1
       - name: Build All (mps2-an386)
         run: make PLATFORM=mps2-an386 -j2
+      - name: Run tests (mps2-an386)
+        run: ./test.py -p mps2-an386
+      - name: Run testvectors (mps2-an386)
+        run: ./testvectors.py -p mps2-an386
