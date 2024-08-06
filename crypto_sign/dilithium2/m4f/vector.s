@@ -169,6 +169,59 @@ pqcrystals_dilithium_asm_caddq:
     bx lr
 .size pqcrystals_dilithium_asm_caddq, .-pqcrystals_dilithium_asm_caddq
 
+.macro csubq a, tmp, q
+    cmp.n \a, \q
+    it ge
+    subge.w \a, \a, \q
+    cmp \a, #0
+    it mi
+    addmi.w \a, \a, \q
+.endm
+
+// void asm_csubq(int32_t a[N]);
+.global pqcrystals_dilithium_asm_csubq
+.type pqcrystals_dilithium_asm_csubq, %function
+.align 2
+pqcrystals_dilithium_asm_csubq:
+    push {r4-r10}
+
+    movw r12,#:lower16:8380417
+    movt r12,#:upper16:8380417
+
+    movw r10, #32
+    1:
+        ldr.w r1, [r0]
+        ldr.w r2, [r0, #1*4]
+        ldr.w r3, [r0, #2*4]
+        ldr.w r4, [r0, #3*4]
+        ldr.w r5, [r0, #4*4]
+        ldr.w r6, [r0, #5*4]
+        ldr.w r7, [r0, #6*4]
+        ldr.w r8, [r0, #7*4]
+
+        csubq r1, r9, r12
+        csubq r2, r9, r12
+        csubq r3, r9, r12
+        csubq r4, r9, r12
+        csubq r5, r9, r12
+        csubq r6, r9, r12
+        csubq r7, r9, r12
+        csubq r8, r9, r12
+
+        str.w r2, [r0, #1*4]
+        str.w r3, [r0, #2*4]
+        str.w r4, [r0, #3*4]
+        str.w r5, [r0, #4*4]
+        str.w r6, [r0, #5*4]
+        str.w r7, [r0, #6*4]
+        str.w r8, [r0, #7*4]
+        str r1, [r0], #8*4
+        subs r10, #1
+        bne.w 1b
+
+    pop {r4-r10}
+    bx lr
+.size pqcrystals_dilithium_asm_csubq, .-pqcrystals_dilithium_asm_csubq
 
 // asm_rej_uniform(int32_t *a,unsigned int len,const unsigned char *buf, unsigned int buflen);
 .global pqcrystals_dilithium_asm_rej_uniform
