@@ -21,6 +21,13 @@
 ## Signature Schemes
 | scheme | implementation | key generation [cycles] | sign [cycles] | verify [cycles] |
 | ------ | -------------- | ----------------------- | ------------- | --------------- |
+| aimer128s (10 executions) | mem_opt | AVG: 564,323 <br /> MIN: 564,323 <br /> MAX: 564,325 | AVG: 374,834,586 <br /> MIN: 374,834,473 <br /> MAX: 374,834,973 | AVG: 227,230,761 <br /> MIN: 227,230,441 <br /> MAX: 227,230,833 |
+| aimer192f (10 executions) | mem_opt | AVG: 1,397,043 <br /> MIN: 1,397,043 <br /> MAX: 1,397,043 | AVG: 117,993,511 <br /> MIN: 117,991,579 <br /> MAX: 117,995,094 | AVG: 76,372,135 <br /> MIN: 76,370,763 <br /> MAX: 76,373,839 |
+| aimer192f (10 executions) | ref | AVG: 1,397,040 <br /> MIN: 1,397,040 <br /> MAX: 1,397,041 | AVG: 81,884,026 <br /> MIN: 81,883,991 <br /> MAX: 81,884,035 | AVG: 76,458,825 <br /> MIN: 76,456,517 <br /> MAX: 76,460,984 |
+| aimer192s (10 executions) | mem_opt | AVG: 1,397,047 <br /> MIN: 1,397,039 <br /> MAX: 1,397,079 | AVG: 916,637,185 <br /> MIN: 916,637,133 <br /> MAX: 916,637,425 | AVG: 629,249,382 <br /> MIN: 629,249,345 <br /> MAX: 629,249,415 |
+| aimer256f (10 executions) | mem_opt | AVG: 3,344,254 <br /> MIN: 3,344,250 <br /> MAX: 3,344,255 | AVG: 233,973,308 <br /> MIN: 233,969,892 <br /> MAX: 233,976,707 | AVG: 170,620,601 <br /> MIN: 170,617,448 <br /> MAX: 170,623,743 |
+| aimer256f (10 executions) | ref | AVG: 3,344,258 <br /> MIN: 3,344,255 <br /> MAX: 3,344,292 | AVG: 164,484,408 <br /> MIN: 164,483,962 <br /> MAX: 164,484,481 | AVG: 170,648,722 <br /> MIN: 170,647,189 <br /> MAX: 170,651,027 |
+| aimer256s (10 executions) | mem_opt | AVG: 3,344,262 <br /> MIN: 3,344,252 <br /> MAX: 3,344,293 | AVG: 1,752,719,642 <br /> MIN: 1,752,719,422 <br /> MAX: 1,752,720,844 | AVG: 1,361,337,862 <br /> MIN: 1,361,336,718 <br /> MAX: 1,361,338,013 |
 | ascon-sign-128f-robust (10 executions) | ref | AVG: 122,506,162 <br /> MIN: 122,506,099 <br /> MAX: 122,506,254 | AVG: 2,855,797,836 <br /> MIN: 2,855,797,243 <br /> MAX: 2,855,798,602 | AVG: 174,707,763 <br /> MIN: 169,973,472 <br /> MAX: 179,525,137 |
 | ascon-sign-128f-simple (10 executions) | ref | AVG: 69,376,878 <br /> MIN: 69,376,875 <br /> MAX: 69,376,883 | AVG: 1,629,111,557 <br /> MIN: 1,629,111,334 <br /> MAX: 1,629,112,028 | AVG: 97,798,317 <br /> MIN: 95,509,050 <br /> MAX: 98,714,007 |
 | ascon-sign-128s-robust (10 executions) | ref | AVG: 7,842,366,557 <br /> MIN: 7,842,366,432 <br /> MAX: 7,842,366,620 | AVG: 59,267,552,580 <br /> MIN: 59,267,543,517 <br /> MAX: 59,267,565,672 | AVG: 60,232,378 <br /> MIN: 57,865,239 <br /> MAX: 62,848,708 |
@@ -174,6 +181,13 @@
 ## Signature Schemes
 | Scheme | Implementation | Key Generation [bytes] | Sign [bytes] | Verify [bytes] |
 | ------ | -------------- | ---------------------- | ------------ | -------------- |
+| aimer128s | mem_opt | 8,728 | 27,324 | 34,624 |
+| aimer192f | mem_opt | 19,192 | 29,976 | 31,608 |
+| aimer192f | ref | 19,192 | 273,104 | 31,608 |
+| aimer192s | mem_opt | 19,192 | 43,220 | 60,384 |
+| aimer256f | mem_opt | 50,040 | 77,164 | 78,568 |
+| aimer256f | ref | 50,040 | 573,284 | 78,716 |
+| aimer256s | mem_opt | 50,040 | 76,140 | 117,044 |
 | ascon-sign-128f-robust | ref | 3,260 | 2,772 | 2,992 |
 | ascon-sign-128f-simple | ref | 2,632 | 2,144 | 2,448 |
 | ascon-sign-128s-robust | ref | 3,452 | 2,916 | 2,240 |
@@ -328,6 +342,13 @@
 ## Signature Schemes
 | Scheme | Implementation | Key Generation [%] | Sign [%] | Verify [%] |
 | ------ | -------------- | ------------------ | -------- | ---------- |
+| aimer128s | mem_opt | 50.6% | 67.9% | 50.2% |
+| aimer192f | mem_opt | 53.5% | 56.4% | 40.5% |
+| aimer192f | ref | 53.5% | 39.8% | 40.5% |
+| aimer192s | mem_opt | 53.5% | 58.1% | 40.9% |
+| aimer256f | mem_opt | 58.9% | 40.6% | 27.0% |
+| aimer256f | ref | 58.9% | 28.0% | 27.0% |
+| aimer256s | mem_opt | 58.9% | 42.4% | 27.2% |
 | ascon-sign-128f-robust | ref | 0.0% | 0.0% | 0.0% |
 | ascon-sign-128f-simple | ref | 0.0% | 0.0% | 0.0% |
 | ascon-sign-128s-robust | ref | 0.0% | 0.0% | 0.0% |
@@ -481,6 +502,13 @@
 ## Signature Schemes
 | Scheme | Implementation | .text [bytes] | .data [bytes] | .bss [bytes] | Total [bytes] |
 | ------ | -------------- | ------------- | ------------- | ------------ | ------------- |
+| aimer128s | mem_opt | 17,452 | 0 | 0 | 17,452 |
+| aimer192f | mem_opt | 25,384 | 0 | 0 | 25,384 |
+| aimer192f | ref | 24,956 | 0 | 0 | 24,956 |
+| aimer192s | mem_opt | 25,288 | 0 | 0 | 25,288 |
+| aimer256f | mem_opt | 27,804 | 0 | 0 | 27,804 |
+| aimer256f | ref | 27,304 | 0 | 0 | 27,304 |
+| aimer256s | mem_opt | 27,636 | 0 | 0 | 27,636 |
 | ascon-sign-128f-robust | ref | 17,664 | 0 | 0 | 17,664 |
 | ascon-sign-128f-simple | ref | 17,596 | 0 | 0 | 17,596 |
 | ascon-sign-128s-robust | ref | 17,972 | 0 | 0 | 17,972 |

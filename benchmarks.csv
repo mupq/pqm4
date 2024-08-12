@@ -19,6 +19,13 @@ kyber768 (10 executions),m4fspeed,631912,631599,632459,656455,656155,656969,7055
 kyber768 (10 executions),m4fstack,634213,632786,644273,662556,661130,672615,712081,710655,722140
 Signature Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [cycles] (mean),Key Generation [cycles] (min),Key Generation [cycles] (max),Sign [cycles] (mean),Sign [cycles] (min),Sign [cycles] (max),Verify [cycles] (mean),Verify [cycles] (min),Verify [cycles] (max)
+aimer128s (10 executions),mem_opt,564323,564323,564325,374834586,374834473,374834973,227230761,227230441,227230833
+aimer192f (10 executions),mem_opt,1397043,1397043,1397043,117993511,117991579,117995094,76372135,76370763,76373839
+aimer192f (10 executions),ref,1397040,1397040,1397041,81884026,81883991,81884035,76458825,76456517,76460984
+aimer192s (10 executions),mem_opt,1397047,1397039,1397079,916637185,916637133,916637425,629249382,629249345,629249415
+aimer256f (10 executions),mem_opt,3344254,3344250,3344255,233973308,233969892,233976707,170620601,170617448,170623743
+aimer256f (10 executions),ref,3344258,3344255,3344292,164484408,164483962,164484481,170648722,170647189,170651027
+aimer256s (10 executions),mem_opt,3344262,3344252,3344293,1752719642,1752719422,1752720844,1361337862,1361336718,1361338013
 ascon-sign-128f-robust (10 executions),ref,122506162,122506099,122506254,2855797836,2855797243,2855798602,174707763,169973472,179525137
 ascon-sign-128f-simple (10 executions),ref,69376878,69376875,69376883,1629111557,1629111334,1629112028,97798317,95509050,98714007
 ascon-sign-128s-robust (10 executions),ref,7842366557,7842366432,7842366620,59267552580,59267543517,59267565672,60232378,57865239,62848708
@@ -170,6 +177,13 @@ kyber768,m4fspeed,5396,6468,6452,,,,,,
 kyber768,m4fstack,2820,2860,2844,,,,,,
 Signature Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [bytes],Sign [bytes],Verify [bytes],,,,,,
+aimer128s,mem_opt,8728,27324,34624,,,,,,
+aimer192f,mem_opt,19192,29976,31608,,,,,,
+aimer192f,ref,19192,273104,31608,,,,,,
+aimer192s,mem_opt,19192,43220,60384,,,,,,
+aimer256f,mem_opt,50040,77164,78568,,,,,,
+aimer256f,ref,50040,573284,78716,,,,,,
+aimer256s,mem_opt,50040,76140,117044,,,,,,
 ascon-sign-128f-robust,ref,3260,2772,2992,,,,,,
 ascon-sign-128f-simple,ref,2632,2144,2448,,,,,,
 ascon-sign-128s-robust,ref,3452,2916,2240,,,,,,
@@ -322,6 +336,13 @@ kyber768,m4fspeed,75.4,74.4,69.2,,,,,,
 kyber768,m4fstack,75.3,73.8,68.7,,,,,,
 Signature Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [%],Sign [%],Verify [%],,,,,,
+aimer128s,mem_opt,50.6,67.9,50.2,,,,,,
+aimer192f,mem_opt,53.5,56.4,40.5,,,,,,
+aimer192f,ref,53.5,39.8,40.5,,,,,,
+aimer192s,mem_opt,53.5,58.1,40.9,,,,,,
+aimer256f,mem_opt,58.9,40.6,27.0,,,,,,
+aimer256f,ref,58.9,28.0,27.0,,,,,,
+aimer256s,mem_opt,58.9,42.4,27.2,,,,,,
 ascon-sign-128f-robust,ref,0.0,0.0,0.0,,,,,,
 ascon-sign-128f-simple,ref,0.0,0.0,0.0,,,,,,
 ascon-sign-128s-robust,ref,0.0,0.0,0.0,,,,,,
@@ -473,6 +494,13 @@ kyber768,m4fspeed,15964,0,0,15964,,,,,
 kyber768,m4fstack,13288,0,0,13288,,,,,
 Signature Schemes,,,,,,,,,,
 Scheme,Implementation,.text [bytes],.data [bytes],.bss [bytes],Total [bytes],,,,,
+aimer128s,mem_opt,17452,0,0,17452,,,,,
+aimer192f,mem_opt,25384,0,0,25384,,,,,
+aimer192f,ref,24956,0,0,24956,,,,,
+aimer192s,mem_opt,25288,0,0,25288,,,,,
+aimer256f,mem_opt,27804,0,0,27804,,,,,
+aimer256f,ref,27304,0,0,27304,,,,,
+aimer256s,mem_opt,27636,0,0,27636,,,,,
 ascon-sign-128f-robust,ref,17664,0,0,17664,,,,,
 ascon-sign-128f-simple,ref,17596,0,0,17596,,,,,
 ascon-sign-128s-robust,ref,17972,0,0,17972,,,,,
