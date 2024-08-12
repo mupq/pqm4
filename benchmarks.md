@@ -21,9 +21,6 @@
 ## Signature Schemes
 | scheme | implementation | key generation [cycles] | sign [cycles] | verify [cycles] |
 | ------ | -------------- | ----------------------- | ------------- | --------------- |
-| aimer-l1-param1 (10 executions) | ref | AVG: 392,943 <br /> MIN: 392,938 <br /> MAX: 392,977 | AVG: 32,386,301 <br /> MIN: 32,386,203 <br /> MAX: 32,386,424 | AVG: 31,111,672 <br /> MIN: 31,111,588 <br /> MAX: 31,111,782 |
-| aimer-l1-param2 (10 executions) | ref | AVG: 392,938 <br /> MIN: 392,938 <br /> MAX: 392,941 | AVG: 79,450,721 <br /> MIN: 79,450,349 <br /> MAX: 79,451,595 | AVG: 78,429,263 <br /> MIN: 78,398,061 <br /> MAX: 78,434,987 |
-| aimer-l3-param1 (10 executions) | ref | AVG: 981,288 <br /> MIN: 981,288 <br /> MAX: 981,290 | AVG: 90,953,716 <br /> MIN: 90,953,603 <br /> MAX: 90,953,763 | AVG: 88,350,755 <br /> MIN: 88,350,600 <br /> MAX: 88,350,906 |
 | ascon-sign-128f-robust (10 executions) | ref | AVG: 122,506,162 <br /> MIN: 122,506,099 <br /> MAX: 122,506,254 | AVG: 2,855,797,836 <br /> MIN: 2,855,797,243 <br /> MAX: 2,855,798,602 | AVG: 174,707,763 <br /> MIN: 169,973,472 <br /> MAX: 179,525,137 |
 | ascon-sign-128f-simple (10 executions) | ref | AVG: 69,376,878 <br /> MIN: 69,376,875 <br /> MAX: 69,376,883 | AVG: 1,629,111,557 <br /> MIN: 1,629,111,334 <br /> MAX: 1,629,112,028 | AVG: 97,798,317 <br /> MIN: 95,509,050 <br /> MAX: 98,714,007 |
 | ascon-sign-128s-robust (10 executions) | ref | AVG: 7,842,366,557 <br /> MIN: 7,842,366,432 <br /> MAX: 7,842,366,620 | AVG: 59,267,552,580 <br /> MIN: 59,267,543,517 <br /> MAX: 59,267,565,672 | AVG: 60,232,378 <br /> MIN: 57,865,239 <br /> MAX: 62,848,708 |
@@ -177,9 +174,6 @@
 ## Signature Schemes
 | Scheme | Implementation | Key Generation [bytes] | Sign [bytes] | Verify [bytes] |
 | ------ | -------------- | ---------------------- | ------------ | -------------- |
-| aimer-l1-param1 | ref | 10,952 | 187,724 | 196,728 |
-| aimer-l1-param2 | ref | 10,952 | 442,668 | 451,672 |
-| aimer-l3-param1 | ref | 23,864 | 413,940 | 435,640 |
 | ascon-sign-128f-robust | ref | 3,260 | 2,772 | 2,992 |
 | ascon-sign-128f-simple | ref | 2,632 | 2,144 | 2,448 |
 | ascon-sign-128s-robust | ref | 3,452 | 2,916 | 2,240 |
@@ -334,9 +328,6 @@
 ## Signature Schemes
 | Scheme | Implementation | Key Generation [%] | Sign [%] | Verify [%] |
 | ------ | -------------- | ------------------ | -------- | ---------- |
-| aimer-l1-param1 | ref | 72.0% | 47.2% | 46.7% |
-| aimer-l1-param2 | ref | 72.0% | 48.7% | 48.7% |
-| aimer-l3-param1 | ref | 77.4% | 41.7% | 41.6% |
 | ascon-sign-128f-robust | ref | 0.0% | 0.0% | 0.0% |
 | ascon-sign-128f-simple | ref | 0.0% | 0.0% | 0.0% |
 | ascon-sign-128s-robust | ref | 0.0% | 0.0% | 0.0% |
@@ -490,9 +481,6 @@
 ## Signature Schemes
 | Scheme | Implementation | .text [bytes] | .data [bytes] | .bss [bytes] | Total [bytes] |
 | ------ | -------------- | ------------- | ------------- | ------------ | ------------- |
-| aimer-l1-param1 | ref | 19,302 | 468 | 0 | 19,770 |
-| aimer-l1-param2 | ref | 19,894 | 468 | 0 | 20,362 |
-| aimer-l3-param1 | ref | 23,398 | 468 | 0 | 23,866 |
 | ascon-sign-128f-robust | ref | 17,664 | 0 | 0 | 17,664 |
 | ascon-sign-128f-simple | ref | 17,596 | 0 | 0 | 17,596 |
 | ascon-sign-128s-robust | ref | 17,972 | 0 | 0 | 17,972 |

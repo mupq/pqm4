@@ -19,9 +19,6 @@ kyber768 (10 executions),m4fspeed,631912,631599,632459,656455,656155,656969,7055
 kyber768 (10 executions),m4fstack,634213,632786,644273,662556,661130,672615,712081,710655,722140
 Signature Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [cycles] (mean),Key Generation [cycles] (min),Key Generation [cycles] (max),Sign [cycles] (mean),Sign [cycles] (min),Sign [cycles] (max),Verify [cycles] (mean),Verify [cycles] (min),Verify [cycles] (max)
-aimer-l1-param1 (10 executions),ref,392943,392938,392977,32386301,32386203,32386424,31111672,31111588,31111782
-aimer-l1-param2 (10 executions),ref,392938,392938,392941,79450721,79450349,79451595,78429263,78398061,78434987
-aimer-l3-param1 (10 executions),ref,981288,981288,981290,90953716,90953603,90953763,88350755,88350600,88350906
 ascon-sign-128f-robust (10 executions),ref,122506162,122506099,122506254,2855797836,2855797243,2855798602,174707763,169973472,179525137
 ascon-sign-128f-simple (10 executions),ref,69376878,69376875,69376883,1629111557,1629111334,1629112028,97798317,95509050,98714007
 ascon-sign-128s-robust (10 executions),ref,7842366557,7842366432,7842366620,59267552580,59267543517,59267565672,60232378,57865239,62848708
@@ -173,9 +170,6 @@ kyber768,m4fspeed,5396,6468,6452,,,,,,
 kyber768,m4fstack,2820,2860,2844,,,,,,
 Signature Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [bytes],Sign [bytes],Verify [bytes],,,,,,
-aimer-l1-param1,ref,10952,187724,196728,,,,,,
-aimer-l1-param2,ref,10952,442668,451672,,,,,,
-aimer-l3-param1,ref,23864,413940,435640,,,,,,
 ascon-sign-128f-robust,ref,3260,2772,2992,,,,,,
 ascon-sign-128f-simple,ref,2632,2144,2448,,,,,,
 ascon-sign-128s-robust,ref,3452,2916,2240,,,,,,
@@ -328,9 +322,6 @@ kyber768,m4fspeed,75.4,74.4,69.2,,,,,,
 kyber768,m4fstack,75.3,73.8,68.7,,,,,,
 Signature Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [%],Sign [%],Verify [%],,,,,,
-aimer-l1-param1,ref,72.0,47.2,46.7,,,,,,
-aimer-l1-param2,ref,72.0,48.7,48.7,,,,,,
-aimer-l3-param1,ref,77.4,41.7,41.6,,,,,,
 ascon-sign-128f-robust,ref,0.0,0.0,0.0,,,,,,
 ascon-sign-128f-simple,ref,0.0,0.0,0.0,,,,,,
 ascon-sign-128s-robust,ref,0.0,0.0,0.0,,,,,,
@@ -482,9 +473,6 @@ kyber768,m4fspeed,15964,0,0,15964,,,,,
 kyber768,m4fstack,13288,0,0,13288,,,,,
 Signature Schemes,,,,,,,,,,
 Scheme,Implementation,.text [bytes],.data [bytes],.bss [bytes],Total [bytes],,,,,
-aimer-l1-param1,ref,19302,468,0,19770,,,,,
-aimer-l1-param2,ref,19894,468,0,20362,,,,,
-aimer-l3-param1,ref,23398,468,0,23866,,,,,
 ascon-sign-128f-robust,ref,17664,0,0,17664,,,,,
 ascon-sign-128f-simple,ref,17596,0,0,17596,,,,,
 ascon-sign-128s-robust,ref,17972,0,0,17972,,,,,
