@@ -21,6 +21,8 @@
 ## Signature Schemes
 | scheme | implementation | key generation [cycles] | sign [cycles] | verify [cycles] |
 | ------ | -------------- | ----------------------- | ------------- | --------------- |
+| aimer128f (10 executions) | mem_opt | AVG: 564,325 <br /> MIN: 564,324 <br /> MAX: 564,326 | AVG: 46,875,341 <br /> MIN: 46,874,593 <br /> MAX: 46,876,276 | AVG: 26,989,249 <br /> MIN: 26,988,505 <br /> MAX: 26,989,828 |
+| aimer128f (10 executions) | ref | AVG: 564,323 <br /> MIN: 564,323 <br /> MAX: 564,324 | AVG: 28,991,142 <br /> MIN: 28,991,115 <br /> MAX: 28,991,171 | AVG: 26,994,617 <br /> MIN: 26,994,234 <br /> MAX: 26,994,927 |
 | aimer128s (10 executions) | mem_opt | AVG: 564,323 <br /> MIN: 564,323 <br /> MAX: 564,325 | AVG: 374,834,586 <br /> MIN: 374,834,473 <br /> MAX: 374,834,973 | AVG: 227,230,761 <br /> MIN: 227,230,441 <br /> MAX: 227,230,833 |
 | aimer192f (10 executions) | mem_opt | AVG: 1,397,043 <br /> MIN: 1,397,043 <br /> MAX: 1,397,043 | AVG: 117,993,511 <br /> MIN: 117,991,579 <br /> MAX: 117,995,094 | AVG: 76,372,135 <br /> MIN: 76,370,763 <br /> MAX: 76,373,839 |
 | aimer192f (10 executions) | ref | AVG: 1,397,040 <br /> MIN: 1,397,040 <br /> MAX: 1,397,041 | AVG: 81,884,026 <br /> MIN: 81,883,991 <br /> MAX: 81,884,035 | AVG: 76,458,825 <br /> MIN: 76,456,517 <br /> MAX: 76,460,984 |
@@ -181,6 +183,8 @@
 ## Signature Schemes
 | Scheme | Implementation | Key Generation [bytes] | Sign [bytes] | Verify [bytes] |
 | ------ | -------------- | ---------------------- | ------------ | -------------- |
+| aimer128f | mem_opt | 8,728 | 13,864 | 15,440 |
+| aimer128f | ref | 8,728 | 123,376 | 15,448 |
 | aimer128s | mem_opt | 8,728 | 27,324 | 34,624 |
 | aimer192f | mem_opt | 19,192 | 29,976 | 31,608 |
 | aimer192f | ref | 19,192 | 273,104 | 31,608 |
@@ -342,6 +346,8 @@
 ## Signature Schemes
 | Scheme | Implementation | Key Generation [%] | Sign [%] | Verify [%] |
 | ------ | -------------- | ------------------ | -------- | ---------- |
+| aimer128f | mem_opt | 50.6% | 66.1% | 49.6% |
+| aimer128f | ref | 50.6% | 48.8% | 49.6% |
 | aimer128s | mem_opt | 50.6% | 67.9% | 50.2% |
 | aimer192f | mem_opt | 53.5% | 56.4% | 40.5% |
 | aimer192f | ref | 53.5% | 39.8% | 40.5% |
@@ -502,6 +508,8 @@
 ## Signature Schemes
 | Scheme | Implementation | .text [bytes] | .data [bytes] | .bss [bytes] | Total [bytes] |
 | ------ | -------------- | ------------- | ------------- | ------------ | ------------- |
+| aimer128f | mem_opt | 17,476 | 0 | 0 | 17,476 |
+| aimer128f | ref | 17,076 | 0 | 0 | 17,076 |
 | aimer128s | mem_opt | 17,452 | 0 | 0 | 17,452 |
 | aimer192f | mem_opt | 25,384 | 0 | 0 | 25,384 |
 | aimer192f | ref | 24,956 | 0 | 0 | 24,956 |

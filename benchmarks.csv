@@ -19,6 +19,8 @@ kyber768 (10 executions),m4fspeed,631912,631599,632459,656455,656155,656969,7055
 kyber768 (10 executions),m4fstack,634213,632786,644273,662556,661130,672615,712081,710655,722140
 Signature Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [cycles] (mean),Key Generation [cycles] (min),Key Generation [cycles] (max),Sign [cycles] (mean),Sign [cycles] (min),Sign [cycles] (max),Verify [cycles] (mean),Verify [cycles] (min),Verify [cycles] (max)
+aimer128f (10 executions),mem_opt,564325,564324,564326,46875341,46874593,46876276,26989249,26988505,26989828
+aimer128f (10 executions),ref,564323,564323,564324,28991142,28991115,28991171,26994617,26994234,26994927
 aimer128s (10 executions),mem_opt,564323,564323,564325,374834586,374834473,374834973,227230761,227230441,227230833
 aimer192f (10 executions),mem_opt,1397043,1397043,1397043,117993511,117991579,117995094,76372135,76370763,76373839
 aimer192f (10 executions),ref,1397040,1397040,1397041,81884026,81883991,81884035,76458825,76456517,76460984
@@ -177,6 +179,8 @@ kyber768,m4fspeed,5396,6468,6452,,,,,,
 kyber768,m4fstack,2820,2860,2844,,,,,,
 Signature Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [bytes],Sign [bytes],Verify [bytes],,,,,,
+aimer128f,mem_opt,8728,13864,15440,,,,,,
+aimer128f,ref,8728,123376,15448,,,,,,
 aimer128s,mem_opt,8728,27324,34624,,,,,,
 aimer192f,mem_opt,19192,29976,31608,,,,,,
 aimer192f,ref,19192,273104,31608,,,,,,
@@ -336,6 +340,8 @@ kyber768,m4fspeed,75.4,74.4,69.2,,,,,,
 kyber768,m4fstack,75.3,73.8,68.7,,,,,,
 Signature Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [%],Sign [%],Verify [%],,,,,,
+aimer128f,mem_opt,50.6,66.1,49.6,,,,,,
+aimer128f,ref,50.6,48.8,49.6,,,,,,
 aimer128s,mem_opt,50.6,67.9,50.2,,,,,,
 aimer192f,mem_opt,53.5,56.4,40.5,,,,,,
 aimer192f,ref,53.5,39.8,40.5,,,,,,
@@ -494,6 +500,8 @@ kyber768,m4fspeed,15964,0,0,15964,,,,,
 kyber768,m4fstack,13288,0,0,13288,,,,,
 Signature Schemes,,,,,,,,,,
 Scheme,Implementation,.text [bytes],.data [bytes],.bss [bytes],Total [bytes],,,,,
+aimer128f,mem_opt,17476,0,0,17476,,,,,
+aimer128f,ref,17076,0,0,17076,,,,,
 aimer128s,mem_opt,17452,0,0,17452,,,,,
 aimer192f,mem_opt,25384,0,0,25384,,,,,
 aimer192f,ref,24956,0,0,24956,,,,,
