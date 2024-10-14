@@ -9,15 +9,15 @@
 | hqc-128 (10 executions) | clean | AVG: 52,705,201 <br /> MIN: 52,705,180 <br /> MAX: 52,705,224 | AVG: 105,650,897 <br /> MIN: 105,650,877 <br /> MAX: 105,650,927 | AVG: 159,569,179 <br /> MIN: 159,569,176 <br /> MAX: 159,569,183 |
 | hqc-192 (10 executions) | clean | AVG: 161,458,617 <br /> MIN: 161,458,590 <br /> MAX: 161,458,638 | AVG: 323,146,261 <br /> MIN: 323,146,250 <br /> MAX: 323,146,292 | AVG: 486,156,251 <br /> MIN: 486,156,214 <br /> MAX: 486,156,266 |
 | hqc-256 (10 executions) | clean | AVG: 295,934,078 <br /> MIN: 295,934,057 <br /> MAX: 295,934,104 | AVG: 591,853,870 <br /> MIN: 591,853,850 <br /> MAX: 591,853,898 | AVG: 891,163,005 <br /> MIN: 891,162,988 <br /> MAX: 891,163,038 |
-| kyber1024 (10 executions) | clean | AVG: 1,540,394 <br /> MIN: 1,537,580 <br /> MAX: 1,549,267 | AVG: 1,712,150 <br /> MIN: 1,709,337 <br /> MAX: 1,721,019 | AVG: 2,024,408 <br /> MIN: 2,021,583 <br /> MAX: 2,033,304 |
-| kyber1024 (10 executions) | m4fspeed | AVG: 1,006,341 <br /> MIN: 1,004,590 <br /> MAX: 1,016,692 | AVG: 1,029,398 <br /> MIN: 1,027,642 <br /> MAX: 1,039,752 | AVG: 1,091,847 <br /> MIN: 1,090,091 <br /> MAX: 1,102,201 |
-| kyber1024 (10 executions) | m4fstack | AVG: 1,009,603 <br /> MIN: 1,007,702 <br /> MAX: 1,019,835 | AVG: 1,038,001 <br /> MIN: 1,036,100 <br /> MAX: 1,048,226 | AVG: 1,101,208 <br /> MIN: 1,099,307 <br /> MAX: 1,111,470 |
-| kyber512 (10 executions) | clean | AVG: 597,372 <br /> MIN: 596,106 <br /> MAX: 607,563 | AVG: 702,227 <br /> MIN: 700,957 <br /> MAX: 712,416 | AVG: 890,274 <br /> MIN: 889,008 <br /> MAX: 900,467 |
-| kyber512 (10 executions) | m4fspeed | AVG: 387,341 <br /> MIN: 386,762 <br /> MAX: 387,769 | AVG: 391,098 <br /> MIN: 390,520 <br /> MAX: 391,527 | AVG: 428,365 <br /> MIN: 427,786 <br /> MAX: 428,794 |
-| kyber512 (10 executions) | m4fstack | AVG: 386,853 <br /> MIN: 386,573 <br /> MAX: 387,221 | AVG: 392,801 <br /> MIN: 392,521 <br /> MAX: 393,166 | AVG: 430,140 <br /> MIN: 429,861 <br /> MAX: 430,504 |
-| kyber768 (10 executions) | clean | AVG: 989,247 <br /> MIN: 987,825 <br /> MAX: 999,577 | AVG: 1,138,807 <br /> MIN: 1,137,381 <br /> MAX: 1,149,131 | AVG: 1,388,568 <br /> MIN: 1,387,146 <br /> MAX: 1,398,896 |
-| kyber768 (10 executions) | m4fspeed | AVG: 631,912 <br /> MIN: 631,599 <br /> MAX: 632,459 | AVG: 656,455 <br /> MIN: 656,155 <br /> MAX: 656,969 | AVG: 705,524 <br /> MIN: 705,223 <br /> MAX: 706,037 |
-| kyber768 (10 executions) | m4fstack | AVG: 634,213 <br /> MIN: 632,786 <br /> MAX: 644,273 | AVG: 662,556 <br /> MIN: 661,130 <br /> MAX: 672,615 | AVG: 712,081 <br /> MIN: 710,655 <br /> MAX: 722,140 |
+| ml-kem-1024 (10 executions) | clean | AVG: 1,540,607 <br /> MIN: 1,535,678 <br /> MAX: 1,547,404 | AVG: 1,712,361 <br /> MIN: 1,707,431 <br /> MAX: 1,719,164 | AVG: 2,024,616 <br /> MIN: 2,019,674 <br /> MAX: 2,031,410 |
+| ml-kem-1024 (10 executions) | m4fspeed | AVG: 1,007,759 <br /> MIN: 1,004,549 <br /> MAX: 1,017,159 | AVG: 1,030,702 <br /> MIN: 1,027,443 <br /> MAX: 1,040,101 | AVG: 1,093,153 <br /> MIN: 1,089,895 <br /> MAX: 1,102,552 |
+| ml-kem-1024 (10 executions) | m4fstack | AVG: 1,010,100 <br /> MIN: 1,007,459 <br /> MAX: 1,018,999 | AVG: 1,038,190 <br /> MIN: 1,035,550 <br /> MAX: 1,047,090 | AVG: 1,101,234 <br /> MIN: 1,098,594 <br /> MAX: 1,110,134 |
+| ml-kem-512 (10 executions) | clean | AVG: 595,882 <br /> MIN: 595,636 <br /> MAX: 596,329 | AVG: 700,689 <br /> MIN: 700,440 <br /> MAX: 701,134 | AVG: 888,740 <br /> MIN: 888,494 <br /> MAX: 889,189 |
+| ml-kem-512 (10 executions) | m4fspeed | AVG: 388,544 <br /> MIN: 387,190 <br /> MAX: 398,814 | AVG: 392,178 <br /> MIN: 390,825 <br /> MAX: 402,445 | AVG: 429,456 <br /> MIN: 428,102 <br /> MAX: 439,722 |
+| ml-kem-512 (10 executions) | m4fstack | AVG: 386,999 <br /> MIN: 386,677 <br /> MAX: 387,465 | AVG: 392,813 <br /> MIN: 392,492 <br /> MAX: 393,280 | AVG: 430,152 <br /> MIN: 429,831 <br /> MAX: 430,619 |
+| ml-kem-768 (10 executions) | clean | AVG: 990,901 <br /> MIN: 986,123 <br /> MAX: 997,663 | AVG: 1,140,412 <br /> MIN: 1,135,630 <br /> MAX: 1,147,169 | AVG: 1,390,176 <br /> MIN: 1,385,399 <br /> MAX: 1,396,936 |
+| ml-kem-768 (10 executions) | m4fspeed | AVG: 631,949 <br /> MIN: 631,658 <br /> MAX: 632,164 | AVG: 656,369 <br /> MIN: 656,082 <br /> MAX: 656,596 | AVG: 705,436 <br /> MIN: 705,148 <br /> MAX: 705,663 |
+| ml-kem-768 (10 executions) | m4fstack | AVG: 634,227 <br /> MIN: 632,761 <br /> MAX: 644,635 | AVG: 662,468 <br /> MIN: 661,003 <br /> MAX: 672,877 | AVG: 711,996 <br /> MIN: 710,530 <br /> MAX: 722,405 |
 ## Signature Schemes
 | scheme | implementation | key generation [cycles] | sign [cycles] | verify [cycles] |
 | ------ | -------------- | ----------------------- | ------------- | --------------- |
@@ -171,15 +171,15 @@
 | hqc-128 | clean | 33,644 | 51,428 | 55,892 |
 | hqc-192 | clean | 65,668 | 101,636 | 110,660 |
 | hqc-256 | clean | 103,756 | 161,508 | 175,972 |
-| kyber1024 | clean | 15,136 | 18,784 | 20,360 |
-| kyber1024 | m4fspeed | 6,436 | 7,500 | 7,484 |
-| kyber1024 | m4fstack | 3,332 | 3,372 | 3,356 |
-| kyber512 | clean | 6,168 | 8,800 | 9,576 |
-| kyber512 | m4fspeed | 4,364 | 5,436 | 5,412 |
-| kyber512 | m4fstack | 2,292 | 2,348 | 2,332 |
-| kyber768 | clean | 10,272 | 13,408 | 14,504 |
-| kyber768 | m4fspeed | 5,396 | 6,468 | 6,452 |
-| kyber768 | m4fstack | 2,820 | 2,860 | 2,844 |
+| ml-kem-1024 | clean | 15,128 | 18,776 | 20,352 |
+| ml-kem-1024 | m4fspeed | 6,436 | 7,500 | 7,484 |
+| ml-kem-1024 | m4fstack | 3,332 | 3,372 | 3,356 |
+| ml-kem-512 | clean | 6,152 | 8,784 | 9,560 |
+| ml-kem-512 | m4fspeed | 4,372 | 5,436 | 5,412 |
+| ml-kem-512 | m4fstack | 2,300 | 2,348 | 2,332 |
+| ml-kem-768 | clean | 10,248 | 13,384 | 14,480 |
+| ml-kem-768 | m4fspeed | 5,396 | 6,468 | 6,452 |
+| ml-kem-768 | m4fstack | 2,820 | 2,860 | 2,844 |
 ## Signature Schemes
 | Scheme | Implementation | Key Generation [bytes] | Sign [bytes] | Verify [bytes] |
 | ------ | -------------- | ---------------------- | ------------ | -------------- |
@@ -334,15 +334,15 @@
 | hqc-128 | clean | 0.4% | 0.8% | 0.5% |
 | hqc-192 | clean | 0.3% | 0.5% | 0.3% |
 | hqc-256 | clean | 0.2% | 0.4% | 0.3% |
-| kyber1024 | clean | 49.9% | 45.6% | 38.6% |
-| kyber1024 | m4fspeed | 76.1% | 75.5% | 71.2% |
-| kyber1024 | m4fstack | 75.8% | 74.9% | 70.6% |
-| kyber512 | clean | 49.8% | 41.1% | 32.5% |
-| kyber512 | m4fspeed | 76.5% | 73.5% | 67.1% |
-| kyber512 | m4fstack | 76.5% | 73.1% | 66.8% |
-| kyber768 | clean | 48.5% | 43.2% | 35.4% |
-| kyber768 | m4fspeed | 75.4% | 74.4% | 69.2% |
-| kyber768 | m4fstack | 75.3% | 73.8% | 68.7% |
+| ml-kem-1024 | clean | 50.0% | 45.6% | 38.6% |
+| ml-kem-1024 | m4fspeed | 76.1% | 75.5% | 71.2% |
+| ml-kem-1024 | m4fstack | 75.9% | 74.9% | 70.7% |
+| ml-kem-512 | clean | 49.9% | 41.1% | 32.5% |
+| ml-kem-512 | m4fspeed | 76.5% | 73.5% | 67.2% |
+| ml-kem-512 | m4fstack | 76.6% | 73.2% | 66.9% |
+| ml-kem-768 | clean | 48.6% | 43.2% | 35.4% |
+| ml-kem-768 | m4fspeed | 75.5% | 74.4% | 69.3% |
+| ml-kem-768 | m4fstack | 75.3% | 73.9% | 68.7% |
 ## Signature Schemes
 | Scheme | Implementation | Key Generation [%] | Sign [%] | Verify [%] |
 | ------ | -------------- | ------------------ | -------- | ---------- |
@@ -496,15 +496,15 @@
 | hqc-128 | clean | 18,628 | 0 | 0 | 18,628 |
 | hqc-192 | clean | 21,104 | 0 | 0 | 21,104 |
 | hqc-256 | clean | 26,260 | 0 | 0 | 26,260 |
-| kyber1024 | clean | 6,264 | 0 | 0 | 6,264 |
-| kyber1024 | m4fspeed | 16,884 | 0 | 0 | 16,884 |
-| kyber1024 | m4fstack | 14,092 | 0 | 0 | 14,092 |
-| kyber512 | clean | 5,132 | 0 | 0 | 5,132 |
-| kyber512 | m4fspeed | 15,796 | 0 | 0 | 15,796 |
-| kyber512 | m4fstack | 13,280 | 0 | 0 | 13,280 |
-| kyber768 | clean | 5,136 | 0 | 0 | 5,136 |
-| kyber768 | m4fspeed | 15,964 | 0 | 0 | 15,964 |
-| kyber768 | m4fstack | 13,288 | 0 | 0 | 13,288 |
+| ml-kem-1024 | clean | 6,160 | 0 | 0 | 6,160 |
+| ml-kem-1024 | m4fspeed | 16,912 | 0 | 0 | 16,912 |
+| ml-kem-1024 | m4fstack | 14,012 | 0 | 0 | 14,012 |
+| ml-kem-512 | clean | 5,116 | 0 | 0 | 5,116 |
+| ml-kem-512 | m4fspeed | 15,844 | 0 | 0 | 15,844 |
+| ml-kem-512 | m4fstack | 13,324 | 0 | 0 | 13,324 |
+| ml-kem-768 | clean | 5,120 | 0 | 0 | 5,120 |
+| ml-kem-768 | m4fspeed | 16,012 | 0 | 0 | 16,012 |
+| ml-kem-768 | m4fstack | 13,316 | 0 | 0 | 13,316 |
 ## Signature Schemes
 | Scheme | Implementation | .text [bytes] | .data [bytes] | .bss [bytes] | Total [bytes] |
 | ------ | -------------- | ------------- | ------------- | ------------ | ------------- |
