@@ -53,15 +53,6 @@
 | cross-sha3-r-sdpg-1-small (10 executions) | ref | AVG: 290,135 <br /> MIN: 287,741 <br /> MAX: 297,757 | AVG: 102,853,622 <br /> MIN: 102,847,774 <br /> MAX: 102,861,948 | AVG: 75,137,510 <br /> MIN: 75,126,803 <br /> MAX: 75,159,685 |
 | cross-sha3-r-sdpg-3-fast (10 executions) | ref | AVG: 627,948 <br /> MIN: 625,525 <br /> MAX: 637,639 | AVG: 43,573,841 <br /> MIN: 43,565,461 <br /> MAX: 43,582,933 | AVG: 27,513,830 <br /> MIN: 27,493,024 <br /> MAX: 27,525,746 |
 | cross-sha3-r-sdpg-5-fast (10 executions) | ref | AVG: 1,146,280 <br /> MIN: 1,142,409 <br /> MAX: 1,153,794 | AVG: 93,557,878 <br /> MIN: 93,547,167 <br /> MAX: 93,566,329 | AVG: 59,948,216 <br /> MIN: 59,857,434 <br /> MAX: 60,043,852 |
-| dilithium2 (1000 executions) | clean | AVG: 1,874,167 <br /> MIN: 1,827,645 <br /> MAX: 1,914,566 | AVG: 7,493,877 <br /> MIN: 3,321,630 <br /> MAX: 40,762,756 | AVG: 2,062,795 <br /> MIN: 2,062,255 <br /> MAX: 2,063,222 |
-| dilithium2 (1000 executions) | m4f | AVG: 1,425,723 <br /> MIN: 1,379,410 <br /> MAX: 1,466,445 | AVG: 3,835,095 <br /> MIN: 1,813,682 <br /> MAX: 16,068,642 | AVG: 1,421,307 <br /> MIN: 1,420,219 <br /> MAX: 1,422,056 |
-| dilithium2 (1000 executions) | m4fstack | AVG: 1,801,523 <br /> MIN: 1,684,895 <br /> MAX: 1,902,114 | AVG: 12,170,976 <br /> MIN: 3,900,911 <br /> MAX: 86,281,518 | AVG: 3,241,353 <br /> MIN: 3,194,028 <br /> MAX: 3,281,144 |
-| dilithium3 (1000 executions) | clean | AVG: 3,205,551 <br /> MIN: 3,204,090 <br /> MAX: 3,207,411 | AVG: 12,696,585 <br /> MIN: 5,097,364 <br /> MAX: 74,392,293 | AVG: 3,376,992 <br /> MIN: 3,376,581 <br /> MAX: 3,377,393 |
-| dilithium3 (1000 executions) | m4f | AVG: 2,515,915 <br /> MIN: 2,514,307 <br /> MAX: 2,517,413 | AVG: 6,054,094 <br /> MIN: 2,917,316 <br /> MAX: 27,829,552 | AVG: 2,415,526 <br /> MIN: 2,414,696 <br /> MAX: 2,416,440 |
-| dilithium3 (1000 executions) | m4fstack | AVG: 3,412,759 <br /> MIN: 3,406,659 <br /> MAX: 3,419,247 | AVG: 23,673,016 <br /> MIN: 6,733,971 <br /> MAX: 145,803,146 | AVG: 5,733,307 <br /> MIN: 5,688,893 <br /> MAX: 5,778,120 |
-| dilithium5 (1000 executions) | clean | AVG: 5,341,477 <br /> MIN: 5,286,872 <br /> MAX: 5,395,822 | AVG: 15,710,371 <br /> MIN: 7,953,367 <br /> MAX: 75,940,093 | AVG: 5,609,679 <br /> MIN: 5,609,217 <br /> MAX: 5,610,183 |
-| dilithium5 (1000 executions) | m4f | AVG: 4,275,033 <br /> MIN: 4,220,989 <br /> MAX: 4,350,945 | AVG: 8,349,360 <br /> MIN: 4,882,552 <br /> MAX: 29,688,762 | AVG: 4,192,692 <br /> MIN: 4,191,427 <br /> MAX: 4,193,764 |
-| dilithium5 (1000 executions) | m4fstack | AVG: 5,816,287 <br /> MIN: 5,474,236 <br /> MAX: 6,115,061 | AVG: 33,452,872 <br /> MIN: 11,170,780 <br /> MAX: 185,259,803 | AVG: 9,912,851 <br /> MIN: 9,845,789 <br /> MAX: 9,981,834 |
 | falcon-1024 (10 executions) | clean | AVG: 602,066,436 <br /> MIN: 377,135,260 <br /> MAX: 1,488,065,363 | AVG: 136,241,759 <br /> MIN: 136,017,549 <br /> MAX: 136,556,585 | AVG: 1,678,109 <br /> MIN: 1,677,732 <br /> MAX: 1,678,566 |
 | falcon-1024 (10 executions) | m4-ct | AVG: 408,725,773 <br /> MIN: 314,885,208 <br /> MAX: 712,370,124 | AVG: 87,706,019 <br /> MIN: 87,549,942 <br /> MAX: 87,839,508 | AVG: 990,541 <br /> MIN: 984,448 <br /> MAX: 997,160 |
 | falcon-1024 (10 executions) | opt-ct | AVG: 448,194,494 <br /> MIN: 301,446,952 <br /> MAX: 784,390,745 | AVG: 87,699,336 <br /> MIN: 87,550,679 <br /> MAX: 87,857,833 | AVG: 992,822 <br /> MIN: 983,184 <br /> MAX: 998,271 |
@@ -111,6 +102,15 @@
 | mirith_hypercube_Ib_short (10 executions) | ref | AVG: 2,514,920 <br /> MIN: 2,514,920 <br /> MAX: 2,514,923 | AVG: 447,351,952 <br /> MIN: 447,351,902 <br /> MAX: 447,351,992 | AVG: 440,279,587 <br /> MIN: 440,278,101 <br /> MAX: 440,281,382 |
 | mirith_hypercube_Va_fast (10 executions) | ref | AVG: 6,254,896 <br /> MIN: 6,254,886 <br /> MAX: 6,254,922 | AVG: 808,070,687 <br /> MIN: 808,007,911 <br /> MAX: 808,157,180 | AVG: 792,058,628 <br /> MIN: 792,006,360 <br /> MAX: 792,098,565 |
 | mirith_hypercube_Vb_fast (10 executions) | ref | AVG: 8,807,565 <br /> MIN: 8,807,542 <br /> MAX: 8,807,583 | AVG: 1,134,272,446 <br /> MIN: 1,134,201,632 <br /> MAX: 1,134,368,110 | AVG: 1,117,085,816 <br /> MIN: 1,117,059,819 <br /> MAX: 1,117,104,354 |
+| ml-dsa-44 (1000 executions) | clean | AVG: 1,874,405 <br /> MIN: 1,827,873 <br /> MAX: 1,914,904 | AVG: 7,925,955 <br /> MIN: 3,322,507 <br /> MAX: 33,055,004 | AVG: 2,063,096 <br /> MIN: 2,062,599 <br /> MAX: 2,063,590 |
+| ml-dsa-44 (1000 executions) | m4f | AVG: 1,425,492 <br /> MIN: 1,379,560 <br /> MAX: 1,466,364 | AVG: 3,822,701 <br /> MIN: 1,814,511 <br /> MAX: 22,969,466 | AVG: 1,421,600 <br /> MIN: 1,420,736 <br /> MAX: 1,422,318 |
+| ml-dsa-44 (1000 executions) | m4fstack | AVG: 1,799,062 <br /> MIN: 1,685,053 <br /> MAX: 1,902,006 | AVG: 12,134,284 <br /> MIN: 3,901,973 <br /> MAX: 65,357,843 | AVG: 3,242,333 <br /> MIN: 3,199,001 <br /> MAX: 3,279,836 |
+| ml-dsa-65 (1000 executions) | clean | AVG: 3,205,533 <br /> MIN: 3,204,116 <br /> MAX: 3,206,864 | AVG: 12,359,056 <br /> MIN: 5,098,254 <br /> MAX: 70,122,163 | AVG: 3,377,305 <br /> MIN: 3,376,896 <br /> MAX: 3,377,714 |
+| ml-dsa-65 (1000 executions) | m4f | AVG: 2,516,006 <br /> MIN: 2,514,337 <br /> MAX: 2,517,453 | AVG: 6,193,171 <br /> MIN: 2,918,295 <br /> MAX: 26,008,621 | AVG: 2,415,944 <br /> MIN: 2,415,109 <br /> MAX: 2,416,730 |
+| ml-dsa-65 (1000 executions) | m4fstack | AVG: 3,412,622 <br /> MIN: 3,406,495 <br /> MAX: 3,418,945 | AVG: 24,421,526 <br /> MIN: 6,735,243 <br /> MAX: 164,688,347 | AVG: 5,732,397 <br /> MIN: 5,688,990 <br /> MAX: 5,783,258 |
+| ml-dsa-87 (1000 executions) | clean | AVG: 5,341,863 <br /> MIN: 5,276,084 <br /> MAX: 5,406,569 | AVG: 15,579,513 <br /> MIN: 7,954,385 <br /> MAX: 82,615,659 | AVG: 5,610,203 <br /> MIN: 5,609,675 <br /> MAX: 5,610,695 |
+| ml-dsa-87 (1000 executions) | m4f | AVG: 4,274,513 <br /> MIN: 4,210,044 <br /> MAX: 4,340,431 | AVG: 8,204,023 <br /> MIN: 4,883,484 <br /> MAX: 29,488,880 | AVG: 4,193,228 <br /> MIN: 4,192,029 <br /> MAX: 4,194,357 |
+| ml-dsa-87 (1000 executions) | m4fstack | AVG: 5,820,537 <br /> MIN: 5,484,663 <br /> MAX: 6,113,363 | AVG: 33,357,899 <br /> MIN: 11,168,408 <br /> MAX: 170,850,278 | AVG: 9,911,514 <br /> MIN: 9,852,116 <br /> MAX: 9,969,829 |
 | mqom_cat1_gf251_fast (10 executions) | ref | AVG: 7,780,082 <br /> MIN: 7,761,398 <br /> MAX: 7,795,766 | AVG: 149,063,790 <br /> MIN: 149,045,955 <br /> MAX: 149,079,787 | AVG: 136,742,778 <br /> MIN: 136,613,266 <br /> MAX: 136,821,602 |
 | mqom_cat1_gf31_fast (10 executions) | ref | AVG: 8,472,628 <br /> MIN: 8,471,619 <br /> MAX: 8,473,585 | AVG: 243,796,920 <br /> MIN: 243,782,136 <br /> MAX: 243,811,088 | AVG: 244,346,110 <br /> MIN: 244,239,828 <br /> MAX: 244,424,317 |
 | ov-Ip (10 executions) | m4f | AVG: 139,186,121 <br /> MIN: 139,186,115 <br /> MAX: 139,186,154 | AVG: 2,465,106 <br /> MIN: 2,465,096 <br /> MAX: 2,465,133 | AVG: 993,538 <br /> MIN: 979,943 <br /> MAX: 997,098 |
@@ -215,15 +215,6 @@
 | cross-sha3-r-sdpg-1-small | ref | 2,328 | 466,400 | 245,512 |
 | cross-sha3-r-sdpg-3-fast | ref | 4,032 | 205,080 | 108,236 |
 | cross-sha3-r-sdpg-5-fast | ref | 6,824 | 398,600 | 213,436 |
-| dilithium2 | clean | 38,304 | 51,968 | 36,192 |
-| dilithium2 | m4f | 38,296 | 49,416 | 9,012 |
-| dilithium2 | m4fstack | 4,408 | 5,072 | 2,704 |
-| dilithium3 | clean | 60,832 | 79,616 | 57,728 |
-| dilithium3 | m4f | 60,824 | 68,864 | 9,880 |
-| dilithium3 | m4fstack | 4,408 | 6,608 | 2,704 |
-| dilithium5 | clean | 97,696 | 122,724 | 92,940 |
-| dilithium5 | m4f | 97,688 | 116,076 | 11,944 |
-| dilithium5 | m4fstack | 4,408 | 8,136 | 2,712 |
 | falcon-1024 | clean | 35,076 | 84,604 | 8,776 |
 | falcon-1024 | m4-ct | 1,156 | 2,508 | 376 |
 | falcon-1024 | opt-ct | 1,204 | 2,508 | 376 |
@@ -273,6 +264,15 @@
 | mirith_hypercube_Ib_short | ref | 19,064 | 237,408 | 41,220 |
 | mirith_hypercube_Va_fast | ref | 45,000 | 308,440 | 81,056 |
 | mirith_hypercube_Vb_fast | ref | 62,864 | 344,832 | 101,220 |
+| ml-dsa-44 | clean | 38,304 | 51,976 | 36,308 |
+| ml-dsa-44 | m4f | 38,296 | 49,424 | 8,912 |
+| ml-dsa-44 | m4fstack | 4,408 | 5,080 | 2,712 |
+| ml-dsa-65 | clean | 60,832 | 79,624 | 57,736 |
+| ml-dsa-65 | m4f | 60,824 | 68,872 | 9,888 |
+| ml-dsa-65 | m4fstack | 4,408 | 6,616 | 2,712 |
+| ml-dsa-87 | clean | 97,696 | 122,740 | 92,948 |
+| ml-dsa-87 | m4f | 97,688 | 116,084 | 12,060 |
+| ml-dsa-87 | m4fstack | 4,408 | 8,144 | 2,720 |
 | mqom_cat1_gf251_fast | ref | 184,356 | 399,396 | 252,684 |
 | mqom_cat1_gf31_fast | ref | 262,888 | 612,816 | 421,596 |
 | ov-Ip | m4f | 15,676 | 5,216 | 2,512 |
@@ -378,15 +378,6 @@
 | cross-sha3-r-sdpg-1-small | ref | 71.8% | 74.7% | 78.4% |
 | cross-sha3-r-sdpg-3-fast | ref | 71.7% | 68.2% | 68.7% |
 | cross-sha3-r-sdpg-5-fast | ref | 71.1% | 66.1% | 66.8% |
-| dilithium2 | clean | 61.0% | 30.9% | 52.9% |
-| dilithium2 | m4f | 79.9% | 60.7% | 76.6% |
-| dilithium2 | m4fstack | 74.8% | 55.2% | 40.8% |
-| dilithium3 | clean | 64.7% | 31.3% | 56.8% |
-| dilithium3 | m4f | 82.3% | 60.7% | 79.2% |
-| dilithium3 | m4fstack | 77.1% | 54.6% | 41.0% |
-| dilithium5 | clean | 67.0% | 35.7% | 61.1% |
-| dilithium5 | m4f | 83.5% | 65.3% | 81.6% |
-| dilithium5 | m4fstack | 76.1% | 54.5% | 42.6% |
 | falcon-1024 | clean | 8.9% | 0.3% | 23.7% |
 | falcon-1024 | m4-ct | 8.6% | 0.4% | 32.2% |
 | falcon-1024 | opt-ct | 9.8% | 0.4% | 32.2% |
@@ -436,6 +427,15 @@
 | mirith_hypercube_Ib_short | ref | 61.2% | 56.6% | 56.8% |
 | mirith_hypercube_Va_fast | ref | 64.8% | 13.4% | 12.3% |
 | mirith_hypercube_Vb_fast | ref | 64.5% | 11.0% | 10.1% |
+| ml-dsa-44 | clean | 61.0% | 31.0% | 52.9% |
+| ml-dsa-44 | m4f | 79.9% | 60.7% | 76.6% |
+| ml-dsa-44 | m4fstack | 74.9% | 54.8% | 40.8% |
+| ml-dsa-65 | clean | 64.7% | 31.2% | 56.8% |
+| ml-dsa-65 | m4f | 82.3% | 60.6% | 79.2% |
+| ml-dsa-65 | m4fstack | 77.1% | 54.2% | 41.0% |
+| ml-dsa-87 | clean | 67.0% | 35.9% | 61.1% |
+| ml-dsa-87 | m4f | 83.5% | 65.1% | 81.6% |
+| ml-dsa-87 | m4fstack | 76.1% | 54.0% | 42.6% |
 | mqom_cat1_gf251_fast | ref | 73.5% | 33.0% | 33.1% |
 | mqom_cat1_gf31_fast | ref | 64.6% | 19.8% | 19.2% |
 | ov-Ip | m4f | 7.5% | 0.9% | 1.1% |
@@ -540,15 +540,6 @@
 | cross-sha3-r-sdpg-1-small | ref | 18,846 | 0 | 208 | 19,054 |
 | cross-sha3-r-sdpg-3-fast | ref | 19,689 | 0 | 208 | 19,897 |
 | cross-sha3-r-sdpg-5-fast | ref | 18,593 | 0 | 208 | 18,801 |
-| dilithium2 | clean | 8,064 | 0 | 0 | 8,064 |
-| dilithium2 | m4f | 19,180 | 0 | 0 | 19,180 |
-| dilithium2 | m4fstack | 24,184 | 0 | 0 | 24,184 |
-| dilithium3 | clean | 7,580 | 0 | 0 | 7,580 |
-| dilithium3 | m4f | 19,188 | 0 | 0 | 19,188 |
-| dilithium3 | m4fstack | 23,448 | 0 | 0 | 23,448 |
-| dilithium5 | clean | 7,808 | 0 | 0 | 7,808 |
-| dilithium5 | m4f | 19,096 | 0 | 0 | 19,096 |
-| dilithium5 | m4fstack | 23,820 | 0 | 0 | 23,820 |
 | falcon-1024 | clean | 82,703 | 0 | 0 | 82,703 |
 | falcon-1024 | m4-ct | 81,825 | 0 | 79,872 | 161,697 |
 | falcon-1024 | opt-ct | 81,825 | 0 | 79,872 | 161,697 |
@@ -598,6 +589,15 @@
 | mirith_hypercube_Ib_short | ref | 8,825 | 256 | 0 | 9,081 |
 | mirith_hypercube_Va_fast | ref | 9,140 | 256 | 0 | 9,396 |
 | mirith_hypercube_Vb_fast | ref | 9,160 | 256 | 0 | 9,416 |
+| ml-dsa-44 | clean | 8,212 | 0 | 0 | 8,212 |
+| ml-dsa-44 | m4f | 19,324 | 0 | 0 | 19,324 |
+| ml-dsa-44 | m4fstack | 24,844 | 0 | 0 | 24,844 |
+| ml-dsa-65 | clean | 7,724 | 0 | 0 | 7,724 |
+| ml-dsa-65 | m4f | 19,328 | 0 | 0 | 19,328 |
+| ml-dsa-65 | m4fstack | 24,120 | 0 | 0 | 24,120 |
+| ml-dsa-87 | clean | 8,036 | 0 | 0 | 8,036 |
+| ml-dsa-87 | m4f | 19,232 | 0 | 0 | 19,232 |
+| ml-dsa-87 | m4fstack | 24,516 | 0 | 0 | 24,516 |
 | mqom_cat1_gf251_fast | ref | 16,865 | 0 | 0 | 16,865 |
 | mqom_cat1_gf31_fast | ref | 23,718 | 0 | 0 | 23,718 |
 | ov-Ip | m4f | 118,939 | 0 | 0 | 118,939 |
