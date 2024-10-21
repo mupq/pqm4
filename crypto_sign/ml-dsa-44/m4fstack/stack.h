@@ -34,11 +34,6 @@ size_t poly_make_hint_stack(poly *a, poly *t, uint8_t w[768]);
 int unpack_sig_h_indices(uint8_t h_i[OMEGA], unsigned int * number_of_hints, unsigned int idx, const unsigned char sig[CRYPTO_BYTES]);
 void poly_use_hint_stack(poly *b, const poly *a, uint8_t h_i[OMEGA], unsigned int number_of_hints);
 
-void unpack_sk_stack(uint8_t rho[SEEDBYTES],
-               uint8_t tr[TRBYTES],
-               uint8_t key[SEEDBYTES],
-               const uint8_t sk[CRYPTO_SECRETKEYBYTES]);
-
 void pack_pk_rho(unsigned char pk[CRYPTO_PUBLICKEYBYTES],
                  const unsigned char rho[SEEDBYTES]);
 

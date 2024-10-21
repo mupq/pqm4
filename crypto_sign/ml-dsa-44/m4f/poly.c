@@ -45,17 +45,6 @@ void poly_caddq(poly *a) {
   asm_caddq(a->coeffs);
 }
 
-/*************************************************
-* Name:        poly_csubq
-*
-* Description: For all coefficients of input polynomial subtract Q if
-*              coefficient is bigger than Q; add Q if coefficient is negative.
-*
-* Arguments:   - poly *a: pointer to input/output polynomial
-**************************************************/
-void poly_csubq(poly *a) {
-    asm_caddq(a->coeffs);
-}
 
 #if 0
 /*************************************************

@@ -349,7 +349,7 @@ int crypto_sign_verify_ctx(const uint8_t *sig,
     poly_invntt_tomont(&w1_elem);
 
     // Reconstruct w1
-    poly_csubq(&w1_elem);
+    poly_caddq(&w1_elem);
     if (unpack_sig_h(&tmp_elem, k_idx, sig) != 0) {
       return -1;
     }

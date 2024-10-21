@@ -438,26 +438,6 @@ size_t poly_make_hint_stack(poly *a, poly *t, uint8_t w[768]){
   return hints_n;
 }
 
-void unpack_sk_stack(uint8_t rho[SEEDBYTES],
-               uint8_t tr[TRBYTES],
-               uint8_t key[SEEDBYTES],
-               const uint8_t sk[CRYPTO_SECRETKEYBYTES])
-{
-  unsigned int i;
-
-  for(i = 0; i < SEEDBYTES; ++i)
-    rho[i] = sk[i];
-  sk += SEEDBYTES;
-
-  for(i = 0; i < SEEDBYTES; ++i)
-    key[i] = sk[i];
-  sk += SEEDBYTES;
-
-  for(i = 0; i < TRBYTES; ++i)
-    tr[i] = sk[i];
-  sk += TRBYTES;
-}
-
 /*************************************************
 * Name:        unpack_sig_h_indices
 *
