@@ -1,1 +1,1 @@
-../m4speed/hash.c
+../../aimer128f/m4speed/hash.c
