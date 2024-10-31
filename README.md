@@ -163,22 +163,22 @@ int crypto_sign_open(unsigned char *m, size_t *mlen,
 
 
 ## Running tests and benchmarks
-The build system compiles six binaries for each implemenation which can be used to test and benchmark the schemes. For example, for the reference implementation of [Kyber768](https://pq-crystals.org/kyber/) the following binaries are assembled: 
- - `bin/crypto_kem_kyber768_m4_test.bin` tests if the scheme works as expected. For KEMs this tests if Alice and Bob derive the same shared key and for signature schemes it tests if a generated signature can be verified correctly. Several failure cases are also checked, see [mupq/crypto_kem/test.c](https://github.com/mupq/mupq/blob/master/crypto_kem/test.c) and [mupq/crypto_sign/test.c](https://github.com/mupq/mupq/blob/master/crypto_sign/test.c) for details.
- - `bin/crypto_kem_kyber768_m4_speed.bin` measures the runtime of `crypto_kem_keypair`, `crypto_kem_enc`, and `crypto_kem_dec` for KEMs and `crypto_sign_keypair`, `crypto_sign`, and `crypto_sign_open` for signatures. See [mupq/crypto_kem/speed.c](https://github.com/mupq/mupq/blob/master/crypto_kem/speed.c) and [mupq/crypto_sign/speed.c](https://github.com/mupq/mupq/blob/master/crypto_sign/speed.c).
- - `bin/crypto_kem_kyber768_m4_hashing.bin` measures the cycles spent in SHA-2, SHA-3, and AES of `crypto_kem_keypair`, `crypto_kem_enc`, and `crypto_kem_dec` for KEMs and `crypto_sign_keypair`, `crypto_sign`, and `crypto_sign_open` for signatures. See [mupq/crypto_kem/hashing.c](https://github.com/mupq/mupq/blob/master/crypto_kem/speed.c) and [mupq/crypto_sign/speed.c](https://github.com/mupq/mupq/blob/master/crypto_sign/speed.c).
- - `bin/crypto_kem_kyber768_m4_stack.bin` measures the stack consumption of each of the procedures involved. The memory allocated outside of the procedures (e.g., public keys, private keys, ciphertexts, signatures) is not included. See [mupq/crypto_kem/stack.c](https://github.com/mupq/mupq/blob/master/crypto_kem/stack.c) and [mupq/crypto_sign/stack.c](https://github.com/mupq/mupq/blob/master/crypto_sign/stack.c).
- - `bin/crypto_kem_kyber768_m4_testvectors.bin` uses a deterministic random number generator to generate testvectors for the implementation. These can be used to cross-check different implemenatations of the same scheme. See [mupq/crypto_kem/testvectors.c](https://github.com/mupq/mupq/blob/master/crypto_kem/testvectors.c) and [mupq/crypto_sign/testvectors.c](https://github.com/mupq/mupq/blob/master/crypto_sign/testvectors.c).
-- `bin-host/crypto_kem_kyber768_m4_testvectors` uses the same deterministic random number generator to create the testvectors on your host. See [mupq/crypto_kem/testvectors-host.c](https://github.com/mupq/mupq/blob/master/crypto_kem/testvectors-host.c) and [mupq/crypto_sign/testvectors-host.c](https://github.com/mupq/mupq/blob/master/crypto_sign/testvectors-host.c).
+The build system compiles six binaries for each implemenation which can be used to test and benchmark the schemes. For example, for the reference implementation of [ML-KEM-768](https://pq-crystals.org/kyber/) the following binaries are assembled: 
+ - `bin/crypto_kem_ml-kem-768_m4_test.bin` tests if the scheme works as expected. For KEMs this tests if Alice and Bob derive the same shared key and for signature schemes it tests if a generated signature can be verified correctly. Several failure cases are also checked, see [mupq/crypto_kem/test.c](https://github.com/mupq/mupq/blob/master/crypto_kem/test.c) and [mupq/crypto_sign/test.c](https://github.com/mupq/mupq/blob/master/crypto_sign/test.c) for details.
+ - `bin/crypto_kem_ml-kem-768_m4_speed.bin` measures the runtime of `crypto_kem_keypair`, `crypto_kem_enc`, and `crypto_kem_dec` for KEMs and `crypto_sign_keypair`, `crypto_sign`, and `crypto_sign_open` for signatures. See [mupq/crypto_kem/speed.c](https://github.com/mupq/mupq/blob/master/crypto_kem/speed.c) and [mupq/crypto_sign/speed.c](https://github.com/mupq/mupq/blob/master/crypto_sign/speed.c).
+ - `bin/crypto_kem_ml-kem-768_m4_hashing.bin` measures the cycles spent in SHA-2, SHA-3, and AES of `crypto_kem_keypair`, `crypto_kem_enc`, and `crypto_kem_dec` for KEMs and `crypto_sign_keypair`, `crypto_sign`, and `crypto_sign_open` for signatures. See [mupq/crypto_kem/hashing.c](https://github.com/mupq/mupq/blob/master/crypto_kem/speed.c) and [mupq/crypto_sign/speed.c](https://github.com/mupq/mupq/blob/master/crypto_sign/speed.c).
+ - `bin/crypto_kem_ml-kem-768_m4_stack.bin` measures the stack consumption of each of the procedures involved. The memory allocated outside of the procedures (e.g., public keys, private keys, ciphertexts, signatures) is not included. See [mupq/crypto_kem/stack.c](https://github.com/mupq/mupq/blob/master/crypto_kem/stack.c) and [mupq/crypto_sign/stack.c](https://github.com/mupq/mupq/blob/master/crypto_sign/stack.c).
+ - `bin/crypto_kem_ml-kem-768_m4_testvectors.bin` uses a deterministic random number generator to generate testvectors for the implementation. These can be used to cross-check different implemenatations of the same scheme. See [mupq/crypto_kem/testvectors.c](https://github.com/mupq/mupq/blob/master/crypto_kem/testvectors.c) and [mupq/crypto_sign/testvectors.c](https://github.com/mupq/mupq/blob/master/crypto_sign/testvectors.c).
+- `bin-host/crypto_kem_ml-kem-768_m4_testvectors` uses the same deterministic random number generator to create the testvectors on your host. See [mupq/crypto_kem/testvectors-host.c](https://github.com/mupq/mupq/blob/master/crypto_kem/testvectors-host.c) and [mupq/crypto_sign/testvectors-host.c](https://github.com/mupq/mupq/blob/master/crypto_sign/testvectors-host.c).
 - An `elf` file for each binary is generated in the `elf/` folder if desired.
 
 The `elf` files or binaries can be flashed to your board using an appropriate
-tool. For example, the `stm32f4discovery` platform uses `st-flash`, e.g., `st-flash write bin/crypto_kem_kyber768_m4_test.bin 0x8000000`. To receive the output, run `python3 hostside/host_unidirectional.py`. 
+tool. For example, the `stm32f4discovery` platform uses `st-flash`, e.g., `st-flash write bin/crypto_kem_ml-kem-768_m4_test.bin 0x8000000`. To receive the output, run `python3 hostside/host_unidirectional.py`. 
 
 If you target the `mps2-an386` platform, you can also run the `elf` file using
 the QEMU ARM emulator:
 ```
-qemu-system-arm -M mps2-an386 -nographic -semihosting -kernel elf/crypto_kem_kyber512_m4_test.elf
+qemu-system-arm -M mps2-an386 -nographic -semihosting -kernel elf/crypto_kem_ml-kem-512_m4_test.elf
 ```
 The emulator should exit automatically when the test / benchmark completes. If
 you run into an error, you can exit QEMU pressing CTRL+A and then X.
@@ -197,7 +197,7 @@ The scripts take a number of command line arguments, which you'll need to adapt:
 If you change any of these values, you'll need to run `make clean` (the build
 system will remind you).
 
-In case you don't want to include all schemes, pass a list of schemes you want to include to any of the scripts, e.g., `python3 test.py kyber768 sphincs-shake256-128f-simple`. 
+In case you don't want to include all schemes, pass a list of schemes you want to include to any of the scripts, e.g., `python3 test.py ml-kem-768 sphincs-shake256-128f-simple`. 
 In case you want to exclude certain schemes pass `--exclude`, e.g., `python3 test.py --exclude saber`.
 
 The benchmark results (in `benchmarks/`) created by 
