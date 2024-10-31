@@ -16,13 +16,17 @@ The design goals of the library are to offer
 * integration of clean implementations from [PQClean](https://github.com/PQClean/PQClean); and
 * easy integration of new schemes and implementations into the framework.
 
-## Previous NIST PQC
+## Scope of pqm4
 
-The master branch of **pqm4** contains schemes that either [selected for standardization by NIST](https://csrc.nist.gov/Projects/post-quantum-cryptography/selected-algorithms-2022),
-part of the [4th round of the NIST PQC standardization process](https://csrc.nist.gov/Projects/post-quantum-cryptography/round-4-submissions),
-or part or the [first round of additional signatures of the NIST PQC standardization process](https://csrc.nist.gov/projects/pqc-dig-sig/round-1-additional-signatures).
+The master branch of **pqm4** contains schemes that either
+- standardized by NIST in [FIPS203](https://csrc.nist.gov/pubs/fips/203/final), [FIPS204](https://csrc.nist.gov/pubs/fips/203/final), or [FIPS205](https://csrc.nist.gov/pubs/fips/203/final),
+- [selected for standardization by NIST](https://csrc.nist.gov/Projects/post-quantum-cryptography/selected-algorithms-2022),
+- part of the [4th round of the NIST PQC standardization process](https://csrc.nist.gov/Projects/post-quantum-cryptography/round-4-submissions),
+- part or the [first round of additional signatures of the NIST PQC standardization process](https://csrc.nist.gov/projects/pqc-dig-sig/round-1-additional-signatures),
+- part of the [second round of the KpqC competition](https://www.kpqc.or.kr/competition.html).
 
 Implementations for previous NIST PQC rounds are available here:
+- Signature Round 1: https://github.com/mupq/pqm4/releases/tag/SignatureRound1
 - Round 3: https://github.com/mupq/pqm4/releases/tag/Round3
 - Round 2: https://github.com/mupq/pqm4/releases/tag/Round2
 - Round 1: https://github.com/mupq/pqm4/releases/tag/Round1

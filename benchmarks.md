@@ -42,17 +42,6 @@
 | aimer256s (10 executions) | m4speed | AVG: 2,899,956 <br /> MIN: 2,899,949 <br /> MAX: 2,899,989 | AVG: 1,391,295,720 <br /> MIN: 1,391,289,067 <br /> MAX: 1,391,297,144 | AVG: 1,321,985,344 <br /> MIN: 1,321,984,834 <br /> MAX: 1,321,985,426 |
 | aimer256s (10 executions) | m4stack | AVG: 2,899,950 <br /> MIN: 2,899,950 <br /> MAX: 2,899,950 | AVG: 1,712,314,043 <br /> MIN: 1,712,314,001 <br /> MAX: 1,712,314,175 | AVG: 1,322,034,101 <br /> MIN: 1,322,034,066 <br /> MAX: 1,322,034,132 |
 | aimer256s (10 executions) | mem_opt | AVG: 3,344,262 <br /> MIN: 3,344,252 <br /> MAX: 3,344,293 | AVG: 1,752,719,642 <br /> MIN: 1,752,719,422 <br /> MAX: 1,752,720,844 | AVG: 1,361,337,862 <br /> MIN: 1,361,336,718 <br /> MAX: 1,361,338,013 |
-| ascon-sign-128f-robust (10 executions) | ref | AVG: 122,506,162 <br /> MIN: 122,506,099 <br /> MAX: 122,506,254 | AVG: 2,855,797,836 <br /> MIN: 2,855,797,243 <br /> MAX: 2,855,798,602 | AVG: 174,707,763 <br /> MIN: 169,973,472 <br /> MAX: 179,525,137 |
-| ascon-sign-128f-simple (10 executions) | ref | AVG: 69,376,878 <br /> MIN: 69,376,875 <br /> MAX: 69,376,883 | AVG: 1,629,111,557 <br /> MIN: 1,629,111,334 <br /> MAX: 1,629,112,028 | AVG: 97,798,317 <br /> MIN: 95,509,050 <br /> MAX: 98,714,007 |
-| ascon-sign-128s-robust (10 executions) | ref | AVG: 7,842,366,557 <br /> MIN: 7,842,366,432 <br /> MAX: 7,842,366,620 | AVG: 59,267,552,580 <br /> MIN: 59,267,543,517 <br /> MAX: 59,267,565,672 | AVG: 60,232,378 <br /> MIN: 57,865,239 <br /> MAX: 62,848,708 |
-| ascon-sign-128s-simple (10 executions) | ref | AVG: 4,441,129,007 <br /> MIN: 4,441,128,624 <br /> MAX: 4,441,129,583 | AVG: 33,877,719,255 <br /> MIN: 33,877,704,467 <br /> MAX: 33,877,739,518 | AVG: 33,665,713 <br /> MIN: 31,101,669 <br /> MAX: 34,993,483 |
-| ascon-sign-192f-robust (10 executions) | ref | AVG: 222,614,206 <br /> MIN: 222,614,156 <br /> MAX: 222,614,345 | AVG: 5,712,962,198 <br /> MIN: 5,712,960,682 <br /> MAX: 5,712,963,829 | AVG: 321,026,499 <br /> MIN: 315,341,414 <br /> MAX: 327,745,233 |
-| ascon-sign-192f-simple (10 executions) | ref | AVG: 128,167,067 <br /> MIN: 128,167,038 <br /> MAX: 128,167,083 | AVG: 3,345,487,807 <br /> MIN: 3,345,484,178 <br /> MAX: 3,345,492,588 | AVG: 179,328,421 <br /> MIN: 175,094,665 <br /> MAX: 183,794,127 |
-| ascon-sign-192s-robust (10 executions) | ref | AVG: 14,249,838,562 <br /> MIN: 14,249,837,693 <br /> MAX: 14,249,840,118 | AVG: 126,646,612,223 <br /> MIN: 126,646,594,160 <br /> MAX: 126,646,651,564 | AVG: 111,451,290 <br /> MIN: 108,763,808 <br /> MAX: 114,965,691 |
-| ascon-sign-192s-simple (10 executions) | ref | AVG: 8,204,011,592 <br /> MIN: 8,204,011,246 <br /> MAX: 8,204,011,971 | AVG: 74,760,768,141 <br /> MIN: 74,760,751,354 <br /> MAX: 74,760,789,761 | AVG: 61,679,880 <br /> MIN: 58,983,014 <br /> MAX: 64,202,741 |
-| biscuit128f (10 executions) | ref | AVG: 1,054,719 <br /> MIN: 1,054,719 <br /> MAX: 1,054,720 | AVG: 274,072,426 <br /> MIN: 274,072,411 <br /> MAX: 274,072,461 | AVG: 254,371,114 <br /> MIN: 254,371,087 <br /> MAX: 254,371,140 |
-| biscuit192f (10 executions) | ref | AVG: 1,886,203 <br /> MIN: 1,886,199 <br /> MAX: 1,886,238 | AVG: 765,314,258 <br /> MIN: 765,314,227 <br /> MAX: 765,314,291 | AVG: 713,412,502 <br /> MIN: 713,412,394 <br /> MAX: 713,412,608 |
-| biscuit256f (10 executions) | ref | AVG: 3,301,990 <br /> MIN: 3,301,983 <br /> MAX: 3,302,022 | AVG: 1,747,187,940 <br /> MIN: 1,747,187,918 <br /> MAX: 1,747,187,973 | AVG: 1,678,998,604 <br /> MIN: 1,678,998,013 <br /> MAX: 1,678,998,987 |
 | cross-sha2-r-sdp-1-fast (10 executions) | ref | AVG: 5,614,888 <br /> MIN: 5,590,276 <br /> MAX: 5,650,611 | AVG: 216,566,013 <br /> MIN: 215,745,202 <br /> MAX: 217,395,250 | AVG: 143,008,126 <br /> MIN: 141,803,162 <br /> MAX: 144,002,548 |
 | cross-sha2-r-sdp-3-fast (10 executions) | ref | AVG: 8,201,340 <br /> MIN: 8,148,672 <br /> MAX: 8,208,465 | AVG: 241,899,820 <br /> MIN: 241,815,860 <br /> MAX: 242,049,039 | AVG: 123,896,179 <br /> MIN: 123,524,606 <br /> MAX: 124,545,760 |
 | cross-sha2-r-sdpg-1-fast (10 executions) | ref | AVG: 2,151,163 <br /> MIN: 2,115,797 <br /> MAX: 2,174,685 | AVG: 116,162,852 <br /> MIN: 116,120,174 <br /> MAX: 116,181,821 | AVG: 87,741,423 <br /> MIN: 87,209,686 <br /> MAX: 88,267,494 |
@@ -94,8 +83,6 @@
 | mayo2 (10 executions) | m4f | AVG: 11,917,959 <br /> MIN: 11,917,940 <br /> MAX: 11,917,980 | AVG: 11,979,613 <br /> MIN: 11,979,582 <br /> MAX: 11,979,624 | AVG: 5,130,148 <br /> MIN: 5,130,131 <br /> MAX: 5,130,180 |
 | mayo2 (10 executions) | ref | AVG: 18,432,706 <br /> MIN: 18,432,701 <br /> MAX: 18,432,740 | AVG: 23,546,659 <br /> MIN: 23,546,640 <br /> MAX: 23,546,680 | AVG: 5,494,246 <br /> MIN: 5,494,236 <br /> MAX: 5,494,276 |
 | mayo3 (10 executions) | m4f | AVG: 18,946,738 <br /> MIN: 18,946,737 <br /> MAX: 18,946,740 | AVG: 32,477,408 <br /> MIN: 32,477,407 <br /> MAX: 32,477,411 | AVG: 16,852,927 <br /> MIN: 16,852,799 <br /> MAX: 16,853,047 |
-| meds13220 (10 executions) | ref | AVG: 47,801,890 <br /> MIN: 47,796,259 <br /> MAX: 47,805,424 | AVG: 1,774,401,869 <br /> MIN: 1,773,011,038 <br /> MAX: 1,779,733,959 | AVG: 1,767,764,521 <br /> MIN: 1,766,326,468 <br /> MAX: 1,773,152,168 |
-| meds55604 (10 executions) | ref | AVG: 253,603,604 <br /> MIN: 253,590,695 <br /> MAX: 253,615,749 | AVG: 8,009,948,412 <br /> MIN: 8,009,909,000 <br /> MAX: 8,009,995,748 | AVG: 8,320,756,990 <br /> MIN: 8,320,682,364 <br /> MAX: 8,320,835,448 |
 | mirith_IIIa_fast (10 executions) | ref | AVG: 3,009,088 <br /> MIN: 3,009,084 <br /> MAX: 3,009,123 | AVG: 891,195,817 <br /> MIN: 891,191,657 <br /> MAX: 891,198,221 | AVG: 831,725,932 <br /> MIN: 831,697,264 <br /> MAX: 831,742,620 |
 | mirith_IIIb_fast (10 executions) | ref | AVG: 4,565,011 <br /> MIN: 4,565,007 <br /> MAX: 4,565,046 | AVG: 1,298,812,706 <br /> MIN: 1,298,810,546 <br /> MAX: 1,298,815,343 | AVG: 1,214,260,655 <br /> MIN: 1,214,247,570 <br /> MAX: 1,214,277,229 |
 | mirith_Ia_fast (10 executions) | ref | AVG: 1,303,728 <br /> MIN: 1,303,721 <br /> MAX: 1,303,764 | AVG: 296,732,107 <br /> MIN: 296,728,990 <br /> MAX: 296,734,109 | AVG: 276,059,526 <br /> MIN: 276,031,297 <br /> MAX: 276,080,171 |
@@ -154,12 +141,6 @@
 | snova-28-17-16-2-esk (10 executions) | ref | AVG: 51,177,590 <br /> MIN: 51,177,548 <br /> MAX: 51,177,647 | AVG: 23,387,139 <br /> MIN: 21,270,788 <br /> MAX: 42,311,786 | AVG: 19,180,389 <br /> MIN: 19,180,360 <br /> MAX: 19,180,440 |
 | snova-28-17-16-2-ssk (10 executions) | ref | AVG: 51,065,038 <br /> MIN: 51,064,999 <br /> MAX: 51,065,086 | AVG: 52,865,514 <br /> MIN: 50,757,388 <br /> MAX: 71,788,606 | AVG: 19,180,379 <br /> MIN: 19,180,357 <br /> MAX: 19,180,425 |
 | snova-37-8-16-4-ssk (10 executions) | ref | AVG: 122,023,801 <br /> MIN: 122,023,399 <br /> MAX: 122,024,216 | AVG: 533,063,912 <br /> MIN: 533,033,960 <br /> MAX: 533,090,127 | AVG: 335,806,349 <br /> MIN: 335,805,890 <br /> MAX: 335,806,820 |
-| sphincs-a-sha2-128f (10 executions) | ref | AVG: 30,278,936 <br /> MIN: 30,278,762 <br /> MAX: 30,279,211 | AVG: 382,270,810 <br /> MIN: 382,269,421 <br /> MAX: 382,271,497 | AVG: 35,695,646 <br /> MIN: 35,693,840 <br /> MAX: 35,698,828 |
-| sphincs-a-sha2-128s (10 executions) | ref | AVG: 814,836,852 <br /> MIN: 814,834,574 <br /> MAX: 814,838,039 | AVG: 6,981,930,727 <br /> MIN: 6,981,924,687 <br /> MAX: 6,981,936,443 | AVG: 187,090,082 <br /> MIN: 187,087,928 <br /> MAX: 187,093,600 |
-| sphincs-a-sha2-192f (10 executions) | ref | AVG: 45,930,664 <br /> MIN: 45,930,481 <br /> MAX: 45,930,983 | AVG: 634,374,072 <br /> MIN: 634,373,011 <br /> MAX: 634,375,225 | AVG: 35,145,783 <br /> MIN: 35,144,266 <br /> MAX: 35,146,607 |
-| sphincs-a-shake-128f (10 executions) | ref | AVG: 61,578,406 <br /> MIN: 61,578,107 <br /> MAX: 61,578,885 | AVG: 1,188,147,363 <br /> MIN: 1,188,146,489 <br /> MAX: 1,188,148,063 | AVG: 76,330,135 <br /> MIN: 76,328,602 <br /> MAX: 76,331,478 |
-| sphincs-a-shake-128s (10 executions) | ref | AVG: 2,342,298,427 <br /> MIN: 2,342,296,403 <br /> MAX: 2,342,299,607 | AVG: 22,926,754,899 <br /> MIN: 22,926,752,978 <br /> MAX: 22,926,758,555 | AVG: 241,835,141 <br /> MIN: 241,830,735 <br /> MAX: 241,838,908 |
-| sphincs-a-shake-192f (10 executions) | ref | AVG: 110,027,677 <br /> MIN: 110,027,323 <br /> MAX: 110,027,950 | AVG: 1,814,954,350 <br /> MIN: 1,814,953,585 <br /> MAX: 1,814,955,913 | AVG: 64,022,276 <br /> MIN: 64,020,853 <br /> MAX: 64,023,988 |
 | sphincs-sha2-128f-simple (10 executions) | clean | AVG: 15,742,990 <br /> MIN: 15,742,958 <br /> MAX: 15,742,996 | AVG: 368,575,228 <br /> MIN: 368,575,193 <br /> MAX: 368,575,246 | AVG: 21,923,628 <br /> MIN: 21,369,867 <br /> MAX: 22,456,717 |
 | sphincs-sha2-128s-simple (10 executions) | clean | AVG: 1,007,731,522 <br /> MIN: 1,007,731,504 <br /> MAX: 1,007,731,551 | AVG: 7,657,558,168 <br /> MIN: 7,657,558,117 <br /> MAX: 7,657,558,212 | AVG: 7,471,794 <br /> MIN: 7,228,491 <br /> MAX: 7,797,915 |
 | sphincs-sha2-192f-simple (10 executions) | clean | AVG: 23,570,224 <br /> MIN: 23,570,214 <br /> MAX: 23,570,257 | AVG: 666,398,438 <br /> MIN: 666,398,401 <br /> MAX: 666,398,468 | AVG: 35,457,937 <br /> MIN: 35,087,854 <br /> MAX: 35,973,969 |
@@ -216,17 +197,6 @@
 | aimer256s | m4speed | 50,032 | 615,856 | 116,936 |
 | aimer256s | m4stack | 50,032 | 76,032 | 116,936 |
 | aimer256s | mem_opt | 50,040 | 76,140 | 117,044 |
-| ascon-sign-128f-robust | ref | 3,260 | 2,772 | 2,992 |
-| ascon-sign-128f-simple | ref | 2,632 | 2,144 | 2,448 |
-| ascon-sign-128s-robust | ref | 3,452 | 2,916 | 2,240 |
-| ascon-sign-128s-simple | ref | 2,824 | 2,268 | 1,752 |
-| ascon-sign-192f-robust | ref | 6,092 | 4,924 | 4,504 |
-| ascon-sign-192f-simple | ref | 4,808 | 3,640 | 3,704 |
-| ascon-sign-192s-robust | ref | 6,380 | 5,116 | 4,332 |
-| ascon-sign-192s-simple | ref | 5,096 | 3,812 | 3,048 |
-| biscuit128f | ref | 600 | 137,348 | 14,560 |
-| biscuit192f | ref | 640 | 265,964 | 20,796 |
-| biscuit256f | ref | 720 | 477,468 | 33,108 |
 | cross-sha2-r-sdp-1-fast | ref | 5,200 | 218,304 | 105,604 |
 | cross-sha2-r-sdp-3-fast | ref | 9,920 | 324,764 | 158,132 |
 | cross-sha2-r-sdpg-1-fast | ref | 2,760 | 130,824 | 69,536 |
@@ -268,8 +238,6 @@
 | mayo2 | m4f | 111,532 | 124,644 | 278,444 |
 | mayo2 | ref | 111,532 | 238,324 | 270,260 |
 | mayo3 | m4f | 244,748 | 340,668 | 469,780 |
-| meds13220 | ref | 44,000 | 180,404 | 47,716 |
-| meds55604 | ref | 162,196 | 392,852 | 160,324 |
 | mirith_IIIa_fast | ref | 21,832 | 266,480 | 46,156 |
 | mirith_IIIb_fast | ref | 32,872 | 298,208 | 59,172 |
 | mirith_Ia_fast | ref | 10,208 | 122,424 | 22,836 |
@@ -328,12 +296,6 @@
 | snova-28-17-16-2-esk | ref | 309,216 | 127,232 | 199,684 |
 | snova-28-17-16-2-ssk | ref | 309,216 | 309,356 | 199,684 |
 | snova-37-8-16-4-ssk | ref | 640,324 | 640,428 | 411,516 |
-| sphincs-a-sha2-128f | ref | 281,168 | 280,772 | 280,656 |
-| sphincs-a-sha2-128s | ref | 585,984 | 585,732 | 585,396 |
-| sphincs-a-sha2-192f | ref | 504,084 | 502,636 | 502,356 |
-| sphincs-a-shake-128f | ref | 281,072 | 280,676 | 280,560 |
-| sphincs-a-shake-128s | ref | 585,888 | 585,636 | 585,264 |
-| sphincs-a-shake-192f | ref | 503,544 | 502,092 | 501,816 |
 | sphincs-sha2-128f-simple | clean | 2,856 | 2,468 | 2,664 |
 | sphincs-sha2-128s-simple | clean | 3,084 | 2,556 | 1,968 |
 | sphincs-sha2-192f-simple | clean | 5,468 | 4,404 | 4,356 |
@@ -346,7 +308,6 @@
 | sphincs-shake-192s-simple | clean | 5,252 | 3,996 | 3,160 |
 | sphincs-shake-256f-simple | clean | 7,928 | 5,876 | 5,448 |
 | sphincs-shake-256s-simple | clean | 8,220 | 6,004 | 5,048 |
-| tuov_v | ref | 503,544 | 502,092 | 501,816 |
 # Hashing Evaluation
 ## Key Encapsulation Schemes
 | Scheme | Implementation | Key Generation [%] | Encapsulation [%] | Decapsulation [%] |
@@ -391,17 +352,6 @@
 | aimer256s | m4speed | 67.7% | 32.2% | 28.0% |
 | aimer256s | m4stack | 67.7% | 43.3% | 28.0% |
 | aimer256s | mem_opt | 58.9% | 42.4% | 27.2% |
-| ascon-sign-128f-robust | ref | 0.0% | 0.0% | 0.0% |
-| ascon-sign-128f-simple | ref | 0.0% | 0.0% | 0.0% |
-| ascon-sign-128s-robust | ref | 0.0% | 0.0% | 0.0% |
-| ascon-sign-128s-simple | ref | 0.0% | 0.0% | 0.0% |
-| ascon-sign-192f-robust | ref | 0.0% | 0.0% | 0.0% |
-| ascon-sign-192f-simple | ref | 0.0% | 0.0% | 0.0% |
-| ascon-sign-192s-robust | ref | 0.0% | 0.0% | 0.0% |
-| ascon-sign-192s-simple | ref | 0.0% | 0.0% | 0.0% |
-| biscuit128f | ref | 54.3% | 9.7% | 8.9% |
-| biscuit192f | ref | 54.0% | 6.0% | 5.5% |
-| biscuit256f | ref | 54.0% | 4.4% | 4.2% |
 | cross-sha2-r-sdp-1-fast | ref | 90.2% | 86.3% | 91.0% |
 | cross-sha2-r-sdp-3-fast | ref | 86.5% | 79.8% | 81.7% |
 | cross-sha2-r-sdpg-1-fast | ref | 92.9% | 90.9% | 92.1% |
@@ -443,8 +393,6 @@
 | mayo2 | m4f | 35.2% | 35.5% | 81.2% |
 | mayo2 | ref | 22.8% | 18.1% | 75.8% |
 | mayo3 | m4f | 55.4% | 32.6% | 62.2% |
-| meds13220 | ref | 2.5% | 5.1% | 4.8% |
-| meds55604 | ref | 1.6% | 3.0% | 2.9% |
 | mirith_IIIa_fast | ref | 64.3% | 6.7% | 6.5% |
 | mirith_IIIb_fast | ref | 64.5% | 4.7% | 4.6% |
 | mirith_Ia_fast | ref | 61.4% | 10.1% | 9.7% |
@@ -503,12 +451,6 @@
 | snova-28-17-16-2-esk | ref | 10.6% | 0.2% | 28.1% |
 | snova-28-17-16-2-ssk | ref | 10.6% | 10.7% | 28.1% |
 | snova-37-8-16-4-ssk | ref | 8.8% | 2.0% | 3.4% |
-| sphincs-a-sha2-128f | ref | 43.3% | 86.6% | 48.2% |
-| sphincs-a-sha2-128s | ref | 72.9% | 88.3% | 11.7% |
-| sphincs-a-sha2-192f | ref | 57.5% | 88.3% | 46.0% |
-| sphincs-a-shake-128f | ref | 72.3% | 96.2% | 76.0% |
-| sphincs-a-shake-128s | ref | 90.9% | 96.9% | 31.8% |
-| sphincs-a-shake-192f | ref | 82.6% | 96.5% | 70.7% |
 | sphincs-sha2-128f-simple | clean | 90.8% | 90.7% | 90.6% |
 | sphincs-sha2-128s-simple | clean | 90.8% | 90.7% | 90.4% |
 | sphincs-sha2-192f-simple | clean | 90.2% | 90.8% | 90.7% |
@@ -565,17 +507,6 @@
 | aimer256s | m4speed | 26,372 | 0 | 0 | 26,372 |
 | aimer256s | m4stack | 25,928 | 0 | 0 | 25,928 |
 | aimer256s | mem_opt | 27,636 | 0 | 0 | 27,636 |
-| ascon-sign-128f-robust | ref | 17,664 | 0 | 0 | 17,664 |
-| ascon-sign-128f-simple | ref | 17,596 | 0 | 0 | 17,596 |
-| ascon-sign-128s-robust | ref | 17,972 | 0 | 0 | 17,972 |
-| ascon-sign-128s-simple | ref | 17,904 | 0 | 0 | 17,904 |
-| ascon-sign-192f-robust | ref | 17,960 | 0 | 0 | 17,960 |
-| ascon-sign-192f-simple | ref | 17,912 | 0 | 0 | 17,912 |
-| ascon-sign-192s-robust | ref | 18,472 | 0 | 0 | 18,472 |
-| ascon-sign-192s-simple | ref | 18,424 | 0 | 0 | 18,424 |
-| biscuit128f | ref | 7,580 | 0 | 0 | 7,580 |
-| biscuit192f | ref | 7,780 | 0 | 0 | 7,780 |
-| biscuit256f | ref | 8,216 | 0 | 0 | 8,216 |
 | cross-sha2-r-sdp-1-fast | ref | 14,244 | 0 | 104 | 14,348 |
 | cross-sha2-r-sdp-3-fast | ref | 14,744 | 0 | 128 | 14,872 |
 | cross-sha2-r-sdpg-1-fast | ref | 18,409 | 0 | 104 | 18,513 |
@@ -617,8 +548,6 @@
 | mayo2 | m4f | 17,292 | 8 | 0 | 17,300 |
 | mayo2 | ref | 24,404 | 8 | 0 | 24,412 |
 | mayo3 | m4f | 23,612 | 8 | 0 | 23,620 |
-| meds13220 | ref | 16,844 | 0 | 0 | 16,844 |
-| meds55604 | ref | 9,012 | 0 | 0 | 9,012 |
 | mirith_IIIa_fast | ref | 7,720 | 256 | 0 | 7,976 |
 | mirith_IIIb_fast | ref | 7,760 | 256 | 0 | 8,016 |
 | mirith_Ia_fast | ref | 7,610 | 256 | 0 | 7,866 |
@@ -677,12 +606,6 @@
 | snova-28-17-16-2-esk | ref | 16,436 | 0 | 280 | 16,716 |
 | snova-28-17-16-2-ssk | ref | 16,436 | 0 | 280 | 16,716 |
 | snova-37-8-16-4-ssk | ref | 52,440 | 0 | 336 | 52,776 |
-| sphincs-a-sha2-128f | ref | 6,343 | 0 | 0 | 6,343 |
-| sphincs-a-sha2-128s | ref | 6,899 | 0 | 0 | 6,899 |
-| sphincs-a-sha2-192f | ref | 6,867 | 0 | 0 | 6,867 |
-| sphincs-a-shake-128f | ref | 5,552 | 0 | 0 | 5,552 |
-| sphincs-a-shake-128s | ref | 6,108 | 0 | 0 | 6,108 |
-| sphincs-a-shake-192f | ref | 5,916 | 0 | 0 | 5,916 |
 | sphincs-sha2-128f-simple | clean | 4,956 | 0 | 0 | 4,956 |
 | sphincs-sha2-128s-simple | clean | 5,264 | 0 | 0 | 5,264 |
 | sphincs-sha2-192f-simple | clean | 5,444 | 0 | 0 | 5,444 |
