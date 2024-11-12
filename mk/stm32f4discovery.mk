@@ -25,7 +25,7 @@ elf/boardtest-fast.elf: CPPFLAGS+=-DSRAM_TIMING_TEST -DHAS_SRAM2 -DHAS_CCM
 
 elf/crypto_kem_frodokem640aes_m4_%.elf: LDSCRIPT=ldscripts/stm32f4discovery_fullram.ld
 elf/mupq_pqclean_crypto_kem_frodokem640shake_opt_%.elf: LDSCRIPT=ldscripts/stm32f4discovery_fullram.ld
-elf/crypto_sign_dilithium5_m4f_%.elf: LDSCRIPT=ldscripts/stm32f4discovery_fullram.ld
+elf/crypto_sign_ml-dsa-87_m4f_%.elf: LDSCRIPT=ldscripts/stm32f4discovery_fullram.ld
 elf/crypto_sign_perk-256-%_m4_testvectors.elf: LDSCRIPT=ldscripts/stm32f4discovery_fullram.ld
 elf/crypto_sign_perk-256-fast%_m4_test.elf: LDSCRIPT=ldscripts/stm32f4discovery_fullram.ld
 elf/crypto_sign_haetae5_m4f_%.elf: LDSCRIPT=ldscripts/stm32f4discovery_fullram.ld
