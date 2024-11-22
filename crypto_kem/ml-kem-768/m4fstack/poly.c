@@ -142,7 +142,7 @@ void poly_packcompress(unsigned char *r, poly *a, int i) {
         d0 >>= 31;
         t[k] = d0 & 0x7ff;
       }
-      
+
 
     r[352*i+11*j+ 0] =  t[0] & 0xff;
     r[352*i+11*j+ 1] = (t[0] >>  8) | ((t[1] & 0x1f) << 3);
@@ -366,6 +366,7 @@ void poly_tobytes(unsigned char *r, poly *a) {
     int i;
     uint16_t t0, t1;
 
+    poly_reduce(a);
     poly_reduce(a);
 
     for (i = 0; i < KYBER_N / 2; i++) {

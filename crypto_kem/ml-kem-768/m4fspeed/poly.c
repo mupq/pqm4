@@ -142,7 +142,7 @@ void poly_packcompress(unsigned char *r, poly *a, int i) {
         d0 >>= 31;
         t[k] = d0 & 0x7ff;
       }
-      
+
 
     r[352*i+11*j+ 0] =  t[0] & 0xff;
     r[352*i+11*j+ 1] = (t[0] >>  8) | ((t[1] & 0x1f) << 3);
@@ -367,6 +367,7 @@ void poly_tobytes(unsigned char *r, poly *a) {
     uint16_t t0, t1;
 
     poly_reduce(a);
+    poly_reduce(a);
 
     for (i = 0; i < KYBER_N / 2; i++) {
         t0 = a->coeffs[2 * i];
@@ -465,7 +466,7 @@ void poly_noise(poly *r, const unsigned char *seed, unsigned char nonce, int add
 *              Using strategy of better accumulation (initial step).
 * Arguments:   - const poly *a:       pointer to input polynomial
 *              - const poly *b:       pointer to input polynomial
-*              - const poly *a_prime: pointer to a pre-multiplied by zetas 
+*              - const poly *a_prime: pointer to a pre-multiplied by zetas
 *              - int32_t *r_tmp:      array for accumulating unreduced results
 **************************************************/
 extern void basemul_asm_opt_16_32(int32_t *, const int16_t *, const int16_t *, const int16_t *);
@@ -481,7 +482,7 @@ void poly_basemul_opt_16_32(int32_t *r_tmp, const poly *a, const poly *b, const 
 *              Using strategy of better accumulation.
 * Arguments:   - const poly *a:       pointer to input polynomial
 *              - const poly *b:       pointer to input polynomial
-*              - const poly *a_prime: pointer to a pre-multiplied by zetas 
+*              - const poly *a_prime: pointer to a pre-multiplied by zetas
 *              - int32_t *r_tmp:      array for accumulating unreduced results
 **************************************************/
 extern void basemul_asm_acc_opt_32_32(int32_t *, const int16_t *, const int16_t *, const int16_t *);
@@ -497,7 +498,7 @@ void poly_basemul_acc_opt_32_32(int32_t *r_tmp, const poly *a, const poly *b, co
 *              Using strategy of better accumulation (final step).
 * Arguments:   - const poly *a:       pointer to input polynomial
 *              - const poly *b:       pointer to input polynomial
-*              - const poly *a_prime: pointer to a pre-multiplied by zetas 
+*              - const poly *a_prime: pointer to a pre-multiplied by zetas
 *              - poly *r:             pointer to output polynomial
 *              - int32_t *r_tmp:      array for accumulating unreduced results
 **************************************************/
