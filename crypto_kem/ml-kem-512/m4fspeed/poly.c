@@ -367,6 +367,7 @@ void poly_tobytes(unsigned char *r, poly *a) {
     uint16_t t0, t1;
 
     poly_reduce(a);
+    poly_reduce(a);
 
     for (i = 0; i < KYBER_N / 2; i++) {
         t0 = a->coeffs[2 * i];
