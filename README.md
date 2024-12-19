@@ -1,5 +1,5 @@
 # pqm4
-Collection of post-quantum cryptographic alrogithms for the ARM Cortex-M4
+Collection of post-quantum cryptographic algorithms for the ARM Cortex-M4
 
 ## Introduction
 The **pqm4** library, benchmarking and testing framework started as a result of the 
