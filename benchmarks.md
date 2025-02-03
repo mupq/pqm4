@@ -69,6 +69,10 @@
 | falcon-512-tree (10 executions) | opt-leaktime | AVG: 203,618,838 <br /> MIN: 106,760,540 <br /> MAX: 425,495,750 | AVG: 20,110,699 <br /> MIN: 19,752,157 <br /> MAX: 20,375,122 | AVG: 480,119 <br /> MIN: 472,263 <br /> MAX: 485,743 |
 | falcon-padded-1024 (10 executions) | clean | AVG: 464,867,653 <br /> MIN: 351,942,875 <br /> MAX: 908,060,882 | AVG: 136,157,961 <br /> MIN: 135,988,344 <br /> MAX: 136,430,038 | AVG: 1,677,719 <br /> MIN: 1,677,506 <br /> MAX: 1,677,932 |
 | falcon-padded-512 (10 executions) | clean | AVG: 241,548,154 <br /> MIN: 164,862,595 <br /> MAX: 348,699,388 | AVG: 62,231,774 <br /> MIN: 62,096,573 <br /> MAX: 62,365,088 | AVG: 834,766 <br /> MIN: 834,480 <br /> MAX: 834,957 |
+| fndsa_provisional-1024 (10 executions) | m4f | AVG: 308,608,613 <br /> MIN: 195,536,229 <br /> MAX: 763,483,542 | AVG: 48,321,135 <br /> MIN: 48,158,227 <br /> MAX: 48,398,718 | AVG: 793,856 <br /> MIN: 782,604 <br /> MAX: 799,182 |
+| fndsa_provisional-1024 (10 executions) | ref | AVG: 274,928,016 <br /> MIN: 217,869,128 <br /> MAX: 448,029,028 | AVG: 107,512,779 <br /> MIN: 107,106,716 <br /> MAX: 107,788,566 | AVG: 1,461,795 <br /> MIN: 1,444,739 <br /> MAX: 1,469,817 |
+| fndsa_provisional-512 (10 executions) | m4f | AVG: 67,693,338 <br /> MIN: 57,825,106 <br /> MAX: 81,542,705 | AVG: 22,469,685 <br /> MIN: 22,280,159 <br /> MAX: 22,594,542 | AVG: 396,949 <br /> MIN: 390,368 <br /> MAX: 406,553 |
+| fndsa_provisional-512 (10 executions) | ref | AVG: 85,699,591 <br /> MIN: 64,822,516 <br /> MAX: 132,207,505 | AVG: 49,522,949 <br /> MIN: 49,325,465 <br /> MAX: 49,631,598 | AVG: 731,387 <br /> MIN: 714,301 <br /> MAX: 738,870 |
 | haetae2 (100 executions) | m4f | AVG: 6,743,278 <br /> MIN: 1,555,292 <br /> MAX: 25,393,506 | AVG: 21,993,963 <br /> MIN: 4,721,290 <br /> MAX: 86,765,689 | AVG: 918,459 <br /> MIN: 918,244 <br /> MAX: 918,668 |
 | haetae2 (100 executions) | ref | AVG: 9,363,639 <br /> MIN: 1,716,264 <br /> MAX: 41,895,014 | AVG: 31,631,089 <br /> MIN: 6,247,382 <br /> MAX: 216,853,925 | AVG: 1,104,080 <br /> MIN: 1,103,874 <br /> MAX: 1,104,329 |
 | haetae3 (100 executions) | m4f | AVG: 12,925,388 <br /> MIN: 2,752,846 <br /> MAX: 52,240,529 | AVG: 30,891,994 <br /> MIN: 7,467,529 <br /> MAX: 160,522,018 | AVG: 1,760,745 <br /> MIN: 1,760,408 <br /> MAX: 1,761,081 |
@@ -224,6 +228,10 @@
 | falcon-512-tree | opt-leaktime | 1,196 | 2,828 | 376 |
 | falcon-padded-1024 | clean | 34,988 | 84,596 | 8,776 |
 | falcon-padded-512 | clean | 18,092 | 43,540 | 4,680 |
+| fndsa_provisional-1024 | m4f | 27,772 | 81,992 | 5,024 |
+| fndsa_provisional-1024 | ref | 27,676 | 82,276 | 5,308 |
+| fndsa_provisional-512 | m4f | 14,348 | 41,952 | 2,976 |
+| fndsa_provisional-512 | ref | 14,380 | 42,124 | 3,260 |
 | haetae2 | m4f | 19,756 | 55,568 | 23,296 |
 | haetae2 | ref | 26,092 | 54,444 | 29,696 |
 | haetae3 | m4f | 29,596 | 83,420 | 31,784 |
@@ -379,6 +387,10 @@
 | falcon-512-tree | opt-leaktime | 20.5% | 1.0% | 34.3% |
 | falcon-padded-1024 | clean | 7.3% | 0.3% | 23.7% |
 | falcon-padded-512 | clean | 16.0% | 0.4% | 26.0% |
+| fndsa_provisional-1024 | m4f | 0.0% | 0.0% | 0.0% |
+| fndsa_provisional-1024 | ref | 0.0% | 0.0% | 0.0% |
+| fndsa_provisional-512 | m4f | 0.0% | 0.0% | 0.0% |
+| fndsa_provisional-512 | ref | 0.0% | 0.0% | 0.0% |
 | haetae2 | m4f | 12.4% | 56.7% | 54.1% |
 | haetae2 | ref | 10.6% | 42.4% | 45.1% |
 | haetae3 | m4f | 14.6% | 56.6% | 57.1% |
@@ -534,6 +546,10 @@
 | falcon-512-tree | opt-leaktime | 75,173 | 0 | 27,648 | 102,821 |
 | falcon-padded-1024 | clean | 82,643 | 0 | 0 | 82,643 |
 | falcon-padded-512 | clean | 82,599 | 0 | 0 | 82,599 |
+| fndsa_provisional-1024 | m4f | 103,801 | 0 | 0 | 103,801 |
+| fndsa_provisional-1024 | ref | 103,089 | 0 | 0 | 103,089 |
+| fndsa_provisional-512 | m4f | 103,789 | 0 | 0 | 103,789 |
+| fndsa_provisional-512 | ref | 103,077 | 0 | 0 | 103,077 |
 | haetae2 | m4f | 35,708 | 0 | 0 | 35,708 |
 | haetae2 | ref | 25,568 | 0 | 0 | 25,568 |
 | haetae3 | m4f | 35,936 | 0 | 0 | 35,936 |
