@@ -224,4 +224,8 @@ skip_list = [
     {'scheme': 'ml-dsa-87', 'implementation': 'clean', 'estmemory': 136192},
     {'scheme': 'ml-dsa-65', 'implementation': 'clean', 'estmemory': 90112},
     {'scheme': 'ml-dsa-44', 'implementation': 'clean', 'estmemory': 59392},
+    {'scheme': 'fndsa_provisional-1024', 'implementation': 'ref', 'estmemory': 89088},
+    {'scheme': 'fndsa_provisional-512', 'implementation': 'ref', 'estmemory': 46080},
+    {'scheme': 'fndsa_provisional-1024', 'implementation': 'm4f', 'estmemory': 89088},
+    {'scheme': 'fndsa_provisional-512', 'implementation': 'm4f', 'estmemory': 46080},
 ]
