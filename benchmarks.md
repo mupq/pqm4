@@ -342,10 +342,10 @@
 | cross-sha3-r-sdpg-1-small | ref | 71.8% | 74.7% | 78.4% |
 | cross-sha3-r-sdpg-3-fast | ref | 71.7% | 68.2% | 68.7% |
 | cross-sha3-r-sdpg-5-fast | ref | 71.1% | 66.1% | 66.8% |
-| fndsa_provisional-1024 | m4f | 0.0% | 0.0% | 0.0% |
-| fndsa_provisional-1024 | ref | 0.0% | 0.0% | 0.0% |
-| fndsa_provisional-512 | m4f | 0.0% | 0.0% | 0.0% |
-| fndsa_provisional-512 | ref | 0.0% | 0.0% | 0.0% |
+| fndsa_provisional-1024 | m4f | 7.0% | 10.2% | 61.6% |
+| fndsa_provisional-1024 | ref | 8.0% | 6.2% | 45.3% |
+| fndsa_provisional-512 | m4f | 4.2% | 11.2% | 64.0% |
+| fndsa_provisional-512 | ref | 8.1% | 6.9% | 47.6% |
 | haetae2 | m4f | 12.4% | 56.7% | 54.1% |
 | haetae2 | ref | 10.6% | 42.4% | 45.1% |
 | haetae3 | m4f | 14.6% | 56.6% | 57.1% |
