@@ -15,8 +15,7 @@ EXCLUDED_SCHEMES = \
 	mupq/crypto_sign/meds55604% \
 	mupq/crypto_sign/meds167717% \
 	mupq/crypto_sign/meds134180% \
-	crypto_sign/ov-Ip% \
-	mupq/crypto_sign/falcon-1024-tree%
+	crypto_sign/ov-Ip%
 
 include mk/opencm3.mk
 

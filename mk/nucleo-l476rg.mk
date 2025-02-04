@@ -5,7 +5,6 @@ OPENCM3_TARGET=lib/stm32/l4
 EXCLUDED_SCHEMES = \
 	mupq/pqclean/crypto_kem/mceliece% \
 	mupq/crypto_sign/ov-Ip% \
-	mupq/crypto_sign/falcon-1024-tree% \
 	mupq/crypto_sign/snova-43-25-16-2-esk% \
 	mupq/crypto_sign/snova-61-33-16-2-esk% \
 	mupq/crypto_sign/snova-60-10-16-4-esk% \

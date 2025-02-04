@@ -13,10 +13,6 @@ EXCLUDED_SCHEMES = \
 	mupq/crypto_sign/tuov_iii% \
 	mupq/crypto_sign/tuov_v% \
 	crypto_sign/ov-Ip% \
-	mupq/crypto_sign/falcon-1024% \
-	mupq/crypto_sign/falcon-512% \
-	crypto_sign/falcon-1024% \
-	crypto_sign/falcon-512% \
 	mupq/crypto_sign/meds167717% \
 	mupq/crypto_sign/meds134180% \
 	mupq/crypto_sign/snova-60-10-16-4% \
