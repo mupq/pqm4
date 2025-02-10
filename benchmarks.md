@@ -91,13 +91,13 @@
 | mirith_hypercube_Va_fast (10 executions) | ref | AVG: 6,254,896 <br /> MIN: 6,254,886 <br /> MAX: 6,254,922 | AVG: 808,070,687 <br /> MIN: 808,007,911 <br /> MAX: 808,157,180 | AVG: 792,058,628 <br /> MIN: 792,006,360 <br /> MAX: 792,098,565 |
 | mirith_hypercube_Vb_fast (10 executions) | ref | AVG: 8,807,565 <br /> MIN: 8,807,542 <br /> MAX: 8,807,583 | AVG: 1,134,272,446 <br /> MIN: 1,134,201,632 <br /> MAX: 1,134,368,110 | AVG: 1,117,085,816 <br /> MIN: 1,117,059,819 <br /> MAX: 1,117,104,354 |
 | ml-dsa-44 (1000 executions) | clean | AVG: 1,874,405 <br /> MIN: 1,827,873 <br /> MAX: 1,914,904 | AVG: 7,925,955 <br /> MIN: 3,322,507 <br /> MAX: 33,055,004 | AVG: 2,063,096 <br /> MIN: 2,062,599 <br /> MAX: 2,063,590 |
-| ml-dsa-44 (1000 executions) | m4f | AVG: 1,425,492 <br /> MIN: 1,379,560 <br /> MAX: 1,466,364 | AVG: 3,822,701 <br /> MIN: 1,814,511 <br /> MAX: 22,969,466 | AVG: 1,421,600 <br /> MIN: 1,420,736 <br /> MAX: 1,422,318 |
+| ml-dsa-44 (1000 executions) | m4f | AVG: 1,426,025 <br /> MIN: 1,379,650 <br /> MAX: 1,466,529 | AVG: 3,943,121 <br /> MIN: 1,812,557 <br /> MAX: 17,009,165 | AVG: 1,421,623 <br /> MIN: 1,420,738 <br /> MAX: 1,422,362 |
 | ml-dsa-44 (1000 executions) | m4fstack | AVG: 1,799,062 <br /> MIN: 1,685,053 <br /> MAX: 1,902,006 | AVG: 12,134,284 <br /> MIN: 3,901,973 <br /> MAX: 65,357,843 | AVG: 3,242,333 <br /> MIN: 3,199,001 <br /> MAX: 3,279,836 |
 | ml-dsa-65 (1000 executions) | clean | AVG: 3,205,533 <br /> MIN: 3,204,116 <br /> MAX: 3,206,864 | AVG: 12,359,056 <br /> MIN: 5,098,254 <br /> MAX: 70,122,163 | AVG: 3,377,305 <br /> MIN: 3,376,896 <br /> MAX: 3,377,714 |
 | ml-dsa-65 (1000 executions) | m4f | AVG: 2,516,006 <br /> MIN: 2,514,337 <br /> MAX: 2,517,453 | AVG: 6,193,171 <br /> MIN: 2,918,295 <br /> MAX: 26,008,621 | AVG: 2,415,944 <br /> MIN: 2,415,109 <br /> MAX: 2,416,730 |
 | ml-dsa-65 (1000 executions) | m4fstack | AVG: 3,412,622 <br /> MIN: 3,406,495 <br /> MAX: 3,418,945 | AVG: 24,421,526 <br /> MIN: 6,735,243 <br /> MAX: 164,688,347 | AVG: 5,732,397 <br /> MIN: 5,688,990 <br /> MAX: 5,783,258 |
 | ml-dsa-87 (1000 executions) | clean | AVG: 5,341,863 <br /> MIN: 5,276,084 <br /> MAX: 5,406,569 | AVG: 15,579,513 <br /> MIN: 7,954,385 <br /> MAX: 82,615,659 | AVG: 5,610,203 <br /> MIN: 5,609,675 <br /> MAX: 5,610,695 |
-| ml-dsa-87 (1000 executions) | m4f | AVG: 4,274,513 <br /> MIN: 4,210,044 <br /> MAX: 4,340,431 | AVG: 8,204,023 <br /> MIN: 4,883,484 <br /> MAX: 29,488,880 | AVG: 4,193,228 <br /> MIN: 4,192,029 <br /> MAX: 4,194,357 |
+| ml-dsa-87 (1000 executions) | m4f | AVG: 4,275,859 <br /> MIN: 4,188,469 <br /> MAX: 4,340,256 | AVG: 7,947,380 <br /> MIN: 4,880,711 <br /> MAX: 29,357,607 | AVG: 4,193,104 <br /> MIN: 4,191,862 <br /> MAX: 4,194,249 |
 | ml-dsa-87 (1000 executions) | m4fstack | AVG: 5,820,537 <br /> MIN: 5,484,663 <br /> MAX: 6,113,363 | AVG: 33,357,899 <br /> MIN: 11,168,408 <br /> MAX: 170,850,278 | AVG: 9,911,514 <br /> MIN: 9,852,116 <br /> MAX: 9,969,829 |
 | mqom_cat1_gf251_fast (10 executions) | ref | AVG: 7,780,082 <br /> MIN: 7,761,398 <br /> MAX: 7,795,766 | AVG: 149,063,790 <br /> MIN: 149,045,955 <br /> MAX: 149,079,787 | AVG: 136,742,778 <br /> MIN: 136,613,266 <br /> MAX: 136,821,602 |
 | mqom_cat1_gf31_fast (10 executions) | ref | AVG: 8,472,628 <br /> MIN: 8,471,619 <br /> MAX: 8,473,585 | AVG: 243,796,920 <br /> MIN: 243,782,136 <br /> MAX: 243,811,088 | AVG: 244,346,110 <br /> MIN: 244,239,828 <br /> MAX: 244,424,317 |
@@ -235,13 +235,13 @@
 | mirith_hypercube_Va_fast | ref | 45,000 | 308,440 | 81,056 |
 | mirith_hypercube_Vb_fast | ref | 62,864 | 344,832 | 101,220 |
 | ml-dsa-44 | clean | 38,304 | 51,976 | 36,308 |
-| ml-dsa-44 | m4f | 38,296 | 49,424 | 8,912 |
+| ml-dsa-44 | m4f | 38,296 | 44,816 | 8,912 |
 | ml-dsa-44 | m4fstack | 4,408 | 5,080 | 2,712 |
 | ml-dsa-65 | clean | 60,832 | 79,624 | 57,736 |
 | ml-dsa-65 | m4f | 60,824 | 68,872 | 9,888 |
 | ml-dsa-65 | m4fstack | 4,408 | 6,616 | 2,712 |
 | ml-dsa-87 | clean | 97,696 | 122,740 | 92,948 |
-| ml-dsa-87 | m4f | 97,688 | 116,084 | 12,060 |
+| ml-dsa-87 | m4f | 97,688 | 107,892 | 12,060 |
 | ml-dsa-87 | m4fstack | 4,408 | 8,144 | 2,720 |
 | mqom_cat1_gf251_fast | ref | 184,356 | 399,396 | 252,684 |
 | mqom_cat1_gf31_fast | ref | 262,888 | 612,816 | 421,596 |
@@ -379,13 +379,13 @@
 | mirith_hypercube_Va_fast | ref | 64.8% | 13.4% | 12.3% |
 | mirith_hypercube_Vb_fast | ref | 64.5% | 11.0% | 10.1% |
 | ml-dsa-44 | clean | 61.0% | 31.0% | 52.9% |
-| ml-dsa-44 | m4f | 79.9% | 60.7% | 76.6% |
+| ml-dsa-44 | m4f | 79.9% | 60.6% | 76.6% |
 | ml-dsa-44 | m4fstack | 74.9% | 54.8% | 40.8% |
 | ml-dsa-65 | clean | 64.7% | 31.2% | 56.8% |
 | ml-dsa-65 | m4f | 82.3% | 60.6% | 79.2% |
 | ml-dsa-65 | m4fstack | 77.1% | 54.2% | 41.0% |
 | ml-dsa-87 | clean | 67.0% | 35.9% | 61.1% |
-| ml-dsa-87 | m4f | 83.5% | 65.1% | 81.6% |
+| ml-dsa-87 | m4f | 83.5% | 65.3% | 81.6% |
 | ml-dsa-87 | m4fstack | 76.1% | 54.0% | 42.6% |
 | mqom_cat1_gf251_fast | ref | 73.5% | 33.0% | 33.1% |
 | mqom_cat1_gf31_fast | ref | 64.6% | 19.8% | 19.2% |
@@ -523,13 +523,13 @@
 | mirith_hypercube_Va_fast | ref | 9,140 | 256 | 0 | 9,396 |
 | mirith_hypercube_Vb_fast | ref | 9,160 | 256 | 0 | 9,416 |
 | ml-dsa-44 | clean | 8,212 | 0 | 0 | 8,212 |
-| ml-dsa-44 | m4f | 19,324 | 0 | 0 | 19,324 |
+| ml-dsa-44 | m4f | 19,592 | 0 | 0 | 19,592 |
 | ml-dsa-44 | m4fstack | 24,844 | 0 | 0 | 24,844 |
 | ml-dsa-65 | clean | 7,724 | 0 | 0 | 7,724 |
 | ml-dsa-65 | m4f | 19,328 | 0 | 0 | 19,328 |
 | ml-dsa-65 | m4fstack | 24,120 | 0 | 0 | 24,120 |
 | ml-dsa-87 | clean | 8,036 | 0 | 0 | 8,036 |
-| ml-dsa-87 | m4f | 19,232 | 0 | 0 | 19,232 |
+| ml-dsa-87 | m4f | 19,500 | 0 | 0 | 19,500 |
 | ml-dsa-87 | m4fstack | 24,516 | 0 | 0 | 24,516 |
 | mqom_cat1_gf251_fast | ref | 16,865 | 0 | 0 | 16,865 |
 | mqom_cat1_gf31_fast | ref | 23,718 | 0 | 0 | 23,718 |
