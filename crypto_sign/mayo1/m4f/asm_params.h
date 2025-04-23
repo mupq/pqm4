@@ -1,5 +1,5 @@
-#define M 64
-#define N 66
-#define K 9
+#define M 78
+#define N 86
+#define K 10
 #define O 8
 #define V (N-O)

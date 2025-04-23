@@ -35,6 +35,8 @@
 .endm
 
 
+
+
 .macro gf16_bitslice_single out0, out1, out2, out3, in0
     and.w \out0, \in0, #0x11111111
     and.w \out1, \in0, #0x22222222
@@ -52,3 +54,49 @@
     orr.w \out0, \out0, \in2, lsl#2
     orr.w \out0, \out0, \in3, lsl#3
 .endm
+
+.macro gf16_bitslice_dual out0, out1, out2, out3, in0, in1
+    // use out3 as tmp
+    and.w \out0, \in0, #0x11111111
+    and.w \out3, \in1, #0x11111111
+    orr.w \out0, \out0, \out3, lsl#1
+
+    and.w \out1, \in1, #0x22222222
+    and.w \out3, \in0, #0x22222222
+    orr.w \out1, \out1, \out3, lsr#1
+
+    and.w \out3, \in0, #0x44444444
+    lsr.w \out2, \out3, #2
+    and.w \out3, \in1, #0x44444444
+    orr.w \out2, \out2, \out3, lsr#1
+
+    
+    and.w \out3, \in0, #0x88888888
+    // in0 no longer needed; use as tmp
+    lsr.w \out3, \out3, #3
+    and.w \in0, \in1, #0x88888888
+    orr.w \out3, \out3, \in0, lsr#2
+.endm
+
+
+
+.macro gf16_unbitslice_dual out0, out1, in0, in1, in2, in3
+    // use out1 as tmp
+    and.w \out0, \in0, #0x11111111
+    and.w \out1, \in1, #0x11111111
+    orr.w \out0, \out0, \out1, lsl#1
+    and.w \out1, \in2,  #0x11111111
+    orr.w \out0, \out0, \out1, lsl#2
+    and.w \out1, \in3, #0x11111111
+    orr.w \out0, \out0, \out1, lsl#3
+
+    and.w \out1, \in1, #0x22222222
+    // in1 no longer needed, use as tmp
+    and.w \in1, \in0, #0x22222222
+    orr.w \out1, \out1, \in1, lsr#1
+    and.w \in1, \in2, #0x22222222
+    orr.w \out1, \out1, \in1, lsl#1
+    and.w \in1, \in3, #0x22222222
+    orr.w \out1, \out1, \in1, lsl#2
+.endm
+

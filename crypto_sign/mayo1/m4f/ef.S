@@ -586,19 +586,6 @@ ef_unbitslice_asm:
 
     gf16_bitslice tmp0, tmp2, tmp4, tmp6, tmp1, tmp3, tmp5, tmp7
 
-
-    .if ncols % 32 == 9
-    lsr.w tmp1, tmp0, #4
-
-    and.w tmp0, #0x0F0F0F0F
-    and.w tmp1, #0x0F0F0F0F
-    and.w tmp2, #0x0F0F0F0F
-
-    str.w tmp0, [out]
-    str.w tmp1, [out, #4*1]
-    strb.w tmp2, [out, #4*2]
-    .endif
-
     .if ncols % 32 == 15
     lsr.w tmp1, tmp0, #4
     lsr.w tmp3, tmp2, #4
@@ -611,16 +598,38 @@ ef_unbitslice_asm:
     str.w tmp0, [out]
     str.w tmp1, [out, #4*1]
     str.w tmp2, [out, #4*2]
-
-    // DODO can we just do a str directly?
-    strb.w tmp3, [out, #4*3]
-    lsr.w tmp3, 8
-    strb.w tmp3, [out, #4*3+1]
-    lsr.w tmp3, 8
+    strh.w tmp3, [out, #4*3]
+    lsr.w tmp3, 16
     strb.w tmp3, [out, #4*3+2]
-
     .endif
 
+    .if ncols % 32 == 17
+    lsr.w tmp1, tmp0, #4
+    lsr.w tmp3, tmp2, #4
+
+    and.w tmp0, #0x0F0F0F0F
+    and.w tmp1, #0x0F0F0F0F
+    and.w tmp2, #0x0F0F0F0F
+    and.w tmp3, #0x0F0F0F0F
+    and.w tmp4, #0x0F0F0F0F
+
+    str.w tmp0, [out]
+    str.w tmp1, [out, #4*1]
+    str.w tmp2, [out, #4*2]
+    str.w tmp3, [out, #4*3]
+    strb.w tmp4, [out, #4*4]
+    .endif
+
+    .if ncols % 32 == 5
+    lsr.w tmp1, tmp0, #4
+
+
+    and.w tmp0, #0x0F0F0F0F
+    and.w tmp1, #0x0F0F0F0F
+
+    str.w tmp0, [out]
+    strb.w tmp1, [out, #4*1]
+    .endif
 
 
     pop.w {r4-r11, pc}
@@ -687,7 +696,6 @@ ef_unbitslice_asm:
 .align 2
 backsub_inner_asm:
     .set ncols, (K*O+1)
-    .set legs, ((ncols+31)/32)
 
     ctr .req s0
 
@@ -697,8 +705,6 @@ backsub_inner_asm:
 
     ldrb.w r0, [r0]
     cmp.n r3, #0
-
-    // TODO: check if mul works too
     it eq
     moveq.w r0, #0
 
