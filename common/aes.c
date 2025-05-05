@@ -1,4 +1,3 @@
-// SPDX-License-Identifier: Apache-2.0 or CC0-1.0
 #include <stdint.h>
 #include <string.h>
 #include "aes.h"
@@ -87,7 +86,7 @@ void aes128_ctr_keyexp(aes128ctx *r, const unsigned char *key){
 
 
 void aes128_ctr(unsigned char *out, size_t outlen, const unsigned char *iv,
-                const aes128ctx *ctx){
+                uint32_t ctr, const aes128ctx *ctx){
     #ifdef PROFILE_HASHING
     uint64_t t0 = hal_get_time();
     #endif
@@ -99,8 +98,9 @@ void aes128_ctr(unsigned char *out, size_t outlen, const unsigned char *iv,
 
     memcpy(ivw1, iv, AESCTR_NONCEBYTES);
     memcpy(ivw2, iv, AESCTR_NONCEBYTES);
-    inc1_be(ivw2 + 3);
 
+    ivw1[3] = br_swap32(ctr);
+    ivw2[3] = br_swap32(ctr+1);
 
     while (outlen > 2*AES_BLOCKBYTES) {
         aes128_encrypt_ffs(out, out+16, (uint8_t *)ivw1, (uint8_t *)ivw2, ctx->sk_exp);
@@ -185,7 +185,7 @@ void aes256_ctr_keyexp(aes256ctx *r, const unsigned char *key){
 }
 
 void aes256_ctr(unsigned char *out, size_t outlen, const unsigned char *iv,
-                const aes256ctx *ctx){
+                uint32_t ctr, const aes256ctx *ctx){
     #ifdef PROFILE_HASHING
     uint64_t t0 = hal_get_time();
     #endif
@@ -197,7 +197,9 @@ void aes256_ctr(unsigned char *out, size_t outlen, const unsigned char *iv,
 
     memcpy(ivw1, iv, AESCTR_NONCEBYTES);
     memcpy(ivw2, iv, AESCTR_NONCEBYTES);
-    inc1_be(ivw2 + 3);
+
+    ivw1[3] = br_swap32(ctr);
+    ivw2[3] = br_swap32(ctr+1);
 
 
     while (outlen > 2*AES_BLOCKBYTES) {

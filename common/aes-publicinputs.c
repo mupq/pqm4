@@ -67,12 +67,14 @@ static void aes_ecb(unsigned char *out, const unsigned char *in, size_t nblocks,
 }
 
 
-static void aes_ctr(unsigned char *out, size_t outlen, const unsigned char *iv, const uint64_t *rkeys, void (*aes_encrypt_asm)(const uint8_t *, const uint8_t *, uint8_t *)) {
+static void aes_ctr(unsigned char *out, size_t outlen, const unsigned char *iv, uint32_t ctr, const uint64_t *rkeys, void (*aes_encrypt_asm)(const uint8_t *, const uint8_t *, uint8_t *)) {
     uint32_t ivw[4] = {0};
     uint8_t buf[AES_BLOCKBYTES];
     size_t i;
 
     memcpy(ivw, iv, AESCTR_NONCEBYTES);
+
+    ivw[3] = br_swap32(ctr);
 
     while (outlen > AES_BLOCKBYTES) {
         aes_encrypt_asm((uint8_t *)rkeys, (uint8_t *)ivw, out);
@@ -171,12 +173,12 @@ void aes128_ecb_publicinputs(unsigned char *out, const unsigned char *in, size_t
 #endif
 }
 
-void aes128_ctr_publicinputs(unsigned char *out, size_t outlen, const unsigned char *iv, const aes128ctx_publicinputs *ctx) {
+void aes128_ctr_publicinputs(unsigned char *out, size_t outlen, const unsigned char *iv, uint32_t ctr, const aes128ctx_publicinputs *ctx) {
 #ifdef PROFILE_HASHING
     uint64_t t0 = hal_get_time();
 #endif
 
-    aes_ctr(out, outlen, iv, ctx->sk_exp, aes128_encrypt_publicinputs_asm);
+    aes_ctr(out, outlen, iv, ctr, ctx->sk_exp, aes128_encrypt_publicinputs_asm);
 
 #ifdef PROFILE_HASHING
     uint64_t t1 = hal_get_time();
@@ -197,12 +199,12 @@ void aes192_ecb_publicinputs(unsigned char *out, const unsigned char *in, size_t
 #endif
 }
 
-void aes192_ctr_publicinputs(unsigned char *out, size_t outlen, const unsigned char *iv, const aes192ctx_publicinputs *ctx) {
+void aes192_ctr_publicinputs(unsigned char *out, size_t outlen, const unsigned char *iv, uint32_t ctr,  const aes192ctx_publicinputs *ctx) {
 #ifdef PROFILE_HASHING
     uint64_t t0 = hal_get_time();
 #endif
 
-    aes_ctr(out, outlen, iv, ctx->sk_exp, aes192_encrypt_publicinputs_asm);
+    aes_ctr(out, outlen, iv, ctr, ctx->sk_exp, aes192_encrypt_publicinputs_asm);
 
 #ifdef PROFILE_HASHING
     uint64_t t1 = hal_get_time();
@@ -223,12 +225,12 @@ void aes256_ecb_publicinputs(unsigned char *out, const unsigned char *in, size_t
 #endif
 }
 
-void aes256_ctr_publicinputs(unsigned char *out, size_t outlen, const unsigned char *iv, const aes256ctx_publicinputs *ctx) {
+void aes256_ctr_publicinputs(unsigned char *out, size_t outlen, const unsigned char *iv, uint32_t ctr, const aes256ctx_publicinputs *ctx) {
 #ifdef PROFILE_HASHING
     uint64_t t0 = hal_get_time();
 #endif
 
-    aes_ctr(out, outlen, iv, ctx->sk_exp, aes256_encrypt_publicinputs_asm);
+    aes_ctr(out, outlen, iv, ctr, ctx->sk_exp, aes256_encrypt_publicinputs_asm);
 
 #ifdef PROFILE_HASHING
     uint64_t t1 = hal_get_time();
