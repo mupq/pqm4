@@ -31,7 +31,7 @@ void aes128_ctr_keyexp_publicinputs(aes128ctx_publicinputs *r, const unsigned ch
 
 void aes128_ecb_publicinputs(unsigned char *out, const unsigned char *in, size_t nblocks, const aes128ctx_publicinputs *ctx);
 
-void aes128_ctr_publicinputs(unsigned char *out, size_t outlen, const unsigned char *iv, uint32_t ctr, const aes128ctx_publicinputs *ctx);
+void aes128_ctr_publicinputs(unsigned char *out, size_t outlen, const unsigned char *iv, const aes128ctx_publicinputs *ctx);
 
 void aes128_ctx_release_publicinputs(aes128ctx_publicinputs *r);
 
@@ -42,7 +42,7 @@ void aes192_ctr_keyexp_publicinputs(aes192ctx_publicinputs *r, const unsigned ch
 
 void aes192_ecb_publicinputs(unsigned char *out, const unsigned char *in, size_t nblocks, const aes192ctx_publicinputs *ctx);
 
-void aes192_ctr_publicinputs(unsigned char *out, size_t outlen, const unsigned char *iv, uint32_t ctr, const aes192ctx_publicinputs *ctx);
+void aes192_ctr_publicinputs(unsigned char *out, size_t outlen, const unsigned char *iv, const aes192ctx_publicinputs *ctx);
 
 void aes192_ctx_release_publicinputs(aes192ctx_publicinputs *r);
 
@@ -54,7 +54,7 @@ void aes256_ctr_keyexp_publicinputs(aes256ctx_publicinputs *r, const unsigned ch
 
 void aes256_ecb_publicinputs(unsigned char *out, const unsigned char *in, size_t nblocks, const aes256ctx_publicinputs *ctx);
 
-void aes256_ctr_publicinputs(unsigned char *out, size_t outlen, const unsigned char *iv, uint32_t ctr, const aes256ctx_publicinputs *ctx);
+void aes256_ctr_publicinputs(unsigned char *out, size_t outlen, const unsigned char *iv, const aes256ctx_publicinputs *ctx);
 
 void aes256_ctx_release_publicinputs(aes256ctx_publicinputs *r);
 
