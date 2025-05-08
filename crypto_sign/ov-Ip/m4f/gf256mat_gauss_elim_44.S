@@ -294,10 +294,21 @@
 
     add.w \aj, \ai, #48
 
+    .if 0
+    // this is a performance optimization resulting in a 2^-57.4 chance to
+    // wrongly reject a set of vinegar variables.
+    // We disable this trick by default as it it is incompatible with formal verification.
+    // See `Reducing the number of conditional additions` of
+    // https://eprint.iacr.org/2023/059
+
     cmp.n \ii, #36
     ite lt
     movlt.w \ajmax, #8
     rsbge.w \ajmax, \ii, #44
+    .else
+    rsb.w \ajmax, \ii, #44
+    .endif
+
     mov.w \tmp0, #48
     mla.w \ajmax, \ajmax, \tmp0, \ai
 

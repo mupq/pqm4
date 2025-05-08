@@ -33,25 +33,6 @@ void gf256mat_colmat_mul_ref(uint8_t *mat_c, const uint8_t *mat_a, unsigned a_ve
 
 /////////////////////////////////////////////////////
 
-unsigned gf16mat_inv_ref(uint8_t *inv_a, const uint8_t *a , unsigned len );
-
-unsigned gf256mat_inv_ref(uint8_t *inv_a, const uint8_t *a , unsigned len );
-
-
-/////////////////////////////////////////////////////
-
-unsigned gf256mat_LDUinv_ref(uint8_t *mat_U_AinvB, uint8_t *mat_Ainv, uint8_t *mat_CAinvB_inv, uint8_t *mat_L_C, const uint8_t *matA , unsigned len);
-
-void gf256mat_LDUinv_prod_ref(uint8_t *c, const uint8_t *mat_U_AinvB, const uint8_t *mat_Ainv, const uint8_t *mat_CAinvB_inv, const uint8_t *mat_L_C, const uint8_t * b , unsigned len);
-
-
-unsigned gf16mat_LDUinv_ref(uint8_t *mat_U_AinvB, uint8_t *mat_Ainv, uint8_t *mat_CAinvB_inv, uint8_t *mat_L_C, const uint8_t *matA , unsigned mat_dim);
-
-void gf16mat_LDUinv_prod_ref(uint8_t *c, const uint8_t *mat_U_AinvB, const uint8_t *mat_Ainv, const uint8_t *mat_CAinvB_inv, const uint8_t *mat_L_C, const uint8_t * b , unsigned veclen_byte );
-
-
-
-
 void gf256mat_back_substitute_ref( uint8_t *constant, const uint8_t *sq_row_mat_a, unsigned len);
 
 void gf16mat_back_substitute_ref( uint8_t *constant, const uint8_t *sq_row_mat_a, unsigned len);
