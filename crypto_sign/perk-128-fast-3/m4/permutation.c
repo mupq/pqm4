@@ -1,10 +1,7 @@
 
 /**
  * @file permutation.c
- * @brief Implementation of permutation related functions.
- *
- *  This implementation uses memory table lookup
- *  and is constant time only for CPU without RAM cache like Arm M4 CPUs
+ * @brief Implementation of permutation related functions
  */
 
 #include "permutation.h"
@@ -47,27 +44,39 @@ void sig_perk_perm_set_random(perm_t p, const uint8_t seed[SEED_BYTES]) {
 }
 
 void sig_perk_perm_vect_permute(vect1_t output, const perm_t p, const vect1_t input) {
-    vect1_t buffer = {0};
-    for (size_t i = 0; i < PARAM_N1; i++) {
-        buffer[p[i]] = input[i];
+    uint32_t buffer[PARAM_N1];
+    for (int i = 0; i < PARAM_N1; ++i) {
+        buffer[i] = (((uint32_t)p[i]) << 16) | input[i];
     }
-    memcpy(output, buffer, sizeof(vect1_t));
+    uint32_sort(buffer, PARAM_N1);
+    for (int i = 0; i < PARAM_N1; ++i) {
+        output[i] = (uint16_t)(buffer[i]);
+    }
 }
 
 void sig_perk_perm_inverse(perm_t o, const perm_t p) {
-    perm_t buffer;
+    uint32_t buffer[PARAM_N1];
     for (int i = 0; i < PARAM_N1; i++) {
-        buffer[p[i]] = i;
+        buffer[i] = (((uint32_t)p[i]) << 16) | i;
     }
-    memcpy(o, buffer, sizeof(perm_t));
+    uint32_sort(buffer, PARAM_N1);
+
+    for (int i = 0; i < PARAM_N1; i++) {
+        o[i] = (uint16_t)(buffer[i]);
+    }
 }
 
 void sig_perk_perm_compose(perm_t o, const perm_t p1, const perm_t p2) {
-    perm_t buffer = {0};
-    for (size_t i = 0; i < PARAM_N1; i++) {
-        buffer[i] = p1[p2[i]];
+    uint32_t buffer[PARAM_N1];
+    perm_t tmp;
+    sig_perk_perm_inverse(tmp, p2);
+    for (int i = 0; i < PARAM_N1; ++i) {
+        buffer[i] = (((uint32_t)tmp[i]) << 16) | p1[i];
     }
-    memcpy(o, buffer, sizeof(perm_t));
+    uint32_sort(buffer, PARAM_N1);
+    for (int i = 0; i < PARAM_N1; ++i) {
+        o[i] = (uint16_t)(buffer[i]);
+    }
 }
 
 // compute p1 compose p2^-1
