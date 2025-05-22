@@ -102,14 +102,14 @@
 | ml-dsa-87 (1000 executions) | m4fstack | AVG: 5,820,537 <br /> MIN: 5,484,663 <br /> MAX: 6,113,363 | AVG: 33,357,899 <br /> MIN: 11,168,408 <br /> MAX: 170,850,278 | AVG: 9,911,514 <br /> MIN: 9,852,116 <br /> MAX: 9,969,829 |
 | mqom_cat1_gf251_fast (10 executions) | ref | AVG: 7,780,082 <br /> MIN: 7,761,398 <br /> MAX: 7,795,766 | AVG: 149,063,790 <br /> MIN: 149,045,955 <br /> MAX: 149,079,787 | AVG: 136,742,778 <br /> MIN: 136,613,266 <br /> MAX: 136,821,602 |
 | mqom_cat1_gf31_fast (10 executions) | ref | AVG: 8,472,628 <br /> MIN: 8,471,619 <br /> MAX: 8,473,585 | AVG: 243,796,920 <br /> MIN: 243,782,136 <br /> MAX: 243,811,088 | AVG: 244,346,110 <br /> MIN: 244,239,828 <br /> MAX: 244,424,317 |
-| ov-Ip (10 executions) | m4f | AVG: 139,186,121 <br /> MIN: 139,186,115 <br /> MAX: 139,186,154 | AVG: 2,465,106 <br /> MIN: 2,465,096 <br /> MAX: 2,465,133 | AVG: 993,538 <br /> MIN: 979,943 <br /> MAX: 997,098 |
-| ov-Ip (10 executions) | ref | AVG: 350,783,613 <br /> MIN: 350,783,583 <br /> MAX: 350,783,641 | AVG: 6,479,343 <br /> MIN: 6,479,329 <br /> MAX: 6,479,364 | AVG: 1,301,328 <br /> MIN: 1,301,328 <br /> MAX: 1,301,329 |
-| ov-Ip-pkc (10 executions) | m4fspeed | AVG: 175,417,340 <br /> MIN: 175,417,323 <br /> MAX: 175,417,366 | AVG: 2,484,348 <br /> MIN: 2,484,345 <br /> MAX: 2,484,383 | AVG: 11,197,952 <br /> MIN: 11,185,489 <br /> MAX: 11,202,816 |
-| ov-Ip-pkc (10 executions) | m4fstack | AVG: 175,417,332 <br /> MIN: 175,417,319 <br /> MAX: 175,417,363 | AVG: 2,484,355 <br /> MIN: 2,484,351 <br /> MAX: 2,484,391 | AVG: 12,047,546 <br /> MIN: 12,033,622 <br /> MAX: 12,049,099 |
-| ov-Ip-pkc (10 executions) | ref | AVG: 375,129,899 <br /> MIN: 375,129,876 <br /> MAX: 375,129,925 | AVG: 6,924,383 <br /> MIN: 6,924,364 <br /> MAX: 6,924,403 | AVG: 11,429,702 <br /> MIN: 11,429,685 <br /> MAX: 11,429,720 |
-| ov-Ip-pkc-skc (10 executions) | m4fspeed | AVG: 175,417,478 <br /> MIN: 175,417,464 <br /> MAX: 175,417,508 | AVG: 89,193,259 <br /> MIN: 89,193,250 <br /> MAX: 89,193,291 | AVG: 11,987,533 <br /> MIN: 11,972,791 <br /> MAX: 11,991,175 |
-| ov-Ip-pkc-skc (10 executions) | m4fstack | AVG: 175,417,481 <br /> MIN: 175,417,467 <br /> MAX: 175,417,513 | AVG: 89,193,257 <br /> MIN: 89,193,252 <br /> MAX: 89,193,294 | AVG: 12,046,865 <br /> MIN: 12,036,910 <br /> MAX: 12,049,102 |
-| ov-Ip-pkc-skc (10 executions) | ref | AVG: 375,129,970 <br /> MIN: 375,129,961 <br /> MAX: 375,129,979 | AVG: 241,521,035 <br /> MIN: 241,521,010 <br /> MAX: 241,521,062 | AVG: 12,160,652 <br /> MIN: 12,160,649 <br /> MAX: 12,160,655 |
+| ov-Ip (10 executions) | m4f | AVG: 139,271,467 <br /> MIN: 139,271,458 <br /> MAX: 139,271,493 | AVG: 2,505,317 <br /> MIN: 2,505,311 <br /> MAX: 2,505,345 | AVG: 996,456 <br /> MIN: 986,007 <br /> MAX: 997,662 |
+| ov-Ip (10 executions) | ref | AVG: 351,626,040 <br /> MIN: 351,626,005 <br /> MAX: 351,626,063 | AVG: 6,488,435 <br /> MIN: 6,488,421 <br /> MAX: 6,488,456 | AVG: 1,413,310 <br /> MIN: 1,413,307 <br /> MAX: 1,413,342 |
+| ov-Ip-pkc (10 executions) | m4fspeed | AVG: 175,478,881 <br /> MIN: 175,478,862 <br /> MAX: 175,478,911 | AVG: 2,527,865 <br /> MIN: 2,527,858 <br /> MAX: 2,527,896 | AVG: 11,215,424 <br /> MIN: 11,205,795 <br /> MAX: 11,218,217 |
+| ov-Ip-pkc (10 executions) | m4fstack | AVG: 175,478,881 <br /> MIN: 175,478,860 <br /> MAX: 175,478,903 | AVG: 2,773,500 <br /> MIN: 2,527,858 <br /> MAX: 4,984,285 | AVG: 12,061,774 <br /> MIN: 12,042,070 <br /> MAX: 12,064,226 |
+| ov-Ip-pkc (10 executions) | ref | AVG: 375,763,094 <br /> MIN: 375,763,057 <br /> MAX: 375,763,124 | AVG: 6,928,079 <br /> MIN: 6,928,071 <br /> MAX: 6,928,111 | AVG: 11,584,175 <br /> MIN: 11,584,145 <br /> MAX: 11,584,182 |
+| ov-Ip-pkc-skc (10 executions) | m4fspeed | AVG: 175,478,965 <br /> MIN: 175,478,948 <br /> MAX: 175,478,990 | AVG: 89,263,175 <br /> MIN: 89,263,170 <br /> MAX: 89,263,214 | AVG: 12,003,597 <br /> MIN: 11,986,733 <br /> MAX: 12,006,562 |
+| ov-Ip-pkc-skc (10 executions) | m4fstack | AVG: 175,478,966 <br /> MIN: 175,478,947 <br /> MAX: 175,478,991 | AVG: 89,263,173 <br /> MIN: 89,263,168 <br /> MAX: 89,263,204 | AVG: 12,058,243 <br /> MIN: 12,038,372 <br /> MAX: 12,064,225 |
+| ov-Ip-pkc-skc (10 executions) | ref | AVG: 375,763,142 <br /> MIN: 375,763,127 <br /> MAX: 375,763,170 | AVG: 242,044,572 <br /> MIN: 242,044,549 <br /> MAX: 242,044,595 | AVG: 12,436,704 <br /> MIN: 12,436,679 <br /> MAX: 12,436,717 |
 | perk-128-fast-3 (10 executions) | m4 | AVG: 644,470 <br /> MIN: 636,635 <br /> MAX: 647,939 | AVG: 246,017,426 <br /> MIN: 243,005,413 <br /> MAX: 253,780,360 | AVG: 81,024,701 <br /> MIN: 80,816,007 <br /> MAX: 81,395,570 |
 | perk-128-fast-3 (10 executions) | ref | AVG: 708,498 <br /> MIN: 693,335 <br /> MAX: 746,765 | AVG: 217,731,020 <br /> MIN: 217,373,834 <br /> MAX: 218,266,235 | AVG: 96,392,553 <br /> MIN: 96,066,645 <br /> MAX: 96,887,038 |
 | perk-128-fast-5 (10 executions) | m4 | AVG: 817,180 <br /> MIN: 816,960 <br /> MAX: 817,404 | AVG: 237,884,869 <br /> MIN: 230,003,551 <br /> MAX: 244,535,683 | AVG: 78,109,386 <br /> MIN: 77,698,543 <br /> MAX: 78,417,783 |
@@ -247,14 +247,14 @@
 | ml-dsa-87 | m4fstack | 4,408 | 8,144 | 2,720 |
 | mqom_cat1_gf251_fast | ref | 184,356 | 399,396 | 252,684 |
 | mqom_cat1_gf31_fast | ref | 262,888 | 612,816 | 421,596 |
-| ov-Ip | m4f | 15,676 | 5,216 | 2,512 |
-| ov-Ip | ref | 15,724 | 12,728 | 6,236 |
-| ov-Ip-pkc | m4fspeed | 142,244 | 5,216 | 280,944 |
-| ov-Ip-pkc | m4fstack | 142,244 | 5,216 | 6,548 |
-| ov-Ip-pkc | ref | 15,724 | 12,728 | 284,560 |
-| ov-Ip-pkc-skc | m4fspeed | 380,164 | 243,128 | 281,028 |
-| ov-Ip-pkc-skc | m4fstack | 380,164 | 243,128 | 6,548 |
-| ov-Ip-pkc-skc | ref | 253,628 | 253,580 | 284,560 |
+| ov-Ip | m4f | 18,676 | 5,192 | 2,520 |
+| ov-Ip | ref | 18,732 | 12,712 | 5,492 |
+| ov-Ip-pkc | m4fspeed | 145,236 | 5,192 | 280,952 |
+| ov-Ip-pkc | m4fstack | 145,236 | 5,192 | 6,556 |
+| ov-Ip-pkc | ref | 18,732 | 12,712 | 283,860 |
+| ov-Ip-pkc-skc | m4fspeed | 383,148 | 243,104 | 281,036 |
+| ov-Ip-pkc-skc | m4fstack | 383,148 | 243,104 | 6,556 |
+| ov-Ip-pkc-skc | ref | 256,644 | 256,596 | 283,860 |
 | perk-128-fast-3 | m4 | 7,696 | 24,020 | 20,684 |
 | perk-128-fast-3 | ref | 7,728 | 313,412 | 313,284 |
 | perk-128-fast-5 | m4 | 9,032 | 25,160 | 21,752 |
@@ -393,13 +393,13 @@
 | mqom_cat1_gf251_fast | ref | 73.5% | 33.0% | 33.1% |
 | mqom_cat1_gf31_fast | ref | 64.6% | 19.8% | 19.2% |
 | ov-Ip | m4f | 7.5% | 0.9% | 1.1% |
-| ov-Ip | ref | 3.0% | 0.3% | 0.9% |
-| ov-Ip-pkc | m4fspeed | 6.4% | 0.9% | 81.5% |
-| ov-Ip-pkc | m4fstack | 6.4% | 0.9% | 81.4% |
-| ov-Ip-pkc | ref | 3.0% | 0.3% | 80.0% |
+| ov-Ip | ref | 3.0% | 0.3% | 0.8% |
+| ov-Ip-pkc | m4fspeed | 6.4% | 0.9% | 81.4% |
+| ov-Ip-pkc | m4fstack | 6.4% | 0.9% | 81.3% |
+| ov-Ip-pkc | ref | 3.0% | 0.3% | 79.1% |
 | ov-Ip-pkc-skc | m4fspeed | 6.4% | 12.5% | 81.7% |
-| ov-Ip-pkc-skc | m4fstack | 6.4% | 12.5% | 81.4% |
-| ov-Ip-pkc-skc | ref | 3.0% | 4.7% | 80.7% |
+| ov-Ip-pkc-skc | m4fstack | 6.4% | 12.5% | 81.3% |
+| ov-Ip-pkc-skc | ref | 3.0% | 4.7% | 79.1% |
 | perk-128-fast-3 | m4 | 63.7% | 48.5% | 71.6% |
 | perk-128-fast-3 | ref | 58.7% | 28.4% | 61.6% |
 | perk-128-fast-5 | m4 | 56.1% | 47.1% | 70.5% |
@@ -537,14 +537,14 @@
 | ml-dsa-87 | m4fstack | 24,516 | 0 | 0 | 24,516 |
 | mqom_cat1_gf251_fast | ref | 16,865 | 0 | 0 | 16,865 |
 | mqom_cat1_gf31_fast | ref | 23,718 | 0 | 0 | 23,718 |
-| ov-Ip | m4f | 118,939 | 0 | 0 | 118,939 |
-| ov-Ip | ref | 29,215 | 0 | 0 | 29,215 |
-| ov-Ip-pkc | m4fspeed | 119,131 | 0 | 0 | 119,131 |
-| ov-Ip-pkc | m4fstack | 119,059 | 0 | 0 | 119,059 |
-| ov-Ip-pkc | ref | 29,423 | 0 | 0 | 29,423 |
-| ov-Ip-pkc-skc | m4fspeed | 119,175 | 0 | 0 | 119,175 |
-| ov-Ip-pkc-skc | m4fstack | 119,103 | 0 | 0 | 119,103 |
-| ov-Ip-pkc-skc | ref | 29,467 | 0 | 0 | 29,467 |
+| ov-Ip | m4f | 116,070 | 0 | 0 | 116,070 |
+| ov-Ip | ref | 22,374 | 0 | 0 | 22,374 |
+| ov-Ip-pkc | m4fspeed | 116,310 | 0 | 0 | 116,310 |
+| ov-Ip-pkc | m4fstack | 88,530 | 0 | 0 | 88,530 |
+| ov-Ip-pkc | ref | 22,630 | 0 | 0 | 22,630 |
+| ov-Ip-pkc-skc | m4fspeed | 116,350 | 0 | 0 | 116,350 |
+| ov-Ip-pkc-skc | m4fstack | 88,570 | 0 | 0 | 88,570 |
+| ov-Ip-pkc-skc | ref | 22,670 | 0 | 0 | 22,670 |
 | perk-128-fast-3 | m4 | 11,717 | 4 | 0 | 11,721 |
 | perk-128-fast-3 | ref | 11,053 | 4 | 0 | 11,057 |
 | perk-128-fast-5 | m4 | 11,709 | 4 | 0 | 11,713 |

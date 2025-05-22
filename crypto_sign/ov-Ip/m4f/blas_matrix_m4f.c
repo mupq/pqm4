@@ -35,51 +35,6 @@ void gf16mat_prod_m4f(uint8_t *c, const uint8_t *matA, unsigned n_A_vec_byte, un
 }
 
 
-unsigned gf16mat_LDUinv_m4f(uint8_t *mat_U_AinvB, uint8_t *mat_Ainv,
-                             uint8_t *mat_CAinvB_inv, uint8_t *mat_L_C,
-                             const uint8_t *matA , unsigned len)
-{
-    #if _O != 64
-    #error not implemented
-    #endif
-    // column-major matrices
-    unsigned a_veclen_byte = len/2;
-    unsigned a_n_vec = len;
-    unsigned a_veclen_byte_2 = a_veclen_byte/2;
-    unsigned a_n_vec_2 = a_n_vec/2;
-
-    uint8_t * temp = mat_L_C;
-
-    gf256mat_submat( temp, a_veclen_byte_2 , 0 , matA , a_veclen_byte , a_n_vec_2 );  // A
-    unsigned r = gf16mat_inv_m4f_32( mat_Ainv , temp );
-    if( 0==r ) return 0;
-
-    gf256mat_submat( temp , a_veclen_byte_2 , 0 , matA+a_veclen_byte*a_n_vec_2 , a_veclen_byte , a_n_vec_2 );  // B
-    gf16mat_colmat_mul_ref( mat_U_AinvB , mat_Ainv , a_veclen_byte_2 , a_n_vec_2  , temp , a_n_vec_2 );  // A^-1 x B
-
-    gf256mat_submat( temp , a_veclen_byte_2 , a_veclen_byte_2  , matA , a_veclen_byte , a_n_vec_2 );  // C
-    gf16mat_colmat_mul_ref( mat_CAinvB_inv , temp , a_veclen_byte_2 , a_n_vec_2 , mat_U_AinvB , a_n_vec_2 );
-    gf256mat_submat( temp , a_veclen_byte_2 , a_veclen_byte_2 , matA+a_veclen_byte*a_n_vec_2 , a_veclen_byte , a_n_vec_2 );  // D
-    gf256v_add( temp , mat_CAinvB_inv , a_veclen_byte_2*a_n_vec_2 );  // (D-CA^-1B)
-
-    r &= gf16mat_inv_m4f_32( mat_CAinvB_inv , temp );
-    if( 0==r ) return 0;
-
-    gf256mat_submat( mat_L_C , a_veclen_byte_2 , a_veclen_byte_2 , matA , a_veclen_byte , a_n_vec_2 );  // C
-
-    return r;
-}
-
-unsigned gf16mat_inv_m4f(uint8_t * inv_a , const uint8_t * a , unsigned H )
-{
-  #if _O != 64
-  #error not implemented
-  #endif
-  (void)H;
-  return gf16mat_inv_m4f_64(inv_a, a);
-}
-
-
 void batch_quad_trimat_eval_gf16_m4f(unsigned char * y, const unsigned char * trimat,
                                      const unsigned char * x, unsigned dim , unsigned size_batch)
 {
@@ -122,48 +77,6 @@ void gf256mat_prod_m4f(uint8_t *c, const uint8_t *matA, unsigned n_A_vec_byte, u
   } else if(n_A_vec_byte == 44) {
     gf256mat_prod_m4f_44_X_normal_normal(c, matA, b, n_A_width);
   }
-}
-
-
-unsigned gf256mat_LDUinv_m4f(uint8_t *mat_U_AinvB, uint8_t *mat_Ainv, uint8_t *mat_CAinvB_inv, uint8_t *mat_L_C, const uint8_t *matA , unsigned len) {
-  #if _O != 44
-  #error not implemented
-  #endif
-
-  // column-major matrices
-  unsigned a_veclen_byte = len;
-  unsigned a_n_vec = len;
-  unsigned a_veclen_byte_2 = a_veclen_byte/2;
-  unsigned a_n_vec_2 = a_n_vec/2;
-
-  uint8_t * temp = mat_L_C;
-
-  gf256mat_submat( temp, a_veclen_byte_2 , 0 , matA , a_veclen_byte , a_n_vec_2 );  // A
-  unsigned r = gf256mat_inv_m4f_22( mat_Ainv , temp);
-  if( 0==r ) return 0;
-
-  gf256mat_submat( temp , a_veclen_byte_2 , 0 , matA+a_veclen_byte*a_n_vec_2 , a_veclen_byte , a_n_vec_2 );  // B
-  gf256mat_colmat_mul_ref( mat_U_AinvB , mat_Ainv , a_veclen_byte_2 , a_n_vec_2  , temp , a_n_vec_2 );  // A^-1 x B
-
-  gf256mat_submat( temp , a_veclen_byte_2 , a_veclen_byte_2  , matA , a_veclen_byte , a_n_vec_2 );  // C
-  gf256mat_colmat_mul_ref( mat_CAinvB_inv , temp , a_veclen_byte_2 , a_n_vec_2 , mat_U_AinvB , a_n_vec_2 );
-
-  gf256mat_submat( temp , a_veclen_byte_2 , a_veclen_byte_2 , matA+a_veclen_byte*a_n_vec_2 , a_veclen_byte , a_n_vec_2 );  // D
-  gf256v_add( temp , mat_CAinvB_inv , a_veclen_byte_2*a_n_vec_2 );  // (D-CA^-1B)
-  r = gf256mat_inv_m4f_22( mat_CAinvB_inv , temp);
-  if( 0==r ) return 0;
-
-  gf256mat_submat( mat_L_C , a_veclen_byte_2 , a_veclen_byte_2 , matA , a_veclen_byte , a_n_vec_2 );  // C
-  return 1;
-}
-
-
-unsigned gf256mat_inv_m4f(uint8_t * inv_a , const uint8_t * a , unsigned H ){
-  #if _O != 44
-  #error not implemented
-  #endif
-  (void) H;
-  return gf256mat_inv_m4f_44(inv_a, a);
 }
 
 void batch_quad_trimat_eval_gf256_m4f(unsigned char * y, const unsigned char * trimat, const unsigned char * x, unsigned dim , unsigned size_batch){

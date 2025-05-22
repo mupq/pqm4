@@ -9,12 +9,6 @@ void gf256mat_prod_m4f_1936_68_normal_normal(uint8_t *c, const uint8_t *matA, co
 void gf256mat_prod_m4f_68_44_normal_normal(uint8_t *c, const uint8_t *matA, const uint8_t *b);
 void gf256mat_prod_m4f_44_X_normal_normal(uint8_t *c, const uint8_t *matA, const uint8_t *b, size_t n_A_width);
 
-// gf256mat_inv_22.S
-unsigned gf256mat_inv_m4f_22(uint8_t *inv, const uint8_t *mat);
-
-// gf256mat_inv_44.S
-unsigned gf256mat_inv_m4f_44(uint8_t *inv, const uint8_t *mat);
-
 // gf256trimat_eval_68_44.S
 void gf256trimat_eval_m4f_68_44(uint8_t * y, const uint8_t * trimat, const uint8_t * x);
 
