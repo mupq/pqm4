@@ -11,12 +11,15 @@ hqc-256 (10 executions),clean,295934078,295934057,295934104,591853870,591853850,
 ml-kem-1024 (10 executions),clean,1536343,1535750,1536698,1708071,1707476,1708427,2020327,2019721,2020672
 ml-kem-1024 (10 executions),m4fspeed,1018976,1014877,1026934,1031565,1027454,1039544,1094008,1089897,1101987
 ml-kem-1024 (10 executions),m4fstack,1020202,1017478,1029553,1037953,1035260,1047298,1100982,1098251,1110327
+ml-kem-1024 (100 executions),mlkem-native,1199669,1193125,1237955,1331376,1324853,1369669,1601677,1595153,1640008
 ml-kem-512 (10 executions),clean,595793,595576,595971,700605,700383,700779,888653,888436,888831
 ml-kem-512 (10 executions),m4fspeed,392423,392211,392614,390881,390671,391073,428167,427955,428357
 ml-kem-512 (10 executions),m4fstack,392224,391772,392541,392864,392407,393181,430202,429745,430519
+ml-kem-512 (100 executions),mlkem-native,489033,486884,531269,585802,583656,628026,747256,745108,789479
 ml-kem-768 (10 executions),clean,988722,985880,998135,1138225,1135419,1147634,1387984,1385144,1397397
 ml-kem-768 (10 executions),m4fspeed,642096,639116,651103,658754,655785,667769,707827,704858,716842
 ml-kem-768 (10 executions),m4fstack,644195,640433,652374,664654,660893,672834,714194,710433,722374
+ml-kem-768 (100 executions),mlkem-native,805317,802419,847120,905221,902328,947006,1119531,1116638,1161316
 Signature Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [cycles] (mean),Key Generation [cycles] (min),Key Generation [cycles] (max),Sign [cycles] (mean),Sign [cycles] (min),Sign [cycles] (max),Verify [cycles] (mean),Verify [cycles] (min),Verify [cycles] (max)
 aimer128f (10 executions),m4speed,490087,490087,490088,28590420,28590395,28590439,26750578,26749771,26751014
@@ -154,12 +157,15 @@ hqc-256,clean,103756,161508,175972,,,,,,
 ml-kem-1024,clean,15128,18776,20352,,,,,,
 ml-kem-1024,m4fspeed,6436,7500,7484,,,,,,
 ml-kem-1024,m4fstack,3332,3372,3356,,,,,,
+ml-kem-1024,mlkem-native,18688,22368,23904,,,,,,
 ml-kem-512,clean,6152,8784,9560,,,,,,
 ml-kem-512,m4fspeed,4372,5436,5412,,,,,,
 ml-kem-512,m4fstack,2300,2348,2332,,,,,,
+ml-kem-512,mlkem-native,8952,11608,12344,,,,,,
 ml-kem-768,clean,10248,13384,14480,,,,,,
 ml-kem-768,m4fspeed,5396,6468,6452,,,,,,
 ml-kem-768,m4fstack,2820,2860,2844,,,,,,
+ml-kem-768,mlkem-native,13624,16784,17840,,,,,,
 Signature Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [bytes],Sign [bytes],Verify [bytes],,,,,,
 aimer128f,m4speed,8720,123376,15448,,,,,,
@@ -298,12 +304,15 @@ hqc-256,clean,0.2,0.4,0.3,,,,,,
 ml-kem-1024,clean,50.0,45.7,38.6,,,,,,
 ml-kem-1024,m4fspeed,75.3,75.5,71.2,,,,,,
 ml-kem-1024,m4fstack,75.1,74.9,70.7,,,,,,
+ml-kem-1024,mlkem-native,64.4,58.9,57.1,,,,,,
 ml-kem-512,clean,49.8,41.1,32.5,,,,,,
 ml-kem-512,m4fspeed,75.5,73.5,67.1,,,,,,
 ml-kem-512,m4fstack,75.6,73.2,66.9,,,,,,
+ml-kem-512,mlkem-native,61.0,52.9,50.3,,,,,,
 ml-kem-768,clean,48.5,43.2,35.4,,,,,,
 ml-kem-768,m4fspeed,74.5,74.4,69.2,,,,,,
 ml-kem-768,m4fstack,74.4,73.9,68.7,,,,,,
+ml-kem-768,mlkem-native,62.5,55.7,53.8,,,,,,
 Signature Schemes,,,,,,,,,,
 Scheme,Implementation,Key Generation [%],Sign [%],Verify [%],,,,,,
 aimer128f,m4speed,57.9,49.5,50.1,,,,,,
@@ -441,12 +450,15 @@ hqc-256,clean,26260,0,0,26260,,,,,
 ml-kem-1024,clean,6160,0,0,6160,,,,,
 ml-kem-1024,m4fspeed,16916,0,0,16916,,,,,
 ml-kem-1024,m4fstack,14016,0,0,14016,,,,,
+ml-kem-1024,mlkem-native,7444,0,0,7444,,,,,
 ml-kem-512,clean,5116,0,0,5116,,,,,
 ml-kem-512,m4fspeed,15848,0,0,15848,,,,,
 ml-kem-512,m4fstack,13328,0,0,13328,,,,,
+ml-kem-512,mlkem-native,6964,0,0,6964,,,,,
 ml-kem-768,clean,5120,0,0,5120,,,,,
 ml-kem-768,m4fspeed,16016,0,0,16016,,,,,
 ml-kem-768,m4fstack,13320,0,0,13320,,,,,
+ml-kem-768,mlkem-native,6568,0,0,6568,,,,,
 Signature Schemes,,,,,,,,,,
 Scheme,Implementation,.text [bytes],.data [bytes],.bss [bytes],Total [bytes],,,,,
 aimer128f,m4speed,15992,0,0,15992,,,,,
