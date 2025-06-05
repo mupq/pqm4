@@ -218,4 +218,7 @@ skip_list = [
     {'scheme': 'ov-Ip', 'implementation': 'ref', 'estmemory': 537600},
     {'scheme': 'ov-Ip-pkc', 'implementation': 'ref', 'estmemory': 567296},
     {'scheme': 'ov-Ip-pkc-skc', 'implementation': 'ref', 'estmemory': 329728},
+    {'scheme': 'ml-kem-512', 'implementation': 'mlkem-native', 'estmemory': 16384},
+    {'scheme': 'ml-kem-768', 'implementation': 'mlkem-native', 'estmemory': 23552},
+    {'scheme': 'ml-kem-1024', 'implementation': 'mlkem-native', 'estmemory': 31744},
 ]
