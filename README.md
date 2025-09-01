@@ -19,7 +19,7 @@ The design goals of the library are to offer
 ## Scope of pqm4
 
 The master branch of **pqm4** contains schemes that either
-- standardized by NIST in [FIPS203](https://csrc.nist.gov/pubs/fips/203/final), [FIPS204](https://csrc.nist.gov/pubs/fips/203/final), or [FIPS205](https://csrc.nist.gov/pubs/fips/203/final),
+- standardized by NIST in [FIPS203](https://csrc.nist.gov/pubs/fips/203/final), [FIPS204](https://csrc.nist.gov/pubs/fips/204/final), or [FIPS205](https://csrc.nist.gov/pubs/fips/205/final),
 - [selected for standardization by NIST](https://csrc.nist.gov/Projects/post-quantum-cryptography/selected-algorithms-2022),
 - part of the [4th round of the NIST PQC standardization process](https://csrc.nist.gov/Projects/post-quantum-cryptography/round-4-submissions),
 - part or the [first round of additional signatures of the NIST PQC standardization process](https://csrc.nist.gov/projects/pqc-dig-sig/round-1-additional-signatures),
