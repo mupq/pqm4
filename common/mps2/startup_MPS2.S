@@ -26,7 +26,7 @@
 
     .section .vector_table,"a",%progbits
     .align 2
-    .globl __isr_vector
+    .global __isr_vector
 __isr_vector:
     .long    __StackTop            /* Top of Stack */
     .long    Reset_Handler         /* Reset Handler */
@@ -85,7 +85,7 @@ __isr_vector:
     .thumb
     .thumb_func
     .align  2
-    .globl   Reset_Handler
+    .global   Reset_Handler
     .type    Reset_Handler, %function
 Reset_Handler:
 /*
