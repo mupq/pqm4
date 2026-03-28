@@ -100,6 +100,7 @@ LDFLAGS += \
 	-Wl,--wrap=_getpid \
 	-nostartfiles \
 	-ffreestanding \
+	-fbuiltin \
 	-T$(LDSCRIPT) \
 	$(ARCH_FLAGS)
 
