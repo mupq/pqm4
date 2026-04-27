@@ -16,8 +16,8 @@
 #include <libopencm3/stm32/flash.h>
 #include <libopencm3/stm32/rng.h>
 #define SERIAL_GPIO GPIOA
-#define SERIAL_USART USART2
-#define SERIAL_PINS (GPIO2 | GPIO3)
+#define SERIAL_USART USART1
+#define SERIAL_PINS (GPIO9 | GPIO10)
 #define STM32
 #define DISCOVERY_BOARD
 
@@ -294,7 +294,7 @@ void usart_setup()
 {
 #if defined(DISCOVERY_BOARD)
   rcc_periph_clock_enable(RCC_GPIOA);
-  rcc_periph_clock_enable(RCC_USART2);
+  rcc_periph_clock_enable(RCC_USART1);
 #elif defined(CW_BOARD)
   rcc_periph_clock_enable(RCC_GPIOA);
   rcc_periph_clock_enable(RCC_USART1);
@@ -323,9 +323,9 @@ void usart_setup()
 #endif
 
 #if defined(DISCOVERY_BOARD) || defined(NUCLEO_BOARD) || defined(CW_BOARD)
-  gpio_set_output_options(SERIAL_GPIO, GPIO_OTYPE_OD, GPIO_OSPEED_100MHZ, SERIAL_PINS);
-  gpio_set_af(SERIAL_GPIO, GPIO_AF7, SERIAL_PINS);
-  gpio_mode_setup(SERIAL_GPIO, GPIO_MODE_AF, GPIO_PUPD_PULLUP, SERIAL_PINS);
+  gpio_set_output_options(SERIAL_GPIO, GPIO_OTYPE_PP, GPIO_OSPEED_100MHZ, SERIAL_PINS);
+  gpio_set_af(SERIAL_GPIO, GPIO_AF7, SERIAL_PINS); // 注意：USART1 也是 AF7，这里不用改
+  gpio_mode_setup(SERIAL_GPIO, GPIO_MODE_AF, GPIO_PUPD_NONE, SERIAL_PINS);
   usart_set_baudrate(SERIAL_USART, SERIAL_BAUD);
   usart_set_databits(SERIAL_USART, 8);
   usart_set_stopbits(SERIAL_USART, USART_STOPBITS_1);
