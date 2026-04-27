@@ -45,7 +45,7 @@ void ref_xof_expand_matrix(poly_matrix *A, const uint8_t *seed) {
   unsigned int ctr;
   uint8_t buf[GEN_MATRIX_NBLOCKS * SHAKE128_RATE]; // 缓冲区
   uint8_t extseed[34]; // 32 byte seed + 2 byte nonce
-  keccak_state state;
+  shake128ctx state;
 
   for(i=0; i<MLWQ_K; i++) {
     for(j=0; j<MLWQ_K; j++) {
@@ -56,7 +56,9 @@ void ref_xof_expand_matrix(poly_matrix *A, const uint8_t *seed) {
       extseed[33] = i;
       
       // 1. 初始化并吸收种子
-      shake128_absorb_once(&state, extseed, 34);
+      shake128_inc_init(&state);
+      shake128_inc_absorb(&state, extseed, 34);
+      shake128_inc_finalize(&state);
       
       // 2. [关键优化] 一次性挤出多个块
       shake128_squeezeblocks(buf, GEN_MATRIX_NBLOCKS, &state);
@@ -115,13 +117,15 @@ void ref_xof_expand_poly_vec(poly_vec *v, const uint8_t *seed, int32_t modulus) 
   unsigned int buflen;
   uint8_t buf[2 * SHAKE128_RATE]; // 2 blocks usually enough for dither
   uint8_t extseed[33];
-  keccak_state state;
+  shake128ctx state;
 
   for(i=0; i<MLWQ_K; i++) {
     memcpy(extseed, seed, 32);
     extseed[32] = i; // Nonce
     
-    shake128_absorb_once(&state, extseed, 33);
+    shake128_inc_init(&state);
+    shake128_inc_absorb(&state, extseed, 34);
+    shake128_inc_finalize(&state);
     
     // 批量挤出
     shake128_squeezeblocks(buf, 2, &state);
