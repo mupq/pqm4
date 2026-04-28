@@ -45,7 +45,7 @@ void ref_xof_expand_matrix(poly_matrix *A, const uint8_t *seed) {
   unsigned int ctr;
   uint8_t buf[GEN_MATRIX_NBLOCKS * SHAKE128_RATE]; // 缓冲区
   uint8_t extseed[34]; // 32 byte seed + 2 byte nonce
-  shake128ctx state;
+  shake128incctx state;
 
   for(i=0; i<MLWQ_K; i++) {
     for(j=0; j<MLWQ_K; j++) {
@@ -61,7 +61,9 @@ void ref_xof_expand_matrix(poly_matrix *A, const uint8_t *seed) {
       shake128_inc_finalize(&state);
       
       // 2. [关键优化] 一次性挤出多个块
-      shake128_squeezeblocks(buf, GEN_MATRIX_NBLOCKS, &state);
+      // shake128_squeezeblocks(buf, GEN_MATRIX_NBLOCKS, &state);
+      // FIX: use incremental squeeze (bytes), not shake128_squeezeblocks (ctx type differs)
+      shake128_inc_squeeze(buf, GEN_MATRIX_NBLOCKS * SHAKE128_RATE, &state);
       buflen = GEN_MATRIX_NBLOCKS * SHAKE128_RATE;
       
       // 3. 从缓冲区解析系数
@@ -69,7 +71,9 @@ void ref_xof_expand_matrix(poly_matrix *A, const uint8_t *seed) {
 
       // 4. 如果运气不好没填满，继续挤出 (Fallback)
       while(ctr < MLWQ_N) {
-        shake128_squeezeblocks(buf, 1, &state); // 每次补 1 个块
+        // shake128_squeezeblocks(buf, 1, &state); // 每次补 1 个块
+        // squeeze one more block
+        shake128_inc_squeeze(buf, SHAKE128_RATE, &state);
         buflen = SHAKE128_RATE;
         ctr += rej_uniform(A->row[i].vec[j].coeffs + ctr, MLWQ_N - ctr, buf, buflen);
       }
@@ -117,24 +121,25 @@ void ref_xof_expand_poly_vec(poly_vec *v, const uint8_t *seed, int32_t modulus) 
   unsigned int buflen;
   uint8_t buf[2 * SHAKE128_RATE]; // 2 blocks usually enough for dither
   uint8_t extseed[33];
-  shake128ctx state;
+  shake128incctx state;
 
   for(i=0; i<MLWQ_K; i++) {
     memcpy(extseed, seed, 32);
     extseed[32] = i; // Nonce
     
     shake128_inc_init(&state);
-    shake128_inc_absorb(&state, extseed, 34);
+    shake128_inc_absorb(&state, extseed, 33);
     shake128_inc_finalize(&state);
     
     // 批量挤出
-    shake128_squeezeblocks(buf, 2, &state);
+    // shake128_squeezeblocks(buf, 2, &state);
+    shake128_inc_squeeze(buf, 2 * SHAKE128_RATE, &state);
     buflen = 2 * SHAKE128_RATE;
     
     ctr = rej_uniform_mod(v->vec[i].coeffs, MLWQ_N, buf, buflen, modulus);
     
     while(ctr < MLWQ_N) {
-        shake128_squeezeblocks(buf, 1, &state);
+        shake128_inc_squeeze(buf, SHAKE128_RATE, &state);
         buflen = SHAKE128_RATE;
         ctr += rej_uniform_mod(v->vec[i].coeffs + ctr, MLWQ_N - ctr, buf, buflen, modulus);
     }
