@@ -45,7 +45,7 @@ static void poly_getnoise_eta1(poly *r, const uint8_t *seed, uint8_t nonce) {
     memcpy(extseed, seed, 32);
     extseed[32] = nonce;
     
-    // Use SHAKE256 for PRF (Standard Kyber practice)
+    // Use SHAKE128 for PRF (Standard Kyber practice)
     shake128(buf, sizeof(buf), extseed, 33);
     
     cbd3(r, buf);
@@ -87,7 +87,7 @@ void ref_mlwq_keygen(mlwq_pk *pk, mlwq_sk *sk, const uint8_t *seed_A, const uint
     ref_poly_matrix_vec_mul(&As, &A, &sk->s);
     
     // print_debug("Result As[0]", As.vec[0].coeffs, 8);
-
+    // mlwq_pk
     memcpy(pk->seed_A, seed_A, 32);
     memcpy(pk->seed_d, seed_d, 32);
     
@@ -205,12 +205,13 @@ void ref_mlwq_kem_encaps(mlwq_ciphertext *ct, uint8_t *ss, const mlwq_pk *pk) {
     uint8_t buf[64]; 
     memcpy(buf, m, 32);
     shake128(buf + 32, HASHBYTES, pk_bytes, MLWQ_PUBLICKEYBYTES); /* H(pk) */
-    
+    // G(m, H(pk))
     uint8_t kr[64];
     shake128(kr, 64, buf, 64);
-    
+    // K(shared secret) = G(m, H(pk))[:32]
     memcpy(ss, kr, 32);
-    // kr+32 is used as the seed for noise 'r'
+    // kr+32 is used as the seed for noise 'r', r = G(m, H(pk))[32:]
+    // PKE.Enc(pk,m;r) -> ct
     ref_mlwq_encrypt(ct, pk, m, kr+32);
 }
 

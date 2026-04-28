@@ -40,7 +40,7 @@ void ref_poly_getnoise_eta1(poly *r, const uint8_t *seed, uint8_t nonce) {
     for(int i=0; i<32; i++) extseed[i] = seed[i];
     extseed[32] = nonce;
     
-    // 2. PRF (使用 SHAKE256 生成固定长度字节)
+    // 2. PRF (使用 SHAKE128 生成固定长度字节)
     shake128(buf, sizeof(buf), extseed, 33);
     
     // 3. CBD 解析
