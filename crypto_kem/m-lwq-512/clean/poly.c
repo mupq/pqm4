@@ -63,124 +63,49 @@ static void poly_basemul(poly *r, const poly *a, const poly *b) {
 // -------------------------------------------------------------------------
 // 2. [核心优化] 极速打包与解包 (Packing/Unpacking)
 // -------------------------------------------------------------------------
-void ref_poly_tobytes(uint8_t *r, const poly *a) {
-    int i;
-#if BIT_PK == 9
-    // 9-bit: 8 coeffs -> 9 bytes
-    for(i=0; i<MLWQ_N/8; i++) {
-        uint16_t t[8];
-        for(int j=0; j<8; j++) t[j] = a->coeffs[8*i+j] + ((a->coeffs[8*i+j] >> 15) & MLWQ_Q);
-        r[9*i+0] = (uint8_t)(t[0]);
-        r[9*i+1] = (uint8_t)((t[0] >> 8) | (t[1] << 1));
-        r[9*i+2] = (uint8_t)((t[1] >> 7) | (t[2] << 2));
-        r[9*i+3] = (uint8_t)((t[2] >> 6) | (t[3] << 3));
-        r[9*i+4] = (uint8_t)((t[3] >> 5) | (t[4] << 4));
-        r[9*i+5] = (uint8_t)((t[4] >> 4) | (t[5] << 5));
-        r[9*i+6] = (uint8_t)((t[5] >> 3) | (t[6] << 6));
-        r[9*i+7] = (uint8_t)((t[6] >> 2) | (t[7] << 7));
-        r[9*i+8] = (uint8_t)(t[7] >> 1);
-    }
-#elif BIT_PK == 10
-    // 10-bit: 4 coeffs -> 5 bytes
-    for(i=0; i<MLWQ_N/4; i++) {
-        uint16_t t[4];
-        for(int j=0; j<4; j++) t[j] = a->coeffs[4*i+j] + ((a->coeffs[4*i+j] >> 15) & MLWQ_Q);
-        r[5*i+0] = (uint8_t)(t[0]);
-        r[5*i+1] = (uint8_t)((t[0] >> 8) | (t[1] << 2));
-        r[5*i+2] = (uint8_t)((t[1] >> 6) | (t[2] << 4));
-        r[5*i+3] = (uint8_t)((t[2] >> 4) | (t[3] << 6));
-        r[5*i+4] = (uint8_t)(t[3] >> 2);
-    }
-#endif
-}
+static void pack_bits(uint8_t *out, const poly *a, int bits) {
+    uint32_t acc = 0;
+    int acc_bits = 0;
+    size_t idx = 0;
+    const uint32_t mask = (1u << bits) - 1u;
 
-void ref_poly_frombytes(poly *r, const uint8_t *a) {
-    int i;
-#if BIT_PK == 9
-    for(i=0; i<MLWQ_N/8; i++) {
-        r->coeffs[8*i+0] =  (a[9*i+0]       | ((uint16_t)a[9*i+1] << 8)) & 0x1FF;
-        r->coeffs[8*i+1] = ((a[9*i+1] >> 1) | ((uint16_t)a[9*i+2] << 7)) & 0x1FF;
-        r->coeffs[8*i+2] = ((a[9*i+2] >> 2) | ((uint16_t)a[9*i+3] << 6)) & 0x1FF;
-        r->coeffs[8*i+3] = ((a[9*i+3] >> 3) | ((uint16_t)a[9*i+4] << 5)) & 0x1FF;
-        r->coeffs[8*i+4] = ((a[9*i+4] >> 4) | ((uint16_t)a[9*i+5] << 4)) & 0x1FF;
-        r->coeffs[8*i+5] = ((a[9*i+5] >> 5) | ((uint16_t)a[9*i+6] << 3)) & 0x1FF;
-        r->coeffs[8*i+6] = ((a[9*i+6] >> 6) | ((uint16_t)a[9*i+7] << 2)) & 0x1FF;
-        r->coeffs[8*i+7] = ((a[9*i+7] >> 7) | ((uint16_t)a[9*i+8] << 1)) & 0x1FF;
-    }
-#elif BIT_PK == 10
-    for(i=0; i<MLWQ_N/4; i++) {
-        r->coeffs[4*i+0] = ((a[5*i+0] >> 0) | ((uint16_t)(a[5*i+1] & 0x03) << 8));
-        r->coeffs[4*i+1] = ((a[5*i+1] >> 2) | ((uint16_t)(a[5*i+2] & 0x0F) << 6));
-        r->coeffs[4*i+2] = ((a[5*i+2] >> 4) | ((uint16_t)(a[5*i+3] & 0x3F) << 4));
-        r->coeffs[4*i+3] = ((a[5*i+3] >> 6) | ((uint16_t)(a[5*i+4] & 0xFF) << 2));
-    }
-#endif
-}
-
-
-// =========================================================================
-// 2. 密文 U 压缩 (compress_u)
-// 全等级均为 10-bit
-// =========================================================================
-
-void ref_poly_compress_u(uint8_t *r, const poly *a) {
-    // 10-bit: 4 coeffs -> 5 bytes
-    int i;
-    for(i=0; i<MLWQ_N/4; i++) {
-        uint16_t t[4];
-        for(int j=0;j<4;j++) t[j] = a->coeffs[4*i+j];
-        r[5*i+0] = (uint8_t)(t[0]);
-        r[5*i+1] = (uint8_t)((t[0] >> 8) | (t[1] << 2));
-        r[5*i+2] = (uint8_t)((t[1] >> 6) | (t[2] << 4));
-        r[5*i+3] = (uint8_t)((t[2] >> 4) | (t[3] << 6));
-        r[5*i+4] = (uint8_t)(t[3] >> 2);
+    for (int i = 0; i < MLWQ_N; ++i) {
+        uint32_t v = (uint16_t)(a->coeffs[i] + ((a->coeffs[i] >> 15) & MLWQ_Q));
+        acc |= (v & mask) << acc_bits;
+        acc_bits += bits;
+        while (acc_bits >= 8) {
+            out[idx++] = (uint8_t)acc;
+            acc >>= 8;
+            acc_bits -= 8;
+        }
     }
 }
 
-void ref_poly_decompress_u(poly *r, const uint8_t *a) {
-    int i;
-    for(i=0; i<MLWQ_N/4; i++) {
-        r->coeffs[4*i+0] = ((a[5*i+0] >> 0) | ((uint16_t)(a[5*i+1] & 0x03) << 8));
-        r->coeffs[4*i+1] = ((a[5*i+1] >> 2) | ((uint16_t)(a[5*i+2] & 0x0F) << 6));
-        r->coeffs[4*i+2] = ((a[5*i+2] >> 4) | ((uint16_t)(a[5*i+3] & 0x3F) << 4));
-        r->coeffs[4*i+3] = ((a[5*i+3] >> 6) | ((uint16_t)(a[5*i+4] & 0xFF) << 2));
+static void unpack_bits(poly *r, const uint8_t *in, int bits) {
+    uint32_t acc = 0;
+    int acc_bits = 0;
+    size_t idx = 0;
+    const uint32_t mask = (1u << bits) - 1u;
+
+    for (int i = 0; i < MLWQ_N; ++i) {
+        while (acc_bits < bits) {
+            acc |= ((uint32_t)in[idx++]) << acc_bits;
+            acc_bits += 8;
+        }
+        r->coeffs[i] = (int16_t)(acc & mask);
+        acc >>= bits;
+        acc_bits -= bits;
     }
 }
 
+void ref_poly_tobytes(uint8_t *r, const poly *a) { pack_bits(r, a, BIT_PK); }
+void ref_poly_frombytes(poly *r, const uint8_t *a) { unpack_bits(r, a, BIT_PK); }
+void ref_poly_compress_u(uint8_t *r, const poly *a) { pack_bits(r, a, BIT_U); }
+void ref_poly_decompress_u(poly *r, const uint8_t *a) { unpack_bits(r, a, BIT_U); }
+void ref_poly_compress_v(uint8_t *r, const poly *a) { pack_bits(r, a, BIT_V); }
+void ref_poly_decompress_v(poly *r, const uint8_t *a) { unpack_bits(r, a, BIT_V); }
 
-// =========================================================================
-// 3. 密文 V 压缩 (compress_v)
-// 全等级均为 5-bit
-// =========================================================================
 
-void ref_poly_compress_v(uint8_t *r, const poly *a) {
-    // 5-bit: 8 coeffs -> 5 bytes
-    int i;
-    for(i=0; i<MLWQ_N/8; i++) {
-        uint8_t t[8];
-        for(int j=0; j<8; j++) t[j] = a->coeffs[8*i+j] & 0x1F;
-        
-        r[5*i+0] = (t[0] >> 0) | (t[1] << 5);
-        r[5*i+1] = (t[1] >> 3) | (t[2] << 2) | (t[3] << 7);
-        r[5*i+2] = (t[3] >> 1) | (t[4] << 4);
-        r[5*i+3] = (t[4] >> 4) | (t[5] << 1) | (t[6] << 6);
-        r[5*i+4] = (t[6] >> 2) | (t[7] << 3);
-    }
-}
-
-void ref_poly_decompress_v(poly *r, const uint8_t *a) {
-    int i;
-    for(i=0; i<MLWQ_N/8; i++) {
-        r->coeffs[8*i+0] =  (a[5*i+0]       ) & 0x1F;
-        r->coeffs[8*i+1] = ((a[5*i+0] >> 5) | (a[5*i+1] << 3)) & 0x1F;
-        r->coeffs[8*i+2] = ((a[5*i+1] >> 2) ) & 0x1F;
-        r->coeffs[8*i+3] = ((a[5*i+1] >> 7) | (a[5*i+2] << 1)) & 0x1F;
-        r->coeffs[8*i+4] = ((a[5*i+2] >> 4) | (a[5*i+3] << 4)) & 0x1F;
-        r->coeffs[8*i+5] = ((a[5*i+3] >> 1) ) & 0x1F;
-        r->coeffs[8*i+6] = ((a[5*i+3] >> 6) | (a[5*i+4] << 2)) & 0x1F;
-        r->coeffs[8*i+7] = ((a[5*i+4] >> 3) ) & 0x1F;
-    }
-}
 
 // -------------------------------------------------------------------------
 // 3. [核心优化] 快速压缩与解压缩 (Compress/Decompress)

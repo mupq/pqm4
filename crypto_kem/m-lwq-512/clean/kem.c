@@ -38,27 +38,57 @@ static void unpack_pk(mlwq_pk *pk, const unsigned char *in)
 }
 
 static void pack_sk(unsigned char *out, const mlwq_kem_sk *sk,
-                    const unsigned char *pk_bytes)
+    const unsigned char *pk_bytes)
 {
-    for (int i = 0; i < MLWQ_K; i++)
-        ref_poly_tobytes(out + i * MLWQ_POLYBYTES, &sk->pke_sk.s.vec[i]);
-    memcpy(out + MLWQ_POLYVECBYTES, pk_bytes, MLWQ_PUBLICKEYBYTES);
-    memcpy(out + MLWQ_POLYVECBYTES + MLWQ_PUBLICKEYBYTES, sk->h_pk, HASHBYTES);
-    memcpy(out + MLWQ_POLYVECBYTES + MLWQ_PUBLICKEYBYTES + HASHBYTES, sk->z,
-           SEEDBYTES);
+for (int i = 0; i < MLWQ_K; i++) {
+// 创建临时多项式，避免修改原始 sk 结构
+poly temp_s = sk->pke_sk.s.vec[i];
+
+for (int j = 0; j < MLWQ_N; j++) {
+/* * 关键修改：将 [-3, 3] 范围的系数转换为 10-bit 无符号正数。
+* 例如：-2 的 int16 表示为 0xFFFE，经过 & 0x3FF 变为 1022 (0x3FE)。
+* 这样在 ref_poly_tobytes 内部，t[j] = 1022 + 0 = 1022，
+* 1022 可以完美塞进 10 个 bit，不会发生之前的截断错误。
+*/
+temp_s.coeffs[j] = (int16_t)((uint16_t)temp_s.coeffs[j] & 0x3FF);
+}
+
+ref_poly_tobytes(out + i * MLWQ_POLYBYTES, &temp_s);
+}
+memcpy(out + MLWQ_POLYVECBYTES, pk_bytes, MLWQ_PUBLICKEYBYTES);
+memcpy(out + MLWQ_POLYVECBYTES + MLWQ_PUBLICKEYBYTES, sk->h_pk, HASHBYTES);
+memcpy(out + MLWQ_POLYVECBYTES + MLWQ_PUBLICKEYBYTES + HASHBYTES, sk->z,
+SEEDBYTES);
 }
 
 static void unpack_sk(mlwq_kem_sk *sk, const unsigned char *in)
 {
-    for (int i = 0; i < MLWQ_K; i++)
-        ref_poly_frombytes(&sk->pke_sk.s.vec[i], in + i * MLWQ_POLYBYTES);
-    unpack_pk(&sk->pk, in + MLWQ_POLYVECBYTES);
-    memcpy(sk->h_pk,
-           in + MLWQ_POLYVECBYTES + MLWQ_PUBLICKEYBYTES,
-           HASHBYTES);
-    memcpy(sk->z,
-           in + MLWQ_POLYVECBYTES + MLWQ_PUBLICKEYBYTES + HASHBYTES,
-           SEEDBYTES);
+for (int i = 0; i < MLWQ_K; i++) {
+// 1. 调用原有的解包函数，得到 [0, 1023] 范围的系数
+ref_poly_frombytes(&sk->pke_sk.s.vec[i], in + i * MLWQ_POLYBYTES);
+
+// 2. 核心修改：将 10-bit 无符号表示恢复为有符号表示
+for (int j = 0; j < MLWQ_N; j++) {
+uint16_t v = (uint16_t)sk->pke_sk.s.vec[i].coeffs[j];
+
+/* * 如果 v > 512，说明它原本是一个负数（补码表示）。
+* 例如：v = 1022, 则 1022 - 1024 = -2。
+* 如果 v < 512，则是正数，保持不变。
+*/
+if (v > 512) {
+sk->pke_sk.s.vec[i].coeffs[j] = (int16_t)(v - 1024);
+} else {
+sk->pke_sk.s.vec[i].coeffs[j] = (int16_t)v;
+}
+}
+}
+unpack_pk(&sk->pk, in + MLWQ_POLYVECBYTES);
+memcpy(sk->h_pk,
+in + MLWQ_POLYVECBYTES + MLWQ_PUBLICKEYBYTES,
+HASHBYTES);
+memcpy(sk->z,
+in + MLWQ_POLYVECBYTES + MLWQ_PUBLICKEYBYTES + HASHBYTES,
+SEEDBYTES);
 }
 
 static void pack_ct(unsigned char *out, const mlwq_ciphertext *ct)
