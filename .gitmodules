@@ -3,4 +3,4 @@
 	url = https://github.com/libopencm3/libopencm3.git
 [submodule "mupq"]
 	path = mupq
-	url = https://github.com/mupq/mupq.git
+	url = https://github.com/AKA-AK1ng/mupq.git
