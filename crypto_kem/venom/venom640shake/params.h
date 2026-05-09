@@ -1,20 +1,19 @@
 #ifndef PARAMS_H
 #define PARAMS_H
 
-#define PARAMS_N 640
-#define PARAMS_NBAR 8
-#define PARAMS_LOGQ 15
-#define PARAMS_Q (1 << PARAMS_LOGQ)
+#define PARAMS_N 640    // 格的主维度（Lattice dimension）
+#define PARAMS_NBAR 8   // 秘密矩阵 S 和误差矩阵 E 的列数
+#define PARAMS_LOGQ 15  // 模数 q 的位长
+#define PARAMS_Q (1 << PARAMS_LOGQ) // 模数 q 的具体值
 // #define PARAMS_EXTRACTED_BITS 2
 #define PARAMS_EXTRACTED_BITS 1
 #define PARAMS_STRIPE_STEP 8
 #define PARAMS_PARALLEL 4
 // #define BYTES_SEED_A 16
 #define BYTES_SEED_A 32
-// #define BYTES_MU ((PARAMS_EXTRACTED_BITS * PARAMS_NBAR * PARAMS_NBAR) / 8)
 #define BYTES_MU (PARAMS_EXTRACTED_BITS*PARAMS_NBAR*PARAMS_NBAR)/8
 #define BYTES_PKHASH CRYPTO_BYTES
-// new parameters
+// new parameters for venom
 #define BYTES_SALT 32
 #define BYTES_SEED_SE (2*CRYPTO_BYTES)
 #define PARAMS_PK_LOGP 10

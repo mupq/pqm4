@@ -16,6 +16,6 @@ int8_t ct_verify(const uint16_t *a, const uint16_t *b, size_t len);
 void ct_select(uint8_t *r, const uint8_t *a, const uint8_t *b, size_t len, int8_t selector);
 void clear_bytes(uint8_t *mem, size_t n);
 uint16_t LE_TO_UINT16(uint16_t n);
-uint16_t UINT16_TO_LE(uint16_t n);
+uint16_t UINT16_TO_LE(uint16_t n);  // util
 
 #endif
