@@ -3,7 +3,7 @@
 .thumb
 
 
-//extern void sa(uint16_t *out,  const uint16_t *s, const int16_t *a)
+//extern void sa(uint16_t *out,  const uint16_t *s, const int16_t *a)   matrix_shake
 .global sa
 .type sa, %function
 .align 2 

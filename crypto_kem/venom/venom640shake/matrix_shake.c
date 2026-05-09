@@ -14,7 +14,7 @@
 #include "params.h"
 
 extern uint16_t xs(const uint16_t *s, const int16_t *a_row);
-int mul_add_as_plus_e(uint16_t *out, const uint16_t *s, const uint8_t *seed_A) {    // venom_macrify
+int mul_add_as_plus_e(uint16_t *out, const uint16_t *s, const uint8_t *seed_A) {
     // Generate-and-multiply: generate matrix A (N x N) row-wise, multiply by s on the right.
     // Inputs: s, e (N x N_BAR)
     // Output: out = A*s + e (N x N_BAR)
@@ -50,7 +50,7 @@ int mul_add_as_plus_e(uint16_t *out, const uint16_t *s, const uint8_t *seed_A) {
 
 
 extern void sa(uint16_t *out,  const uint16_t *s, const uint16_t *a);
-int mul_add_sa_plus_e(uint16_t *out, const uint16_t *s, const uint8_t *seed_A) {    
+int mul_add_sa_plus_e(uint16_t *out, const uint16_t *s, const uint8_t *seed_A) {
     // Generate-and-multiply: generate matrix A (N x N) column-wise, multiply by s' on the left.
     // Inputs: s', e' (N_BAR x N)
     // Output: out = s'*A + e' (N_BAR x N)

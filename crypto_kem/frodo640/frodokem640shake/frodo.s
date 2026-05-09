@@ -2,7 +2,7 @@
 .cpu cortex-m4
 .thumb
 
-//uint16_t xs(const uint16_t *s, const uint16_t *a_row)
+//uint16_t xs(const uint16_t *s, const uint16_t *a_row) matrix_shake.c
 .global xs 
 .type xs, %function
 .align 2
@@ -21,7 +21,7 @@ xs:
     .endr
     pop {r4-r11, pc}
 
-//void sb(uint16_t *out, const uint16_t *s, const uint16_t *a)
+//void sb(uint16_t *out, const uint16_t *s, const uint16_t *a)  util.c
 .global sb
 .type sb, %function
 .align 2 

@@ -13,7 +13,7 @@
 
 #define min(x, y) (((x) < (y)) ? (x) : (y))
 
-uint16_t LE_TO_UINT16(uint16_t n) {
+uint16_t LE_TO_UINT16(uint16_t n) {     // config.h
     return (((uint8_t *) &n)[0] | (((uint8_t *) &n)[1] << 8));
 }
 
@@ -27,7 +27,7 @@ uint16_t UINT16_TO_LE(uint16_t n) {
 
 
 uint16_t xs(const uint16_t *s, const uint16_t *a_row);
-void mul_bs(uint16_t *out, const uint16_t *b, const uint16_t *s) {
+void mul_bs(uint16_t *out, const uint16_t *b, const uint16_t *s) {  // venom_macrify
     // Multiply by s on the right
     // Inputs: b (N_BAR x N), s (N x N_BAR)
     // Output: out = b*s (N_BAR x N_BAR)
@@ -128,7 +128,7 @@ void key_decode(uint16_t *out, const uint16_t *in) {
 }
 
 
-void pack(uint8_t *out, size_t outlen, const uint16_t *in, size_t inlen, uint8_t lsb) {
+void pack(uint8_t *out, size_t outlen, const uint16_t *in, size_t inlen, uint8_t lsb) { // util.c
     // Pack the input uint16 vector into a char output vector, copying lsb bits from each input element.
     // If inlen * lsb / 8 > outlen, only outlen * 8 bits are copied.
     memset(out, 0, outlen);

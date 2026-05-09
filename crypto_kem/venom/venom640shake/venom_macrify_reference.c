@@ -15,7 +15,7 @@
 #endif    
 
 
-int frodo_mul_add_as_plus_e(uint16_t *out, const uint16_t *s, const uint16_t *e, const uint8_t *seed_A) 
+int frodo_mul_add_as_plus_e(uint16_t *out, const uint16_t *s, const uint16_t *e, const uint8_t *seed_A)     // matrix_shake
 { // Generate-and-multiply: generate matrix A (N x N) row-wise, multiply by s on the right.
   // Inputs: s, e (N x N_BAR)
   // Output: out = A*s + e (N x N_BAR)
@@ -73,7 +73,7 @@ int frodo_mul_add_as_plus_e(uint16_t *out, const uint16_t *s, const uint16_t *e,
 }
 
 
-int frodo_mul_add_sa_plus_e(uint16_t *out, const uint16_t *s, uint16_t *e, const uint8_t *seed_A) 
+int frodo_mul_add_sa_plus_e(uint16_t *out, const uint16_t *s, uint16_t *e, const uint8_t *seed_A)
 { // Generate-and-multiply: generate matrix A (N x N) column-wise, multiply by s' on the left.
   // Inputs: s', e' (N_BAR x N)
   // Output: out = s'*A + e' (N_BAR x N)
@@ -131,7 +131,7 @@ int frodo_mul_add_sa_plus_e(uint16_t *out, const uint16_t *s, uint16_t *e, const
 }
 
 
-void frodo_mul_bs(uint16_t *out, const uint16_t *b, const uint16_t *s) 
+void frodo_mul_bs(uint16_t *out, const uint16_t *b, const uint16_t *s) // util.c
 { // Multiply by s on the right
   // Inputs: b (N_BAR x N), s (N x N_BAR)
   // Output: out = b*s (N_BAR x N_BAR)
