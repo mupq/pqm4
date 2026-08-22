@@ -1,4 +1,11 @@
 # pqm4
+
+> [!WARNING]
+> **Deprecation Notice:** [pqm4 is no longer under active maintenance and we plan to archive it as read-only in or after January 2027](https://github.com/mupq/pqm4/issues/409).
+> Please open any remaining pull requests by **30 November 2026**.
+>
+> For maintained implementations of standardized PQC that also cater to embedded use cases, you may want to consider the [PQ Code Package](https://github.com/pq-code-package), in particular [mlkem-native](https://github.com/pq-code-package/mlkem-native) and [mldsa-native](https://github.com/pq-code-package/mldsa-native).
+
 Collection of post-quantum cryptographic algorithms for the ARM Cortex-M4
 
 ## Introduction
