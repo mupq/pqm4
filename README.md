@@ -8,6 +8,8 @@
 
 Collection of post-quantum cryptographic algorithms for the ARM Cortex-M4
 
+> **Maintenance Notice**
+
 ## Introduction
 The **pqm4** library, benchmarking and testing framework started as a result of the 
 [PQCRYPTO](https://pqcrypto.eu.org) project funded by the European Commission in the H2020 program. 
