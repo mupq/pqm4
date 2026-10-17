@@ -1,1 +1,1 @@
-../../ml-kem-768/m4fspeed/fastinvntt.S
+../../ml-kem-768/m4fstack/fastinvntt.S
