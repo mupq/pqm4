@@ -15,7 +15,7 @@ int32_t montgomery_reduce(int64_t a);
 
 
 #define _montgomery_reduce HAETAE_NAMESPACE(_montgomery_reduce)
-inline int32_t _montgomery_reduce(int64_t a) {
+static inline int32_t _montgomery_reduce(int64_t a) {
     int32_t t;
 
     t = (int64_t)(int32_t)a * QINV;
