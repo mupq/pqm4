@@ -19,6 +19,14 @@ EXCLUDED_SCHEMES = \
 
 include mk/opencm3.mk
 
+# STACK_IN_CCM=1 places the stack in the CCM instead of the main RAM
+STACK_IN_CCM ?=
+RETAINED_VARS += STACK_IN_CCM
+ifeq ($(STACK_IN_CCM),1)
+CPPFLAGS += -DSTACK_IN_CCM
+LDFLAGS += -Wl,--defsym=STACK_IN_CCM=1
+endif
+
 elf/boardtest.elf: CPPFLAGS+=-DSRAM_TIMING_TEST -DHAS_SRAM2 -DHAS_CCM
 elf/boardtest-fast.elf: CPPFLAGS+=-DSRAM_TIMING_TEST -DHAS_SRAM2 -DHAS_CCM
 
