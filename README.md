@@ -151,6 +151,10 @@ variable to your chosen platform and the number of threads in `-j4` to your PC a
 make -j4 PLATFORM=stm32f4discovery
 ```
 
+On the `stm32f4discovery`, `STACK_IN_CCM=1` places the stack in the 64 KiB CCM
+instead of the main RAM, e.g., `make -j4 PLATFORM=stm32f4discovery STACK_IN_CCM=1`.
+Implementations whose stack exceeds the CCM will fault.
+
 ## API documentation
 The **pqm4** library uses the NIST/SUPERCOP/[PQClean
 API](https://github.com/PQClean/PQClean). It is mandated for all included

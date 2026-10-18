@@ -390,6 +390,15 @@ uint64_t hal_get_time()
 extern char _ebss;
 static char* heap_end = &_ebss;
 
+#if defined(STACK_IN_CCM)
+/* The stack grows down to the end of the CCM data (defined in the linker script) */
+extern char _eccm;
+#define STACK_BOTTOM (&_eccm)
+#else
+/* The stack grows down to the heap */
+#define STACK_BOTTOM heap_end
+#endif
+
 void* __wrap__sbrk (int incr)
 {
   char* prev_heap_end;
@@ -404,7 +413,7 @@ size_t hal_get_stack_size(void)
 {
   register char* cur_stack;
 	asm volatile ("mov %0, sp" : "=r" (cur_stack));
-  return cur_stack - heap_end;
+  return cur_stack - STACK_BOTTOM;
 }
 
 const uint32_t stackpattern = 0xDEADBEEFlu;
@@ -414,7 +423,7 @@ static void* last_sp = NULL;
 void hal_spraystack(void)
 {
   
-  char* _heap_end = heap_end;
+  char* _heap_end = STACK_BOTTOM;
   asm volatile ("mov %0, sp\n"
                 ".L%=:\n\t"
                 "str %2, [%1], #4\n\t"
@@ -436,7 +445,7 @@ size_t hal_checkstack(void)
                "cmp %2, %1\n\t"
                "blt .L%=\n\t"
                ".LE%=:\n"
-               : "+r"(result) : "r" (last_sp), "r" (heap_end), "r" (stackpattern) : "ip", "cc");
+               : "+r"(result) : "r" (last_sp), "r" (STACK_BOTTOM), "r" (stackpattern) : "ip", "cc");
   return result;
 }
 

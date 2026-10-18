@@ -62,8 +62,9 @@ SECTIONS
  .ccm : {
   *(.ccmram*)
   . = ALIGN(4);
+  _eccm = .;
  } >ccm
  /DISCARD/ : { *(.eh_frame) }
  . = ALIGN(4);
 }
-PROVIDE(_stack = ORIGIN(ram) + LENGTH(ram));
+PROVIDE(_stack = DEFINED(STACK_IN_CCM) ? ORIGIN(ccm) + LENGTH(ccm) : ORIGIN(ram) + LENGTH(ram));
