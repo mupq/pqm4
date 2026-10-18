@@ -57,8 +57,8 @@ SECTIONS
   *(COMMON)
   . = ALIGN(4);
   _ebss = .;
+  end = .;
  } >ram
- end = .;
  /DISCARD/ : { *(.eh_frame) }
  . = ALIGN(4);
 }

@@ -387,8 +387,8 @@ uint64_t hal_get_time()
 }
 
 /* End of BSS is where the heap starts (defined in the linker script) */
-extern char end;
-static char* heap_end = &end;
+extern char _ebss;
+static char* heap_end = &_ebss;
 
 void* __wrap__sbrk (int incr)
 {

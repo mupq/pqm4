@@ -59,12 +59,12 @@ SECTIONS
   *(COMMON)
   . = ALIGN(4);
   _ebss = .;
+  end = .;
  } >ram
  .ram1 : {
  *(.ram1*)
  . = ALIGN(4);
  } >ram
- end = .;
  .ram2 : {
  *(.ram2*)
  . = ALIGN(4);
