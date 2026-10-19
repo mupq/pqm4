@@ -1,7 +1,12 @@
-/* from Dilithium2 */
+/* from Dilithium2 (pqm4); CC0, see ntt332.S.  Comments added for HAETAE
+ * 1.2.0 (2026, YoungBeom Kim; also under CC0). */
 
 #ifndef MACROS_I
 #define MACROS_I
+
+// A "// n" line before a macro gives the size of its expansion in 32-bit
+// words (n * 4 bytes of code).
+
 // 3
 .macro montgomery_mul_32 a, b, Qprime, Q, tmp, tmp2
     smull \tmp, \a, \a, \b
@@ -124,11 +129,12 @@
 *
 * Constants:    Qprime = -MOD^{-1} mod^{+-} R, Q = MOD
 *
-* Output:
+* Output:       (in terms of the input values; c0 and c2 are
+*               used as scratch registers)
 *               c4 =  c4 + c1        + (c6 + c3)
-*               c5 = (c4 - c1) w_4   + (c6 + c3) w_8^3
+*               c5 = (c4 - c1) w_8   + (c6 - c3) w_8^3
 *               c6 =  c4 + c1        - (c6 + c3)
-*               c7 = (c4 - c1) w_8^3 + (c6 + c3) w_4
+*               c7 = (c4 - c1) w_8^3 + (c6 - c3) w_8
 ************************************************************/
 // 15
 .macro _3_layer_inv_butterfly_light_fast_first c0, c1, c2, c3, c4, c5, c6, c7, xi0, xi1, xi2, xi3, xi4, xi5, xi6, twiddle, Qprime, Q, tmp, tmp2
@@ -153,8 +159,10 @@
 * Name:         _3_layer_inv_butterfly_light_fast_second
 *
 * Description:  lower half of 3-layer inverse butterfly
-*               defined over X^8 - 1, and the 2nd
-*               layer of butterflies
+*               defined over X^8 - 1 (its first two layers),
+*               followed by the third layer, which combines it
+*               with the upper half computed by
+*               _3_layer_inv_butterfly_light_fast_first
 *
 * Input:
 *               (c4, c5, c6, c7) = results of the upper half;
@@ -167,15 +175,16 @@
 *
 * Constants:    Qprime = -MOD^{-1} mod^{+-} R, Q = MOD
 *
-* Output:       (normal order)
-*               c0 =   c0 + c1     + (c2 + c3)         + (  c4 + c5     + (c6 + c7)       )
-*               c1 =  (c0 - c1) w3 + (c2 - c3)  w4     + ( (c4 - c5) w5 + (c6 - c7) w6    )
-*               c2 = ( c0 + c1     - (c2 + c3)) w1     + (( c4 + c5     - (c6 + c7)   ) w2)
-*               c3 = ((c0 - c1) w3 - (c2 - c3)  w4) w1 + (((c4 - c5) w5 - (c6 - c7) w6) w2)
-*               c4 =   c0 + c1     - (c2 + c3)         - (  c4 + c5     + (c6 + c7)       ) w0
-*               c5 =  (c0 - c1) w3 + (c2 - c3)  w4     - ( (c4 - c5) w5 + (c6 - c7) w6    ) w0
-*               c6 = ( c0 + c1     - (c2 + c3)) w1     - (( c4 + c5     - (c6 + c7)   ) w2) w0
-*               c7 = ((c0 - c1) w3 - (c2 - c3)  w4) w1 - (((c4 - c5) w5 - (c6 - c7) w6) w2) w0
+* Output:       (normal order; in terms of the input values)
+*               c0 =  c0 + c1 + (c2 + c3)          + c4
+*               c1 = (c0 - c1) + (c2 - c3) w_4     + c5
+*               c2 =  c0 + c1 - (c2 + c3)          + c6 w_4
+*               c3 = (c0 - c1) - (c2 - c3) w_4     + c7
+*               c4 =  c0 + c1 + (c2 + c3)          - c4
+*               c5 = (c0 - c1) + (c2 - c3) w_4     - c5
+*               c6 =  c0 + c1 - (c2 + c3)          - c6 w_4
+*               c7 = (c0 - c1) - (c2 - c3) w_4     - c7
+*               (products with w_4 are Montgomery multiplications by xi2)
 ************************************************************/
 // 19
 .macro _3_layer_inv_butterfly_light_fast_second c0, c1, c2, c3, c4, c5, c6, c7, xi0, xi1, xi2, xi3, xi4, xi5, xi6, twiddle, Qprime, Q, tmp, tmp2

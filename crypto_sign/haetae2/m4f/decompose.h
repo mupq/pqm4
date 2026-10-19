@@ -1,7 +1,10 @@
-#ifndef HAETAE_ROUNDING_H
-#define HAETAE_ROUNDING_H
+// SPDX-License-Identifier: MIT
+
+#ifndef HAETAE_DECOMPOSE_H
+#define HAETAE_DECOMPOSE_H
 
 #include "params.h"
+
 #include <stdint.h>
 
 #define decompose_z1 HAETAE_NAMESPACE(decompose_z1)
@@ -13,4 +16,4 @@ void decompose_hint(int32_t *highbits, const int32_t r);
 #define decompose_vk HAETAE_NAMESPACE(decompose_vk)
 int32_t decompose_vk(int32_t *a0, const int32_t a);
 
-#endif
+#endif /* !HAETAE_DECOMPOSE_H */

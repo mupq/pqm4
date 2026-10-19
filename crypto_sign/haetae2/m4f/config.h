@@ -1,29 +1,44 @@
-#ifndef CONFIG_H
-#define CONFIG_H
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Team HAETAE
+// Copyright (c) 2026 YoungBeom Kim (Cortex-M4 modifications)
 
-#define HAETAE_MODE 2
+#ifndef HAETAE_CONFIG_H
+#define HAETAE_CONFIG_H
 
-/*********************************************************************
- * STACK_STRATEGY
- *   0 or undefined:    optimized for speed (default)
- *   1:                 do not buffer the polynomials of
- *                      the verification key
- *   2:                 as 1, and use multiple passes 
- *                      to sample the hyperball
- *********************************************************************/
-#define STACK_STRATEGY 0
+#include "common.h"
 
-#if HAETAE_MODE == 2
-#define CRYPTO_ALGNAME "HAETAE2"
-#define HAETAE_NAMESPACETOP haetae2
-#define HAETAE_NAMESPACE(s) cryptolab_haetae2_##s
-#elif HAETAE_MODE == 3
-#define CRYPTO_ALGNAME "HAETAE3"
-#define HAETAE_NAMESPACETOP haetae3
-#define HAETAE_NAMESPACE(s) cryptolab_haetae3_##s
-#elif HAETAE_MODE == 5
-#define CRYPTO_ALGNAME "HAETAE5"
-#define HAETAE_NAMESPACETOP haetae5
-#define HAETAE_NAMESPACE(s) cryptolab_haetae5_##s
+#define HAETAE_MODE2 0
+#define HAETAE_MODE3 1
+#define HAETAE_MODE5 2
+
+#if !defined(HAETAE_CONFIG_MODE)
+#define HAETAE_CONFIG_MODE HAETAE_MODE2
+#endif
+
+#if (HAETAE_CONFIG_MODE != HAETAE_MODE2) &&                                    \
+    (HAETAE_CONFIG_MODE != HAETAE_MODE3) &&                                    \
+    (HAETAE_CONFIG_MODE != HAETAE_MODE5)
+#error "Invalid HAETAE_CONFIG_MODE"
+#endif
+
+#if !defined(HAETAE_CONFIG_MODE_STRING)
+#if HAETAE_CONFIG_MODE == HAETAE_MODE2
+#define HAETAE_CONFIG_MODE_STRING mode2
+#elif HAETAE_CONFIG_MODE == HAETAE_MODE3
+#define HAETAE_CONFIG_MODE_STRING mode3
+#elif HAETAE_CONFIG_MODE == HAETAE_MODE5
+#define HAETAE_CONFIG_MODE_STRING mode5
 #endif
 #endif
+
+#if !defined(HAETAE_CONFIG_NAMESPACE_PREFIX)
+#define HAETAE_CONFIG_NAMESPACE_PREFIX cryptolab_haetae_
+#endif
+
+#if !defined(HAETAE_CONFIG_NAMESPACE_PREFIX_MODE)
+#define HAETAE_ADD_MODE(s) HAETAE_CONCAT(s, HAETAE_CONFIG_MODE_STRING)
+#define HAETAE_CONFIG_NAMESPACE_PREFIX_MODE                                    \
+  HAETAE_CONCAT(HAETAE_ADD_MODE(HAETAE_CONFIG_NAMESPACE_PREFIX), _m4f_)
+#endif
+
+#endif /* !HAETAE_CONFIG_H */

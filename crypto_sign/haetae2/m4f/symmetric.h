@@ -1,85 +1,67 @@
-#ifndef SYMMETRIC_H
-#define SYMMETRIC_H
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Team HAETAE
+// Copyright (c) 2026 YoungBeom Kim (Cortex-M4 modifications)
+
+#ifndef HAETAE_SYMMETRIC_H
+#define HAETAE_SYMMETRIC_H
+
+/*
+ * pqm4/mupq adaptation: the XOF and stream functions are mapped onto the
+ * incremental SHAKE API of mupq/common/fips202.h (assembly Keccak on the
+ * Cortex-M4) instead of the stand-alone fips202.c of the HAETAE package.
+ * The byte streams are unchanged.
+ */
 
 #include "fips202.h"
 #include "params.h"
+
+#include <stddef.h>
 #include <stdint.h>
 
-// Cryptographic XOF function: shake256
-
 typedef shake256incctx xof256_state;
-
-#define haetae_shake256_absorb_twice                                           \
-    HAETAE_NAMESPACE(haetae_shake256_absorb_twice)
-void haetae_shake256_absorb_twice(xof256_state *state, const uint8_t *in1,
-                                  size_t in1len, const uint8_t *in2,
-                                  size_t in2len);
-
-#define haetae_shake256_absorb_once                                           \
-    HAETAE_NAMESPACE(haetae_shake256_absorb_once)
-void haetae_shake256_absorb_once(xof256_state *state, const uint8_t *in1,
-                                 size_t in1len);
-
-#define haetae_shake256_squeezeblocks                                           \
-    HAETAE_NAMESPACE(haetae_shake256_squeezeblocks)
-void haetae_shake256_squeezeblocks(uint8_t *output, size_t nblocks, 
-                                   xof256_state *state);
-
-
-
-#define XOF256_BLOCKBYTES SHAKE256_RATE
-
-#define xof256_absorb_once(STATE, IN, IN_LEN)                                 \
-    haetae_shake256_absorb_once(STATE, IN, IN_LEN)
-#define xof256_absorb_twice(STATE, IN, IN_LEN, IN2, IN2_LEN)                  \
-    haetae_shake256_absorb_twice(STATE, IN, IN_LEN, IN2, IN2_LEN)
-#define xof256_squeeze(OUT, OUT_LEN, STATE)                                    \
-    shake256_inc_squeeze(OUT, OUT_LEN, STATE)
-#define xof256_squeezeblocks(OUT, OUTBLOCKS, STATE)                            \
-    haetae_shake256_squeezeblocks(OUT, OUTBLOCKS, STATE)
-
-
-
-
-
-// Stream function: shake128|256
-
 typedef shake128incctx stream128_state;
 typedef shake256incctx stream256_state;
 
-#define haetae_shake128_stream_init                                            \
-    HAETAE_NAMESPACE(haetae_shake128_stream_init)
-void haetae_shake128_stream_init(stream128_state *state,
-                                 const uint8_t seed[SEEDBYTES], uint16_t nonce);
+#define XOF256_BLOCKBYTES SHAKE256_RATE
+#define STREAM128_BLOCKBYTES SHAKE128_RATE // 168
+#define STREAM256_BLOCKBYTES SHAKE256_RATE // 136
 
-#define haetae_shake128_stream_squeezeblocks                                           \
-    HAETAE_NAMESPACE(haetae_shake128_stream_squeezeblocks)
-void haetae_shake128_stream_squeezeblocks(uint8_t *output, size_t nblocks, 
-                                           stream128_state *state);
+#define shake256_absorb_once_inc HAETAE_NAMESPACE(shake256_absorb_once_inc)
+void shake256_absorb_once_inc(xof256_state *state, const uint8_t *in,
+                              size_t inlen);
+#define shake256_absorb_twice HAETAE_NAMESPACE(shake256_absorb_twice)
+void shake256_absorb_twice(xof256_state *state, const uint8_t *in1,
+                           size_t in1len, const uint8_t *in2, size_t in2len);
+#define shake256_absorb_thrice HAETAE_NAMESPACE(shake256_absorb_thrice)
+void shake256_absorb_thrice(xof256_state *state, const uint8_t *in1,
+                            size_t in1len, const uint8_t *in2, size_t in2len,
+                            const uint8_t *in3, size_t in3len);
 
-#define haetae_shake256_stream_init                                            \
-    HAETAE_NAMESPACE(haetae_shake256_stream_init)
-void haetae_shake256_stream_init(stream256_state *state,
-                                 const uint8_t seed[CRHBYTES], uint16_t nonce);
+#define shake128_stream_init HAETAE_NAMESPACE(shake128_stream_init)
+void shake128_stream_init(stream128_state *state,
+                          const uint8_t seed[HAETAE_SEEDBYTES], uint16_t nonce);
+#define shake256_stream_init HAETAE_NAMESPACE(shake256_stream_init)
+void shake256_stream_init(stream256_state *state,
+                          const uint8_t seed[HAETAE_CRHBYTES], uint16_t nonce);
 
-#define haetae_shake256_stream_squeezeblocks                                           \
-    HAETAE_NAMESPACE(haetae_shake256_stream_squeezeblocks)
-void haetae_shake256_stream_squeezeblocks(uint8_t *output, size_t nblocks, 
-                                   stream256_state *state);
-
-
-
-
-#define STREAM128_BLOCKBYTES SHAKE128_RATE
-#define STREAM256_BLOCKBYTES SHAKE256_RATE
+#define xof256_absorb_once(STATE, IN, IN_LEN)                                  \
+  shake256_absorb_once_inc(STATE, IN, IN_LEN)
+#define xof256_absorb_twice(STATE, IN, IN_LEN, IN2, IN2_LEN)                   \
+  shake256_absorb_twice(STATE, IN, IN_LEN, IN2, IN2_LEN)
+#define xof256_absorb_thrice(STATE, IN, IN_LEN, IN2, IN2_LEN, IN3, IN3_LEN)    \
+  shake256_absorb_thrice(STATE, IN, IN_LEN, IN2, IN2_LEN, IN3, IN3_LEN)
+#define xof256_squeeze(OUT, OUT_LEN, STATE)                                    \
+  shake256_inc_squeeze(OUT, OUT_LEN, STATE)
+#define xof256_squeezeblocks(OUT, OUTBLOCKS, STATE)                            \
+  shake256_inc_squeeze(OUT, (OUTBLOCKS) * SHAKE256_RATE, STATE)
 
 #define stream128_init(STATE, SEED, NONCE)                                     \
-    haetae_shake128_stream_init(STATE, SEED, NONCE)
+  shake128_stream_init(STATE, SEED, NONCE)
 #define stream128_squeezeblocks(OUT, OUTBLOCKS, STATE)                         \
-    haetae_shake128_stream_squeezeblocks(OUT, OUTBLOCKS, STATE)
+  shake128_inc_squeeze(OUT, (OUTBLOCKS) * SHAKE128_RATE, STATE)
 #define stream256_init(STATE, SEED, NONCE)                                     \
-    haetae_shake256_stream_init(STATE, SEED, NONCE)
+  shake256_stream_init(STATE, SEED, NONCE)
 #define stream256_squeezeblocks(OUT, OUTBLOCKS, STATE)                         \
-    haetae_shake256_stream_squeezeblocks(OUT, OUTBLOCKS, STATE)
+  shake256_inc_squeeze(OUT, (OUTBLOCKS) * SHAKE256_RATE, STATE)
 
-#endif // SYMMETRIC_H
+#endif /* !HAETAE_SYMMETRIC_H */
