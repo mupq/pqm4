@@ -1,7 +1,6 @@
-- [ ] PR changes testvectors
+- [ ] Testvectors unchanged
+- [ ] Skiplist entries unchanged
 - [ ] Tests pass in qemu
 - [ ] Testvectors pass in qemu
 - [ ] Tests pass on Nucleo-L4R5ZI 
 - [ ] Testvectors pass on Nucleo-L4R5ZI 
-- [ ] Updated Benchmarks
-- [ ] Updated Skiplist entries
