@@ -27,6 +27,7 @@ EXCLUDED_SCHEMES = \
 	mupq/crypto_sign/cross-sha3-r-sdp-5-small% \
 	mupq/crypto_sign/cross-sha2-r-sdp-5-fast% \
 	mupq/crypto_sign/cross-sha3-r-sdp-5-fast% \
+	mupq/crypto_sign/cross-sha3-r-sdpg-5-fast% \
 	mupq/crypto_sign/meds55604% \
 	mupq/crypto_sign/meds41711% \
 	mupq/crypto_sign/meds167717% \
