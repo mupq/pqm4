@@ -37,8 +37,21 @@ def load(r):
                 iterations=re.search(r"benchmarks\.py .*-i (\d+)", cmds).group(1))
 
 families = sorted(os.listdir(RUNS))
-runs = {(fam, t): load(f"{RUNS}/{fam}/{t}") for fam in families
-        for t in TYPES if os.path.isdir(f"{RUNS}/{fam}/{t}")}
+runs = {}
+for fam in families:
+    for t in TYPES:
+        r = f"{RUNS}/{fam}/{t}"
+        if not os.path.isdir(r):
+            continue
+        # a record cut by record.py before its conditions and commands are written
+        # (a family recorded for the first time) is left out, not an error
+        missing = [f for f in ("converted.md", "conditions.txt", "commands.txt")
+                   if not os.path.isfile(f"{r}/{f}")]
+        if missing:
+            print(f"{r}: skipped, no {' or '.join(missing)}")
+            continue
+        runs[(fam, t)] = load(r)
+families = sorted({fam for fam, _ in runs})
 
 for stem, title in TYPES.items():
     out = f"{RESULTS}/{stem}"
