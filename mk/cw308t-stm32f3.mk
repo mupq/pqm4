@@ -23,12 +23,18 @@ EXCLUDED_SCHEMES = \
 	mupq/crypto_sign/sphincs-a-sha2-256f% \
 	mupq/crypto_sign/sphincs-a-shake-256f% \
 	mupq/crypto_sign/ov-Ip% \
-	mupq/crypto_sign/cross-sha2-r-sdp-5-small% \
-	mupq/crypto_sign/cross-sha3-r-sdp-5-small% \
-	mupq/crypto_sign/cross-sha2-r-sdp-5-fast% \
-	mupq/crypto_sign/cross-sha3-r-sdp-5-fast% \
-	mupq/crypto_sign/cross-sha2-r-sdpg-5-fast% \
-	mupq/crypto_sign/cross-sha3-r-sdpg-5-fast% \
+	mupq/crypto_sign/cross-rsdp-3-fast% \
+	mupq/crypto_sign/cross-rsdp-5-fast% \
+	mupq/crypto_sign/cross-rsdp-5-balanced% \
+	mupq/crypto_sign/cross-rsdp-5-small% \
+	mupq/crypto_sign/cross-rsdpg-5-fast% \
+	mupq/crypto_sign/cross-rsdpg-5-balanced% \
+	crypto_sign/cross-rsdp-3-fast% \
+	crypto_sign/cross-rsdp-5-fast% \
+	crypto_sign/cross-rsdp-5-balanced% \
+	crypto_sign/cross-rsdp-5-small% \
+	crypto_sign/cross-rsdpg-5-fast% \
+	crypto_sign/cross-rsdpg-5-balanced% \
 	mupq/crypto_sign/meds55604% \
 	mupq/crypto_sign/meds41711% \
 	mupq/crypto_sign/meds167717% \
