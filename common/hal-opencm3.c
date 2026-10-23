@@ -232,14 +232,21 @@ static void clock_setup(enum clock_mode clock)
   rcc_periph_clock_enable(RCC_RNG);
   rng_enable();
 #elif defined(NUCLEO_L4R5_BOARD)
+#define NUCLEO_L4R5_PWR_CR5 MMIO32(POWER_CONTROL_BASE + 0x80)
+#define NUCLEO_L4R5_R1MODE (1u << 8)
   rcc_periph_clock_enable(RCC_PWR);
   rcc_periph_clock_enable(RCC_SYSCFG);
   pwr_set_vos_scale(PWR_SCALE1);
-  /* The L4R5ZI chip also needs the R1MODE bit in PWR_CR5 register set, but
-     OpenCM3 doesn't support this yet. But luckily the default value for the bit
-     is 1. */
+  while (PWR_SR2 & PWR_SR2_VOSF);
+  /* Range 1 has two modes, selected by PWR_CR5.R1MODE (RM0432, Sec. 5.1.8):
+     R1MODE = 1 (the reset value) is normal mode, documented up to 80 MHz;
+     R1MODE = 0 is boost mode, required above 80 MHz. libopencm3 has no accessor
+     for PWR_CR5, so the register is written directly below. We observed that
+     the bit survives a system reset, so each clock setting writes it. */
   switch (clock) {
   case CLOCK_BENCHMARK:
+    /* 20 MHz runs in normal mode; undo boost mode left by an earlier firmware */
+    NUCLEO_L4R5_PWR_CR5 |= NUCLEO_L4R5_R1MODE;
     /* Benchmark straight from the HSI16 without prescaling */
     rcc_osc_on(RCC_HSI16);
     rcc_wait_for_osc_ready(RCC_HSI16);
@@ -276,6 +283,8 @@ static void clock_setup(enum clock_mode clock)
     rcc_set_ppre2(RCC_CFGR_PPRE_NODIV);
     rcc_osc_off(RCC_PLL);
     while(rcc_is_osc_ready(RCC_PLL));
+    /* 120 MHz requires Range 1 boost mode (R1MODE = 0), set before the switch */
+    NUCLEO_L4R5_PWR_CR5 &= ~NUCLEO_L4R5_R1MODE;
     /* Configure the PLL oscillator (use CUBEMX tool -> scale HSI16 to 120MHz). */
     _rcc_set_main_pll(RCC_PLLCFGR_PLLSRC_HSI16, 1, 15, 2, RCC_PLLCFGR_PLLQ_DIV2, RCC_PLLCFGR_PLLR_DIV2);
     /* Enable PLL oscillator and wait for it to stabilize. */
@@ -285,8 +294,13 @@ static void clock_setup(enum clock_mode clock)
     flash_icache_enable();
     flash_set_ws(0x05);
     flash_prefetch_enable();
+    /* Above 80 MHz, RM0432 asks for the AHB prescaler at /2 during the switch
+       and at least 1 us before returning to /1. */
+    rcc_set_hpre(RCC_CFGR_HPRE_DIV2);
     rcc_set_sysclk_source(RCC_CFGR_SW_PLL);
     rcc_wait_for_sysclk_status(RCC_PLL);
+    for (volatile int i = 0; i < 200; i++);
+    rcc_set_hpre(RCC_CFGR_HPRE_NODIV);
     break;
   }
   rcc_osc_on(RCC_HSI48); /* HSI48 must always be on for RNG */
