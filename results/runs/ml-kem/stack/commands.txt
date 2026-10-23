@@ -1,6 +1,8 @@
 python3 -m venv .venv && . .venv/bin/activate && pip install -r requirements.txt
-# finds the serial port of the board, ttyACM on Linux and tty.usbmodem on macOS
-UART=$(find /dev -maxdepth 1 \( -name 'ttyACM*' -o -name 'tty.usbmodem*' \) | head -n 1)
+# selects the probe of the board measured here, for setups with several boards attached
+export MUPQ_OPENOCD_SERIAL=066BFF575550897767144107
+# the serial port of that board on the measuring host
+UART=/dev/tty.usbmodem1103
 rm -rf obj elf bin bin-host benchmarks
 # writes the raw results to benchmarks/stack/
 python3 benchmarks.py -p nucleo-l4r5zi -u "$UART" -i 1 --nospeed --nohashing --nosize ml-kem-512 ml-kem-768 ml-kem-1024
