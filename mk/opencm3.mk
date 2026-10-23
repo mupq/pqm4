@@ -16,6 +16,13 @@ endif
 
 LDLIBS += -lc -lgcc
 
+# BAUD sets the UART baud rate (default 38400); the host reads at MUPQ_BAUD, which must match
+BAUD ?=
+RETAINED_VARS += BAUD
+ifneq ($(BAUD),)
+CPPFLAGS += -DSERIAL_BAUD=$(BAUD)
+endif
+
 export OPENCM3_DIR := $(CURDIR)/libopencm3
 
 _git_submodule_update_opencm3 := $(shell git submodule update --init --recursive $(OPENCM3_DIR))

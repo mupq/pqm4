@@ -156,6 +156,17 @@ On the `stm32f4discovery`, `STACK_IN_CCM=1` places the stack in the 64 KiB CCM
 instead of the main RAM, e.g., `make -j4 PLATFORM=stm32f4discovery STACK_IN_CCM=1`.
 Implementations whose stack exceeds the CCM will fault.
 
+On the libopencm3 platforms, `BAUD` sets the UART baud rate (default 38400), e.g.,
+`make -j4 PLATFORM=nucleo-l4r5zi BAUD=115200`. Like `PLATFORM`, the value is kept until
+`make clean`. The host scripts read at the rate in
+the environment variable `MUPQ_BAUD`, which must match. The scripts build through `make`,
+which takes `BAUD` from the environment as well:
+```
+export BAUD=115200
+export MUPQ_BAUD=115200
+python3 test.py -p nucleo-l4r5zi -u /dev/ttyACM0 ml-kem-768
+```
+
 ## API documentation
 The **pqm4** library uses the NIST/SUPERCOP/[PQClean
 API](https://github.com/PQClean/PQClean). It is mandated for all included
