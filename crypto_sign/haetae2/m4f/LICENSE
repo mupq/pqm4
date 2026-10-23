@@ -1,0 +1,41 @@
+The files in this directory are the HAETAE 1.2.0 reference implementation
+(Team HAETAE, MIT License, below) with modifications for the Cortex-M4 by
+YoungBeom Kim (MIT License, below); the file headers say which files are
+modified.  fft.S and sample_gauss83.S are new (YoungBeom Kim, MIT License,
+below); their tables are generated from the reference fft.c and sampler.c.
+Exceptions:
+
+- ntt332.S and ntt332_macros.i: the NTT and inverse NTT in assembly from the
+  Dilithium implementation of pqm4, based on code by Markus Krausz, licensed
+  under CC0 with permission of the authors (see the file headers); adapted to
+  the HAETAE prime in the earlier pqm4 HAETAE m4f implementation and modified
+  for HAETAE 1.2.0 by YoungBeom Kim (also under CC0).
+- rans_byte.h: the rANS coder of the reference implementation, by Fabian
+  Giesen, public domain (see the file header); modified by YoungBeom Kim
+  (also in the public domain).
+
+-------------------------------------------------------------------------------
+
+Copyright (c) 2026 Team HAETAE
+Copyright (c) 2026 YoungBeom Kim (Cortex-M4 modifications)
+
+Permission is hereby granted, free of charge, to any person
+obtaining a copy of this software and associated documentation
+files (the "Software"), to deal in the Software without
+restriction, including without limitation the rights to use,
+copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following
+conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.

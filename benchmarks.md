@@ -58,12 +58,15 @@
 | fndsa_provisional-1024 (10 executions) | ref | AVG: 274,928,016 <br /> MIN: 217,869,128 <br /> MAX: 448,029,028 | AVG: 107,512,779 <br /> MIN: 107,106,716 <br /> MAX: 107,788,566 | AVG: 1,461,795 <br /> MIN: 1,444,739 <br /> MAX: 1,469,817 |
 | fndsa_provisional-512 (10 executions) | m4f | AVG: 67,693,338 <br /> MIN: 57,825,106 <br /> MAX: 81,542,705 | AVG: 22,469,685 <br /> MIN: 22,280,159 <br /> MAX: 22,594,542 | AVG: 396,949 <br /> MIN: 390,368 <br /> MAX: 406,553 |
 | fndsa_provisional-512 (10 executions) | ref | AVG: 85,699,591 <br /> MIN: 64,822,516 <br /> MAX: 132,207,505 | AVG: 49,522,949 <br /> MIN: 49,325,465 <br /> MAX: 49,631,598 | AVG: 731,387 <br /> MIN: 714,301 <br /> MAX: 738,870 |
-| haetae2 (100 executions) | m4f | AVG: 6,743,278 <br /> MIN: 1,555,292 <br /> MAX: 25,393,506 | AVG: 21,993,963 <br /> MIN: 4,721,290 <br /> MAX: 86,765,689 | AVG: 918,459 <br /> MIN: 918,244 <br /> MAX: 918,668 |
-| haetae2 (100 executions) | ref | AVG: 9,363,639 <br /> MIN: 1,716,264 <br /> MAX: 41,895,014 | AVG: 31,631,089 <br /> MIN: 6,247,382 <br /> MAX: 216,853,925 | AVG: 1,104,080 <br /> MIN: 1,103,874 <br /> MAX: 1,104,329 |
-| haetae3 (100 executions) | m4f | AVG: 12,925,388 <br /> MIN: 2,752,846 <br /> MAX: 52,240,529 | AVG: 30,891,994 <br /> MIN: 7,467,529 <br /> MAX: 160,522,018 | AVG: 1,760,745 <br /> MIN: 1,760,408 <br /> MAX: 1,761,081 |
-| haetae3 (100 executions) | ref | AVG: 20,247,658 <br /> MIN: 3,023,325 <br /> MAX: 101,863,701 | AVG: 41,078,691 <br /> MIN: 9,771,906 <br /> MAX: 168,213,225 | AVG: 1,998,105 <br /> MIN: 1,997,691 <br /> MAX: 1,998,406 |
-| haetae5 (100 executions) | m4f | AVG: 19,064,310 <br /> MIN: 3,530,778 <br /> MAX: 94,189,003 | AVG: 44,679,058 <br /> MIN: 9,277,906 <br /> MAX: 182,948,586 | AVG: 2,323,830 <br /> MIN: 2,323,454 <br /> MAX: 2,324,229 |
-| haetae5 (100 executions) | ref | AVG: 18,169,623 <br /> MIN: 3,864,921 <br /> MAX: 64,304,046 | AVG: 63,180,459 <br /> MIN: 12,011,324 <br /> MAX: 264,538,555 | AVG: 2,461,679 <br /> MIN: 2,461,294 <br /> MAX: 2,462,068 |
+| haetae2 (100 executions) | m4f | AVG: 5,241,781 <br /> MIN: 903,870 <br /> MAX: 32,298,825 | AVG: 35,873,441 <br /> MIN: 6,608,501 <br /> MAX: 142,023,044 | AVG: 836,881 <br /> MIN: 836,612 <br /> MAX: 837,124 |
+| haetae2 (100 executions) | m4fstack | AVG: 11,425,578 <br /> MIN: 1,235,466 <br /> MAX: 51,392,176 | AVG: 156,096,129 <br /> MIN: 40,321,753 <br /> MAX: 547,585,692 | AVG: 853,032 <br /> MIN: 852,825 <br /> MAX: 853,298 |
+| haetae2 (100 executions) | ref | AVG: 9,006,959 <br /> MIN: 1,255,912 <br /> MAX: 45,518,866 | AVG: 71,649,643 <br /> MIN: 11,518,197 <br /> MAX: 372,938,074 | AVG: 1,102,069 <br /> MIN: 1,101,837 <br /> MAX: 1,102,385 |
+| haetae3 (100 executions) | m4f | AVG: 8,830,462 <br /> MIN: 1,701,095 <br /> MAX: 37,660,230 | AVG: 41,633,637 <br /> MIN: 10,222,885 <br /> MAX: 196,188,965 | AVG: 1,589,972 <br /> MIN: 1,589,660 <br /> MAX: 1,590,316 |
+| haetae3 (100 executions) | m4fstack | AVG: 20,467,525 <br /> MIN: 2,368,256 <br /> MAX: 98,986,096 | AVG: 206,248,036 <br /> MIN: 75,827,614 <br /> MAX: 1,101,722,959 | AVG: 1,719,532 <br /> MIN: 1,719,145 <br /> MAX: 1,719,877 |
+| haetae3 (100 executions) | ref | AVG: 14,470,781 <br /> MIN: 2,286,488 <br /> MAX: 61,088,444 | AVG: 81,181,841 <br /> MIN: 17,606,341 <br /> MAX: 368,337,467 | AVG: 1,995,410 <br /> MIN: 1,995,084 <br /> MAX: 1,995,745 |
+| haetae5 (100 executions) | m4f | AVG: 9,483,598 <br /> MIN: 2,207,023 <br /> MAX: 46,758,237 | AVG: 66,403,852 <br /> MIN: 12,661,821 <br /> MAX: 317,163,048 | AVG: 2,066,222 <br /> MIN: 2,065,836 <br /> MAX: 2,066,652 |
+| haetae5 (100 executions) | m4fstack | AVG: 12,638,184 <br /> MIN: 3,255,305 <br /> MAX: 53,589,953 | AVG: 319,705,974 <br /> MIN: 97,537,118 <br /> MAX: 1,036,893,500 | AVG: 2,206,735 <br /> MIN: 2,206,407 <br /> MAX: 2,207,199 |
+| haetae5 (100 executions) | ref | AVG: 13,313,733 <br /> MIN: 2,947,973 <br /> MAX: 139,242,237 | AVG: 116,389,222 <br /> MIN: 21,639,668 <br /> MAX: 510,058,554 | AVG: 2,460,302 <br /> MIN: 2,459,799 <br /> MAX: 2,460,750 |
 | hawk1024 (100 executions) | ref | AVG: 246,017,495 <br /> MIN: 183,762,252 <br /> MAX: 662,190,563 | AVG: 4,309,675 <br /> MIN: 4,309,595 <br /> MAX: 4,309,759 | AVG: 2,782,441 <br /> MIN: 2,780,257 <br /> MAX: 2,784,348 |
 | hawk256 (100 executions) | ref | AVG: 15,758,436 <br /> MIN: 11,600,791 <br /> MAX: 35,345,186 | AVG: 1,042,002 <br /> MIN: 954,957 <br /> MAX: 2,294,025 | AVG: 627,815 <br /> MIN: 627,480 <br /> MAX: 628,077 |
 | hawk512 (100 executions) | ref | AVG: 53,733,289 <br /> MIN: 45,271,209 <br /> MAX: 174,603,165 | AVG: 1,972,051 <br /> MIN: 1,971,984 <br /> MAX: 1,972,127 | AVG: 1,293,829 <br /> MIN: 1,292,946 <br /> MAX: 1,294,494 |
@@ -203,12 +206,15 @@
 | fndsa_provisional-1024 | ref | 27,676 | 82,276 | 5,308 |
 | fndsa_provisional-512 | m4f | 14,348 | 41,952 | 2,976 |
 | fndsa_provisional-512 | ref | 14,380 | 42,124 | 3,260 |
-| haetae2 | m4f | 19,756 | 55,568 | 23,296 |
-| haetae2 | ref | 26,092 | 54,444 | 29,696 |
-| haetae3 | m4f | 29,596 | 83,420 | 31,784 |
-| haetae3 | ref | 43,492 | 80,428 | 48,424 |
-| haetae5 | m4f | 34,084 | 103,964 | 37,300 |
-| haetae5 | ref | 54,868 | 100,228 | 62,024 |
+| haetae2 | m4f | 25,096 | 52,036 | 38,128 |
+| haetae2 | m4fstack | 4,832 | 5,988 | 4,840 |
+| haetae2 | ref | 24,084 | 85,820 | 38,168 |
+| haetae3 | m4f | 42,496 | 78,020 | 60,952 |
+| haetae3 | m4fstack | 4,932 | 6,172 | 4,864 |
+| haetae3 | ref | 41,492 | 129,236 | 61,100 |
+| haetae5 | m4f | 53,752 | 99,884 | 76,592 |
+| haetae5 | m4fstack | 3,800 | 6,148 | 4,856 |
+| haetae5 | ref | 52,748 | 162,316 | 76,632 |
 | hawk1024 | ref | 27,972 | 7,980 | 11,468 |
 | hawk256 | ref | 7,900 | 3,320 | 3,712 |
 | hawk512 | ref | 14,580 | 4,856 | 6,272 |
@@ -348,12 +354,15 @@
 | fndsa_provisional-1024 | ref | 8.0% | 6.2% | 45.3% |
 | fndsa_provisional-512 | m4f | 4.2% | 11.2% | 64.0% |
 | fndsa_provisional-512 | ref | 8.1% | 6.9% | 47.6% |
-| haetae2 | m4f | 12.4% | 56.7% | 54.1% |
-| haetae2 | ref | 10.6% | 42.4% | 45.1% |
-| haetae3 | m4f | 14.6% | 56.6% | 57.1% |
-| haetae3 | ref | 14.4% | 42.4% | 50.3% |
-| haetae5 | m4f | 15.7% | 56.6% | 57.5% |
-| haetae5 | ref | 15.7% | 42.8% | 54.3% |
+| haetae2 | m4f | 23.1% | 56.9% | 59.4% |
+| haetae2 | m4fstack | 39.9% | 48.4% | 58.4% |
+| haetae2 | ref | 14.7% | 32.0% | 45.2% |
+| haetae3 | m4f | 26.6% | 57.0% | 63.2% |
+| haetae3 | m4fstack | 45.5% | 47.8% | 58.5% |
+| haetae3 | ref | 18.9% | 32.2% | 50.4% |
+| haetae5 | m4f | 32.7% | 56.8% | 64.6% |
+| haetae5 | m4fstack | 24.5% | 50.1% | 60.6% |
+| haetae5 | ref | 23.1% | 32.2% | 54.3% |
 | hawk1024 | ref | 1.7% | 49.3% | 8.3% |
 | hawk256 | ref | 32.8% | 54.6% | 10.7% |
 | hawk512 | ref | 2.6% | 48.7% | 8.6% |
@@ -493,12 +502,15 @@
 | fndsa_provisional-1024 | ref | 103,089 | 0 | 0 | 103,089 |
 | fndsa_provisional-512 | m4f | 103,789 | 0 | 0 | 103,789 |
 | fndsa_provisional-512 | ref | 103,077 | 0 | 0 | 103,077 |
-| haetae2 | m4f | 35,708 | 0 | 0 | 35,708 |
-| haetae2 | ref | 25,568 | 0 | 0 | 25,568 |
-| haetae3 | m4f | 35,936 | 0 | 0 | 35,936 |
-| haetae3 | ref | 25,980 | 0 | 0 | 25,980 |
-| haetae5 | m4f | 35,692 | 0 | 0 | 35,692 |
-| haetae5 | ref | 25,688 | 0 | 0 | 25,688 |
+| haetae2 | m4f | 33,564 | 0 | 0 | 33,564 |
+| haetae2 | m4fstack | 33,180 | 0 | 0 | 33,180 |
+| haetae2 | ref | 26,248 | 0 | 0 | 26,248 |
+| haetae3 | m4f | 33,864 | 0 | 0 | 33,864 |
+| haetae3 | m4fstack | 33,944 | 0 | 0 | 33,944 |
+| haetae3 | ref | 26,696 | 0 | 0 | 26,696 |
+| haetae5 | m4f | 33,828 | 0 | 0 | 33,828 |
+| haetae5 | m4fstack | 33,268 | 0 | 0 | 33,268 |
+| haetae5 | ref | 26,760 | 0 | 0 | 26,760 |
 | hawk1024 | ref | 102,031 | 0 | 0 | 102,031 |
 | hawk256 | ref | 102,015 | 0 | 0 | 102,015 |
 | hawk512 | ref | 102,027 | 0 | 0 | 102,027 |
