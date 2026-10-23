@@ -93,6 +93,7 @@ boards, all featuring an ARM Cortex-M4 chip:
 ### Installing the ARM toolchain
 The **pqm4** build system assumes that you have the [arm-none-eabi toolchain](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads)
 toolchain installed. All benchmarks are performed using this toolchain.
+The CI builds with Arm GNU Toolchain 15.3.Rel1.
 On most Linux systems, the correct toolchain gets installed when you install the `arm-none-eabi-gcc` (or `gcc-arm-none-eabi`) package.  
 On some Linux distributions, you will also have to explicitly install `libnewlib-arm-none-eabi` .
 
@@ -222,6 +223,13 @@ The benchmark results (in `benchmarks/`) created by
 
 ## Benchmarks
 The current benchmark results can be found in [benchmarks.csv](benchmarks.csv) or [benchmarks.md](benchmarks.md).
+
+Reproduced results are in [results/](results/), one folder per measurement type (`speed`,
+`stack`, `hashing`, `size`): `summary.md` holds the reproduced rows, `legacy.md` the matching
+tables of `benchmarks.md`, and one page per scheme family gives the commit, platform,
+toolchain, build flags, clock and iteration count of its numbers, with the commands that
+reproduce them. `python3 results/build.py results/runs results` regenerates the pages from
+the records in `results/runs/`.
 
 All cycle counts were obtained at 24MHz to avoid wait cycles due to the speed of the memory controller.
 For most schemes we report minimum, maximum, and average cycle counts of 100 executions.
