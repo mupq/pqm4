@@ -19,6 +19,14 @@ EXCLUDED_SCHEMES = \
 
 include mk/opencm3.mk
 
+# STACK_IN_CCM=1 places the stack in the CCM instead of the main RAM
+STACK_IN_CCM ?=
+RETAINED_VARS += STACK_IN_CCM
+ifeq ($(STACK_IN_CCM),1)
+CPPFLAGS += -DSTACK_IN_CCM
+LDFLAGS += -Wl,--defsym=STACK_IN_CCM=1
+endif
+
 elf/boardtest.elf: CPPFLAGS+=-DSRAM_TIMING_TEST -DHAS_SRAM2 -DHAS_CCM
 elf/boardtest-fast.elf: CPPFLAGS+=-DSRAM_TIMING_TEST -DHAS_SRAM2 -DHAS_CCM
 
@@ -30,3 +38,10 @@ elf/crypto_sign_perk-256-fast%_m4_test.elf: LDSCRIPT=ldscripts/stm32f4discovery_
 elf/crypto_sign_haetae5_m4f_%.elf: LDSCRIPT=ldscripts/stm32f4discovery_fullram.ld
 elf/crypto_sign_haetae5_ref_%.elf: LDSCRIPT=ldscripts/stm32f4discovery_fullram.ld
 elf/crypto_sign_cross_%.elf: LDSCRIPT=ldscripts/stm32f4discovery_fullram.ld
+
+# SERIAL_ITM=1 sends the output over ITM stimulus port 0 (SWO, 2 MHz) instead of USART2
+SERIAL_ITM ?=
+RETAINED_VARS += SERIAL_ITM
+ifeq ($(SERIAL_ITM),1)
+CPPFLAGS += -DSERIAL_ITM
+endif

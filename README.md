@@ -1,5 +1,14 @@
 # pqm4
+
+> [!WARNING]
+> **Deprecation Notice:** [pqm4 is no longer under active maintenance and we plan to archive it as read-only in or after January 2027](https://github.com/mupq/pqm4/issues/409).
+> Please open any remaining pull requests by **30 November 2026**.
+>
+> For maintained implementations of standardized PQC that also cater to embedded use cases, you may want to consider the [PQ Code Package](https://github.com/pq-code-package), in particular [mlkem-native](https://github.com/pq-code-package/mlkem-native) and [mldsa-native](https://github.com/pq-code-package/mldsa-native).
+
 Collection of post-quantum cryptographic algorithms for the ARM Cortex-M4
+
+> **Maintenance Notice**
 
 ## Introduction
 The **pqm4** library, benchmarking and testing framework started as a result of the 
@@ -84,6 +93,7 @@ boards, all featuring an ARM Cortex-M4 chip:
 ### Installing the ARM toolchain
 The **pqm4** build system assumes that you have the [arm-none-eabi toolchain](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads)
 toolchain installed. All benchmarks are performed using this toolchain.
+The CI builds with Arm GNU Toolchain 15.3.Rel1.
 On most Linux systems, the correct toolchain gets installed when you install the `arm-none-eabi-gcc` (or `gcc-arm-none-eabi`) package.  
 On some Linux distributions, you will also have to explicitly install `libnewlib-arm-none-eabi` .
 
@@ -141,6 +151,10 @@ variable to your chosen platform and the number of threads in `-j4` to your PC a
 ```
 make -j4 PLATFORM=stm32f4discovery
 ```
+
+On the `stm32f4discovery`, `STACK_IN_CCM=1` places the stack in the 64 KiB CCM
+instead of the main RAM, e.g., `make -j4 PLATFORM=stm32f4discovery STACK_IN_CCM=1`.
+Implementations whose stack exceeds the CCM will fault.
 
 ## API documentation
 The **pqm4** library uses the NIST/SUPERCOP/[PQClean
@@ -209,6 +223,13 @@ The benchmark results (in `benchmarks/`) created by
 
 ## Benchmarks
 The current benchmark results can be found in [benchmarks.csv](benchmarks.csv) or [benchmarks.md](benchmarks.md).
+
+Reproduced results are in [results/](results/), one folder per measurement type (`speed`,
+`stack`, `hashing`, `size`): `summary.md` holds the reproduced rows, `legacy.md` the matching
+tables of `benchmarks.md`, and one page per scheme family gives the commit, platform,
+toolchain, build flags, clock and iteration count of its numbers, with the commands that
+reproduce them. `python3 results/build.py results/runs results` regenerates the pages from
+the records in `results/runs/`.
 
 All cycle counts were obtained at 24MHz to avoid wait cycles due to the speed of the memory controller.
 For most schemes we report minimum, maximum, and average cycle counts of 100 executions.

@@ -1,19 +1,19 @@
-// clang-format off
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Team HAETAE
+// Copyright (c) 2026 YoungBeom Kim (Cortex-M4 modifications)
+
 #ifndef HAETAE_POLYVEC_H
 #define HAETAE_POLYVEC_H
 
 #include "params.h"
 #include "poly.h"
+
 #include <stdint.h>
 
-/* Vectors of polynomials of length K */
+/* Vectors of polynomials of length HAETAE_K */
 typedef struct {
-    poly vec[K];
+  poly vec[HAETAE_K];
 } polyveck;
-
-typedef struct {
-    poly_frozen vec[K];
-} polyveck_frozen;
 
 #define polyveck_add HAETAE_NAMESPACE(polyveck_add)
 void polyveck_add(polyveck *w, const polyveck *u, const polyveck *v);
@@ -30,9 +30,10 @@ void polyveck_freeze2q(polyveck *v);
 void polyveck_freeze(polyveck *v);
 
 #define polyveck_uniform_eta HAETAE_NAMESPACE(polyveck_uniform_eta)
-void polyveck_uniform_eta(polyveck *v, const uint8_t seed[CRHBYTES], uint16_t nonce);
-#define polyveck_expand HAETAE_NAMESPACE(polyveck_expand)
-void polyveck_expand(polyveck *v, const uint8_t seed[SEEDBYTES]);
+void polyveck_uniform_eta(polyveck *v, const uint8_t seed[HAETAE_CRHBYTES],
+                          uint16_t nonce);
+#define polyveck_expand_vecA HAETAE_NAMESPACE(polyveck_expand_vecA)
+void polyveck_expand_vecA(polyveck *v, const uint8_t seed[HAETAE_SEEDBYTES]);
 
 #define polyveck_ntt HAETAE_NAMESPACE(polyveck_ntt)
 void polyveck_ntt(polyveck *x);
@@ -46,20 +47,11 @@ void polyveck_double_negate(polyveck *x);
 #define polyveck_frommont HAETAE_NAMESPACE(polyveck_frommont)
 void polyveck_frommont(polyveck *x);
 
-#define polyveck_poly_pointwise_montgomery HAETAE_NAMESPACE(polyveck_poly_pointwise_montgomery)
-void polyveck_poly_pointwise_montgomery(polyveck *w, const polyveck *u, const poly *v);
-
 #define polyveck_poly_fromcrt HAETAE_NAMESPACE(polyveck_poly_fromcrt)
 void polyveck_poly_fromcrt(polyveck *w, const polyveck *u, const poly *v);
 
 #define polyveck_highbits_hint HAETAE_NAMESPACE(polyveck_highbits_hint)
 void polyveck_highbits_hint(polyveck *w, const polyveck *v);
-
-#define polyveck_pack_highbits HAETAE_NAMESPACE(polyveck_pack_highbits)
-void polyveck_pack_highbits(uint8_t *buf, const polyveck *v);
-
-#define polyveck_cneg HAETAE_NAMESPACE(polyveck_cneg)
-void polyveck_cneg(polyveck *v, const uint8_t b);
 
 #define polyveck_caddDQ2ALPHA HAETAE_NAMESPACE(polyveck_caddDQ2ALPHA)
 void polyveck_caddDQ2ALPHA(polyveck *h);
@@ -84,15 +76,8 @@ uint64_t polyveck_sqnorm2(const polyveck *b);
 
 /* Vectors of polynomials of length L */
 typedef struct {
-    poly vec[L];
+  poly vec[HAETAE_L];
 } polyvecl;
-
-typedef struct {
-    poly_frozen vec[L];
-} polyvecl_frozen;
-
-#define polyvecl_cneg HAETAE_NAMESPACE(polyvecl_cneg)
-void polyvecl_cneg(polyvecl *v, const uint8_t b);
 
 #define polyvecl_sqnorm2 HAETAE_NAMESPACE(polyvecl_sqnorm2)
 uint64_t polyvecl_sqnorm2(const polyvecl *a);
@@ -105,37 +90,33 @@ void polyvecl_highbits(polyvecl *v2, const polyvecl *v);
 #define polyvecl_lowbits HAETAE_NAMESPACE(polyvecl_lowbits)
 void polyvecl_lowbits(polyvecl *v2, const polyvecl *v);
 
-#define polyvecl_pointwise_acc_montgomery HAETAE_NAMESPACE(polyvecl_pointwise_acc_montgomery)
-void polyvecl_pointwise_acc_montgomery(poly *w,
-                                       const polyvecl *u,
+#define polyvecl_pointwise_acc_montgomery                                      \
+  HAETAE_NAMESPACE(polyvecl_pointwise_acc_montgomery)
+void polyvecl_pointwise_acc_montgomery(poly *w, const polyvecl *u,
                                        const polyvecl *v);
-
 
 /* Vectors of polynomials of length M */
 typedef struct {
-  poly vec[M];
+  poly vec[HAETAE_M];
 } polyvecm;
-
-typedef struct {
-    poly_frozen vec[M];
-} polyvecm_frozen;
 
 #define polyvecm_ntt HAETAE_NAMESPACE(polyvecm_ntt)
 void polyvecm_ntt(polyvecm *x);
 
-#define polyvecmk_uniform_eta HAETAE_NAMESPACE(polyvecmk_uniform_eta)
-void polyvecmk_uniform_eta(polyvecm *u, polyveck *v, const uint8_t seed[CRHBYTES], uint16_t nonce);
+#define polyvecmk_expand_S HAETAE_NAMESPACE(polyvecmk_expand_S)
+void polyvecmk_expand_S(polyvecm *u, polyveck *v,
+                        const uint8_t seed[HAETAE_CRHBYTES], uint16_t nonce);
 
-#define polyvecm_pointwise_acc_montgomery HAETAE_NAMESPACE(polyvecm_pointwise_acc_montgomery)
-void polyvecm_pointwise_acc_montgomery(poly *w,
-                                       const polyvecm *u,
+#define polyvecm_pointwise_acc_montgomery                                      \
+  HAETAE_NAMESPACE(polyvecm_pointwise_acc_montgomery)
+void polyvecm_pointwise_acc_montgomery(poly *w, const polyvecm *u,
                                        const polyvecm *v);
 
-#define polyvecmk_sqsing_value HAETAE_NAMESPACE(polyvecmk_sqsing_value)
-int64_t polyvecmk_sqsing_value(const polyvecm *s1, const polyveck *s2);
+#define polyvecmk_sk_singular_value                                            \
+  HAETAE_NAMESPACE(polyvecmk_sk_singular_value)
+int64_t polyvecmk_sk_singular_value(const polyvecm *s1, const polyveck *s2);
 
 #define polyvecmk_sing_value HAETAE_NAMESPACE(polyvecmk_sing_value)
 int64_t polyvecmk_sing_value(const polyvecm *s1, const polyveck *s2);
 
-#endif
-//clang-format on
+#endif /* !HAETAE_POLYVEC_H */

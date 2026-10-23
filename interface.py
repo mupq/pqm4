@@ -28,6 +28,9 @@ def parse_arguments():
         "--no-aio", help="Disable all-in-one compilation", default=False, action="store_true"
     )
     parser.add_argument("-u", "--uart", default="/dev/ttyUSB0", help="Path to UART output")
+    parser.add_argument(
+        "--itm", help="Read the output over ITM/SWO with OpenOCD (stm32f4discovery)", default=False, action="store_true"
+    )
     parser.add_argument("-i", "--iterations", type=int, default=1, help="Number of iterations for benchmarks")
     return parser.parse_known_args()
 
@@ -35,7 +38,11 @@ def parse_arguments():
 def get_platform(args):
     platform = None
     bin_type = 'bin'
-    if args.platform in ['stm32f4discovery', 'nucleo-l476rg']:
+    if args.itm and args.platform != 'stm32f4discovery':
+        raise NotImplementedError("--itm is supported on the stm32f4discovery only")
+    if args.itm:
+        platform = platforms.OpenOCDITM("board/stm32f4discovery.cfg", "stm32f4x.tpiu")
+    elif args.platform in ['stm32f4discovery', 'nucleo-l476rg']:
         platform = platforms.StLink(args.uart)
     elif args.platform == "nucleo-l4r5zi":
         bin_type = 'hex'
@@ -49,6 +56,8 @@ def get_platform(args):
     else:
         raise NotImplementedError("Unsupported Platform")
     settings = M4Settings(args.platform, args.opt, args.lto, not args.no_aio, args.iterations, bin_type)
+    # Retained make variables keep their last value unless given, so always pass it
+    settings.makeflags += [f"SERIAL_ITM={'1' if args.itm else ''}"]
     return platform, settings
 
 

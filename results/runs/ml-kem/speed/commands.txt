@@ -1,0 +1,12 @@
+python3 -m venv .venv && . .venv/bin/activate && pip install -r requirements.txt
+# finds the serial port of the board, ttyACM on Linux and tty.usbmodem on macOS
+UART=$(find /dev -maxdepth 1 \( -name 'ttyACM*' -o -name 'tty.usbmodem*' \) | head -n 1)
+rm -rf obj elf bin bin-host benchmarks
+# writes the raw results to benchmarks/speed/
+python3 benchmarks.py -p nucleo-l4r5zi -u "$UART" -i 10 --nostack --nohashing --nosize ml-kem-512 ml-kem-768 ml-kem-1024
+# reads benchmarks/, writes benchmarks/converted.md
+python3 convert_benchmarks.py md > benchmarks/converted.md
+# reads benchmarks/converted.md, writes results/runs/ml-kem/speed/converted.md
+python3 results/record.py speed benchmarks/converted.md results/runs/ml-kem/speed/converted.md ml-kem-512 ml-kem-768 ml-kem-1024
+# reads results/runs/, writes summary.md and the family pages under results/
+python3 results/build.py results/runs results

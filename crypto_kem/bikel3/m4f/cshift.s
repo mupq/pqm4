@@ -5,6 +5,7 @@
 
 // void cshift_asm(uint32_t *array, int s)
 .global cshift_asm
+.type cshift_asm, %function
 cshift_asm:
 ptr_a 		.req r0
 s 			.req r1

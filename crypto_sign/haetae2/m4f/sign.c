@@ -1,4 +1,8 @@
-#include "sign.h"
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Team HAETAE
+// Copyright (c) 2026 YoungBeom Kim (Cortex-M4 modifications)
+
+#include "api.h"
 #include "packing.h"
 #include "params.h"
 #include "poly.h"
@@ -7,85 +11,118 @@
 #include "polyvec.h"
 #include "randombytes.h"
 #include "symmetric.h"
-#include "decompose.h"
+
 #include <inttypes.h>
 #include <stdint.h>
-#include <string.h>
 #include <stdio.h>
-
-
-/*************************************************
- * Name:        generate_seed_from_one_source
- *
- * Description: Use SHAKE256 to generate a seed from one byte source.
- *
- * Arguments:   - uint8_t *seed:    pointer to buffer of seed to be generated
- *              - size_t seed_len:  desired length of the seed
- *              - uint8_t *src:    pointer to source to be absorbed
- *              - size_t src_len:  length of source
- * 
- * Returns void
- **************************************************/
-static void generate_seed_from_one_source(uint8_t *seed, size_t seed_len, 
-                                          const uint8_t *src, size_t src_len){
-    xof256_state state;
-    xof256_absorb_once(&state, src, src_len);
-    xof256_squeeze(seed, seed_len, &state);
-    return;
-}
+#include <string.h>
 
 /*************************************************
- * Name:        generate_seed_from_two_sources
+ * Name:        crypto_sign_keypair_internal
  *
- * Description: Use SHAKE256 to generate a seed from two byte sources.
+ * Description: Generates public and private key.
  *
- * Arguments:   - uint8_t *seed:    pointer to buffer of seed to be generated
- *              - size_t seed_len:  desired length of the seed
- *              - uint8_t *src1:    pointer to first source to be absorbed
- *              - size_t src1_len:  length of first source
- *              - uint8_t *src2:    pointer to second source to be absorbed
- *              - size_t src2_len:  length of second source
- * 
- * Returns void
+ * Arguments:   - uint8_t *vk: pointer to output public key (allocated
+ *              array of HAETAE_CRYPTO_PUBLICKEYBYTES bytes)
+ *              - uint8_t *sk: pointer to output private key (allocated
+ *              array of HAETAE_CRYPTO_SECRETKEYBYTES bytes)
+ *              - uint8_t seed[]: input seed of HAETAE_SEEDBYTES bytes
+ *
+ * Returns 0 (success)
+ *
+ * Specification: Implements @[Algorithm 54, KeyGenInternal]
  **************************************************/
-static void generate_seed_from_two_sources(uint8_t *seed, size_t seed_len, 
-                                           const uint8_t *src1, size_t src1_len, 
-                                           const uint8_t *src2, size_t src2_len){
-    xof256_state state;
-    xof256_absorb_twice(&state, src1, src1_len, src2, src2_len);
-    xof256_squeeze(seed, seed_len, &state);
-    return;
-}
 
-static inline uint16_t nonce_a(const size_t row){
-    return (K << 8) + M + row;
-}
-static inline uint16_t nonce_A_gen(const size_t row, const size_t column){
-    return (row << 8) + column;
-}
-static inline uint16_t nonce_s_gen(const size_t nonce_offset, const size_t column){
-    return nonce_offset + column;
-}
-static inline uint16_t nonce_e_gen(const size_t nonce_offset, const size_t row){
-    return nonce_offset + M + row;
-}
+int crypto_sign_keypair_internal(uint8_t *vk, uint8_t *sk,
+                                 uint8_t seed[HAETAE_SEEDBYTES]) {
+  uint8_t seedbuf[2 * HAETAE_SEEDBYTES + HAETAE_CRHBYTES] = {0};
+  uint16_t counter = 0;
+  const uint8_t *rhoprime, *sigma, *key;
+  polyvecm A[HAETAE_K], s1, s1hat;
+  polyveck b, s2;
+#if (HAETAE_MODE == HAETAE_MODE2) || (HAETAE_MODE == HAETAE_MODE3)
+  polyveck a, b0;
+#elif HAETAE_MODE == HAETAE_MODE5
+  polyveck s2hat;
+#endif
+  xof256_state state;
 
-static void pointwise_montgomery_by_A_gen_elem_frozen(poly *dest, 
-                                const uMatrixPointerM_frozen agenptr, 
-                                const size_t row, const size_t column, const poly *src){
-#ifdef ENABLE_KEYPAIR_MATRIX_BUFFER
-    poly_pointwise_montgomery_mixed(dest, &agenptr.vec[row].vec[column], src);
-#else
-    poly_frozen a_gen_elem;
-    poly_uniform_frozen(&a_gen_elem, agenptr.seed, nonce_A_gen(row, column));
-    poly_pointwise_montgomery_mixed(dest, &a_gen_elem, src);
-#endif /* ENABLE_KEYPAIR_MATRIX_BUFFER */
-}
+  // Get seed_A
+  memcpy(seedbuf, seed, HAETAE_SEEDBYTES);
 
-// ###################################################################
-// ###################################################################
-// ###################################################################
-// ###################################################################
+  // Sample seeds with entropy \rho
+  xof256_absorb_once(&state, seedbuf, HAETAE_SEEDBYTES);
+  xof256_squeeze(seedbuf, 2 * HAETAE_SEEDBYTES + HAETAE_CRHBYTES, &state);
+
+  rhoprime = seedbuf;
+  sigma = rhoprime + HAETAE_SEEDBYTES;
+  key = sigma + HAETAE_CRHBYTES;
+
+  // Expand Matrix A0 and vector a
+  polymatkm_expand_matA(A, rhoprime);
+
+#if (HAETAE_MODE == HAETAE_MODE2) || (HAETAE_MODE == HAETAE_MODE3)
+  /**********************************************
+   * If there is rounding (D > 0), we need another polyveck a.
+   * Then, b = a + A0 * s1 + s2 and the lower D bits are
+   * rounded from b. The lower D bits are subsequently
+   * subtracted from s2.
+   **********************************************/
+  polyveck_expand_vecA(&a, rhoprime);
+
+reject:
+  // Sample secret vectors s1 and s2
+  polyvecmk_expand_S(&s1, &s2, sigma, counter);
+  counter += HAETAE_M + HAETAE_K;
+
+  // b = a + A0 * s1 + s2 mod q
+  s1hat = s1;
+  polyvecm_ntt(&s1hat);
+  polymatkm_pointwise_montgomery(&b, A, &s1hat);
+  polyveck_invntt_tomont(&b);
+  polyveck_add(&b, &b, &s2);
+  polyveck_add(&b, &b, &a);
+  polyveck_freeze(&b);
+
+  // round off D bits
+  polyveck_decompose_vk(&b0, &b);
+  polyveck_sub(&s2, &s2, &b0);
+
+  int64_t squared_singular_value = polyvecmk_sk_singular_value(&s1, &s2);
+  if (squared_singular_value > HAETAE_GAMMA * HAETAE_GAMMA * HAETAE_N) {
+    goto reject;
+  }
+#elif HAETAE_MODE == HAETAE_MODE5
+  /**********************************************
+   * If there is no rounding (D == 0), we store
+   * -2b directly in NTT domain into the public key.
+   **********************************************/
+reject:
+  // Sample secret vectors s1 and s2
+  polyvecmk_expand_S(&s1, &s2, sigma, counter);
+  counter += HAETAE_M + HAETAE_K;
+  int64_t squared_singular_value = polyvecmk_sk_singular_value(&s1, &s2);
+  if (squared_singular_value > HAETAE_GAMMA * HAETAE_GAMMA * HAETAE_N) {
+    goto reject;
+  }
+
+  // b = A0 * s1 + s2 mod q
+  s1hat = s1;
+  s2hat = s2;
+  polyvecm_ntt(&s1hat);
+  polyveck_ntt(&s2hat);
+  polymatkm_pointwise_montgomery(&b, A, &s1hat);
+  polyveck_frommont(&b);
+  polyveck_add(&b, &b, &s2hat);
+  polyveck_double_negate(&b);
+  polyveck_caddq(&b); // directly compute and store NTT(-2b)
+#endif
+
+  pack_vk(vk, &b, rhoprime);
+  pack_sk(sk, vk, &s1, &s2, key);
+
+  return 0;
+}
 
 /*************************************************
  * Name:        crypto_sign_keypair
@@ -93,780 +130,419 @@ static void pointwise_montgomery_by_A_gen_elem_frozen(poly *dest,
  * Description: Generates public and private key.
  *
  * Arguments:   - uint8_t *pk: pointer to output public key (allocated
- *                             array of CRYPTO_PUBLICKEYBYTES bytes)
+ *              array of HAETAE_CRYPTO_PUBLICKEYBYTES bytes)
  *              - uint8_t *sk: pointer to output private key (allocated
- *                             array of CRYPTO_SECRETKEYBYTES bytes)
+ *              array of HAETAE_CRYPTO_SECRETKEYBYTES bytes)
  *
  * Returns 0 (success)
+ *
+ * Specification: Implements @[Algorithm 51, KeyGen]
  **************************************************/
-
 int crypto_sign_keypair(uint8_t *pk, uint8_t *sk) {
-    uint8_t seedbuf[2 * SEEDBYTES + CRHBYTES] = {0};
-    uint16_t nonce = 0;
-    const uint8_t *rhoprime;
-    const uint8_t *sigma;
-    const uint8_t *key;
-    polyvecm s_gen;
-    polyveck e_gen;
-    polyveck b;
-    poly temp_poly;
+  int ret = 0;
+  uint8_t seed[HAETAE_SEEDBYTES] = {0};
 
-#if D > 0
-    polyveck a;
-#endif
-#ifdef ENABLE_KEYPAIR_MATRIX_BUFFER
-    polyvecm_frozen A_gen[K];
-    uMatrixPointerM_frozen A_gen_ptr = { .vec = A_gen };
-#else
-    uMatrixPointerM_frozen A_gen_ptr = { .seed = seedbuf };
-#endif
+  randombytes(seed, HAETAE_SEEDBYTES);
 
-    // Get entropy \rho
-    randombytes(seedbuf, SEEDBYTES);
-    // Sample seeds with entropy \rho
-    generate_seed_from_one_source(seedbuf, 2 * SEEDBYTES + CRHBYTES, seedbuf, SEEDBYTES);
+  ret = crypto_sign_keypair_internal(pk, sk, seed);
 
-    rhoprime = seedbuf;
-    sigma = rhoprime + SEEDBYTES;
-    key = sigma + CRHBYTES;
-
-#ifdef ENABLE_KEYPAIR_MATRIX_BUFFER
-    // Expand Matrix A0 and vector a
-    for (size_t row = 0; row < K; ++row){
-        for (size_t column = 0; column < M; ++column){
-            poly_uniform_frozen(&A_gen[row].vec[column], rhoprime, nonce_A_gen(row, column));
-        }
-    }
-#endif
-
-#if D > 0
-    /**********************************************
-     * If there is rounding (D > 0), we need another polyveck a.
-     * Then, b = a + A0 * s_gen + e_gen and the lower D bits are
-     * rounded from b. The lower D bits are subsequently
-     * subtracted from e_gen.
-     **********************************************/
-    for (size_t row = 0; row < K; ++row){
-        poly_uniform(&a.vec[row], rhoprime, nonce_a(row));
-    }
-
-reject:
-    // Sample secret vectors s_gen and e_gen
-    for (size_t column = 0; column < M; column++){
-        poly_uniform_eta(&s_gen.vec[column], sigma, nonce_s_gen(nonce, column));
-    }
-    for (size_t row = 0; row < K; row++){
-        poly_uniform_eta(&e_gen.vec[row], sigma, nonce_e_gen(nonce, row));
-    }
-    nonce += M + K;
-
-    // b = a + A0 * s_gen + e_gen mod q
-   {
-        poly s_gen_hat_elem;
-      
-        // column 0
-        s_gen_hat_elem = s_gen.vec[0];
-        poly_ntt(&s_gen_hat_elem);
-        for (size_t row = 0; row < K; row++){
-            pointwise_montgomery_by_A_gen_elem_frozen(&b.vec[row], A_gen_ptr, row, 0, &s_gen_hat_elem); 
-        }
-        // columns 1 to M-1
-        for (size_t column = 1; column < M; column++){
-            s_gen_hat_elem = s_gen.vec[column];
-            poly_ntt(&s_gen_hat_elem);
-            for (size_t row = 0; row < K; row++){
-                pointwise_montgomery_by_A_gen_elem_frozen(&temp_poly, A_gen_ptr, row, column, &s_gen_hat_elem); 
-                poly_add(&b.vec[row], &b.vec[row], &temp_poly);
-            }
-        }
-    }
-
-    for (size_t row = 0; row < K; row++){
-        poly *b_elem = &b.vec[row];
-        poly *e_gen_elem = &e_gen.vec[row];
-
-        poly_invntt_tomont(b_elem);
-        poly_add(b_elem, b_elem, e_gen_elem);
-        poly_add(b_elem, b_elem, &a.vec[row]);
-        poly_freeze(b_elem);
-        // round off D bits
-        poly_decompose_vk(&temp_poly, b_elem);
-        poly_sub(e_gen_elem, e_gen_elem, &temp_poly);
-    }
-
-    int64_t squared_singular_value = polyvecmk_sqsing_value(&s_gen, &e_gen);
-    if (squared_singular_value > GAMMA * GAMMA * N) {
-        goto reject;
-    }
-#else
-    /**********************************************
-     * If there is no rounding (D == 0), we store
-     * -2b directly in NTT domain into the public key.
-     **********************************************/
-reject:
-    // Sample secret vectors s_gen and e_gen
-    // Sample secret vectors s_gen and e_gen
-    for (size_t column = 0; column < M; column++){
-        poly_uniform_eta(&s_gen.vec[column], sigma, nonce_s_gen(nonce, column));
-    }
-    for (size_t row = 0; row < K; row++){
-        poly_uniform_eta(&e_gen.vec[row], sigma, nonce_e_gen(nonce, row));
-    }
-    nonce += M + K;
-
-    int64_t squared_singular_value = polyvecmk_sqsing_value(&s_gen, &e_gen);
-    if (squared_singular_value > GAMMA * GAMMA * N) {
-        goto reject;
-    }
-
-    {
-        // b = A0 * s_gen
-        poly s_gen_hat_elem;
-
-        // column 0
-        s_gen_hat_elem = s_gen.vec[0];
-        poly_ntt(&s_gen_hat_elem);
-        for (size_t row = 0; row < K; row++){
-            pointwise_montgomery_by_A_gen_elem_frozen(&b.vec[row], A_gen_ptr, row, 0, &s_gen_hat_elem);
-        }
-        // columns 1 to M-1
-        for (size_t column = 1; column < M; column++){
-            s_gen_hat_elem = s_gen.vec[column];
-            poly_ntt(&s_gen_hat_elem);
-            for (size_t row = 0; row < K; row++){
-                pointwise_montgomery_by_A_gen_elem_frozen(&temp_poly, A_gen_ptr, row, column, &s_gen_hat_elem);
-                poly_add(&b.vec[row], &b.vec[row], &temp_poly);
-            }
-        }
-    }    
-
-    // b += e_gen mod q
-    for (size_t row = 0; row < K; row++){
-        poly s2hat_elem;
-
-        s2hat_elem = e_gen.vec[row];
-        poly_ntt(&s2hat_elem);
-        poly_frommont(&b.vec[row]);
-        poly_add(&b.vec[row], &b.vec[row], &s2hat_elem);
-        poly_double_negate(&b.vec[row]);        
-        poly_caddq(&b.vec[row]);        
-    }
-
-#endif
-
-    pack_pk(pk, &b, rhoprime);
-    pack_sk(sk, pk, &s_gen, &e_gen, key);
-
-    return 0;
-}
-
-
-// ###################################################################
-// ###################################################################
-// ###################################################################
-// ###################################################################
-
-/*************************************************
- * Name:        make_hint_veck
- *
- * Description: Make hint from z2, Ay and highbits(z2)
- *
- * Arguments:   - polyveck *h:          pointer to the hint
- *              - polyfixveck *z2:      pointer to z2
- *              - polyveck *Ay:         pointer to Ay
- *              - polyveck *highbits:   highbits(z2)
- *  
- * Returns void
- **************************************************/
-static void make_hint_veck(polyveck *h, const polyfixveck *z2, const polyveck *Ay, const polyveck *highbits){
-    poly z2rnd;// round of z2
-    poly htmp; 
-
-    for (size_t row = 0; row < K; row ++){
-        // Round z2
-        polyfix_round(&z2rnd, &z2->vec[row]);
-        // recover htmp == A1 * round(z1) - qcj mod 2q
-        poly_double(&z2rnd);
-        poly_sub(&htmp, &Ay->vec[row], &z2rnd);
-        poly_freeze2q(&htmp);
-
-        // HighBits of (A * round(z) - qcj mod 2q) and (A1 * round(z1) - qcj mod 2q)
-        poly_highbits_hint(&htmp, &htmp);
-        poly_sub(&h->vec[row], &highbits->vec[row], &htmp);
-        poly_caddDQ2ALPHA(&h->vec[row]);
-    }
+  return ret;
 }
 
 /*************************************************
- * Name:        decompose_z1_vecl
+ * Name:        crypto_sign_signature_internal
  *
- * Description: decompose z1 into LowBits and HighBits
+ * Description: Computes signature. Internal API.
  *
- * Arguments:   - polyvecl *lb_z1:  pointer to LowBits(z1) 
- *              - polyvecl *hb_z1:  pointer to HighBits(z1)
- *              - polyfixvecl *z1:  pointer to z1
- *  
- * Returns void
- **************************************************/
-static void decompose_z1_vecl(polyvecl *lb_z1, polyvecl *hb_z1, const polyfixvecl *z1){
-    poly z1rnd; // rounded polynomial of z1
-
-    for (size_t column = 0; column < L; column++){
-        polyfix_round(&z1rnd, &z1->vec[column]);
-        poly_lowbits(&lb_z1->vec[column], &z1rnd);
-        poly_highbits(&hb_z1->vec[column], &z1rnd);
-    }
-}
-
-/*************************************************
- * Name:        compute_z_veckl
- *
- * Description: Compute z1 and z2, where z == (z1 || z2) is a candidate
- *              for the uncompressed signature.
- *
- * Arguments:   - polyfixvecl *z1:  part of the signature candidate
- *              - polyfixveck *z2:  part of the signature candidate
- *              - poly *c:          challenge polynomial
- *              - polyvecm *s1:     part of the secret key, NTT domain
- *              - polyveck *s2:     part of the secret key, NTT domain
- *              - polyfixvecl *y1:  part of the uniform samples from the hyperball
- *              - polyfixveck *y2:  part of the uniform samples from the hyperball
- *              - uint8_t b:        a random byte for bimodal selection using byte mask 0x01
- * 
- * Returns void
- **************************************************/
-static void compute_z_veckl(polyfixvecl *z1, polyfixveck *z2, const poly *c, 
-                            const polyvecm *s1, const polyveck *s2, 
-                            const polyfixvecl *y1, const polyfixveck *y2, const uint8_t b){
-    poly t;
-    poly chat;
-
-    // t = (c * s).vec[i] = (c * (1 || s1 || s2)).vec[i]
-    // z = y + (-1)^b (c * s) = z1 || z2
-
-    chat = *c;
-    poly_ntt(&chat);
-
-    // z1[0]
-    t = *c;
-    poly_cneg(&t, b & 1);
-    polyfix_add(&z1->vec[0], &y1->vec[0], &t);
-
-    // z1.vec[1..L-1]
-    for (size_t column = 1; column < L; ++column) {
-        poly_pointwise_montgomery(&t, &chat, &s1->vec[column - 1]);
-        poly_invntt_tomont(&t);
-        poly_cneg(&t, b & 1);
-        polyfix_add(&z1->vec[column], &y1->vec[column], &t);
-    }
-
-    // z2.vec[0..K-1]
-    for (size_t row = 0; row < K; row++) {
-        poly_pointwise_montgomery(&t, &s2->vec[row], &chat);
-        poly_invntt_tomont(&t);
-        poly_cneg(&t, b & 1);
-        polyfix_add(&z2->vec[row], &y2->vec[row], &t);
-    }
-};
-
-/*************************************************
- * Name:        is_norm_of_z_geq_big_b_prime
- *
- * Description: Test whether norm(z) >= B'
- *
- * Arguments:   - polyfixvecl *z1:  part of the signature candidate
- *              - polyfixveck *z2:  part of the signature candidate
- *
- * Returns 0 if the test passed, 1 if the signature needs to be rejected.
- **************************************************/
-static uint64_t is_norm_of_z_geq_big_b_prime(const polyfixvecl *z1, const polyfixveck *z2){
-    uint64_t reject1;
-
-    // reject if norm(z) >= B'
-    reject1 = ((uint64_t)B1SQ * LN * LN - polyfixveclk_sqnorm2(z1, z2)) >> 63;
-    reject1 &= 1;  // get the sign
-    return reject1;
-};
-
-/*************************************************
- * Name:        is_rejected_in_intersection
- *
- * Description: In bimodal sampling the sample may lie in the intersection of both
- *              hyperballs of radius r', in which case the sample is rejected
- *              with a probability of 50%.
- *
- * Arguments:   - polyfixvecl *z1:  part of the signature candidate
- *              - polyfixveck *z2:  part of the signature candidate
- *              - polyfixvecl *y1:  part of the uniform samples from the hyperball
- *              - polyfixveck *y2:  part of the uniform samples from the hyperball
- *              - uint8_t b:        a random byte for rejection in the overlap
- *                                  region using byte mask 0x02
- *
- * Returns 0 if the test passed, 1 if the signature needs to be rejected.
- **************************************************/
-static uint64_t is_rejected_in_intersection(const polyfixvecl *z1, const polyfixveck *z2, const polyfixvecl *y1, const polyfixveck *y2, uint8_t b){
-    polyfix tmp;
-    uint64_t reject2;
-    uint64_t sqnorm2 = - (uint64_t)B0SQ * LN * LN;
-
-    for (size_t column = 0; column < L; column++){
-        polyfix_double(&tmp, &z1->vec[column]);
-        polyfix_sub(&tmp, &tmp, &y1->vec[column]);
-        sqnorm2 += polyfix_sqnorm2(&tmp);
-    }
-
-    for (size_t row = 0; row < K; row++){
-        polyfix_double(&tmp, &z2->vec[row]);
-        polyfix_sub(&tmp, &tmp, &y2->vec[row]);
-        sqnorm2 += polyfix_sqnorm2(&tmp);
-    }
-
-    // reject if norm(2z-y) < B and b' = 0
-    reject2 = sqnorm2 >> 63;
-    reject2 &= 1; // get the sign, 1 indicates that the sample lies in the overlap region
-    reject2 &= (b & 0x2) >> 1;  // if sample is in the overlap region, reject with 50% probability
-    return reject2;
-}
-
-
-/*************************************************
- * Name:        multiply_a1_by_rounded_y1_mod_q
- *
- * Description: Computes Ay = A1 * round(y1) mod q and a copy of round(y1)[0].
- *              Subfunction of compute_challenge_polynomial()
- *
- * Arguments:   - poly *z1rnd0:     round(y1)[0], not in Montgomery domain
- *              - polyveck *Ay:     vector mod q
- *              - polyfixvecl *y1:  part of the hyperball samples
- *              - polyvecl A1[K]:   matrix A1
- * 
- * Returns void
- **************************************************/
-static void multiply_a1_by_rounded_y1_mod_q(poly *z1rnd0, 
-                                            polyveck *Ay, 
-                                            const polyfixvecl *y1, 
-                                            uMatrixPointerL_frozen a1ptr){
-    poly z1rnd;
-    poly t;
-#ifdef ENABLE_SIGNATURE_MATRIX_BUFFER
-    const poly_frozen *a1_poly_ptr;
-#else
-    poly_frozen a1_poly;
-    poly_frozen *a1_poly_ptr = &a1_poly;
-#endif /* ENABLE_SIGNATURE_MATRIX_BUFFER */
-
-
-    polyfix_round(&z1rnd, &y1->vec[0]);
-    poly_clone(z1rnd0, &z1rnd);
-    poly_ntt(&z1rnd);
-
-    for (size_t row = 0; row < K; ++row) {
-#ifdef ENABLE_SIGNATURE_MATRIX_BUFFER
-        a1_poly_ptr = &a1ptr.vec[row].vec[0];
-#else
-        expand_pk_matrix_elem_frozen(a1_poly_ptr, row, 0, a1ptr.seed);
-#endif /* ENABLE_SIGNATURE_MATRIX_BUFFER */
-        poly_pointwise_montgomery_mixed(&Ay->vec[row], a1_poly_ptr, &z1rnd);
-    }
-
-    for (size_t column = 1; column < L; ++column) {
-        polyfix_round(&z1rnd, &y1->vec[column]);
-        poly_ntt(&z1rnd);
-        for (size_t row = 0; row < K; ++row) {
-#ifdef ENABLE_SIGNATURE_MATRIX_BUFFER
-            a1_poly_ptr = &a1ptr.vec[row].vec[column];
-#else
-            expand_pk_matrix_elem_frozen(a1_poly_ptr, row, column, a1ptr.seed);
-#endif /* ENABLE_SIGNATURE_MATRIX_BUFFER */
-            poly_pointwise_montgomery_mixed(&t, a1_poly_ptr, &z1rnd);
-            poly_add(&Ay->vec[row], &Ay->vec[row], &t);
-        }
-    }
-    polyveck_invntt_tomont(Ay);
-};
-
-/*************************************************
- * Name:        accumulate_two_times_rounded_y2_mod_q
- *
- * Description: Accumulates 2 * round(y2) mod q to Ay 
- *              Subfunction of compute_challenge_polynomial()
- *
- * Arguments:   - polyveck *Ay:     vector mod q
- *              - polyfixveck *y2:  part of the hyperball samples
- *
- * Returns void
- **************************************************/
-static void accumulate_two_times_rounded_y2_mod_q(polyveck *Ay, const polyfixveck *y2){
-	polyveck z2rnd;
-    
-    // Round y2
-    polyfixveck_round(&z2rnd, y2);
-    
-    // Ay += 2 * round(y2) mod q
-    polyveck_double(&z2rnd);
-    polyveck_add(Ay, Ay, &z2rnd);
-}
-
-/*************************************************
- * Name:        compute_challenge_polynomial
- *
- * Description: Computes a challenge polynomial, Ay and HighBits(hint)
- *
- * Arguments:   - poly *c:                      challenge polynomial
- *              - polyveck *Ay:                 A1 * round(y1) + 2 * round(y2) mod q
- *              - polyveck *highbits:           HighBits of hint (A * round(y) mod 2q)
- *              - const polyvecl *A1[K]:        public key matrix
- *              - const polyfixvecl *y1:        part of the hyperball samples
- *              - const polyfixveck *y2:        part of the hyperball samples
- *              - const uint8_t *mu[SEEDBYTES]: seed generated from secret key and message
+ * Arguments:   - uint8_t *sig: pointer to output signature (of length
+ *              HAETAE_CRYPTO_BYTES)
+ *              - size_t *siglen: pointer to output length of signature
+ *              - uint8_t *m: pointer to message to be signed
+ *              - size_t mlen: length of message
+ *              - uint8_t *pre: pointer to prefix string
+ *              - size_t prelen: length of prefix string
+ *              - uint8_t *rnd: pointer to random seed
+ *              - uint8_t *sk: pointer to bit-packed secret key
  *
  * Returns 0 (success)
+ *
+ * Specification: Implements @[Algorithm 55, SignInternal]
  **************************************************/
-static void compute_challenge_polynomial(poly *c, polyveck *Ay, polyveck *highbits, 
-                                   const uMatrixPointerL_frozen a1ptr, const polyfixvecl *y1, 
-                                   const polyfixveck *y2, const uint8_t mu[SEEDBYTES]){
-	uint8_t buf[POLYVECK_HIGHBITS_PACKEDBYTES + POLYC_PACKEDBYTES] = {0};
-	poly z1rnd0;
-	poly lsb;
+int crypto_sign_signature_internal(uint8_t *sig, size_t *siglen,
+                                   const uint8_t *m, size_t mlen,
+                                   const uint8_t *pre, size_t prelen,
+                                   const uint8_t rnd[HAETAE_SEEDBYTES],
+                                   const uint8_t *sk) {
 
-    // A * round(y) mod q = A1 * round(y1) + 2 * round(y2) mod q
-    multiply_a1_by_rounded_y1_mod_q(&z1rnd0, Ay, y1, a1ptr);
-    accumulate_two_times_rounded_y2_mod_q(Ay, y2);
+  uint8_t buf[HAETAE_POLYVECK_HIGHBITS_PACKEDBYTES + HAETAE_POLYC_PACKEDBYTES] =
+      {0};
+  uint8_t seedbuf[HAETAE_CRHBYTES] = {0}, key[HAETAE_SEEDBYTES] = {0};
+  uint8_t mu[HAETAE_CRHBYTES] = {0};
+  uint8_t b = 0; // bit 0: sign (-1)^b, bit 1: second rejection test
+  uint16_t counter = 0;
+  uint64_t reject1, reject2;
 
-    // recover A * round(y) mod 2q
-    polyveck_poly_fromcrt(Ay, Ay, &z1rnd0);
-    polyveck_freeze2q(Ay);
+  polyvecm s1;
+  polyvecl A1[HAETAE_K];
+  polyveck s2, highbits, Ay;
+  polyfixvecl y1;
+  polyfixveck y2;
+  polyveck h;
+  poly c, chat, cs, z1rnd0, lsb;
 
-    // HighBits of (A * round(y) mod 2q)
-    polyveck_highbits_hint(highbits, Ay);
+  // Buffers whose lifetimes do not overlap share memory: the hyperball
+  // samples (step 1) with z and round(z) (steps 2 to 4), and z1 with
+  // HighBits(z1) (step 4).
+  union {
+    uint64_t samples[HAETAE_HYPERBALL_SAMPLES];
+    struct {
+      union {
+        polyfixvecl z1;
+        polyvecl hb_z1;
+      } z1_hb;
+      polyfixveck z2;
+      polyvecl z1rnd; // round of z1
+      polyveck z2rnd; // round of z2
+    } v;
+  } ws;
+  polyfixvecl *const z1 = &ws.v.z1_hb.z1;
+  polyvecl *const hb_z1 = &ws.v.z1_hb.hb_z1;
+  polyfixveck *const z2 = &ws.v.z2;
+  polyvecl *const z1rnd = &ws.v.z1rnd;
+  polyveck *const z2rnd = &ws.v.z2rnd;
 
-    // LSB(round(y_0) * j)
-    poly_lsb(&lsb, &z1rnd0);
+  xof256_state state;
 
-    // Pack HighBits of A * round(y) mod 2q and LSB of round(y0)
-    polyveck_pack_highbits(buf, highbits);
-    poly_pack_lsb(buf + POLYVECK_HIGHBITS_PACKEDBYTES, &lsb);
+  unsigned int i;
 
-    // c = challenge(HighBits(A * y mod 2q), LSB(round(y0) * j), mu)
-    poly_challenge(c, buf, mu);
+  // Unpack secret key
+  unpack_sk(A1, &s1, &s2, key, sk);
 
-    return;
-};
+  xof256_absorb_thrice(&state, sk, HAETAE_CRYPTO_PUBLICKEYBYTES, pre, prelen, m,
+                       mlen);
+  xof256_squeeze(mu, HAETAE_CRHBYTES, &state);
 
-/*************************************************
- * Name:        compress_and_pack_signature
- *
- * Description: Compress and pack the components of the signature
- *
- * Arguments:   - uint8_t *sig:   pointer to output signature (of length
- *                                CRYPTO_BYTES)
- *              - size_t *siglen: pointer to output length of signature
- *
- * Returns 0 (success) or 1 (fail)
- **************************************************/
-static int compress_and_pack_signature(
-    uint8_t *sig,
-    poly *c,
-    const polyfixvecl *z1,
-    const polyfixveck *z2,
-    const polyveck *Ay,
-    const polyveck *highbits
-){
-    polyvecl hb_z1, lb_z1;
-    polyveck h; 
-    /*------------------- 4. Make a hint and decompose z1 -----------*/
-    make_hint_veck(&h, z2, Ay, highbits);
-    decompose_z1_vecl(&lb_z1, &hb_z1, z1);
+  xof256_absorb_thrice(&state, key, HAETAE_SEEDBYTES, rnd, HAETAE_SEEDBYTES, mu,
+                       HAETAE_CRHBYTES);
+  xof256_squeeze(seedbuf, HAETAE_CRHBYTES, &state);
 
-    /*------------------ Pack signature -----------------------------*/
-    if (pack_sig(sig, c, &lb_z1, &hb_z1, &h)) { // reject if signature is too big
-        return 1;
+  polyvecm_ntt(&s1);
+  polyveck_ntt(&s2);
+
+reject:
+
+  /*------------------ 1. Sample y1 and y2 from hyperball ------------------*/
+  counter =
+      polyfixveclk_sample_hyperball(&y1, &y2, &b, seedbuf, counter, ws.samples);
+
+  /*------------------- 2. Compute a challenge c ---------------------------*/
+  // Round y1 and y2
+  polyfixvecl_round(z1rnd, &y1);
+  polyfixveck_round(z2rnd, &y2);
+
+  // A * round(y) mod q = A1 * round(y1) + 2 * round(y2) mod q
+  z1rnd0 = z1rnd->vec[0];
+  polyvecl_ntt(z1rnd);
+  polymatkl_pointwise_montgomery(&Ay, A1, z1rnd);
+  polyveck_invntt_tomont(&Ay);
+  polyveck_double(z2rnd);
+  polyveck_add(&Ay, &Ay, z2rnd);
+
+  // recover A * round(y) mod 2q
+  polyveck_poly_fromcrt(&Ay, &Ay, &z1rnd0);
+  polyveck_freeze2q(&Ay);
+
+  // HighBits of (A * round(y) mod 2q)
+  polyveck_highbits_hint(&highbits, &Ay);
+
+  // LSB(round(y_0) * j)
+  poly_lsb(&lsb, &z1rnd0);
+
+  // Pack HighBits of A * round(y) mod 2q and LSB of round(y0)
+  pack_vec_highbits(buf, &highbits);
+  pack_poly_lsb(buf + HAETAE_POLYVECK_HIGHBITS_PACKEDBYTES, &lsb);
+
+  // c = challenge(highbits, lsb, mu)
+  poly_challenge(&c, buf, mu);
+
+  /*------------------- 3. Compute z = y + (-1)^b c * s --------------------*/
+  // cs = c * s = c * (1 || s1 || s2), one polynomial at a time
+  // z = (z1, z2) = y + (-1)^b cs
+  chat = c;
+  poly_ntt(&chat);
+
+  for (i = 0; i < HAETAE_L; ++i) {
+    if (i == 0) {
+      cs = c;
+    } else {
+      poly_pointwise_montgomery(&cs, &chat, &s1.vec[i - 1]);
+      poly_invntt_tomont(&cs);
     }
-    return 0;
+    poly_cneg(&cs, b & 1);
+    polyfix_add(&z1->vec[i], &y1.vec[i], &cs);
+  }
+  for (i = 0; i < HAETAE_K; ++i) {
+    poly_pointwise_montgomery(&cs, &s2.vec[i], &chat);
+    poly_invntt_tomont(&cs);
+    poly_cneg(&cs, b & 1);
+    polyfix_add(&z2->vec[i], &y2.vec[i], &cs);
+  }
+
+  // reject if ||z||^2 > B1^2 (scaled by LN^2)
+  reject1 = ((uint64_t)HAETAE_B1SQ * HAETAE_LN * HAETAE_LN -
+             polyfixveclk_sqnorm2(z1, z2)) >>
+            63;
+  reject1 &= 1;
+
+  // reject if ||2z - y||^2 < B0^2 (scaled by LN^2) and bit 1 of b is set
+  reject2 = (polyfixveclk_sqnorm2_2z_minus_y(z1, &y1, z2, &y2) -
+             (uint64_t)HAETAE_B0SQ * HAETAE_LN * HAETAE_LN) >>
+            63;
+  reject2 &= 1;
+  reject2 &= (b & 0x2) >> 1;
+
+  if (reject1 | reject2) {
+    goto reject;
+  }
+
+  /*------------------- 4. Make a hint -------------------------------------*/
+  // Round z1 and z2
+  polyfixvecl_round(z1rnd, z1);
+  polyfixveck_round(z2rnd, z2);
+
+  // recover A1 * round(z1) - qcj mod 2q
+  polyveck_double(z2rnd);
+  polyveck_sub(z2rnd, &Ay, z2rnd);
+  polyveck_freeze2q(z2rnd);
+
+  // HighBits of (A * round(z) - qcj mod 2q) and (A1 * round(z1) - qcj mod 2q)
+  polyveck_highbits_hint(z2rnd, z2rnd);
+  polyveck_sub(&h, &highbits, z2rnd);
+  polyveck_caddDQ2ALPHA(&h);
+
+  /*------------------ Decompose(z1) and Pack signature -------------------*/
+  polyvecl_highbits(hb_z1, z1rnd);
+  polyvecl_lowbits(z1rnd, z1rnd); // in place: z1rnd holds LowBits(z1)
+
+  if (pack_sig(sig, &c, z1rnd, hb_z1,
+               &h)) { // reject if the signature cannot be encoded
+    goto reject;
+  }
+  *siglen = HAETAE_CRYPTO_BYTES;
+
+  return 0;
 }
 
 /*************************************************
- * Name:        crypto_sign_signature
+ * Name:        crypto_sign_signature_ctx
  *
  * Description: Computes signature.
  *
  * Arguments:   - uint8_t *sig:   pointer to output signature (of length
- *                                CRYPTO_BYTES)
+ *                                HAETAE_CRYPTO_BYTES)
  *              - size_t *siglen: pointer to output length of signature
  *              - uint8_t *m:     pointer to message to be signed
  *              - size_t mlen:    length of message
+ *              - uint8_t *ctx:   pointer to context string
+ *              - size_t ctxlen:  length of context string
  *              - uint8_t *sk:    pointer to bit-packed secret key
  *
- * Returns 0 (success)
+ * Returns 0 (success) or -1 (invalid context string: ctxlen > 255, or ctx ==
+ * NULL with ctxlen > 0)
+ *
+ * Specification: Implements @[Algorithm 52, Sign]
  **************************************************/
+int crypto_sign_signature_ctx(uint8_t *sig, size_t *siglen, const uint8_t *m,
+                              size_t mlen, const uint8_t *ctx, size_t ctxlen,
+                              const uint8_t *sk) {
+  uint8_t pre[256];
+  uint8_t rnd[HAETAE_SEEDBYTES];
 
-int crypto_sign_signature(uint8_t *sig, size_t *siglen, const uint8_t *m,
-                          size_t mlen, const uint8_t *sk) {
+  if (ctxlen > 255 || (ctx == NULL && ctxlen > 0))
+    return -1;
 
-    uint8_t seedbuf[CRHBYTES] = {0}, key[SEEDBYTES] = {0};
-    uint8_t mu[SEEDBYTES] = {0};
-    poly c = { .coeffs = {0} }; // challenge polynomial
-    uint8_t b = 0;              // some random bits
-    uint16_t counter = 0;
-    uint64_t reject1, reject2;
+  /* Prepare pre = (ctxlen, ctx) */
+  pre[0] = ctxlen;
+  if (ctxlen > 0)
+    memcpy(pre + 1, ctx, ctxlen);
 
-    polyvecm s1;
-    polyveck s2, highbits, Ay;
-    polyfixvecl y1, z1;
-    polyfixveck y2, z2;
+  randombytes(rnd, HAETAE_SEEDBYTES);
 
-#ifdef ENABLE_SIGNATURE_MATRIX_BUFFER
-    polyvecl_frozen A1[K];
-    uMatrixPointerL_frozen a1ptr = { .vec = A1};
-#else
-    uMatrixPointerL_frozen a1ptr = { .seed = sk };
-#endif /* ENABLE_SIGNATURE_MATRIX_BUFFER */
-
-    // Unpack secret key
-    unpack_sk(a1ptr.vec, &s1, &s2, key, sk);
-
-#ifndef ENABLE_SIGNATURE_MATRIX_BUFFER
-#endif /* ENABLE_SIGNATURE_MATRIX_BUFFER */
-    
-    generate_seed_from_two_sources(mu, SEEDBYTES, sk, CRYPTO_PUBLICKEYBYTES, m, mlen);
-    generate_seed_from_two_sources(seedbuf, CRHBYTES, key, SEEDBYTES, mu, SEEDBYTES);
-
-    polyvecm_ntt(&s1);
-    polyveck_ntt(&s2);
-
-reject:
-
-    /*------------------ 1. Sample y1 and y2 from hyperball ------------------*/
-
-#ifdef ENABLE_TWO_PASS_SAMPLING
-    counter = polyfixveclk_two_pass_sample_hyperball(&y1, &y2, &b, seedbuf, counter);
-#else
-    counter = polyfixveclk_sample_hyperball(&y1, &y2, &b, seedbuf, counter);
-#endif
-
-    /*------------------- 2. Compute a challenge c --------------------------*/
-    compute_challenge_polynomial(&c, &Ay, &highbits, a1ptr, &y1, &y2, mu);
-
-    /*------------------- 3. Compute z = y + (-1)^b c * s --------------------*/
-    compute_z_veckl(&z1, &z2, &c, &s1, &s2, &y1, &y2, b);
-
-    reject1 = is_norm_of_z_geq_big_b_prime(&z1, &z2);
-    reject2 = is_rejected_in_intersection(&z1, &z2, &y1, &y2, b);
-    if (reject1 | reject2) {
-        goto reject;
-    }
-
-    /*------------------- 4. Make a hint and decompose z1 -----------*/
-    /*------------------ Pack signature -----------------------------*/
-    if (0 != compress_and_pack_signature(sig, &c, &z1, &z2, &Ay, &highbits)) 
-        goto reject;
-    *siglen = CRYPTO_BYTES;
-
-    return 0;
+  return crypto_sign_signature_internal(sig, siglen, m, mlen, pre, 1 + ctxlen,
+                                        rnd, sk);
 }
 
-// ###################################################################
-// ###################################################################
-// ###################################################################
-// ###################################################################
-
 /*************************************************
- * Name:        crypto_sign
+ * Name:        crypto_sign_ctx
  *
  * Description: Compute signed message.
  *
  * Arguments:   - uint8_t *sm: pointer to output signed message (allocated
- *                             array with CRYPTO_BYTES + mlen bytes),
+ *                             array with HAETAE_CRYPTO_BYTES + mlen bytes),
  *                             can be equal to m
  *              - size_t *smlen: pointer to output length of signed
  *                               message
  *              - const uint8_t *m: pointer to message to be signed
  *              - size_t mlen: length of message
+ *              - const uint8_t *ctx: pointer to context string
+ *              - size_t ctxlen: length of context string
  *              - const uint8_t *sk: pointer to bit-packed secret key
  *
- * Returns 0 (success)
+ * Returns 0 (success) or -1 (invalid context string; *smlen is set to 0)
  **************************************************/
-int crypto_sign(uint8_t *sm, size_t *smlen, const uint8_t *m, size_t mlen,
-                     const uint8_t *sk) {
-    size_t i;
+int crypto_sign_ctx(uint8_t *sm, size_t *smlen, const uint8_t *m, size_t mlen,
+                    const uint8_t *ctx, size_t ctxlen, const uint8_t *sk) {
+  size_t i;
 
-    for (i = 0; i < mlen; ++i)
-        sm[CRYPTO_BYTES + mlen - 1 - i] = m[mlen - 1 - i];
-    crypto_sign_signature(sm, smlen, sm + CRYPTO_BYTES, mlen, sk);
-    *smlen += mlen;
-    return 0;
-}
-
-// ###################################################################
-// ###################################################################
-// ###################################################################
-// ###################################################################
-
-static int unpack_cseed_z1_and_hint_from_sig(poly *c, polyvecl *z1, 
-               polyveck *h, const uint8_t sig[CRYPTO_BYTES]){
-    polyvecl highbits_z1;
-
-    // Unpack signature and Check conditions -- low bits are stored in z1
-    if (unpack_sig(c, &highbits_z1, z1, h, sig)) {
-        return -1;
-    }
-
-    // Compose z1 out of HighBits(z1) and LowBits(z1)
-    for (size_t row = 0; row < L; ++row) {
-        poly_compose(&z1->vec[row], &z1->vec[row], &highbits_z1.vec[row]);
-    }
-    return 0;
-}
-
-static void poly_csubDQ2ALPHA(poly *v) {
-    unsigned int j;
-    for (j = 0; j < N; j++) {
-        v->coeffs[j] -=
-            ~((v->coeffs[j] - (DQ - 2) / ALPHA_HINT) >> 31) &
-            ((DQ - 2) / ALPHA_HINT);
-    }
-}
-
-static void poly_mul_alpha(poly *v, const poly *u) {
-    unsigned int j;
-    for (j = 0; j < N; j++) {
-        v->coeffs[j] = u->coeffs[j] * ALPHA_HINT;
-    }
-}
-
-static void poly_div2(poly *v) {
-    unsigned j;
-        for (j = 0; j < N; ++j)
-            v->coeffs[j] >>= 1;
+  if (ctxlen > 255 || (ctx == NULL && ctxlen > 0)) {
+    *smlen = 0;
+    return -1;
+  }
+  for (i = 0; i < mlen; ++i)
+    sm[HAETAE_CRYPTO_BYTES + mlen - 1 - i] = m[mlen - 1 - i];
+  int ret = crypto_sign_signature_ctx(sm, smlen, sm + HAETAE_CRYPTO_BYTES, mlen,
+                                      ctx, ctxlen, sk);
+  *smlen += mlen;
+  return ret;
 }
 
 /*************************************************
- * Name:        crypto_sign_verify
+ * Name:        crypto_sign_verify_internal
  *
  * Description: Verifies signature.
  *
- * Arguments:   - uint8_t *m: pointer to input signature
+ * Arguments:   - const uint8_t *sig: pointer to input signature
  *              - size_t siglen: length of signature
  *              - const uint8_t *m: pointer to message
  *              - size_t mlen: length of message
- *              - const uint8_t *pk: pointer to bit-packed public key
+ *              - const uint8_t *pre: pointer to prefix string
+ *              - size_t prelen: length of prefix string
+ *              - const uint8_t *vk: pointer to bit-packed public key
  *
  * Returns 0 if signature could be verified correctly and -1 otherwise
+ *
+ * Specification: Implements @[Algorithm 56, VerifyInternal]
  **************************************************/
-int crypto_sign_verify(const uint8_t *sig, size_t siglen, const uint8_t *m,
-                       size_t mlen, const uint8_t *pk) {
-    unsigned int i;
-    uint8_t buf[POLYVECK_HIGHBITS_PACKEDBYTES + POLYC_PACKEDBYTES] = {0};
-    uint8_t rhoprime[SEEDBYTES] = {0};
-    uint8_t mu[SEEDBYTES] = {0};
-    uint64_t sqnorm2;
-    polyvecl z1;
-    polyveck b; 
-    polyveck highbits; 
-    polyveck h; 
-    polyveck z2; 
-    polyveck w;
-    poly c;
-    poly cprime;
-    poly wprime;
+int crypto_sign_verify_internal(const uint8_t *sig, size_t siglen,
+                                const uint8_t *m, size_t mlen,
+                                const uint8_t *pre, size_t prelen,
+                                const uint8_t *vk) {
+  unsigned int i;
+  uint8_t buf[HAETAE_POLYVECK_HIGHBITS_PACKEDBYTES + HAETAE_POLYC_PACKEDBYTES] =
+      {0};
+  uint8_t mu[HAETAE_SEEDBYTES];
+  uint64_t sqnorm2;
+  polyvecl A1[HAETAE_K], highz, lowz, z1;
+  polyveck highbits, h, z2, w;
+  poly c, cprime, wprime;
 
-    // Check signature length
-    if (siglen != CRYPTO_BYTES) {
-        return -1;
+  xof256_state state;
+
+  // Check signature length
+  if (siglen != HAETAE_CRYPTO_BYTES) {
+    return -1;
+  }
+  /*------------------- 1. Recover A1 --------------------------------------*/
+  // A1 = (-2b + qj || 2 * A0)
+  // Unpack public key
+  unpack_vk(A1, vk);
+
+  // Unpack signature and check its format
+  if (unpack_sig(&c, &lowz, &highz, &h, sig)) {
+    return -1;
+  }
+
+  // Compose z1 out of HighBits(z1) and LowBits(z1)
+  for (i = 0; i < HAETAE_L; ++i) {
+    poly_compose(&z1.vec[i], &highz.vec[i], &lowz.vec[i]);
+  }
+
+  /*------------------- 2. Compute \tilde{z}_2 -----------------------------*/
+  // squared norm of z1 (before the NTT), and w' = LSB(z1[0] - c)
+  sqnorm2 = polyvecl_sqnorm2(&z1);
+  poly_sub(&wprime, &z1.vec[0], &c);
+  poly_lsb(&wprime, &wprime);
+
+  // A1 * round(z1) - qcj mod q
+  polyvecl_ntt(&z1);
+  polymatkl_pointwise_montgomery(&highbits, A1, &z1);
+  polyveck_invntt_tomont(&highbits);
+
+  // recover A1 * round(z1) - qcj mod 2q
+  polyveck_poly_fromcrt(&highbits, &highbits, &wprime);
+  polyveck_freeze2q(&highbits);
+
+  // recover w1
+  polyveck_highbits_hint(&w, &highbits);
+  polyveck_add(&w, &w, &h);
+  polyveck_csubDQ2ALPHA(&w);
+
+  // recover \tilde{z}_2 mod q
+  polyveck_mul_alpha(&z2, &w);
+  polyveck_sub(&z2, &z2, &highbits);
+  poly_add(&z2.vec[0], &z2.vec[0], &wprime);
+  polyveck_reduce2q(&z2);
+  polyveck_div2(&z2);
+
+  // check final norm of \tilde{z}
+  if (sqnorm2 + polyveck_sqnorm2(&z2) > HAETAE_B2SQ) {
+    return -1;
+  }
+
+  /*------------------- 3. Compute c' and Compare -------------------------*/
+
+  // Pack w (the recovered highbits) and w'
+  pack_vec_highbits(buf, &w);
+  pack_poly_lsb(buf + HAETAE_POLYVECK_HIGHBITS_PACKEDBYTES, &wprime);
+
+  xof256_absorb_thrice(&state, vk, HAETAE_CRYPTO_PUBLICKEYBYTES, pre, prelen, m,
+                       mlen);
+  xof256_squeeze(mu, HAETAE_SEEDBYTES, &state);
+  // c' = H(HighBits(A * round(y) mod 2q), LSB(round(y0) * j), mu)
+  poly_challenge(&cprime, buf, mu);
+
+  for (i = 0; i < HAETAE_N; ++i) {
+    if (c.coeffs[i] != cprime.coeffs[i]) {
+      return -1;
     }
-
-    // Unpack public key
-    unpack_pk(&b, rhoprime, pk);
-    unpack_cseed_z1_and_hint_from_sig(&c, &z1, &h, sig);
-
-    /*------------------- 2. Compute \tilde{z}_2 -----------------------------*/
-    // compute  w' = lsb(z1[0] - c) and the squared norm of z1 before NTT
-    sqnorm2 = polyvecl_sqnorm2(&z1);
-    poly_sub(&wprime, &z1.vec[0], &c);
-    poly_lsb(&wprime, &wprime);
-
-    // A1 * round(z1) - qcj mod q
-    for (size_t column = 0; column < L; column++) {
-        poly_ntt(&z1.vec[column]);
-    }
-    // highbits = A1 * z1
-    for (size_t row = 0; row < K; ++row) {
-		poly t;
-        poly_frozen a1_elem;  // we need A1 only once, so compute its elements on demand
-
-        expand_pk_matrix_elem_frozen(&a1_elem, row, 0, pk);
-		poly_pointwise_montgomery_mixed(&highbits.vec[row], &a1_elem, &z1.vec[0]);
-		for (size_t column = 1; column < L; ++column) {
-            expand_pk_matrix_elem_frozen(&a1_elem, row, column, pk);
-			poly_pointwise_montgomery_mixed(&t, &a1_elem, &z1.vec[column]);
-			poly_add(&highbits.vec[row], &highbits.vec[row], &t);
-		}
-        poly_invntt_tomont(&highbits.vec[row]);
-	}
-
-    // recover A1 * round(z1) - qcj mod 2q
-
-    for (size_t row = 0; row < K; ++row){
-        poly *highbits_elem_ptr = &highbits.vec[row];
-        poly *h_elem_ptr;
-        poly *w_elem_ptr;
-        poly *z2_elem_ptr;
-
-        h_elem_ptr = &h.vec[row];
-        w_elem_ptr = &w.vec[row];
-        z2_elem_ptr = &z2.vec[row];
-
-
-        if (0 == row) {
-            poly_fromcrt(highbits_elem_ptr, highbits_elem_ptr, &wprime);
-        } else {
-            poly_fromcrt0(highbits_elem_ptr, highbits_elem_ptr);
-        }
-        poly_freeze2q(highbits_elem_ptr);
-        // recover w1
-        poly_highbits_hint(w_elem_ptr, highbits_elem_ptr);
-        poly_add(w_elem_ptr, w_elem_ptr, h_elem_ptr);
-        poly_csubDQ2ALPHA(w_elem_ptr);
-        // recover \tilde{z}_2 mod q
-        poly_mul_alpha(z2_elem_ptr, w_elem_ptr);
-        poly_sub(z2_elem_ptr, z2_elem_ptr, highbits_elem_ptr);
-        if (0 == row) {
-            poly_add(z2_elem_ptr, z2_elem_ptr, &wprime);
-        }
-        poly_reduce2q(z2_elem_ptr);
-        poly_div2(z2_elem_ptr);
-    }
-
-    // check final norm of \tilde{z}
-    if (sqnorm2 + polyveck_sqnorm2(&z2) > B2SQ) {
-        return -1;
-    }
-
-    /*------------------- 3. Compute cprime and Compare ---------------------*/
-
-    // Pack highBits(A * round(z) - qcj mod 2q) and h'
-    polyveck_pack_highbits(buf, &w);
-    poly_pack_lsb(buf + POLYVECK_HIGHBITS_PACKEDBYTES, &wprime);
-
-    generate_seed_from_two_sources(mu, SEEDBYTES, pk, CRYPTO_PUBLICKEYBYTES, m, mlen);
-
-    poly_challenge(&cprime, buf, mu);
-
-    for (i = 0; i < N; ++i) {
-        if (c.coeffs[i] != cprime.coeffs[i]) {
-            return -1;
-        }
-    }
-    return 0;
+  }
+  return 0;
 }
 
-// ###################################################################
-// ###################################################################
-// ###################################################################
-// ###################################################################
+/*************************************************
+ * Name:        crypto_sign_verify_ctx
+ *
+ * Description: Verifies signature.
+ *
+ * Arguments:   - const uint8_t *sig: pointer to input signature
+ *              - size_t siglen: length of signature
+ *              - const uint8_t *m: pointer to message
+ *              - size_t mlen: length of message
+ *              - const uint8_t *ctx: pointer to context string
+ *              - size_t ctxlen: length of context string
+ *              - const uint8_t *vk: pointer to bit-packed public key
+ *
+ * Returns 0 if signature could be verified correctly and -1 otherwise
+ *
+ * Specification: Implements @[Algorithm 53, Verify]
+ **************************************************/
+int crypto_sign_verify_ctx(const uint8_t *sig, size_t siglen, const uint8_t *m,
+                           size_t mlen, const uint8_t *ctx, size_t ctxlen,
+                           const uint8_t *vk) {
+  uint8_t pre[256];
+
+  if (ctxlen > 255 || (ctx == NULL && ctxlen > 0))
+    return -1;
+
+  pre[0] = ctxlen;
+  if (ctxlen > 0)
+    memcpy(pre + 1, ctx, ctxlen);
+
+  return crypto_sign_verify_internal(sig, siglen, m, mlen, pre, 1 + ctxlen, vk);
+}
 
 /*************************************************
- * Name:        crypto_sign_open
+ * Name:        crypto_sign_open_ctx
  *
  * Description: Verify signed message.
  *
@@ -875,37 +551,36 @@ int crypto_sign_verify(const uint8_t *sig, size_t siglen, const uint8_t *m,
  *              - size_t *mlen: pointer to output length of message
  *              - const uint8_t *sm: pointer to signed message
  *              - size_t smlen: length of signed message
- *              - const uint8_t *pk: pointer to bit-packed public key
+ *              - const uint8_t *ctx: pointer to context string
+ *              - size_t ctxlen: length of context string
+ *              - const uint8_t *vk: pointer to bit-packed public key
  *
  * Returns 0 if signed message could be verified correctly and -1 otherwise
  **************************************************/
-int crypto_sign_open(uint8_t *m, size_t *mlen, const uint8_t *sm, size_t smlen,
-                     const uint8_t *pk) {
-    size_t i;
+int crypto_sign_open_ctx(uint8_t *m, size_t *mlen, const uint8_t *sm,
+                         size_t smlen, const uint8_t *ctx, size_t ctxlen,
+                         const uint8_t *vk) {
+  size_t i;
 
-    if (smlen < CRYPTO_BYTES)
-        goto badsig;
+  if (smlen < HAETAE_CRYPTO_BYTES)
+    goto badsig;
 
-    *mlen = smlen - CRYPTO_BYTES;
-    if (crypto_sign_verify(sm, CRYPTO_BYTES, sm + CRYPTO_BYTES, *mlen, pk))
-        goto badsig;
-    else {
-        /* All good, copy msg, return 0 */
-        for (i = 0; i < *mlen; ++i)
-            m[i] = sm[CRYPTO_BYTES + i];
-        return 0;
-    }
+  *mlen = smlen - HAETAE_CRYPTO_BYTES;
+  if (crypto_sign_verify_ctx(sm, HAETAE_CRYPTO_BYTES, sm + HAETAE_CRYPTO_BYTES,
+                             *mlen, ctx, ctxlen, vk))
+    goto badsig;
+  else {
+    /* All good, copy msg, return 0 */
+    for (i = 0; i < *mlen; ++i)
+      m[i] = sm[HAETAE_CRYPTO_BYTES + i];
+    return 0;
+  }
 
 badsig:
-    /* Signature verification failed */
-    *mlen = -1;
-    for (i = 0; i < smlen; ++i)
-        m[i] = 0;
+  /* Signature verification failed */
+  *mlen = -1;
+  for (i = 0; i < smlen; ++i)
+    m[i] = 0;
 
-    return -1;
+  return -1;
 }
-
-// ###################################################################
-// ###################################################################
-// ###################################################################
-// ###################################################################

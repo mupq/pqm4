@@ -103,6 +103,15 @@ void _rcc_set_main_pll(uint32_t source, uint32_t pllm, uint32_t plln, uint32_t p
 #error Unsupported libopencm3 board
 #endif
 
+#if defined(SERIAL_ITM)
+#include <libopencm3/cm3/itm.h>
+#include <libopencm3/cm3/scs.h>
+#include <libopencm3/cm3/tpiu.h>
+#include <libopencm3/stm32/dbgmcu.h>
+/* SWO bit rate; the host captures the trace at the same rate */
+#define SWO_FREQ 2000000
+#endif
+
 #define _RCC_CAT(A, B) A ## _ ## B
 #define RCC_ID(NAME) _RCC_CAT(RCC, NAME)
 
@@ -338,6 +347,28 @@ void usart_setup()
 #endif
 }
 
+#if defined(SERIAL_ITM)
+/* Output on ITM stimulus port 0 through the SWO pin, at SWO_FREQ from the
+   current core clock */
+static void itm_setup(void)
+{
+  SCS_DEMCR |= SCS_DEMCR_TRCENA;
+  DBGMCU_CR = (DBGMCU_CR & ~DBGMCU_CR_TRACE_MODE_MASK) | DBGMCU_CR_TRACE_IOEN | DBGMCU_CR_TRACE_MODE_ASYNC;
+  TPIU_SPPR = TPIU_SPPR_ASYNC_NRZ;
+  TPIU_ACPR = rcc_ahb_frequency / SWO_FREQ - 1;
+  TPIU_FFCR &= ~TPIU_FFCR_ENFCONT;
+  ITM_LAR = CORESIGHT_LAR_KEY;
+  ITM_TCR = (1 << 16) | ITM_TCR_TXENA | ITM_TCR_ITMENA;
+  ITM_TER[0] |= 1;
+}
+
+static void itm_send_blocking(char c)
+{
+  while (!(ITM_STIM32(0) & ITM_STIM_FIFOREADY));
+  ITM_STIM8(0) = c;
+}
+#endif
+
 void systick_setup()
 {
   /* Systick is always the same on libopencm3 */
@@ -350,7 +381,11 @@ static volatile unsigned long long overflowcnt = 0;
 void hal_setup(const enum clock_mode clock)
 {
   clock_setup(clock);
+#if defined(SERIAL_ITM)
+  itm_setup();
+#else
   usart_setup();
+#endif
   systick_setup();
 
   // wait for the first systick overflow
@@ -360,14 +395,20 @@ void hal_setup(const enum clock_mode clock)
   while(old == overflowcnt);
 }
 
+#if defined(SERIAL_ITM)
+#define SERIAL_SEND(c) itm_send_blocking(c)
+#else
+#define SERIAL_SEND(c) usart_send_blocking(SERIAL_USART, (c))
+#endif
+
 void hal_send_str(const char* in)
 {
   const char* cur = in;
   while (*cur) {
-    usart_send_blocking(SERIAL_USART, *cur);
+    SERIAL_SEND(*cur);
     cur += 1;
   }
-  usart_send_blocking(SERIAL_USART, '\n');
+  SERIAL_SEND('\n');
 }
 
 void sys_tick_handler(void)
@@ -387,8 +428,17 @@ uint64_t hal_get_time()
 }
 
 /* End of BSS is where the heap starts (defined in the linker script) */
-extern char end;
-static char* heap_end = &end;
+extern char _ebss;
+static char* heap_end = &_ebss;
+
+#if defined(STACK_IN_CCM)
+/* The stack grows down to the end of the CCM data (defined in the linker script) */
+extern char _eccm;
+#define STACK_BOTTOM (&_eccm)
+#else
+/* The stack grows down to the heap */
+#define STACK_BOTTOM heap_end
+#endif
 
 void* __wrap__sbrk (int incr)
 {
@@ -404,7 +454,7 @@ size_t hal_get_stack_size(void)
 {
   register char* cur_stack;
 	asm volatile ("mov %0, sp" : "=r" (cur_stack));
-  return cur_stack - heap_end;
+  return cur_stack - STACK_BOTTOM;
 }
 
 const uint32_t stackpattern = 0xDEADBEEFlu;
@@ -414,7 +464,7 @@ static void* last_sp = NULL;
 void hal_spraystack(void)
 {
   
-  char* _heap_end = heap_end;
+  char* _heap_end = STACK_BOTTOM;
   asm volatile ("mov %0, sp\n"
                 ".L%=:\n\t"
                 "str %2, [%1], #4\n\t"
@@ -436,7 +486,7 @@ size_t hal_checkstack(void)
                "cmp %2, %1\n\t"
                "blt .L%=\n\t"
                ".LE%=:\n"
-               : "+r"(result) : "r" (last_sp), "r" (heap_end), "r" (stackpattern) : "ip", "cc");
+               : "+r"(result) : "r" (last_sp), "r" (STACK_BOTTOM), "r" (stackpattern) : "ip", "cc");
   return result;
 }
 
