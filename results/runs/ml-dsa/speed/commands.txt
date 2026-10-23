@@ -1,0 +1,14 @@
+python3 -m venv .venv && . .venv/bin/activate && pip install -r requirements.txt
+# selects the probe of the board measured here, for setups with several boards attached
+export MUPQ_OPENOCD_SERIAL=066BFF575550897767144107
+# the serial port of that board on the measuring host
+UART=/dev/tty.usbmodem1103
+rm -rf obj elf bin bin-host benchmarks
+# writes the raw results to benchmarks/speed/
+python3 benchmarks.py -p nucleo-l4r5zi -u "$UART" -i 100 --nostack --nohashing --nosize ml-dsa-44 ml-dsa-65 ml-dsa-87
+# reads benchmarks/, writes benchmarks/converted.md
+python3 convert_benchmarks.py md > benchmarks/converted.md
+# reads benchmarks/converted.md, writes results/runs/ml-dsa/speed/converted.md
+python3 results/record.py speed benchmarks/converted.md results/runs/ml-dsa/speed/converted.md ml-dsa-44 ml-dsa-65 ml-dsa-87
+# reads results/runs/, writes summary.md and the family pages under results/
+python3 results/build.py results/runs results
