@@ -37,7 +37,7 @@ elf/crypto_sign_perk-256-%_m4_testvectors.elf: LDSCRIPT=ldscripts/stm32f4discove
 elf/crypto_sign_perk-256-fast%_m4_test.elf: LDSCRIPT=ldscripts/stm32f4discovery_fullram.ld
 elf/crypto_sign_haetae5_m4f_%.elf: LDSCRIPT=ldscripts/stm32f4discovery_fullram.ld
 elf/crypto_sign_haetae5_ref_%.elf: LDSCRIPT=ldscripts/stm32f4discovery_fullram.ld
-elf/crypto_sign_cross_%.elf: LDSCRIPT=ldscripts/stm32f4discovery_fullram.ld
+elf/crypto_sign_cross-%.elf: LDSCRIPT=ldscripts/stm32f4discovery_fullram.ld
 
 # SERIAL_ITM=1 sends the output over ITM stimulus port 0 (SWO, 2 MHz) instead of USART2
 SERIAL_ITM ?=
