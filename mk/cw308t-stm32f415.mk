@@ -7,6 +7,8 @@ EXCLUDED_SCHEMES = \
 	mupq/pqclean/crypto_sign/sphincs-haraka-256f% \
 	mupq/pqclean/crypto_sign/sphincs-shake256-256f% \
 	mupq/pqclean/crypto_sign/sphincs-sha256-256f% \
+	mupq/crypto_sign/slh-dsa-sha2-256f% \
+	mupq/crypto_sign/slh-dsa-shake-256f% \
 	mupq/crypto_sign/ov-Ip% \
 	mupq/crypto_sign/tuov_is% \
 	mupq/crypto_sign/tuov_ip% \
