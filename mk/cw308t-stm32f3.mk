@@ -22,6 +22,8 @@ EXCLUDED_SCHEMES = \
 	mupq/crypto_sign/snova-37-8-16-4% \
 	mupq/crypto_sign/sphincs-a-sha2-256f% \
 	mupq/crypto_sign/sphincs-a-shake-256f% \
+	mupq/crypto_sign/slh-dsa-sha2-256f% \
+	mupq/crypto_sign/slh-dsa-shake-256f% \
 	mupq/crypto_sign/ov-Ip% \
 	mupq/crypto_sign/cross-rsdp-3-fast% \
 	mupq/crypto_sign/cross-rsdp-5-fast% \
