@@ -1,0 +1,56 @@
+# Speed Evaluation: slh-dsa
+
+- Commit: `7a629261b9cb0c463ff4907255b092a6e2ff4ec4` (mupq `d0d561ccbb20f419e94fc6a95c2b2a05ae35c9b5`)
+- Date: Sat Nov  7 15:34:05 2026
+- Platform: `nucleo-l4r5zi`
+- Toolchain: arm-none-eabi-gcc (Arm GNU Toolchain 15.3.Rel1 (Build arm-15.149)) 15.3.1 20260627
+- Build: `--opt speed` (`-O3 -g3`), each implementation compiled as one translation unit (`AIO=1`), no LTO
+- Clock: 20 MHz (`CLOCK_BENCHMARK`)
+- Iterations: 10
+
+## Signature Schemes
+
+| scheme | implementation | key generation [cycles] | sign [cycles] | verify [cycles] |
+| ------ | -------------- | ----------------------- | ------------- | --------------- |
+| slh-dsa-sha2-128f (10 executions) | ref | AVG: 15,586,855 <br /> MIN: 15,586,761 <br /> MAX: 15,586,891 | AVG: 364,927,279 <br /> MIN: 364,927,116 <br /> MAX: 364,927,317 | AVG: 21,572,683 <br /> MIN: 20,639,577 <br /> MAX: 22,280,215 |
+| slh-dsa-sha2-128s (10 executions) | ref | AVG: 997,965,725 <br /> MIN: 997,964,928 <br /> MAX: 997,965,862 | AVG: 7,583,035,314 <br /> MIN: 7,583,034,397 <br /> MAX: 7,583,035,925 | AVG: 7,469,531 <br /> MIN: 7,356,716 <br /> MAX: 7,715,620 |
+| slh-dsa-sha2-192f (10 executions) | ref | AVG: 23,389,047 <br /> MIN: 23,389,001 <br /> MAX: 23,389,105 | AVG: 661,772,349 <br /> MIN: 661,772,285 <br /> MAX: 661,772,400 | AVG: 35,555,470 <br /> MIN: 34,904,360 <br /> MAX: 36,402,933 |
+| slh-dsa-sha2-192s (10 executions) | ref | AVG: 1,493,762,899 <br /> MIN: 1,493,759,202 <br /> MAX: 1,493,768,929 | AVG: 15,317,185,435 <br /> MIN: 15,317,178,293 <br /> MAX: 15,317,195,161 | AVG: 13,519,141 <br /> MIN: 13,095,737 <br /> MAX: 14,024,983 |
+| slh-dsa-sha2-256f (10 executions) | ref | AVG: 61,850,606 <br /> MIN: 61,850,534 <br /> MAX: 61,850,641 | AVG: 1,363,746,087 <br /> MIN: 1,363,745,925 <br /> MAX: 1,363,746,644 | AVG: 36,730,019 <br /> MIN: 36,302,890 <br /> MAX: 37,486,595 |
+| slh-dsa-sha2-256s (10 executions) | ref | AVG: 990,574,309 <br /> MIN: 990,574,068 <br /> MAX: 990,574,974 | AVG: 14,213,272,863 <br /> MIN: 14,213,271,586 <br /> MAX: 14,213,274,915 | AVG: 19,284,670 <br /> MIN: 18,908,655 <br /> MAX: 19,681,293 |
+| slh-dsa-shake-128f (10 executions) | ref | AVG: 50,493,086 <br /> MIN: 50,493,040 <br /> MAX: 50,493,116 | AVG: 1,182,187,980 <br /> MIN: 1,182,187,939 <br /> MAX: 1,182,188,018 | AVG: 69,983,338 <br /> MIN: 67,424,186 <br /> MAX: 72,107,582 |
+| slh-dsa-shake-128s (10 executions) | ref | AVG: 3,232,155,814 <br /> MIN: 3,232,155,729 <br /> MAX: 3,232,155,867 | AVG: 24,559,519,995 <br /> MIN: 24,559,519,932 <br /> MAX: 24,559,520,050 | AVG: 24,384,130 <br /> MIN: 23,631,422 <br /> MAX: 24,969,563 |
+| slh-dsa-shake-192f (10 executions) | ref | AVG: 74,901,243 <br /> MIN: 74,901,209 <br /> MAX: 74,901,313 | AVG: 1,937,948,130 <br /> MIN: 1,937,948,050 <br /> MAX: 1,937,948,185 | AVG: 104,434,566 <br /> MIN: 101,394,314 <br /> MAX: 107,338,879 |
+| slh-dsa-shake-192s (10 executions) | ref | AVG: 4,794,333,879 <br /> MIN: 4,794,333,816 <br /> MAX: 4,794,333,958 | AVG: 43,122,452,744 <br /> MIN: 43,122,452,642 <br /> MAX: 43,122,452,904 | AVG: 35,854,391 <br /> MIN: 33,918,149 <br /> MAX: 37,315,099 |
+| slh-dsa-shake-256f (10 executions) | ref | AVG: 200,137,217 <br /> MIN: 200,137,127 <br /> MAX: 200,137,268 | AVG: 4,027,165,878 <br /> MIN: 4,027,165,838 <br /> MAX: 4,027,165,932 | AVG: 107,478,861 <br /> MIN: 104,051,765 <br /> MAX: 111,457,063 |
+| slh-dsa-shake-256s (10 executions) | ref | AVG: 3,202,327,091 <br /> MIN: 3,202,327,006 <br /> MAX: 3,202,327,146 | AVG: 38,183,269,028 <br /> MIN: 38,183,268,800 <br /> MAX: 38,183,269,102 | AVG: 53,019,005 <br /> MIN: 51,555,148 <br /> MAX: 53,621,777 |
+
+## Reproducing
+
+```sh
+git clone --recursive https://github.com/mupq/pqm4.git && cd pqm4
+git checkout 7a629261b9cb0c463ff4907255b092a6e2ff4ec4
+git submodule update --init --recursive
+python3 -m venv .venv && . .venv/bin/activate && pip install -r requirements.txt
+# this run used two boards in parallel, each from its own checkout at the same commit
+# with one board, run both benchmarks.py steps below on it, one after the other
+rm -rf obj elf bin bin-host benchmarks
+# selects the probe of the first board, for setups with several boards attached
+export MUPQ_OPENOCD_SERIAL=066BFF575550897767144107
+# the serial port of that board on the measuring host
+UART=/dev/tty.usbmodem1303
+# writes the raw results of six parameter sets to benchmarks/speed/
+python3 benchmarks.py -p nucleo-l4r5zi -u "$UART" -i 10 --nostack --nohashing --nosize slh-dsa-sha2-128f slh-dsa-sha2-256f slh-dsa-shake-192f slh-dsa-sha2-192s slh-dsa-sha2-256s slh-dsa-shake-192s
+# selects the probe of the second board
+export MUPQ_OPENOCD_SERIAL=066EFF363732594D43255352
+# the serial port of that board on the measuring host
+UART=/dev/tty.usbmodem1103
+# writes the raw results of the other six parameter sets to benchmarks/speed/
+python3 benchmarks.py -p nucleo-l4r5zi -u "$UART" -i 10 --nostack --nohashing --nosize slh-dsa-sha2-192f slh-dsa-shake-128f slh-dsa-shake-256f slh-dsa-sha2-128s slh-dsa-shake-128s slh-dsa-shake-256s
+# reads benchmarks/, writes benchmarks/converted.md
+python3 convert_benchmarks.py md > benchmarks/converted.md
+# reads benchmarks/converted.md, writes results/runs/slh-dsa/speed/converted.md
+python3 results/record.py speed benchmarks/converted.md results/runs/slh-dsa/speed/converted.md slh-dsa-sha2-128f slh-dsa-sha2-128s slh-dsa-sha2-192f slh-dsa-sha2-192s slh-dsa-sha2-256f slh-dsa-sha2-256s slh-dsa-shake-128f slh-dsa-shake-128s slh-dsa-shake-192f slh-dsa-shake-192s slh-dsa-shake-256f slh-dsa-shake-256s
+# reads results/runs/, writes summary.md and the family pages under results/
+python3 results/build.py results/runs results
+```

@@ -1,0 +1,14 @@
+python3 -m venv .venv && . .venv/bin/activate && pip install -r requirements.txt
+# selects the probe of the board measured here, for setups with several boards attached
+export MUPQ_OPENOCD_SERIAL=066BFF575550897767144107
+# the serial port of that board on the measuring host
+UART=/dev/tty.usbmodem1303
+rm -rf obj elf bin bin-host benchmarks
+# writes the raw results to benchmarks/size/
+python3 benchmarks.py -p nucleo-l4r5zi -u "$UART" -i 1 --nospeed --nostack --nohashing slh-dsa-sha2-128f slh-dsa-sha2-128s slh-dsa-sha2-192f slh-dsa-sha2-192s slh-dsa-sha2-256f slh-dsa-sha2-256s slh-dsa-shake-128f slh-dsa-shake-128s slh-dsa-shake-192f slh-dsa-shake-192s slh-dsa-shake-256f slh-dsa-shake-256s
+# reads benchmarks/, writes benchmarks/converted.md
+python3 convert_benchmarks.py md > benchmarks/converted.md
+# reads benchmarks/converted.md, writes results/runs/slh-dsa/size/converted.md
+python3 results/record.py size benchmarks/converted.md results/runs/slh-dsa/size/converted.md slh-dsa-sha2-128f slh-dsa-sha2-128s slh-dsa-sha2-192f slh-dsa-sha2-192s slh-dsa-sha2-256f slh-dsa-sha2-256s slh-dsa-shake-128f slh-dsa-shake-128s slh-dsa-shake-192f slh-dsa-shake-192s slh-dsa-shake-256f slh-dsa-shake-256s
+# reads results/runs/, writes summary.md and the family pages under results/
+python3 results/build.py results/runs results
