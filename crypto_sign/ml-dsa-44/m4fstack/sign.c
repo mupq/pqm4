@@ -9,8 +9,6 @@
 #include "smallpoly.h"
 #include "stack.h"
 
-#include "smallntt.h"
-
 /*************************************************
 * Name:        crypto_sign_keypair
 *
@@ -109,12 +107,155 @@ int crypto_sign_keypair(uint8_t *pk, uint8_t *sk) {
 }
 
 
+typedef union {
+  shake128incctx s128;
+  shake256incctx s256;
+} sign_state;
+
+typedef union {
+  poly full;
+  struct {
+    smallpoly stmp0;
+    smallpoly stmp1;
+  } small;
+} sign_polybuffer;
+
+/* w = A*y in the 24-bit packed wcomp. Each packed mask y[l] is kept in its z slot of sig, so that ExpandMask runs
+ * once per y[l] in an attempt; sig therefore cannot hold w1, which is packed in place and absorbed into H(mu || w1) row by row. */
+static void sign_compute_w(uint8_t *sig,
+                           uint8_t wcomp[K][768],
+                           uint16_t nonce,
+                           const uint8_t *rho,
+                           const uint8_t *rhoprime,
+                           const uint8_t *mu,
+                           sign_polybuffer *polybuffer,
+                           sign_state *state) {
+  poly *tmp0 = &polybuffer->full;
+
+  for (size_t k_idx = 0; k_idx < K; k_idx++) {
+    for(size_t i=0;i<768;i++){
+      wcomp[k_idx][i] = 0;
+    }
+  }
+
+  for (size_t l_idx = 0; l_idx < L; l_idx++) {
+    /* Sample intermediate vector y */
+    poly_uniform_gamma1_keep(tmp0, sig + CTILDEBYTES + l_idx*POLYZ_PACKEDBYTES, rhoprime, L*nonce + l_idx, &state->s256);
+    poly_ntt(tmp0);
+
+    /* Matrix-vector multiplication */
+    for (size_t k_idx = 0; k_idx < K; k_idx++) {
+      // sampling of a and packing into wcomp inlined into the basemul
+      poly_uniform_pointwise_montgomery_polywadd_block(wcomp[k_idx], tmp0, rho, (k_idx << 8) + l_idx, &state->s128);
+    }
+  }
+
+  shake256_inc_init(&state->s256);
+  shake256_inc_absorb(&state->s256, mu, CRHBYTES);
+  for (size_t k_idx = 0; k_idx < K; k_idx++) {
+    polyw_unpack(tmp0, wcomp[k_idx]);
+    poly_invntt_tomont(tmp0);
+
+    polyw_pack_w1(wcomp[k_idx], (uint8_t *)tmp0, tmp0);
+    shake256_inc_absorb(&state->s256, (uint8_t *)tmp0, POLYW1_PACKEDBYTES);
+  }
+}
+
+/* Challenge, then z = y + c*s1 (in place in sig) and r0 = LowBits(w - c*s2) row by row; both checks stop at the
+ * first coefficient that violates the bound. The products c*t0 are deferred to sign_compute_hints.
+ * Returns -1 if the attempt is rejected. */
+static int sign_compute_z_r0(uint8_t *sig,
+                             uint8_t ccomp[68],
+                             uint8_t wcomp[K][768],
+                             const uint8_t *sk,
+                             sign_polybuffer *polybuffer,
+                             sign_state *state) {
+  poly      *tmp0  = &polybuffer->full;
+  smallpoly *stmp0 = &polybuffer->small.stmp0;
+  smallpoly *scp   = &polybuffer->small.stmp1;
+
+  shake256_inc_finalize(&state->s256);
+  shake256_inc_squeeze(sig, CTILDEBYTES, &state->s256);
+  /* the hash state and ccomp are unused here */
+  poly_challenge_extbuf(tmp0, sig, &state->s256, ccomp);
+  poly_challenge_compress(ccomp, tmp0);
+
+  /* NTT_769(c) is written to the upper half of the buffer (poly_small_ntt_copy copies backwards, so reading the
+   * 32-bit c from the same buffer is safe) and stays there for all rows; the 16-bit products live in the lower half */
+  poly_small_ntt_copy(scp, tmp0);
+
+  /* Compute z, reject if it reveals secret */
+  for (unsigned int i = 0; i < L; i++) {
+    unpack_sk_s1(stmp0, sk, i);
+    poly_small_ntt_basemul_invntt(stmp0, scp);
+
+    if (polyz_add_reduce_check_inplace(sig + CTILDEBYTES + i*POLYZ_PACKEDBYTES, stmp0, GAMMA1 - BETA) < 0) {
+      return -1;
+    }
+  }
+
+  /* Check that subtracting cs2 does not change high bits of w and low bits
+   * do not reveal secret information. All of z has been accepted at this point. */
+  for (unsigned int i = 0; i < K; i++) {
+    unpack_sk_s2(stmp0, sk, i);
+    poly_small_ntt_basemul_invntt(stmp0, scp);
+
+    if (polyw_sub_cs2_check_r0(wcomp[i], stmp0, GAMMA2 - BETA) < 0) {
+      return -1;
+    }
+  }
+  return 0;
+}
+
+/* c*t0 and the hints, only for attempts that passed all z and r0 checks. Row 0 uses the schoolbook product; its
+ * slot of wcomp is free afterwards and holds NTT(c) in 24-bit packed form for the NTT products of the other rows.
+ * Returns -1 if the attempt is rejected. */
+static int sign_compute_hints(uint8_t *sig,
+                              const uint8_t ccomp[68],
+                              uint8_t wcomp[K][768],
+                              const uint8_t *sk,
+                              sign_polybuffer *polybuffer) {
+  poly *tmp0 = &polybuffer->full;
+  unsigned int hints_written = 0;
+  const uint8_t *t0 = sk + SEEDBYTES + TRBYTES + SEEDBYTES + L*POLYETA_PACKEDBYTES + K*POLYETA_PACKEDBYTES;
+
+  for (unsigned int k_idx = 0; k_idx < K; ++k_idx) {
+    if (k_idx == 0) {
+      poly_schoolbook(tmp0, ccomp, t0);
+    } else {
+      if (k_idx == 1) {
+        poly_challenge_decompress(tmp0, ccomp);
+        poly_ntt(tmp0);
+        polyw_pack(wcomp[0], tmp0);
+      }
+      polyt0_unpack(tmp0, t0 + k_idx*POLYT0_PACKEDBYTES);
+      poly_ntt(tmp0);
+      poly_pointwise_montgomery_polyw(tmp0, wcomp[0]);
+      poly_invntt_tomont(tmp0);
+      poly_reduce(tmp0);
+    }
+
+    /* Compute hints for w1 */
+    if (poly_chknorm(tmp0, GAMMA2)) {
+      return -1;
+    }
+
+    if (poly_make_hint_pack_stack(sig, k_idx, &hints_written, tmp0, wcomp[k_idx]) < 0) {
+      return -1;
+    }
+  }
+  pack_sig_h_zero(sig, &hints_written);
+  return 0;
+}
+
 /*************************************************
 * Name:        crypto_sign_signature
 *
 * Description: Computes signature.
 *
-* Arguments:   - uint8_t *sig:   pointer to output signature (of length CRYPTO_BYTES)
+* Arguments:   - uint8_t *sig:   pointer to output signature (of length CRYPTO_BYTES).
+*                                The buffer must remain private to the signer until the
+*                                call returns because it temporarily holds the secret mask.
 *              - size_t *siglen: pointer to output length of signature
 *              - uint8_t *m:     pointer to message to be signed
 *              - size_t mlen:    length of message
@@ -138,22 +279,8 @@ int crypto_sign_signature_ctx(uint8_t *sig,
   uint8_t wcomp[K][768];
   uint8_t ccomp[68];
 
-  union {
-    shake128incctx s128;
-    shake256incctx s256;
-  } state;
-
-  union {
-    poly full;
-    struct {
-      smallpoly stmp0;
-      smallpoly stmp1;
-    } small;
-  } polybuffer;
-
-  poly      *tmp0  = &polybuffer.full;
-  smallpoly *stmp0 = &polybuffer.small.stmp0;
-  smallpoly *scp   = &polybuffer.small.stmp1;
+  sign_state state;
+  sign_polybuffer polybuffer;
 
   rho = sk;
   tr = sk + SEEDBYTES*2;
@@ -188,121 +315,21 @@ int crypto_sign_signature_ctx(uint8_t *sig,
   // rnd can be overwritten here
   shake256_inc_squeeze(rhoprime, CRHBYTES, &state.s256);
 
-rej:  
-    for (size_t k_idx = 0; k_idx < K; k_idx++) {
-      for(size_t i=0;i<768;i++){
-        wcomp[k_idx][i] = 0;
-      }
+  for (;;) {
+    sign_compute_w(sig, wcomp, nonce, rho, rhoprime, mu, &polybuffer, &state);
+    nonce++;
+
+    if (sign_compute_z_r0(sig, ccomp, wcomp, sk, &polybuffer, &state) < 0) {
+      continue;
     }
 
-      for (size_t l_idx = 0; l_idx < L; l_idx++) {
-        /* Sample intermediate vector y */
-        poly_uniform_gamma1_stack(tmp0, rhoprime, L*nonce + l_idx, &state.s256);
-        poly_ntt(tmp0);
-
-        /* Matrix-vector multiplication */
-        for (size_t k_idx = 0; k_idx < K; k_idx++) {
-          // sampling of y and packing into wcomp inlined into the basemul
-          poly_uniform_pointwise_montgomery_polywadd_block(wcomp[k_idx], tmp0, rho, (k_idx << 8) + l_idx, &state.s128);
-        }
-      }
-      nonce++;
-      for (size_t k_idx = 0; k_idx < K; k_idx++) {
-        polyw_unpack(tmp0, wcomp[k_idx]);
-        poly_invntt_tomont(tmp0);
-        poly_caddq(tmp0);
-
-        polyw_pack(wcomp[k_idx], tmp0);
-        poly_highbits(tmp0, tmp0);
-        polyw1_pack(&sig[k_idx*POLYW1_PACKEDBYTES], tmp0);
-      }
-
-  shake256_inc_init(&state.s256);
-  shake256_inc_absorb(&state.s256, mu, CRHBYTES);
-  shake256_inc_absorb(&state.s256, sig, K*POLYW1_PACKEDBYTES);
-  shake256_inc_finalize(&state.s256);
-  shake256_inc_squeeze(sig, CTILDEBYTES, &state.s256);
-  /* the hash state and ccomp are unused here */
-  poly_challenge_extbuf(tmp0, sig, &state.s256, ccomp);
-
-  poly_challenge_compress(ccomp, tmp0);
-  
-  /* Compute z, reject if it reveals secret */
-    for(size_t l_idx=0;l_idx < L; l_idx++){
-    if(l_idx != 0){
-      poly_challenge_decompress(tmp0, ccomp);
+    if (sign_compute_hints(sig, ccomp, wcomp, sk, &polybuffer) < 0) {
+      continue;
     }
-      poly_small_ntt_copy(scp, tmp0);
-      unpack_sk_s1(stmp0, sk, l_idx);
-      small_ntt(stmp0->coeffs);
-      poly_small_basemul_invntt(tmp0, scp, stmp0);
 
-      poly_uniform_gamma1_add_stack(tmp0, tmp0, rhoprime, L*(nonce-1) + l_idx, &state.s256);
-
-      poly_reduce(tmp0);
-
-      if(poly_chknorm(tmp0, GAMMA1 - BETA))
-        goto rej;
-
-      polyz_pack(sig + CTILDEBYTES + l_idx*POLYZ_PACKEDBYTES, tmp0);
+    break;
   }
 
-
-  /* Check that subtracting cs2 does not change high bits of w and low bits
-   * do not reveal secret information */
-  for(unsigned int k_idx = 0; k_idx < K; ++k_idx) {
-    poly_challenge_decompress(tmp0, ccomp);
-    poly_small_ntt_copy(scp, tmp0);
-
-    unpack_sk_s2(stmp0, sk, k_idx);
-    small_ntt(stmp0->coeffs);
-    poly_small_basemul_invntt(tmp0, scp, stmp0);
-
-    polyw_sub(tmp0, wcomp[k_idx], tmp0);
-    poly_reduce(tmp0);
-
-    polyw_pack(wcomp[k_idx], tmp0);
-
-    poly_lowbits(tmp0, tmp0);
-    poly_reduce(tmp0);
-    if(poly_chknorm(tmp0, GAMMA2 - BETA)){
-      goto rej;
-    }
-  }
-
-  /* Write signature */
-  unsigned int hints_written = 0;
-  const uint8_t *t0 = sk + SEEDBYTES + TRBYTES + SEEDBYTES + L*POLYETA_PACKEDBYTES + K*POLYETA_PACKEDBYTES;
-
-  /* c*t0 and the hints are computed only for attempts that passed all checks above. Row 0 uses the schoolbook
-   * product; its slot of wcomp is free afterwards and holds NTT(c) in 24-bit packed form for the NTT products
-   * of the other rows. */
-  for(unsigned int k_idx = 0; k_idx < K; ++k_idx) {
-    if (k_idx == 0) {
-      poly_schoolbook(tmp0, ccomp, t0);
-    } else {
-      if (k_idx == 1) {
-        poly_challenge_decompress(tmp0, ccomp);
-        poly_ntt(tmp0);
-        polyw_pack(wcomp[0], tmp0);
-      }
-      polyt0_unpack(tmp0, t0 + k_idx*POLYT0_PACKEDBYTES);
-      poly_ntt(tmp0);
-      poly_pointwise_montgomery_polyw(tmp0, wcomp[0]);
-      poly_invntt_tomont(tmp0);
-      poly_reduce(tmp0);
-    }
-
-    /* Compute hints for w1 */
-    if(poly_chknorm(tmp0, GAMMA2)) {
-      goto rej;
-    }
-
-    if (poly_make_hint_pack_stack(sig, k_idx, &hints_written, tmp0, wcomp[k_idx]) < 0) {
-      goto rej;
-    }
-  }
-  pack_sig_h_zero(sig, &hints_written);
   *siglen = CRYPTO_BYTES;
   return 0;
 }
@@ -314,7 +341,10 @@ rej:
 *
 * Arguments:   - uint8_t *sm: pointer to output signed message (allocated
 *                             array with CRYPTO_BYTES + mlen bytes),
-*                             can be equal to m
+*                             can be equal to m. The signature part of
+*                             the buffer must remain private to the signer
+*                             until the call returns because it temporarily
+*                             holds the secret mask.
 *              - size_t *smlen: pointer to output length of signed
 *                               message
 *              - const uint8_t *m: pointer to message to be signed

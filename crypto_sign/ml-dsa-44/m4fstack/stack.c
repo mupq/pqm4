@@ -238,12 +238,6 @@ static int32_t highbits(int32_t a){
   return a1;
 }
 
-void poly_highbits(poly *a1, const poly *a) {
-  unsigned int i;
-
-  for(i = 0; i < N; ++i)
-    a1->coeffs[i] = highbits(a->coeffs[i]);
-}
 
 static int32_t lowbits(int32_t a){
   int32_t a1;
@@ -263,12 +257,6 @@ static int32_t lowbits(int32_t a){
   return a0;
 }
 
-void poly_lowbits(poly *a0, const poly *a){
-  unsigned int i;
-
-  for(i = 0; i < N; ++i)
-    a0->coeffs[i] = lowbits(a->coeffs[i]);
-}
 
 void unpack_sk_s1(smallpoly *a, const uint8_t *sk, size_t idx) {
   small_polyeta_unpack(a, sk + 2*SEEDBYTES + TRBYTES + idx*POLYETA_PACKEDBYTES);
@@ -277,6 +265,52 @@ void unpack_sk_s2(smallpoly *a, const uint8_t *sk, size_t idx) {
   small_polyeta_unpack(a, sk + 2*SEEDBYTES + TRBYTES + L*POLYETA_PACKEDBYTES + idx*POLYETA_PACKEDBYTES);
 }
 
+
+static inline int32_t make_hint_stack(int32_t z, int32_t r){
+  int32_t r1, v1;
+
+  r1 = highbits(r);
+  v1 = highbits(r+z);
+
+  if(r1 != v1) return 1;
+  return 0;
+}
+
+
+/* Sample the challenge using caller-provided SHAKE state and 68 bytes of scratch
+ * (storage the caller already has and does not use at this point), so that the call needs no SHAKE state
+ * and no buffer of its own. */
+void poly_challenge_extbuf(poly *c, const uint8_t seed[CTILDEBYTES], shake256incctx *state, uint8_t buf[68]) {
+  unsigned int i, b, pos;
+  uint64_t signs;
+
+  shake256_inc_init(state);
+  shake256_inc_absorb(state, seed, CTILDEBYTES);
+  shake256_inc_finalize(state);
+  shake256_inc_squeeze(buf, 68, state);
+
+  signs = 0;
+  for(i = 0; i < 8; ++i)
+    signs |= (uint64_t)buf[i] << 8*i;
+  pos = 8;
+
+  for(i = 0; i < N; ++i)
+    c->coeffs[i] = 0;
+  for(i = N-TAU; i < N; ++i) {
+    do {
+      if(pos >= 68) {
+        shake256_inc_squeeze(buf, 68, state);
+        pos = 0;
+      }
+
+      b = buf[pos++];
+    } while(b > i);
+
+    c->coeffs[i] = c->coeffs[b];
+    c->coeffs[b] = 1 - 2*(signs & 1);
+    signs >>= 1;
+  }
+}
 
 /* Samples a_ij from SHAKE128(seed, nonce) and accumulates a_ij * b into the 24-bit packed wcomp,
  * buflen bytes (a positive multiple of 3) of the stream per squeeze. */
@@ -302,110 +336,151 @@ void poly_uniform_pointwise_montgomery_polywadd_block(uint8_t wcomp[3*N], const 
   polywadd_sample(wcomp, b, seed, nonce, state, buf, sizeof buf);
 }
 
-#define POLY_UNIFORM_GAMMA1_BUFFERSIZE 1
+void poly_uniform_gamma1_keep(poly *a, uint8_t ypacked[POLYZ_PACKEDBYTES], const uint8_t seed[CRHBYTES], uint16_t nonce, shake256incctx *state){
+  stream256_init(state, seed, nonce);
+  shake256_inc_squeeze(ypacked, POLYZ_PACKEDBYTES, state);
+  polyz_unpack(a, ypacked);
+}
+
+/* z = y + cs1 inside the signature buffer: zy holds the packed mask y kept by poly_uniform_gamma1_keep and receives the packed z group by group.
+ * Returns -1 at the first coefficient that reaches the bound (the slot is then partly overwritten; the attempt is discarded). */
+int polyz_add_reduce_check_inplace(uint8_t zy[POLYZ_PACKEDBYTES], const smallpoly *cs1, int32_t bound){
 #if GAMMA1 == (1 << 17)
-#define POLY_UNIFORM_GAMMA1_BUFFERSIZE_COEFFS (POLY_UNIFORM_GAMMA1_BUFFERSIZE*4)
-#define POLY_UNIFORM_GAMMA1_BUFFERSIZE_BYTES  (POLY_UNIFORM_GAMMA1_BUFFERSIZE*9)
-#elif GAMMA1 == (1 << 19)
-#define POLY_UNIFORM_GAMMA1_BUFFERSIZE_COEFFS (POLY_UNIFORM_GAMMA1_BUFFERSIZE*2)
-#define POLY_UNIFORM_GAMMA1_BUFFERSIZE_BYTES  (POLY_UNIFORM_GAMMA1_BUFFERSIZE*5)
-#endif
+  for(size_t i = 0; i < N/4; ++i) {
+    uint32_t t[4];
 
-static void polyz_unpack_inplace(int32_t *r){
-  uint8_t *a = (uint8_t *)r;
+    t[0]  = zy[9*i+0];
+    t[0] |= (uint32_t)zy[9*i+1] << 8;
+    t[0] |= (uint32_t)zy[9*i+2] << 16;
+    t[0] &= 0x3FFFF;
 
-  unsigned int i,j;
-  #if GAMMA1 == (1 << 17)
-  for(j = 0; j < POLY_UNIFORM_GAMMA1_BUFFERSIZE; ++j) {
-    i = POLY_UNIFORM_GAMMA1_BUFFERSIZE-1-j;
-    int32_t t0;
+    t[1]  = zy[9*i+2] >> 2;
+    t[1] |= (uint32_t)zy[9*i+3] << 6;
+    t[1] |= (uint32_t)zy[9*i+4] << 14;
+    t[1] &= 0x3FFFF;
 
+    t[2]  = zy[9*i+4] >> 4;
+    t[2] |= (uint32_t)zy[9*i+5] << 4;
+    t[2] |= (uint32_t)zy[9*i+6] << 12;
+    t[2] &= 0x3FFFF;
 
-    r[4*i+3]  = a[9*i+6] >> 6;
-    r[4*i+3] |= (uint32_t)a[9*i+7] << 2;
-    r[4*i+3] |= (uint32_t)a[9*i+8] << 10;
-    r[4*i+3] &= 0x3FFFF;
+    t[3]  = zy[9*i+6] >> 6;
+    t[3] |= (uint32_t)zy[9*i+7] << 2;
+    t[3] |= (uint32_t)zy[9*i+8] << 10;
+    t[3] &= 0x3FFFF;
 
-    r[4*i+2]   = a[9*i+4] >> 4;
-    r[4*i+2]  |= (uint32_t)a[9*i+5] << 4;
-    r[4*i+2]  |= (uint32_t)a[9*i+6] << 12;
-    r[4*i+2]  &= 0x3FFFF;
-
-
-    r[4*i+1] = (uint32_t)a[9*i+4] << 14;
-    r[4*i+1] |= a[9*i+2] >> 2;
-    r[4*i+1] |= (uint32_t)a[9*i+3] << 6;
-    r[4*i+1] &= 0x3FFFF;
-
-    t0  = a[9*i+0];
-    t0 |= (uint32_t)a[9*i+1] << 8;
-    t0 |= (uint32_t)a[9*i+2] << 16;
-    t0 &= 0x3FFFF;
-
-    r[4*i+0] = GAMMA1 - t0;
-    r[4*i+1] = GAMMA1 - r[4*i+1];
-    r[4*i+2] = GAMMA1 - r[4*i+2];
-    r[4*i+3] = GAMMA1 - r[4*i+3];
-
-  }
-#elif GAMMA1 == (1 << 19)
-  for(j = 0; j < POLY_UNIFORM_GAMMA1_BUFFERSIZE; ++j) {
-    i = POLY_UNIFORM_GAMMA1_BUFFERSIZE-1-j;
-    int32_t tmp0, tmp1;
-
-    tmp0  = a[5*i+2] >> 4;
-    tmp0 |= (uint32_t)a[5*i+3] << 4;
-    tmp0 |= (uint32_t)a[5*i+4] << 12;
-    tmp0 &= 0xFFFFF;
-
-    tmp1  = a[5*i+0];
-    tmp1 |= (uint32_t)a[5*i+1] << 8;
-    tmp1 |= (uint32_t)a[5*i+2] << 16;
-    tmp1 &= 0xFFFFF;
-
-    r[2*i+0] = GAMMA1 - tmp1;
-    r[2*i+1] = GAMMA1 - tmp0;
-  }
-#endif
-}
-
-void poly_uniform_gamma1_stack(poly *a, const uint8_t seed[CRHBYTES], uint16_t nonce, shake256incctx *state){
-  int32_t buf[POLY_UNIFORM_GAMMA1_BUFFERSIZE_COEFFS];
-
-  stream256_init(state, seed, nonce);
-  for(size_t i = 0; i < N/POLY_UNIFORM_GAMMA1_BUFFERSIZE_COEFFS; i++){
-    shake256_inc_squeeze((uint8_t *)buf, POLY_UNIFORM_GAMMA1_BUFFERSIZE_BYTES, state);
-    polyz_unpack_inplace(buf);
-
-    for(size_t j = 0; j < POLY_UNIFORM_GAMMA1_BUFFERSIZE_COEFFS; j++){
-      a->coeffs[i*POLY_UNIFORM_GAMMA1_BUFFERSIZE_COEFFS + j] = buf[j];
+    for(size_t j = 0; j < 4; j++) {
+      int32_t v = reduce32(GAMMA1 - (int32_t)t[j] + cs1->coeffs[4*i+j]);
+      int32_t m = v >> 31;
+      m = v - (m & 2*v);
+      if(m >= bound) return -1;
+      t[j] = GAMMA1 - v;
     }
+
+    zy[9*i+0]  = t[0];
+    zy[9*i+1]  = t[0] >> 8;
+    zy[9*i+2]  = t[0] >> 16;
+    zy[9*i+2] |= t[1] << 2;
+    zy[9*i+3]  = t[1] >> 6;
+    zy[9*i+4]  = t[1] >> 14;
+    zy[9*i+4] |= t[2] << 4;
+    zy[9*i+5]  = t[2] >> 4;
+    zy[9*i+6]  = t[2] >> 12;
+    zy[9*i+6] |= t[3] << 6;
+    zy[9*i+7]  = t[3] >> 2;
+    zy[9*i+8]  = t[3] >> 10;
   }
-}
+#elif GAMMA1 == (1 << 19)
+  for(size_t i = 0; i < N/2; ++i) {
+    uint32_t t[2];
 
-void poly_uniform_gamma1_add_stack(poly *a, poly *b, const uint8_t seed[CRHBYTES], uint16_t nonce, shake256incctx *state){
-  int32_t buf[POLY_UNIFORM_GAMMA1_BUFFERSIZE_COEFFS];
+    t[0]  = zy[5*i+0];
+    t[0] |= (uint32_t)zy[5*i+1] << 8;
+    t[0] |= (uint32_t)zy[5*i+2] << 16;
+    t[0] &= 0xFFFFF;
 
-  stream256_init(state, seed, nonce);
-  for(size_t i = 0; i < N/POLY_UNIFORM_GAMMA1_BUFFERSIZE_COEFFS; i++){
-    shake256_inc_squeeze((uint8_t *)buf, POLY_UNIFORM_GAMMA1_BUFFERSIZE_BYTES, state);
-    polyz_unpack_inplace(buf);
+    t[1]  = zy[5*i+2] >> 4;
+    t[1] |= (uint32_t)zy[5*i+3] << 4;
+    t[1] |= (uint32_t)zy[5*i+4] << 12;
 
-    for(size_t j = 0; j < POLY_UNIFORM_GAMMA1_BUFFERSIZE_COEFFS; j++){
-      a->coeffs[i*POLY_UNIFORM_GAMMA1_BUFFERSIZE_COEFFS + j] = buf[j] + b->coeffs[i*POLY_UNIFORM_GAMMA1_BUFFERSIZE_COEFFS + j];
+    for(size_t j = 0; j < 2; j++) {
+      int32_t v = reduce32(GAMMA1 - (int32_t)t[j] + cs1->coeffs[2*i+j]);
+      int32_t m = v >> 31;
+      m = v - (m & 2*v);
+      if(m >= bound) return -1;
+      t[j] = GAMMA1 - v;
     }
+
+    zy[5*i+0]  = t[0];
+    zy[5*i+1]  = t[0] >> 8;
+    zy[5*i+2]  = t[0] >> 16;
+    zy[5*i+2] |= t[1] << 4;
+    zy[5*i+3]  = t[1] >> 4;
+    zy[5*i+4]  = t[1] >> 12;
   }
-}
-
-
-static inline int32_t make_hint_stack(int32_t z, int32_t r){
-  int32_t r1, v1;
-
-  r1 = highbits(r);
-  v1 = highbits(r+z);
-
-  if(r1 != v1) return 1;
+#endif
   return 0;
+}
+
+/* wcomp <- w - c*s2 (24-bit packed, canonical) for a 16-bit c*s2.
+ * Returns -1 at the first coefficient whose low bits r0 reach the bound (wcomp is then partly updated; the attempt is discarded). */
+int polyw_sub_cs2_check_r0(uint8_t wcomp[3*N], const smallpoly *cs2, int32_t bound){
+  for(size_t i = 0; i < N; i++){
+    int32_t w_i  = wcomp[i*3 + 0];
+    w_i |= (int32_t)wcomp[i*3 + 1] << 8;
+    w_i |= (int32_t)wcomp[i*3 + 2] << 16;
+
+    w_i -= cs2->coeffs[i];
+    w_i = reduce32(w_i);
+    w_i = caddq(w_i);
+
+    wcomp[i*3 + 0] = (uint8_t)w_i;
+    wcomp[i*3 + 1] = (uint8_t)(w_i >> 8);
+    wcomp[i*3 + 2] = (uint8_t)(w_i >> 16);
+
+    int32_t a0 = lowbits(w_i);
+    a0 = reduce32(a0);
+    int32_t t = a0 >> 31;
+    t = a0 - (t & 2*a0);
+    if(t >= bound) return -1;
+  }
+  return 0;
+}
+
+/* w is frozen, stored in the 24-bit packed form (as polyw_pack) and its high bits are packed into w1 (as polyw1_pack).
+ * w1 may be w itself (w1 == (uint8_t *)w) or disjoint from w: every group is read completely before its
+ * bytes are written, and those bytes lie below the next group. buf must not overlap w or w1. */
+void polyw_pack_w1(uint8_t buf[3*256], uint8_t w1[POLYW1_PACKEDBYTES], const poly *w){
+#if GAMMA2 == (Q-1)/88
+  for(size_t i = 0; i < N/4; ++i) {
+    int32_t t[4];
+    for(size_t j = 0; j < 4; j++) {
+      int32_t c = freeze(w->coeffs[4*i+j]);
+      buf[(4*i+j)*3 + 0] = c;
+      buf[(4*i+j)*3 + 1] = c >> 8;
+      buf[(4*i+j)*3 + 2] = c >> 16;
+      t[j] = highbits(c);
+    }
+    w1[3*i+0]  = t[0];
+    w1[3*i+0] |= t[1] << 6;
+    w1[3*i+1]  = t[1] >> 2;
+    w1[3*i+1] |= t[2] << 4;
+    w1[3*i+2]  = t[2] >> 4;
+    w1[3*i+2] |= t[3] << 2;
+  }
+#elif GAMMA2 == (Q-1)/32
+  for(size_t i = 0; i < N/2; ++i) {
+    int32_t t[2];
+    for(size_t j = 0; j < 2; j++) {
+      int32_t c = freeze(w->coeffs[2*i+j]);
+      buf[(2*i+j)*3 + 0] = c;
+      buf[(2*i+j)*3 + 1] = c >> 8;
+      buf[(2*i+j)*3 + 2] = c >> 16;
+      t[j] = highbits(c);
+    }
+    w1[i] = t[0] | (t[1] << 4);
+  }
+#endif
 }
 
 /* c = c * a * 2^-32 coefficient-wise, a given in the 24-bit packed form of polyw_pack (canonical). */
@@ -652,39 +727,4 @@ void pack_sk_tr(unsigned char sk[CRYPTO_SECRETKEYBYTES],
     for (unsigned int i = 0; i < TRBYTES; ++i) {
         sk[i] = tr[i];
     }
-}
-
-/* Sample the challenge using caller-provided SHAKE state and 68 bytes of scratch
- * (storage the caller already has and does not use at this point), so that the call needs no SHAKE state
- * and no buffer of its own. */
-void poly_challenge_extbuf(poly *c, const uint8_t seed[CTILDEBYTES], shake256incctx *state, uint8_t buf[68]) {
-  unsigned int i, b, pos;
-  uint64_t signs;
-
-  shake256_inc_init(state);
-  shake256_inc_absorb(state, seed, CTILDEBYTES);
-  shake256_inc_finalize(state);
-  shake256_inc_squeeze(buf, 68, state);
-
-  signs = 0;
-  for(i = 0; i < 8; ++i)
-    signs |= (uint64_t)buf[i] << 8*i;
-  pos = 8;
-
-  for(i = 0; i < N; ++i)
-    c->coeffs[i] = 0;
-  for(i = N-TAU; i < N; ++i) {
-    do {
-      if(pos >= 68) {
-        shake256_inc_squeeze(buf, 68, state);
-        pos = 0;
-      }
-
-      b = buf[pos++];
-    } while(b > i);
-
-    c->coeffs[i] = c->coeffs[b];
-    c->coeffs[b] = 1 - 2*(signs & 1);
-    signs >>= 1;
-  }
 }
