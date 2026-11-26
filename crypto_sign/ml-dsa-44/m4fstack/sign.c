@@ -203,7 +203,7 @@ rej:
         /* Matrix-vector multiplication */
         for (size_t k_idx = 0; k_idx < K; k_idx++) {
           // sampling of y and packing into wcomp inlined into the basemul
-          poly_uniform_pointwise_montgomery_polywadd_stack(wcomp[k_idx], tmp0, rho, (k_idx << 8) + l_idx, &state.s128);
+          poly_uniform_pointwise_montgomery_polywadd_block(wcomp[k_idx], tmp0, rho, (k_idx << 8) + l_idx, &state.s128);
         }
       }
       nonce++;
@@ -222,7 +222,8 @@ rej:
   shake256_inc_absorb(&state.s256, sig, K*POLYW1_PACKEDBYTES);
   shake256_inc_finalize(&state.s256);
   shake256_inc_squeeze(sig, CTILDEBYTES, &state.s256);
-  poly_challenge(tmp0, sig);
+  /* the hash state and ccomp are unused here */
+  poly_challenge_extbuf(tmp0, sig, &state.s256, ccomp);
 
   poly_challenge_compress(ccomp, tmp0);
   
@@ -400,12 +401,15 @@ int crypto_sign_verify_ctx(const uint8_t *sig,
   shake256_inc_finalize(&s256);
   shake256_inc_squeeze(mu, CRHBYTES, &s256);
 
+  /* The challenge is sampled while the hash state and wcomp are unused,
+   * so that neither a second state nor a buffer goes on the stack */
+  poly_challenge_extbuf(&p, sig, &s256, wcomp);
+
   shake256_inc_init(&s256);
   shake256_inc_absorb(&s256, mu, CRHBYTES);
 
   /* Matrix-vector multiplication; compute Az - c2^dt1 */
-  poly_challenge_stack(&p, sig);
-  poly_challenge_compress(ccomp, &p);
+  poly_challenge_compress(ccomp, &p); // overwrites mu
 
   for (size_t k_idx = 0; k_idx < K; k_idx++) {
     for(size_t widx=0;widx<768;widx++){
@@ -413,7 +417,7 @@ int crypto_sign_verify_ctx(const uint8_t *sig,
     }
 
     polyz_unpack(&p, sig + CTILDEBYTES);
-    if(poly_chknorm(&p, GAMMA1 - BETA))
+    if(k_idx == 0 && poly_chknorm(&p, GAMMA1 - BETA))
       return -1;
     poly_ntt(&p);
     
@@ -421,7 +425,7 @@ int crypto_sign_verify_ctx(const uint8_t *sig,
 
     for (size_t l_idx = 1; l_idx < L; l_idx++) {
       polyz_unpack(&p, sig + CTILDEBYTES + l_idx*POLYZ_PACKEDBYTES);
-      if(poly_chknorm(&p, GAMMA1 - BETA))
+      if(k_idx == 0 && poly_chknorm(&p, GAMMA1 - BETA))
         return -1;
       poly_ntt(&p);
       poly_uniform_pointwise_montgomery_polywadd_stack(wcomp, &p, pk, (k_idx << 8) + l_idx, s128);

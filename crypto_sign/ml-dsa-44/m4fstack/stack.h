@@ -25,10 +25,17 @@ void poly_lowbits(poly *a0, const poly *a);
 void unpack_sk_s1(smallpoly *a, const uint8_t *sk, size_t idx);
 void unpack_sk_s2(smallpoly *a, const uint8_t *sk, size_t idx);
 
-void poly_uniform_pointwise_montgomery_polywadd_stack(uint8_t wcomp[3*N], poly *b, const uint8_t  seed[SEEDBYTES], uint16_t nonce, shake128incctx *state);
+void poly_uniform_pointwise_montgomery_polywadd_stack(uint8_t wcomp[3*N], const poly *b, const uint8_t  seed[SEEDBYTES], uint16_t nonce, shake128incctx *state);
+void poly_uniform_pointwise_montgomery_polywadd_block(uint8_t wcomp[3*N], const poly *b, const uint8_t seed[SEEDBYTES], uint16_t nonce, shake128incctx *state);
 void poly_uniform_gamma1_stack(poly *a, const uint8_t seed[CRHBYTES], uint16_t nonce, shake256incctx *state);
 void poly_uniform_gamma1_add_stack(poly *a, poly *b, const uint8_t seed[CRHBYTES], uint16_t nonce, shake256incctx *state);
-void poly_challenge_stack(poly *c, const uint8_t seed[CTILDEBYTES]);
+void poly_challenge_extbuf(poly *c, const uint8_t seed[CTILDEBYTES], shake256incctx *state, uint8_t buf[68]);
+
+/* For each 3-byte candidate t (little endian, low 23 bits) of buf with t < Q: w[ctr] += t*b[ctr]*2^-32 mod Q, ctr++.
+ * Requires 0 <= ctr <= N, buflen % 3 == 0, w canonical (coefficients in [0,Q), 24-bit packed) and w, b, buf disjoint.
+ * Stops when ctr reaches N; returns the new ctr. Uses unaligned halfword accesses. */
+#define asm_rej_mulacc24 DILITHIUM_NAMESPACE(asm_rej_mulacc24)
+unsigned int asm_rej_mulacc24(uint8_t w[3*N], const int32_t b[N], unsigned int ctr, const uint8_t *buf, unsigned int buflen);
 
 size_t poly_make_hint_stack(poly *a, poly *t, uint8_t w[768]);
 int unpack_sig_h_indices(uint8_t h_i[OMEGA], unsigned int * number_of_hints, unsigned int idx, const unsigned char sig[CRYPTO_BYTES]);

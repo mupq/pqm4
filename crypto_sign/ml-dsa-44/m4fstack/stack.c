@@ -282,33 +282,28 @@ void unpack_sk_s2(smallpoly *a, const uint8_t *sk, size_t idx) {
 }
 
 
-// TODO: in the end increase this buffer size as far as possible
-#define POLY_UNIFORM_BUFFERSIZE 3
-void poly_uniform_pointwise_montgomery_polywadd_stack(uint8_t wcomp[3*N], poly *b, const uint8_t seed[SEEDBYTES], uint16_t nonce, shake128incctx *state){
-  int32_t t;
-  uint8_t buf[POLY_UNIFORM_BUFFERSIZE*3];
-  {
-    size_t ctr = 0;
-    stream128_init(state, seed, nonce);
+/* Samples a_ij from SHAKE128(seed, nonce) and accumulates a_ij * b into the 24-bit packed wcomp,
+ * buflen bytes (a positive multiple of 3) of the stream per squeeze. */
+static inline __attribute__((always_inline)) void polywadd_sample(uint8_t wcomp[3*N], const poly *b, const uint8_t seed[SEEDBYTES], uint16_t nonce, shake128incctx *state, uint8_t *buf, unsigned int buflen){
+  unsigned int ctr = 0;
+  stream128_init(state, seed, nonce);
 
-    do {
-      shake128_inc_squeeze(buf, sizeof buf, state);
+  do {
+    shake128_inc_squeeze(buf, buflen, state);
+    ctr = asm_rej_mulacc24(wcomp, b->coeffs, ctr, buf, buflen);
+  } while(ctr < N);
+}
 
-      for(size_t pos=0; pos < sizeof buf && ctr < N; pos += 3){
-        t  = buf[pos];
-        t |= (uint32_t)buf[pos+1] << 8;
-        t |= (uint32_t)buf[pos+2] << 16;
-        t &= 0x7FFFFF;
+/* Verification: 20 candidates per squeeze, which keeps the stack below that of the former challenge sampling. */
+void poly_uniform_pointwise_montgomery_polywadd_stack(uint8_t wcomp[3*N], const poly *b, const uint8_t seed[SEEDBYTES], uint16_t nonce, shake128incctx *state){
+  uint8_t buf[3*20];
+  polywadd_sample(wcomp, b, seed, nonce, state, buf, sizeof buf);
+}
 
-        if(t < Q) {
-          t = montgomery_reduce((int64_t)t * b->coeffs[ctr]);
-          polyw_add_idx(wcomp, t, ctr);
-          ctr++;
-        }
-      }
-    } while(ctr < N);
-
-  }
+/* Signing: one SHAKE128 block (56 candidates) per squeeze. */
+void poly_uniform_pointwise_montgomery_polywadd_block(uint8_t wcomp[3*N], const poly *b, const uint8_t seed[SEEDBYTES], uint16_t nonce, shake128incctx *state){
+  uint8_t buf[SHAKE128_RATE];
+  polywadd_sample(wcomp, b, seed, nonce, state, buf, sizeof buf);
 }
 
 #define POLY_UNIFORM_GAMMA1_BUFFERSIZE 1
@@ -648,40 +643,29 @@ void pack_sk_tr(unsigned char sk[CRYPTO_SECRETKEYBYTES],
     }
 }
 
-/*************************************************
-* Name:        challenge
-*
-* Description: Implementation of H. Samples polynomial with TAU nonzero
-*              coefficients in {-1,1} using the output stream of
-*              SHAKE256(seed). Stack optimized.
-*
-* Arguments:   - poly *c: pointer to output polynomial
-*              - const uint8_t mu[]: byte array containing seed of length SEEDBYTES
-**************************************************/
-#define CHALLENGE_STACK_BUF_SIZE 8
-void poly_challenge_stack(poly *c, const uint8_t seed[CTILDEBYTES]) {
+/* Sample the challenge using caller-provided SHAKE state and 68 bytes of scratch
+ * (storage the caller already has and does not use at this point), so that the call needs no SHAKE state
+ * and no buffer of its own. */
+void poly_challenge_extbuf(poly *c, const uint8_t seed[CTILDEBYTES], shake256incctx *state, uint8_t buf[68]) {
   unsigned int i, b, pos;
   uint64_t signs;
-  uint8_t buf[CHALLENGE_STACK_BUF_SIZE];
-  shake256incctx state;
 
-  shake256_inc_init(&state);
-  shake256_inc_absorb(&state, seed, CTILDEBYTES);
-  shake256_inc_finalize(&state);
-  shake256_inc_squeeze(buf, CHALLENGE_STACK_BUF_SIZE, &state);
+  shake256_inc_init(state);
+  shake256_inc_absorb(state, seed, CTILDEBYTES);
+  shake256_inc_finalize(state);
+  shake256_inc_squeeze(buf, 68, state);
+
   signs = 0;
   for(i = 0; i < 8; ++i)
-  {
     signs |= (uint64_t)buf[i] << 8*i;
-  }
   pos = 8;
 
   for(i = 0; i < N; ++i)
     c->coeffs[i] = 0;
   for(i = N-TAU; i < N; ++i) {
     do {
-      if(pos >= CHALLENGE_STACK_BUF_SIZE) {
-        shake256_inc_squeeze(buf, CHALLENGE_STACK_BUF_SIZE, &state);
+      if(pos >= 68) {
+        shake256_inc_squeeze(buf, 68, state);
         pos = 0;
       }
 
