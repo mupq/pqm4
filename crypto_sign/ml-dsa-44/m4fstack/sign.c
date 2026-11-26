@@ -248,12 +248,8 @@ rej:
   }
 
 
-  /* Write signature */
-  unsigned int hint_n = 0;
-  unsigned int hints_written = 0;
   /* Check that subtracting cs2 does not change high bits of w and low bits
    * do not reveal secret information */
-  
   for(unsigned int k_idx = 0; k_idx < K; ++k_idx) {
     poly_challenge_decompress(tmp0, ccomp);
     poly_small_ntt_copy(scp, tmp0);
@@ -272,22 +268,39 @@ rej:
     if(poly_chknorm(tmp0, GAMMA2 - BETA)){
       goto rej;
     }
+  }
 
-    poly_schoolbook(tmp0, ccomp, sk + SEEDBYTES + TRBYTES + SEEDBYTES +
-      L*POLYETA_PACKEDBYTES + K*POLYETA_PACKEDBYTES + k_idx*POLYT0_PACKEDBYTES);
+  /* Write signature */
+  unsigned int hints_written = 0;
+  const uint8_t *t0 = sk + SEEDBYTES + TRBYTES + SEEDBYTES + L*POLYETA_PACKEDBYTES + K*POLYETA_PACKEDBYTES;
+
+  /* c*t0 and the hints are computed only for attempts that passed all checks above. Row 0 uses the schoolbook
+   * product; its slot of wcomp is free afterwards and holds NTT(c) in 24-bit packed form for the NTT products
+   * of the other rows. */
+  for(unsigned int k_idx = 0; k_idx < K; ++k_idx) {
+    if (k_idx == 0) {
+      poly_schoolbook(tmp0, ccomp, t0);
+    } else {
+      if (k_idx == 1) {
+        poly_challenge_decompress(tmp0, ccomp);
+        poly_ntt(tmp0);
+        polyw_pack(wcomp[0], tmp0);
+      }
+      polyt0_unpack(tmp0, t0 + k_idx*POLYT0_PACKEDBYTES);
+      poly_ntt(tmp0);
+      poly_pointwise_montgomery_polyw(tmp0, wcomp[0]);
+      poly_invntt_tomont(tmp0);
+      poly_reduce(tmp0);
+    }
 
     /* Compute hints for w1 */
-
     if(poly_chknorm(tmp0, GAMMA2)) {
       goto rej;
     }
 
-    hint_n += poly_make_hint_stack(tmp0, tmp0, wcomp[k_idx]);
-
-    if (hint_n > OMEGA) {
+    if (poly_make_hint_pack_stack(sig, k_idx, &hints_written, tmp0, wcomp[k_idx]) < 0) {
       goto rej;
     }
-    pack_sig_h(sig, tmp0, k_idx, &hints_written);
   }
   pack_sig_h_zero(sig, &hints_written);
   *siglen = CRYPTO_BYTES;

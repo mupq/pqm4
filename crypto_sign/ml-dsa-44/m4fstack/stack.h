@@ -15,6 +15,7 @@ void poly_schoolbook(poly *c, const uint8_t ccomp[68], const uint8_t *t0);
 void poly_schoolbook_t1(poly *c, const uint8_t ccomp[68], const uint8_t *t1);
 void polyw_pack(uint8_t buf[3*256], poly *w);
 void polyw_unpack(poly *w, const uint8_t buf[3*256]);
+void poly_pointwise_montgomery_polyw(poly *c, const uint8_t buf[3*256]);
 
 void polyw_add(uint8_t buf[3*256], poly *p);
 void polyw_sub(poly* c, uint8_t buf[3*256], poly *a);
@@ -37,7 +38,7 @@ void poly_challenge_extbuf(poly *c, const uint8_t seed[CTILDEBYTES], shake256inc
 #define asm_rej_mulacc24 DILITHIUM_NAMESPACE(asm_rej_mulacc24)
 unsigned int asm_rej_mulacc24(uint8_t w[3*N], const int32_t b[N], unsigned int ctr, const uint8_t *buf, unsigned int buflen);
 
-size_t poly_make_hint_stack(poly *a, poly *t, uint8_t w[768]);
+int poly_make_hint_pack_stack(uint8_t *sig, unsigned int k, unsigned int *hints_written, const poly *ct0, const uint8_t w[768]);
 int unpack_sig_h_indices(uint8_t h_i[OMEGA], unsigned int * number_of_hints, unsigned int idx, const unsigned char sig[CRYPTO_BYTES]);
 void poly_use_hint_stack(poly *b, const poly *a, uint8_t h_i[OMEGA], unsigned int number_of_hints);
 

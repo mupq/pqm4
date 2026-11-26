@@ -111,33 +111,29 @@ static inline int32_t polyt1_unpack_idx(const uint8_t *t1, unsigned idx){
     return coeff;
 }
 
+/* c*t0 with the loop over t0 outside: each t0 coefficient is unpacked once, without a second polynomial buffer. */
 void poly_schoolbook(poly *c, const uint8_t ccomp[68], const uint8_t *t0){
-  unsigned i,j,idx;
-  uint64_t signs = 0;
+  unsigned i,j,idx,pos,wrap;
+  uint64_t signs = 0, s;
+  int32_t t, mask;
   for(i = 0; i < N; i++) c->coeffs[i] = 0;
   for(i = 0; i < 8; i++) {
     signs |= ((uint64_t)ccomp[60+i]) << (8*i);
   }
 
-  for(idx = 0; idx < TAU; idx++){
-    i = ccomp[idx];
-    if(!(signs & 1)){
-        for(j = 0; i+j < N; j++){
-            c->coeffs[i+j] += polyt0_unpack_idx(t0, j);
-        }
-        for(j = N-i; j<N; j++){
-            c->coeffs[i+j-N] -= polyt0_unpack_idx(t0, j);
-        }
-    } else {
-        for(j = 0; i+j < N; j++){
-            c->coeffs[i+j] -= polyt0_unpack_idx(t0, j);
-        }
-        for(j = N-i; j<N; j++){
-            c->coeffs[i+j-N] += polyt0_unpack_idx(t0, j);
-        }
+  // loop over t0 outside: every coefficient of t0 is unpacked once
+  for(j = 0; j < N; j++){
+    t = polyt0_unpack_idx(t0, j);
+    s = signs;
+    for(idx = 0; idx < TAU; idx++){
+      i = ccomp[idx];
+      pos = i + j;
+      wrap = pos >> 8;                        // 1 iff i + j >= N
+      pos &= 0xFF;
+      mask = -(int32_t)((s & 1) ^ wrap);      // 0 or -1
+      c->coeffs[pos] += (t ^ mask) - mask;    // +t or -t
+      s >>= 1;
     }
-
-    signs >>= 1;
   }
 }
 
@@ -412,25 +408,40 @@ static inline int32_t make_hint_stack(int32_t z, int32_t r){
   return 0;
 }
 
-size_t poly_make_hint_stack(poly *a, poly *t, uint8_t w[768]){
-  int32_t coeff;
-  size_t hints_n = 0;
+/* c = c * a * 2^-32 coefficient-wise, a given in the 24-bit packed form of polyw_pack (canonical). */
+void poly_pointwise_montgomery_polyw(poly *c, const uint8_t buf[3*256]){
+  unsigned int i;
+  for(i = 0; i < N; i++){
+    int32_t a;
+    a  = buf[i*3 + 0];
+    a |= (int32_t)buf[i*3 + 1] << 8;
+    a |= (int32_t)buf[i*3 + 2] << 16;
+    c->coeffs[i] = montgomery_reduce((int64_t)a * c->coeffs[i]);
+  }
+}
+
+/* Computes the hints of row k from c*t0 and the packed w - c*s2 and writes their indices directly into the signature.
+ * hints_written is the running total over the rows. Returns -1 if the total would exceed OMEGA. */
+int poly_make_hint_pack_stack(uint8_t *sig, unsigned int k,
+                              unsigned int *hints_written,
+                              const poly *ct0, const uint8_t w[768]){
+  uint8_t *h_sig = sig + CTILDEBYTES + L*POLYZ_PACKEDBYTES;
   for(size_t i=0;i<N;i++){
-    // unpack coeff from w (contains w - cs2)
-    coeff =  w[i*3 + 0];
+    int32_t coeff =  w[i*3 + 0];
     coeff |= (int32_t)w[i*3 + 1] << 8;
     coeff |= (int32_t)w[i*3 + 2] << 16;
 
-
     // compute w - cs2 + c*t0
-    coeff  = coeff + t->coeffs[i];
-
-    a->coeffs[i] = make_hint_stack(-t->coeffs[i], coeff);
-    if(a->coeffs[i] == 1){
-      hints_n++;
+    coeff += ct0->coeffs[i];
+    if(make_hint_stack(-ct0->coeffs[i], coeff)){
+      if(*hints_written == OMEGA) {
+        return -1;
+      }
+      h_sig[(*hints_written)++] = (uint8_t)i;
     }
   }
-  return hints_n;
+  h_sig[OMEGA + k] = (uint8_t)*hints_written;
+  return 0;
 }
 
 /*************************************************
