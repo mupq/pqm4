@@ -111,33 +111,29 @@ static inline int32_t polyt1_unpack_idx(const uint8_t *t1, unsigned idx){
     return coeff;
 }
 
+/* c*t0 with the loop over t0 outside: each t0 coefficient is unpacked once, without a second polynomial buffer. */
 void poly_schoolbook(poly *c, const uint8_t ccomp[68], const uint8_t *t0){
-  unsigned i,j,idx;
-  uint64_t signs = 0;
+  unsigned i,j,idx,pos,wrap;
+  uint64_t signs = 0, s;
+  int32_t t, mask;
   for(i = 0; i < N; i++) c->coeffs[i] = 0;
   for(i = 0; i < 8; i++) {
     signs |= ((uint64_t)ccomp[60+i]) << (8*i);
   }
 
-  for(idx = 0; idx < TAU; idx++){
-    i = ccomp[idx];
-    if(!(signs & 1)){
-        for(j = 0; i+j < N; j++){
-            c->coeffs[i+j] += polyt0_unpack_idx(t0, j);
-        }
-        for(j = N-i; j<N; j++){
-            c->coeffs[i+j-N] -= polyt0_unpack_idx(t0, j);
-        }
-    } else {
-        for(j = 0; i+j < N; j++){
-            c->coeffs[i+j] -= polyt0_unpack_idx(t0, j);
-        }
-        for(j = N-i; j<N; j++){
-            c->coeffs[i+j-N] += polyt0_unpack_idx(t0, j);
-        }
+  // loop over t0 outside: every coefficient of t0 is unpacked once
+  for(j = 0; j < N; j++){
+    t = polyt0_unpack_idx(t0, j);
+    s = signs;
+    for(idx = 0; idx < TAU; idx++){
+      i = ccomp[idx];
+      pos = i + j;
+      wrap = pos >> 8;                        // 1 iff i + j >= N
+      pos &= 0xFF;
+      mask = -(int32_t)((s & 1) ^ wrap);      // 0 or -1
+      c->coeffs[pos] += (t ^ mask) - mask;    // +t or -t
+      s >>= 1;
     }
-
-    signs >>= 1;
   }
 }
 
@@ -242,12 +238,6 @@ static int32_t highbits(int32_t a){
   return a1;
 }
 
-void poly_highbits(poly *a1, const poly *a) {
-  unsigned int i;
-
-  for(i = 0; i < N; ++i)
-    a1->coeffs[i] = highbits(a->coeffs[i]);
-}
 
 static int32_t lowbits(int32_t a){
   int32_t a1;
@@ -267,143 +257,12 @@ static int32_t lowbits(int32_t a){
   return a0;
 }
 
-void poly_lowbits(poly *a0, const poly *a){
-  unsigned int i;
-
-  for(i = 0; i < N; ++i)
-    a0->coeffs[i] = lowbits(a->coeffs[i]);
-}
 
 void unpack_sk_s1(smallpoly *a, const uint8_t *sk, size_t idx) {
   small_polyeta_unpack(a, sk + 2*SEEDBYTES + TRBYTES + idx*POLYETA_PACKEDBYTES);
 }
 void unpack_sk_s2(smallpoly *a, const uint8_t *sk, size_t idx) {
   small_polyeta_unpack(a, sk + 2*SEEDBYTES + TRBYTES + L*POLYETA_PACKEDBYTES + idx*POLYETA_PACKEDBYTES);
-}
-
-
-// TODO: in the end increase this buffer size as far as possible
-#define POLY_UNIFORM_BUFFERSIZE 3
-void poly_uniform_pointwise_montgomery_polywadd_stack(uint8_t wcomp[3*N], poly *b, const uint8_t seed[SEEDBYTES], uint16_t nonce, shake128incctx *state){
-  int32_t t;
-  uint8_t buf[POLY_UNIFORM_BUFFERSIZE*3];
-  {
-    size_t ctr = 0;
-    stream128_init(state, seed, nonce);
-
-    do {
-      shake128_inc_squeeze(buf, sizeof buf, state);
-
-      for(size_t pos=0; pos < sizeof buf && ctr < N; pos += 3){
-        t  = buf[pos];
-        t |= (uint32_t)buf[pos+1] << 8;
-        t |= (uint32_t)buf[pos+2] << 16;
-        t &= 0x7FFFFF;
-
-        if(t < Q) {
-          t = montgomery_reduce((int64_t)t * b->coeffs[ctr]);
-          polyw_add_idx(wcomp, t, ctr);
-          ctr++;
-        }
-      }
-    } while(ctr < N);
-
-  }
-}
-
-#define POLY_UNIFORM_GAMMA1_BUFFERSIZE 1
-#if GAMMA1 == (1 << 17)
-#define POLY_UNIFORM_GAMMA1_BUFFERSIZE_COEFFS (POLY_UNIFORM_GAMMA1_BUFFERSIZE*4)
-#define POLY_UNIFORM_GAMMA1_BUFFERSIZE_BYTES  (POLY_UNIFORM_GAMMA1_BUFFERSIZE*9)
-#elif GAMMA1 == (1 << 19)
-#define POLY_UNIFORM_GAMMA1_BUFFERSIZE_COEFFS (POLY_UNIFORM_GAMMA1_BUFFERSIZE*2)
-#define POLY_UNIFORM_GAMMA1_BUFFERSIZE_BYTES  (POLY_UNIFORM_GAMMA1_BUFFERSIZE*5)
-#endif
-
-static void polyz_unpack_inplace(int32_t *r){
-  uint8_t *a = (uint8_t *)r;
-
-  unsigned int i,j;
-  #if GAMMA1 == (1 << 17)
-  for(j = 0; j < POLY_UNIFORM_GAMMA1_BUFFERSIZE; ++j) {
-    i = POLY_UNIFORM_GAMMA1_BUFFERSIZE-1-j;
-    int32_t t0;
-
-
-    r[4*i+3]  = a[9*i+6] >> 6;
-    r[4*i+3] |= (uint32_t)a[9*i+7] << 2;
-    r[4*i+3] |= (uint32_t)a[9*i+8] << 10;
-    r[4*i+3] &= 0x3FFFF;
-
-    r[4*i+2]   = a[9*i+4] >> 4;
-    r[4*i+2]  |= (uint32_t)a[9*i+5] << 4;
-    r[4*i+2]  |= (uint32_t)a[9*i+6] << 12;
-    r[4*i+2]  &= 0x3FFFF;
-
-
-    r[4*i+1] = (uint32_t)a[9*i+4] << 14;
-    r[4*i+1] |= a[9*i+2] >> 2;
-    r[4*i+1] |= (uint32_t)a[9*i+3] << 6;
-    r[4*i+1] &= 0x3FFFF;
-
-    t0  = a[9*i+0];
-    t0 |= (uint32_t)a[9*i+1] << 8;
-    t0 |= (uint32_t)a[9*i+2] << 16;
-    t0 &= 0x3FFFF;
-
-    r[4*i+0] = GAMMA1 - t0;
-    r[4*i+1] = GAMMA1 - r[4*i+1];
-    r[4*i+2] = GAMMA1 - r[4*i+2];
-    r[4*i+3] = GAMMA1 - r[4*i+3];
-
-  }
-#elif GAMMA1 == (1 << 19)
-  for(j = 0; j < POLY_UNIFORM_GAMMA1_BUFFERSIZE; ++j) {
-    i = POLY_UNIFORM_GAMMA1_BUFFERSIZE-1-j;
-    int32_t tmp0, tmp1;
-
-    tmp0  = a[5*i+2] >> 4;
-    tmp0 |= (uint32_t)a[5*i+3] << 4;
-    tmp0 |= (uint32_t)a[5*i+4] << 12;
-    tmp0 &= 0xFFFFF;
-
-    tmp1  = a[5*i+0];
-    tmp1 |= (uint32_t)a[5*i+1] << 8;
-    tmp1 |= (uint32_t)a[5*i+2] << 16;
-    tmp1 &= 0xFFFFF;
-
-    r[2*i+0] = GAMMA1 - tmp1;
-    r[2*i+1] = GAMMA1 - tmp0;
-  }
-#endif
-}
-
-void poly_uniform_gamma1_stack(poly *a, const uint8_t seed[CRHBYTES], uint16_t nonce, shake256incctx *state){
-  int32_t buf[POLY_UNIFORM_GAMMA1_BUFFERSIZE_COEFFS];
-
-  stream256_init(state, seed, nonce);
-  for(size_t i = 0; i < N/POLY_UNIFORM_GAMMA1_BUFFERSIZE_COEFFS; i++){
-    shake256_inc_squeeze((uint8_t *)buf, POLY_UNIFORM_GAMMA1_BUFFERSIZE_BYTES, state);
-    polyz_unpack_inplace(buf);
-
-    for(size_t j = 0; j < POLY_UNIFORM_GAMMA1_BUFFERSIZE_COEFFS; j++){
-      a->coeffs[i*POLY_UNIFORM_GAMMA1_BUFFERSIZE_COEFFS + j] = buf[j];
-    }
-  }
-}
-
-void poly_uniform_gamma1_add_stack(poly *a, poly *b, const uint8_t seed[CRHBYTES], uint16_t nonce, shake256incctx *state){
-  int32_t buf[POLY_UNIFORM_GAMMA1_BUFFERSIZE_COEFFS];
-
-  stream256_init(state, seed, nonce);
-  for(size_t i = 0; i < N/POLY_UNIFORM_GAMMA1_BUFFERSIZE_COEFFS; i++){
-    shake256_inc_squeeze((uint8_t *)buf, POLY_UNIFORM_GAMMA1_BUFFERSIZE_BYTES, state);
-    polyz_unpack_inplace(buf);
-
-    for(size_t j = 0; j < POLY_UNIFORM_GAMMA1_BUFFERSIZE_COEFFS; j++){
-      a->coeffs[i*POLY_UNIFORM_GAMMA1_BUFFERSIZE_COEFFS + j] = buf[j] + b->coeffs[i*POLY_UNIFORM_GAMMA1_BUFFERSIZE_COEFFS + j];
-    }
-  }
 }
 
 
@@ -417,25 +276,247 @@ static inline int32_t make_hint_stack(int32_t z, int32_t r){
   return 0;
 }
 
-size_t poly_make_hint_stack(poly *a, poly *t, uint8_t w[768]){
-  int32_t coeff;
-  size_t hints_n = 0;
+
+/* Sample the challenge using caller-provided SHAKE state and 68 bytes of scratch
+ * (storage the caller already has and does not use at this point), so that the call needs no SHAKE state
+ * and no buffer of its own. */
+void poly_challenge_extbuf(poly *c, const uint8_t seed[CTILDEBYTES], shake256incctx *state, uint8_t buf[68]) {
+  unsigned int i, b, pos;
+  uint64_t signs;
+
+  shake256_inc_init(state);
+  shake256_inc_absorb(state, seed, CTILDEBYTES);
+  shake256_inc_finalize(state);
+  shake256_inc_squeeze(buf, 68, state);
+
+  signs = 0;
+  for(i = 0; i < 8; ++i)
+    signs |= (uint64_t)buf[i] << 8*i;
+  pos = 8;
+
+  for(i = 0; i < N; ++i)
+    c->coeffs[i] = 0;
+  for(i = N-TAU; i < N; ++i) {
+    do {
+      if(pos >= 68) {
+        shake256_inc_squeeze(buf, 68, state);
+        pos = 0;
+      }
+
+      b = buf[pos++];
+    } while(b > i);
+
+    c->coeffs[i] = c->coeffs[b];
+    c->coeffs[b] = 1 - 2*(signs & 1);
+    signs >>= 1;
+  }
+}
+
+/* Samples a_ij from SHAKE128(seed, nonce) and accumulates a_ij * b into the 24-bit packed wcomp,
+ * buflen bytes (a positive multiple of 3) of the stream per squeeze. */
+static inline __attribute__((always_inline)) void polywadd_sample(uint8_t wcomp[3*N], const poly *b, const uint8_t seed[SEEDBYTES], uint16_t nonce, shake128incctx *state, uint8_t *buf, unsigned int buflen){
+  unsigned int ctr = 0;
+  stream128_init(state, seed, nonce);
+
+  do {
+    shake128_inc_squeeze(buf, buflen, state);
+    ctr = asm_rej_mulacc24(wcomp, b->coeffs, ctr, buf, buflen);
+  } while(ctr < N);
+}
+
+/* Verification: 20 candidates per squeeze, which keeps the stack below that of the former challenge sampling. */
+void poly_uniform_pointwise_montgomery_polywadd_stack(uint8_t wcomp[3*N], const poly *b, const uint8_t seed[SEEDBYTES], uint16_t nonce, shake128incctx *state){
+  uint8_t buf[3*20];
+  polywadd_sample(wcomp, b, seed, nonce, state, buf, sizeof buf);
+}
+
+/* Signing: one SHAKE128 block (56 candidates) per squeeze. */
+void poly_uniform_pointwise_montgomery_polywadd_block(uint8_t wcomp[3*N], const poly *b, const uint8_t seed[SEEDBYTES], uint16_t nonce, shake128incctx *state){
+  uint8_t buf[SHAKE128_RATE];
+  polywadd_sample(wcomp, b, seed, nonce, state, buf, sizeof buf);
+}
+
+void poly_uniform_gamma1_keep(poly *a, uint8_t ypacked[POLYZ_PACKEDBYTES], const uint8_t seed[CRHBYTES], uint16_t nonce, shake256incctx *state){
+  stream256_init(state, seed, nonce);
+  shake256_inc_squeeze(ypacked, POLYZ_PACKEDBYTES, state);
+  polyz_unpack(a, ypacked);
+}
+
+/* z = y + cs1 inside the signature buffer: zy holds the packed mask y kept by poly_uniform_gamma1_keep and receives the packed z group by group.
+ * Returns -1 at the first coefficient that reaches the bound (the slot is then partly overwritten; the attempt is discarded). */
+int polyz_add_reduce_check_inplace(uint8_t zy[POLYZ_PACKEDBYTES], const smallpoly *cs1, int32_t bound){
+#if GAMMA1 == (1 << 17)
+  for(size_t i = 0; i < N/4; ++i) {
+    uint32_t t[4];
+
+    t[0]  = zy[9*i+0];
+    t[0] |= (uint32_t)zy[9*i+1] << 8;
+    t[0] |= (uint32_t)zy[9*i+2] << 16;
+    t[0] &= 0x3FFFF;
+
+    t[1]  = zy[9*i+2] >> 2;
+    t[1] |= (uint32_t)zy[9*i+3] << 6;
+    t[1] |= (uint32_t)zy[9*i+4] << 14;
+    t[1] &= 0x3FFFF;
+
+    t[2]  = zy[9*i+4] >> 4;
+    t[2] |= (uint32_t)zy[9*i+5] << 4;
+    t[2] |= (uint32_t)zy[9*i+6] << 12;
+    t[2] &= 0x3FFFF;
+
+    t[3]  = zy[9*i+6] >> 6;
+    t[3] |= (uint32_t)zy[9*i+7] << 2;
+    t[3] |= (uint32_t)zy[9*i+8] << 10;
+    t[3] &= 0x3FFFF;
+
+    for(size_t j = 0; j < 4; j++) {
+      int32_t v = reduce32(GAMMA1 - (int32_t)t[j] + cs1->coeffs[4*i+j]);
+      int32_t m = v >> 31;
+      m = v - (m & 2*v);
+      if(m >= bound) return -1;
+      t[j] = GAMMA1 - v;
+    }
+
+    zy[9*i+0]  = t[0];
+    zy[9*i+1]  = t[0] >> 8;
+    zy[9*i+2]  = t[0] >> 16;
+    zy[9*i+2] |= t[1] << 2;
+    zy[9*i+3]  = t[1] >> 6;
+    zy[9*i+4]  = t[1] >> 14;
+    zy[9*i+4] |= t[2] << 4;
+    zy[9*i+5]  = t[2] >> 4;
+    zy[9*i+6]  = t[2] >> 12;
+    zy[9*i+6] |= t[3] << 6;
+    zy[9*i+7]  = t[3] >> 2;
+    zy[9*i+8]  = t[3] >> 10;
+  }
+#elif GAMMA1 == (1 << 19)
+  for(size_t i = 0; i < N/2; ++i) {
+    uint32_t t[2];
+
+    t[0]  = zy[5*i+0];
+    t[0] |= (uint32_t)zy[5*i+1] << 8;
+    t[0] |= (uint32_t)zy[5*i+2] << 16;
+    t[0] &= 0xFFFFF;
+
+    t[1]  = zy[5*i+2] >> 4;
+    t[1] |= (uint32_t)zy[5*i+3] << 4;
+    t[1] |= (uint32_t)zy[5*i+4] << 12;
+
+    for(size_t j = 0; j < 2; j++) {
+      int32_t v = reduce32(GAMMA1 - (int32_t)t[j] + cs1->coeffs[2*i+j]);
+      int32_t m = v >> 31;
+      m = v - (m & 2*v);
+      if(m >= bound) return -1;
+      t[j] = GAMMA1 - v;
+    }
+
+    zy[5*i+0]  = t[0];
+    zy[5*i+1]  = t[0] >> 8;
+    zy[5*i+2]  = t[0] >> 16;
+    zy[5*i+2] |= t[1] << 4;
+    zy[5*i+3]  = t[1] >> 4;
+    zy[5*i+4]  = t[1] >> 12;
+  }
+#endif
+  return 0;
+}
+
+/* wcomp <- w - c*s2 (24-bit packed, canonical) for a 16-bit c*s2.
+ * Returns -1 at the first coefficient whose low bits r0 reach the bound (wcomp is then partly updated; the attempt is discarded). */
+int polyw_sub_cs2_check_r0(uint8_t wcomp[3*N], const smallpoly *cs2, int32_t bound){
+  for(size_t i = 0; i < N; i++){
+    int32_t w_i  = wcomp[i*3 + 0];
+    w_i |= (int32_t)wcomp[i*3 + 1] << 8;
+    w_i |= (int32_t)wcomp[i*3 + 2] << 16;
+
+    w_i -= cs2->coeffs[i];
+    w_i = reduce32(w_i);
+    w_i = caddq(w_i);
+
+    wcomp[i*3 + 0] = (uint8_t)w_i;
+    wcomp[i*3 + 1] = (uint8_t)(w_i >> 8);
+    wcomp[i*3 + 2] = (uint8_t)(w_i >> 16);
+
+    int32_t a0 = lowbits(w_i);
+    a0 = reduce32(a0);
+    int32_t t = a0 >> 31;
+    t = a0 - (t & 2*a0);
+    if(t >= bound) return -1;
+  }
+  return 0;
+}
+
+/* w is frozen, stored in the 24-bit packed form (as polyw_pack) and its high bits are packed into w1 (as polyw1_pack).
+ * w1 may be w itself (w1 == (uint8_t *)w) or disjoint from w: every group is read completely before its
+ * bytes are written, and those bytes lie below the next group. buf must not overlap w or w1. */
+void polyw_pack_w1(uint8_t buf[3*256], uint8_t w1[POLYW1_PACKEDBYTES], const poly *w){
+#if GAMMA2 == (Q-1)/88
+  for(size_t i = 0; i < N/4; ++i) {
+    int32_t t[4];
+    for(size_t j = 0; j < 4; j++) {
+      int32_t c = freeze(w->coeffs[4*i+j]);
+      buf[(4*i+j)*3 + 0] = c;
+      buf[(4*i+j)*3 + 1] = c >> 8;
+      buf[(4*i+j)*3 + 2] = c >> 16;
+      t[j] = highbits(c);
+    }
+    w1[3*i+0]  = t[0];
+    w1[3*i+0] |= t[1] << 6;
+    w1[3*i+1]  = t[1] >> 2;
+    w1[3*i+1] |= t[2] << 4;
+    w1[3*i+2]  = t[2] >> 4;
+    w1[3*i+2] |= t[3] << 2;
+  }
+#elif GAMMA2 == (Q-1)/32
+  for(size_t i = 0; i < N/2; ++i) {
+    int32_t t[2];
+    for(size_t j = 0; j < 2; j++) {
+      int32_t c = freeze(w->coeffs[2*i+j]);
+      buf[(2*i+j)*3 + 0] = c;
+      buf[(2*i+j)*3 + 1] = c >> 8;
+      buf[(2*i+j)*3 + 2] = c >> 16;
+      t[j] = highbits(c);
+    }
+    w1[i] = t[0] | (t[1] << 4);
+  }
+#endif
+}
+
+/* c = c * a * 2^-32 coefficient-wise, a given in the 24-bit packed form of polyw_pack (canonical). */
+void poly_pointwise_montgomery_polyw(poly *c, const uint8_t buf[3*256]){
+  unsigned int i;
+  for(i = 0; i < N; i++){
+    int32_t a;
+    a  = buf[i*3 + 0];
+    a |= (int32_t)buf[i*3 + 1] << 8;
+    a |= (int32_t)buf[i*3 + 2] << 16;
+    c->coeffs[i] = montgomery_reduce((int64_t)a * c->coeffs[i]);
+  }
+}
+
+/* Computes the hints of row k from c*t0 and the packed w - c*s2 and writes their indices directly into the signature.
+ * hints_written is the running total over the rows. Returns -1 if the total would exceed OMEGA. */
+int poly_make_hint_pack_stack(uint8_t *sig, unsigned int k,
+                              unsigned int *hints_written,
+                              const poly *ct0, const uint8_t w[768]){
+  uint8_t *h_sig = sig + CTILDEBYTES + L*POLYZ_PACKEDBYTES;
   for(size_t i=0;i<N;i++){
-    // unpack coeff from w (contains w - cs2)
-    coeff =  w[i*3 + 0];
+    int32_t coeff =  w[i*3 + 0];
     coeff |= (int32_t)w[i*3 + 1] << 8;
     coeff |= (int32_t)w[i*3 + 2] << 16;
 
-
     // compute w - cs2 + c*t0
-    coeff  = coeff + t->coeffs[i];
-
-    a->coeffs[i] = make_hint_stack(-t->coeffs[i], coeff);
-    if(a->coeffs[i] == 1){
-      hints_n++;
+    coeff += ct0->coeffs[i];
+    if(make_hint_stack(-ct0->coeffs[i], coeff)){
+      if(*hints_written == OMEGA) {
+        return -1;
+      }
+      h_sig[(*hints_written)++] = (uint8_t)i;
     }
   }
-  return hints_n;
+  h_sig[OMEGA + k] = (uint8_t)*hints_written;
+  return 0;
 }
 
 /*************************************************
@@ -646,50 +727,4 @@ void pack_sk_tr(unsigned char sk[CRYPTO_SECRETKEYBYTES],
     for (unsigned int i = 0; i < TRBYTES; ++i) {
         sk[i] = tr[i];
     }
-}
-
-/*************************************************
-* Name:        challenge
-*
-* Description: Implementation of H. Samples polynomial with TAU nonzero
-*              coefficients in {-1,1} using the output stream of
-*              SHAKE256(seed). Stack optimized.
-*
-* Arguments:   - poly *c: pointer to output polynomial
-*              - const uint8_t mu[]: byte array containing seed of length SEEDBYTES
-**************************************************/
-#define CHALLENGE_STACK_BUF_SIZE 8
-void poly_challenge_stack(poly *c, const uint8_t seed[CTILDEBYTES]) {
-  unsigned int i, b, pos;
-  uint64_t signs;
-  uint8_t buf[CHALLENGE_STACK_BUF_SIZE];
-  shake256incctx state;
-
-  shake256_inc_init(&state);
-  shake256_inc_absorb(&state, seed, CTILDEBYTES);
-  shake256_inc_finalize(&state);
-  shake256_inc_squeeze(buf, CHALLENGE_STACK_BUF_SIZE, &state);
-  signs = 0;
-  for(i = 0; i < 8; ++i)
-  {
-    signs |= (uint64_t)buf[i] << 8*i;
-  }
-  pos = 8;
-
-  for(i = 0; i < N; ++i)
-    c->coeffs[i] = 0;
-  for(i = N-TAU; i < N; ++i) {
-    do {
-      if(pos >= CHALLENGE_STACK_BUF_SIZE) {
-        shake256_inc_squeeze(buf, CHALLENGE_STACK_BUF_SIZE, &state);
-        pos = 0;
-      }
-
-      b = buf[pos++];
-    } while(b > i);
-
-    c->coeffs[i] = c->coeffs[b];
-    c->coeffs[b] = 1 - 2*(signs & 1);
-    signs >>= 1;
-  }
 }

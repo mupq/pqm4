@@ -21,6 +21,7 @@ void polyveck_small_ntt(smallpoly v[K]);
 
 void polyvecl_small_basemul_invntt(polyvecl *r, const smallpoly *a, const smallpoly b[L]);
 void poly_small_basemul_invntt(poly *r, const smallpoly *a, const smallpoly *b);
+void poly_small_ntt_basemul_invntt(smallpoly *r, const smallpoly *a);
 
 void small_polyeta_unpack(smallpoly *r, const uint8_t *a);
 

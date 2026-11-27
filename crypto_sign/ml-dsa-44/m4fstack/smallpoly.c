@@ -42,6 +42,14 @@ void poly_small_basemul_invntt(poly *r, const smallpoly *a, const smallpoly *b){
     #endif
 }
 
+/* r <- INTT_769(NTT_769(r) * a) for a in the NTT domain; the 16-bit product stays in r.
+ * r and a must not overlap. */
+void poly_small_ntt_basemul_invntt(smallpoly *r, const smallpoly *a){
+    small_ntt(r->coeffs);
+    small_basemul(r->coeffs, a->coeffs, r->coeffs);
+    small_invntt_tomont(r->coeffs);
+}
+
 void polyvecl_small_basemul_invntt(polyvecl *r, const smallpoly *a, const smallpoly b[L]){
     unsigned int i;
     for(i=0;i<L;i++){
