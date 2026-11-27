@@ -96,13 +96,13 @@
 | mirith_hypercube_Vb_fast | ref | 9,160 | 256 | 0 | 9,416 |
 | ml-dsa-44 | clean | 8,212 | 0 | 0 | 8,212 |
 | ml-dsa-44 | m4f | 19,592 | 0 | 0 | 19,592 |
-| ml-dsa-44 | m4fstack | 24,844 | 0 | 0 | 24,844 |
+| ml-dsa-44 | m4fstack | 23,568 | 0 | 0 | 23,568 |
 | ml-dsa-65 | clean | 7,724 | 0 | 0 | 7,724 |
 | ml-dsa-65 | m4f | 19,328 | 0 | 0 | 19,328 |
-| ml-dsa-65 | m4fstack | 24,120 | 0 | 0 | 24,120 |
+| ml-dsa-65 | m4fstack | 22,656 | 0 | 0 | 22,656 |
 | ml-dsa-87 | clean | 8,036 | 0 | 0 | 8,036 |
 | ml-dsa-87 | m4f | 19,500 | 0 | 0 | 19,500 |
-| ml-dsa-87 | m4fstack | 24,516 | 0 | 0 | 24,516 |
+| ml-dsa-87 | m4fstack | 23,080 | 0 | 0 | 23,080 |
 | mqom_cat1_gf251_fast | ref | 16,865 | 0 | 0 | 16,865 |
 | mqom_cat1_gf31_fast | ref | 23,718 | 0 | 0 | 23,718 |
 | ov-Ip | m4f | 116,070 | 0 | 0 | 116,070 |

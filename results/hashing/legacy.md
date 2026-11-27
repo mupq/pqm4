@@ -96,13 +96,13 @@
 | mirith_hypercube_Vb_fast | ref | 64.5% | 11.0% | 10.1% |
 | ml-dsa-44 | clean | 61.0% | 31.0% | 52.9% |
 | ml-dsa-44 | m4f | 79.9% | 60.6% | 76.6% |
-| ml-dsa-44 | m4fstack | 74.9% | 54.8% | 40.8% |
+| ml-dsa-44 | m4fstack | 74.6% | 66.2% | 38.8% |
 | ml-dsa-65 | clean | 64.7% | 31.2% | 56.8% |
 | ml-dsa-65 | m4f | 82.3% | 60.6% | 79.2% |
-| ml-dsa-65 | m4fstack | 77.1% | 54.2% | 41.0% |
+| ml-dsa-65 | m4fstack | 76.8% | 69.3% | 38.9% |
 | ml-dsa-87 | clean | 67.0% | 35.9% | 61.1% |
 | ml-dsa-87 | m4f | 83.5% | 65.3% | 81.6% |
-| ml-dsa-87 | m4fstack | 76.1% | 54.0% | 42.6% |
+| ml-dsa-87 | m4fstack | 75.8% | 71.8% | 41.1% |
 | mqom_cat1_gf251_fast | ref | 73.5% | 33.0% | 33.1% |
 | mqom_cat1_gf31_fast | ref | 64.6% | 19.8% | 19.2% |
 | ov-Ip | m4f | 7.5% | 0.9% | 1.1% |
